@@ -2,3 +2,6 @@
 # those to be versioned must be
 # added with -f
 *
+# vim
+.vim/.netrwhist
+.vim/.vim-tmp
