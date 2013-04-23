@@ -1,1 +1,4 @@
+# by default we ignore all files
+# those to be versioned must be
+# added with -f
 *
