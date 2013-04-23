@@ -1,0 +1,81 @@
+[user]
+	name = Alex Popescu
+	email = the.mindstorm@gmail.com
+[gui]
+	recentrepo = /Volumes/Macintosh HD/Users/alex/workspace/python/fof
+[color]
+	ui = auto
+[core]
+	excludesfile = /Users/alex/.gitignore_global
+	quotepath = false
+[alias]
+    a = add
+    br = branch -a
+    newb = checkout -b
+    newbr = checkout -b
+    s = status
+    cl = clone
+    cl-nohist = clone --depth 1
+    cl0 = clone --depth 1
+    c = commit
+    ci = commit --interactive -v
+    cm = commit -m
+    cv = commit -v
+    ca = commit -a -v
+    co = checkout
+    amend = commit --amend
+    d = diff
+    dh = diff HEAD
+    dc = diff --staged
+    dw = diff --word-diff
+    dcw = diff --color-words
+    dt = difftool
+    dth = difftool HEAD
+    dtc = difftool --staged
+    who = shortlog -s --
+    logp = log -p
+    logd = log --oneline --decorate
+    logg = log --graph
+    loggd = log --pretty=oneline --abbrev-commit --graph --decorate
+    logf = log --pretty=fuller
+    origin = remote show origin
+
+#    dx = !git diff | mate
+#    dv = !git diff | vim
+#    ph = push
+#    pl = pull
+#    spull = !git-svn fetch && git-svn rebase
+#    spush = !git-svn dcommit
+#    sync = !git pull && git push
+
+[push]
+    default = upstream
+[diff]
+  tool = bbdiff 
+[difftool]
+  prompt = false    
+
+[difftool "bbdiff"]
+    cmd = bbdiff --wait --resume "$REMOTE" "$LOCAL" 
+    prompt = false
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[difftool "vimdiff"]
+  cmd = mvim -d \"$REMOTE\" \"$LOCAL\" 
+  
+[difftool "diffmerge"]
+  # GIT_EXTERNAL_DIFF will be called with a fixed set of 7 arguments:
+  #
+  # old-file old-hex old-mode new-file new-hex new-mode
+  # cmd = diffmerge.sh --nosplash -ro2 -t1=Old -t2=New \"$LOCAL\" \"$REMOTE\" > /dev/null 2>&1
+  cmd = diffmerge.sh --nosplash -ro2 -t1=Old -t2=New \"$LOCAL\" \"$REMOTE\" 
+
+[merge]
+	tool = sourcetree
+[mergetool "diffmerge"]
+    cmd = diffmerge.sh --nosplash --merge --result=\"$MERGED\" -t1=New -t2=Base -t3=Old \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	trustexitcode = false
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
