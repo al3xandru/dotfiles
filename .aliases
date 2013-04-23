@@ -1,11 +1,19 @@
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+    colorflag="--color"
+else # OS X `ls`
+    colorflag="-G"
+fi
+
 #
 # ALIASES
 #
-alias ll='ls -AlGFp'
-alias l='ls -1AFGp'
-alias lt='ls -AlGFpt'
+alias ll='ls -AlFp ${colorflag}'
+alias l='ls -1AFp ${colorflag}'
+alias lt='ls -AlFpt ${colorflag}'
 alias m='mvim'
 alias t='tvim'
+alias mmc='mmdc'
 
 # IP addresses
 alias localip="ipconfig getifaddr en1"
@@ -36,5 +44,4 @@ done
 
 # Mac OS: Quick way to rebuild the Launch Services database and get rid
 # of duplicates in the Open With submenu.
-alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
-
+alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
