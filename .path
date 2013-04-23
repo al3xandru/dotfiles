@@ -1,0 +1,11 @@
+#
+# BREWS: rvm, pythonbrew
+#
+# RVM
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+# This loads pythonbrew https://github.com/utahta/pythonbrew
+[[ -s $HOME/.pythonbrew/etc/bashrc ]] && source "$HOME/.pythonbrew/etc/bashrc"
+
+export PATH="$HOME/Applications/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
+
+# see also ~/.exports

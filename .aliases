@@ -1,0 +1,40 @@
+#
+# ALIASES
+#
+alias ll='ls -AlGFp'
+alias l='ls -1AFGp'
+alias lt='ls -AlGFpt'
+alias m='mvim'
+alias t='tvim'
+
+# IP addresses
+alias localip="ipconfig getifaddr en1"
+# alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
+alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
+alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
+
+# Directories:
+alias ..="cd .."
+alias ...="cd .. ; cd .."
+alias cdw="cd ~/Dropbox/workspace"
+alias cddrop="cd ~/Dropbox/"
+alias cddown="cd ~/Downloads/"
+alias cdt="cd ~/tmp"
+
+
+# URL-encode strings
+alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+
+# Merge PDF files
+# Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
+alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
+
+# One of @janmoesen’s ProTip™s
+for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
+    alias "$method"="lwp-request -m '$method'"
+done
+
+# Mac OS: Quick way to rebuild the Launch Services database and get rid
+# of duplicates in the Open With submenu.
+alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
+
