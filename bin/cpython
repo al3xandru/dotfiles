@@ -1,0 +1,7 @@
+if [ `which rlwrap` ]; then
+    echo "Using rlwrap"
+    rlwrap python
+else
+    echo "No rlwrap"
+    python
+fi
