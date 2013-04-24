@@ -1,3 +1,4 @@
+AP_AUTOCOMPLETE=False
 try:
   import readline
 except ImportError:
@@ -5,3 +6,5 @@ except ImportError:
 else:
   import rlcompleter
   readline.parse_and_bind("tab: complete")
+  readline.parse_and_bind("bind ^I rl_complete")
+  AP_AUTOCOMPLETE=True

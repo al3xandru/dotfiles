@@ -1,3 +1,4 @@
+export PYTHONSTARTUP=$HOME/bin/pythonstartup.py
 if [ `which rlwrap` ]; then
     echo "Using rlwrap"
     rlwrap python
