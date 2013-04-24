@@ -185,7 +185,8 @@ function! IAWriter()
 endfunction
 " turn-on distraction free writing mode for markdown files
 au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-
+" crontab -e
+au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
 
 
 " NERDtree settings
