@@ -1,0 +1,62 @@
+#!/bin/bash
+
+backup () {
+    if [ -d "$BACKUP_TARGET" ]; then
+        TODAY=`date +"%Y%m%d %H:%M"`
+#        /System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper > /dev/null 2>&1
+        /usr/bin/tmutil startbackup -b
+        if [ $? -eq 0 ]; then
+            echo "${TODAY}" >> $HOME/Library/Logs/com.mypopescu.timemachine.log
+        fi
+    fi
+}
+
+
+if [ "$HOSTNAME" = "mandelbrot.local" ]; then
+    BACKUP_TARGET="/Volumes/MBPRMountainLionTM/Backups.backupdb"
+elif [ "$HOSTNAME" = "macky.local" ]; then 
+    BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
+else
+    exit 1
+fi
+TODAY=`date +"%Y%m%d"`
+PREV_BACKUP_TIME=`tail -1 $HOME/Library/Logs/com.mypopescu.timemachine.log`
+PREV_BACKUP=`tail -1 $HOME/Library/Logs/com.mypopescu.timemachine.log | cut -d' ' -f1`
+if [ -d "$BACKUP_TARGET" ]; then
+    # trigger TimeMachine
+    if [ "$1" == "-f" ]; then
+        echo "Forced backup of $HOSTNAME -> $BACKUP_TARGET"
+        backup
+    else
+        echo "Machine: $HOSTNAME -> $BACKUP_TARGET"
+        if [ -z "$PREV_BACKUP" ]; then
+            echo "No previous backup found for $HOSTNAME -> $BACKUP_TARGET"
+            backup
+        else
+            if [ "${PREV_BACKUP}" != `date -v-2d "+%Y%m%d"` -a "${PREV_BACKUP}" != `date -v-1d "+%Y%m%d"` -a "${PREV_BACKUP}" != `date "+%Y%m%d"` ]; then
+                echo "Previous backup is old ($PREV_BACKUP_TIME) for $HOSTNAME -> $BACKUP_TARGET"
+                backup
+            else
+                echo "Backup from $PREV_BACKUP_TIME found for $HOSTNAME -> $BACKUP_TARGET" 
+            fi
+        fi
+    fi
+else
+    if [ -z "$PREV_BACKUP" ]; then
+        echo "No previous backup found for $HOSTNAME -> $BACKUP_TARGET"
+        osascript -l AppleScript -e "tell application \"Finder\" to display dialog \"Plug-in TimeMachine drive to backup\"" > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            backup
+        fi
+    else
+        if [ "${PREV_BACKUP}" != `date -v-2d "+%Y%m%d"` -a "${PREV_BACKUP}" != `date -v-1d "+%Y%m%d"` -a "${PREV_BACKUP}" != `date "+%Y%m%d"` ]; then
+            echo "Previous backup is old ($PREV_BACKUP_TIME) for $HOSTNAME -> $BACKUP_TARGET"
+            osascript -l AppleScript -e "tell application \"Finder\" to display dialog \"Plug-in TimeMachine drive to backup\"" > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                backup
+            fi
+        else
+            echo "Backup from $PREV_BACKUP_TIME found for $HOSTNAME -> $BACKUP_TARGET"
+        fi
+    fi
+fi

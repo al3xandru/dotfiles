@@ -1,0 +1,6 @@
+#!/bin/bash
+SUBL="/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl"
+"${SUBL}" -n
+sleep 3
+"${SUBL}" -a "$@"
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+SUBL="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
+"${SUBL}" -n
+sleep 2
+"${SUBL}" -a "$@"
+
