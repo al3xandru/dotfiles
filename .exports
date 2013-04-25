@@ -15,26 +15,32 @@ export GREP_OPTIONS="--color=auto"
 # ENV VARIABLES
 #
 # /System/Library/Java/JavaVirtualMachines/
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_13.jdk/Contents/Home
-PATH=${JAVA_HOME}/bin:$PATH
+MACOS_JVM_VERSION=jdk1.7.0_13.jdk
+MACOS_JVM=/Library/Java/JavaVirtualMachines/${MACOS_JVM_VERSION}
+if [ -d ${MACOS_JVMS} ]; then
+    export JAVA_HOME="${MACOS_JVM}/Contents/Home"
+    PATH=${JAVA_HOME}/bin:$PATH
+fi
 
 if [ -z $ANT_HOME ]; then
   export ANT_HOME=/usr/local/share/java/apache-ant-1.9.0
   PATH=${ANT_HOME}/bin:${PATH}
 fi
+
 if [ -z $GRADLE_HOME ]; then
   export GRADLE_HOME=/usr/local/share/java/gradle-1.2
+  export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled"
   PATH=${GRADLE_HOME}/bin:${PATH}
 fi
-if [ -z $GRADLE_OPTS ]; then
-  export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled"
-fi
+
 if [ -z $SBT_HOME ]; then
   export SBT_HOME=/usr/local/share/java/sbt
   PATH=${SBT_HOME}/bin:${PATH}
 fi
+
 if [ -z $CLOJURE_HOME ]; then
   export CLOJURE_HOME=/usr/local/share/java/clojure-1.4.0
   PATH=${CLOJURE_HOME}:${PATH}
 fi
+
 export PATH
