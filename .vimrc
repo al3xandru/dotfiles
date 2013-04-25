@@ -35,11 +35,20 @@ call pathogen#infect()
 
 set nocompatible
 set backspace=2
+" Allow backspace in insert mode
 set backspace=indent,eol,start
+" Use the OS clipboard by default (on versions compiled with `+clipboard`)
+set clipboard=unnamed
+" Enhance command-line completion
+set wildmenu
+" Allow cursor keys in insert mode
+set esckeys
+
 
 " 2. moving around, searching and patterns "
 set incsearch
 set hlsearch
+
 
 " 4. displaying text
 filetype on
@@ -47,6 +56,7 @@ filetype plugin on
 filetype plugin indent on
 
 set listchars=tab:▸\ ,trail:·,eol:¬
+
 
 " 5. syntax, highlighting and spelling"
 " Dark: darkblue, koehler, vividchalk, vibrantink, molokai, tango, relaxedgreen
@@ -63,6 +73,7 @@ let g:solarized_visibility="high"
 let g:solarized_contrast="high"
 
 set thesaurus+=~/.vim/mthesaur.txt
+
 
 " 6. multiple windows "
 set title
@@ -123,11 +134,12 @@ set foldlevel=100
 
 " 17. mapping
 
-" abbreviations:
+" abbreviations
 cnoreabbrev W w
 cnoreabbrev Q q
 
-" <Leader> = \
+" Change mapleader from <Leader> = \
+let mapleader=","
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -154,12 +166,9 @@ set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 
 
-
 " 24. multi-byte characters
 setglobal fileencoding=utf-8
-set encoding=utf-8
-
-
+set encoding=utf-8 nobomb
 
 " autocmds
 if has("autocmd")
@@ -183,11 +192,17 @@ function! IAWriter()
     " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
     " set fullscreen                      " go to fullescreen editing mode
 endfunction
-" turn-on distraction free writing mode for markdown files
-au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-" crontab -e
-au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
 
+if has("autocmd")
+    " turn-on distraction free writing mode for markdown files
+    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
+
+    " crontab -e
+    au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
+
+    " json is javascript
+    autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+endif
 
 " NERDtree settings
 "let NERDTreeWinPos='right'
@@ -197,7 +212,6 @@ let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
-
 
 " Taglist settings
 let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
