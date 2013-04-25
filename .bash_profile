@@ -5,7 +5,6 @@
 # * ~/.path can be used to extend `$PATH`
 # * ~/.extra can be used for other setttings you don't want to commit
 for file in ~/.{path,prompt_bash,exports,aliases,functions,extra}; do
-    echo "sourcing $file"
     [ -r "$file" ] && source "$file"
 done
 unset file
