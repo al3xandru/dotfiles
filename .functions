@@ -59,6 +59,10 @@ function codepoint() {
     fi
 }
 
+# Find an application CFBundleIndentifier
+function appid() {
+    grep 'CFBundleIdentifier' -A1 "$1Contents/Info.plist" | sed s/string//g | sed s/key//g | sed s/[\<\>\/]//g
+}
 # NPM
 function activate_npm {
     export PATH=/usr/local/share/npm/bin:${PATH}
