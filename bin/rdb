@@ -1,0 +1,39 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+    echo "Usage rdb [-v=<ver>] <data_dir>"
+    exit 1
+fi
+version="rethinkdb-next"
+datadir=""
+extraparams="2"
+case "$1" in
+    -v=*)
+        ver=$(echo "$1" | tr -d "\-v=")
+        version="rel-${ver}"
+        datadir="$2"
+        extraparams="3"
+        ;;
+    *)
+        datadir=$1
+        ;;
+esac
+if [ -z "$datadir" ]; then
+    echo "No database specified"
+    echo "Usage rdb [-v=<ver>] data_dir"
+    exit 2
+fi
+CMD="/home/alex/workspace/${version}/build/release/rethinkdb"
+
+echo "Version: $version"
+echo "Command: $CMD"
+echo "Data   : $datadir"
+
+if [ ! -d "$datadir" ]; then
+    echo "Db $datadir doesn't exist. Creating it..."
+    "$CMD" create -d "$datadir"
+fi
+if [ "$extraparms" = "2" ]; then
+    "$CMD" serve --bind all -d "$datadir" $2 $3 $4 $5 $6 $7 $8 $9
+else
+    "$CMD" serve --bind all -d "$datadir" $3 $4 $5 $6 $7 $8 $9
+fi
