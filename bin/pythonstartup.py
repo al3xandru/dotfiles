@@ -1,4 +1,5 @@
 AP_AUTOCOMPLETE=False
+import sys
 try:
   import readline
 except ImportError:
@@ -6,5 +7,6 @@ except ImportError:
 else:
   import rlcompleter
   readline.parse_and_bind("tab: complete")
-  readline.parse_and_bind("bind ^I rl_complete")
+  if sys.platform == 'darwin':
+    readline.parse_and_bind("bind ^I rl_complete")
   AP_AUTOCOMPLETE=True
