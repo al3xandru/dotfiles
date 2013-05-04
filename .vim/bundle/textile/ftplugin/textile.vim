@@ -5,9 +5,9 @@
 command! -nargs=0 TextileRenderFile call TextileRenderBufferToFile()
 command! -nargs=0 TextileRenderTab call TextileRenderBufferToTab()
 command! -nargs=0 TextilePreview call TextileRenderBufferToPreview()
-noremap <buffer> <LocalLeader>ttp :TextilePreview<CR>
-noremap <buffer> <LocalLeader>ttf :TextileRenderFile<CR>
-noremap <buffer> <LocalLeader>ttt :TextileRenderTab<CR>
+noremap <buffer> <Leader>rp :TextilePreview<CR>
+noremap <buffer> <Leader>rf :TextileRenderFile<CR>
+noremap <buffer> <Leader>rt :TextileRenderTab<CR>
 setlocal ignorecase
 setlocal wrap
 setlocal lbr
@@ -24,7 +24,7 @@ endfunction
 
 function! TextileRenderFile(lines, filename)
   let html = TextileRender(getbufline(bufname("%"), 1, '$'))
-  let html = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'/><link rel='stylesheet' href='file:///Users/alex/.vim/markdownpreview_plugin/markdownprev2.css'></link><title>" . bufname("%") . "</title><body><div id='article'><div class='page'>\n" . html . "\n</div></div></body></html>"
+  let html = "<html><head><title>" . bufname("%") . "</title><body>\n" . html . "\n</body></html>"
   return writefile(split(html, "\n"), a:filename)
 endfunction
 
