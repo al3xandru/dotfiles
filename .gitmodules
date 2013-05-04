@@ -10,3 +10,6 @@
 [submodule ".vim/bundle/vim-matchit"]
 	path = .vim/bundle/vim-matchit
 	url = git@github.com:edsono/vim-matchit.git
+[submodule ".vim/bundle/vim-peepopen"]
+	path = .vim/bundle/vim-peepopen
+	url = git@github.com:mrchrisadams/vim-peepopen.git
