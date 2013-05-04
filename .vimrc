@@ -48,7 +48,7 @@ set esckeys
 " 2. moving around, searching and patterns "
 set incsearch
 set hlsearch
-
+set wildignore+=*.o,*.obj,.git,.svn,*.class,*.pyo,*.pyc
 
 " 4. displaying text
 filetype on
@@ -152,7 +152,7 @@ map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-"map <silent> <Leader>bp <C-R>=expand("%:p:h") . "/" <CR>
+map <silent> <Leader>pp <C-R>=expand("%:p:h") . "/" <CR>
 
 " Insert a newline in normal mode
 nnoremap <NL> i<CR><ESC>
@@ -207,7 +207,7 @@ endif
 " NERDtree settings
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
-map <Leader>t :NERDTreeToggle<CR>
+map <Leader>p :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
@@ -224,5 +224,9 @@ let Tlist_Sort_Type="name"
 nnoremap <silent> <F9> :TlistToggle<CR>
 map <silent> <Leader>s :TlistToggle<CR>
 
+" CommandT settings
+let g:CommandTCancelMap='<C-x>'
 
-
+" PeepCode
+" disabled
+let g:peepopen_loaded = 1
