@@ -231,6 +231,9 @@ let g:CommandTCancelMap='<C-x>'
 " disabled
 let g:peepopen_loaded = 1
 
+" vim-autoclose
+let g:autoclose_vim_commentmode=1
+
 " Taskpaper
 " let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
 " command! -nargs=+ HiLink hi def link <args>

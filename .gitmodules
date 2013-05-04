@@ -25,3 +25,6 @@
 [submodule ".vim/bundle/taskpaper"]
 	path = .vim/bundle/taskpaper
 	url = git@github.com:davidoc/taskpaper.vim.git
+[submodule ".vim/bundle/autoclose"]
+	path = .vim/bundle/autoclose
+	url = git@github.com:seletskiy/vim-autoclose.git
