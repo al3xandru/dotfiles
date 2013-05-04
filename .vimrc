@@ -48,7 +48,7 @@ set esckeys
 " 2. moving around, searching and patterns "
 set incsearch
 set hlsearch
-set wildignore+=*.o,*.obj,.git,.svn,*.class,*.pyo,*.pyc
+set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz
 
 " 4. displaying text
 filetype on
@@ -225,14 +225,19 @@ nnoremap <silent> <F9> :TlistToggle<CR>
 map <silent> <Leader>s :TlistToggle<CR>
 
 " CommandT settings
+let g:command_t_loaded=1  "disabled; using CtrlP
 let g:CommandTCancelMap='<C-x>'
 
 " PeepCode
-" disabled
-let g:peepopen_loaded = 1
+let g:peepopen_loaded = 1  "disabled
 
 " vim-autoclose
 let g:autoclose_vim_commentmode=1
+
+" CtrlP
+let g:ctrlp_map = '<c-t>'
+let g:ctrlp_cmd = 'CtrlP'
+map <Leader>t :CtrlP<CR>
 
 " Taskpaper
 " let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
