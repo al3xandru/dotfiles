@@ -11,6 +11,14 @@ export LC_ALL="en_US.UTF-8"
 # Always enable colored `grep` output
 export GREP_OPTIONS="--color=auto"
 
+# Homebrew vim
+if [ -h "/usr/local/bin/vim" ]; then
+    if [ `which vim` = "/usr/local/bin/vim" ]; then
+        VIMLINK=`ls -l /usr/local/bin/vim | awk '{print $11}'`
+        VIMDIR=`dirname $VIMLINK`
+        export VIMRUNTIME="/usr/local/bin/$VIMDIR/../share/vim/vim73"
+    fi
+fi
 #
 # ENV VARIABLES
 #
