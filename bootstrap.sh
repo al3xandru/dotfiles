@@ -21,7 +21,7 @@ function doStatus() {
         fi
         echo "Comparing $file with $HOME/$file"
         if [ -d $file ]; then
-            diff -r $file $HOME/$file
+            diff -r $file $HOME/$file | grep -v -e 'tags' -e 'netrwhist' -e 'README.md'
         else
             diff $file $HOME/$file
         fi
