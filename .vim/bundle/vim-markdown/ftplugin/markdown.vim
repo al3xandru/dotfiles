@@ -24,15 +24,15 @@ command! -nargs=0 MarkdownToTab call MarkdownBufferToTab()
 command! -nargs=0 MarkdownPreview call MarkdownBufferPreview()
 command! -nargs=0 MarkdownPublish call MarkdownPublishBuffer()
 
-noremap <buffer> <LocalLeader>mkprev :MarkdownPreview<CR>
-noremap <buffer> <LocalLeader>mkfile :MarkdownToFile<CR>
-noremap <buffer> <LocalLeader>mktab :MarkdownToTab<CR>
+noremap <buffer> <LocalLeader>mkp :MarkdownPreview<CR>
+noremap <buffer> <LocalLeader>mkf :MarkdownToFile<CR>
+noremap <buffer> <LocalLeader>mkt :MarkdownToTab<CR>
 noremap <buffer> <LocalLeader>mkpub :MarkdownPublish<CR>
 
 cnoreabbrev mkpub MarkdownPublish
-cnoreabbrev mkprev MarkdownPreview
-cnoreabbrev mktab MarkdownToTab
-cnoreabbrev mkfile MarkdownToFile
+cnoreabbrev mkp MarkdownPreview
+cnoreabbrev mkt MarkdownToTab
+cnoreabbrev mkf MarkdownToFile
 setlocal ignorecase
 setlocal wrap
 setlocal lbr
@@ -45,20 +45,20 @@ function! ToMarkdown(opts)
 endfunction
 
 function! MarkdownBufferPreview()
-  let opts = "--type=d --browser"
+  let opts = "--type=m1 --browser"
   let outp = ToMarkdown(opts)
   echo outp
 endfunction
 
 function! MarkdownBufferToFile()
   let filename = input("Filename:", substitute(bufname("%"), "$", ".html", ""), "file")
-  let opts = "--type=d -o " . filename
+  let opts = "--type=m1 -o " . filename
   call ToMarkdown(opts)
   echo "Rendered to '" . filename . "'"
 endfunction
 
 function! MarkdownBufferToTab()
-  let options = "--type=d --console"
+  let options = "--type=m1 --console"
   let html = ToMarkdown(options)
   tabnew
   call append("^", split(html, "\n"))

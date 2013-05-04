@@ -1,5 +1,5 @@
 body {
-    font: 13px "Akzidenz-Grotesk BQ", Skia,Optima,"Myriad Pro",Molengo,"Helvetica Neue", Arial, Helvetica, sans-serif;
+    font: 13px "Proxima Nova", "Akzidenz-Grotesk BQ", Skia,Optima,"Myriad Pro",Molengo,"Helvetica Neue", Arial, Helvetica, sans-serif;
 }
 
 @media print {
@@ -36,7 +36,7 @@ body {
     font-family:"Helvetica Neue", Arial, "Lucida Grande", sans-serif;
   }
   code {
-    font:.9em "Courier New", Monaco, Courier, monospace;
+    font:.9em Cousine, "Anonymous Pro", "Courier New", Monaco, Courier, monospace;
   }
   pre {
     line-height:0.8;
