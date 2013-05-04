@@ -1,19 +1,25 @@
 #!/bin/bash
 cd "$(dirname "${BASH_SOURCE}")"
 git pull origin master
-function status() {
+function doStatus() {
     IFS=$'\n'
     for file in $(ls -A) ; do
+        if [ $file = ".git" ]; then
+            continue
+        fi
+        if [ $file = ".gitmodules" ]; then
+            continue
+        fi
+        if [ $file = ".DS_Store" ]; then
+            continue
+        fi
         if [ $file = "bootstrap.sh" ]; then
             continue
         fi
         if [ $file = "README.md" ]; then
             continue
         fi
-        if [ $file = ".git" ]; then
-            continue
-        fi
-        echo "Comparing $file"
+        echo "Comparing $file with $HOME/$file"
         if [ -d $file ]; then
             diff -r $file $HOME/$file
         else
@@ -22,11 +28,12 @@ function status() {
     done
 }
 function doIt() {
-	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" --exclude "README.md" -av . ~
+	rsync --exclude ".git/" --exclude ".DS_Store" --exclude "bootstrap.sh" --exclude "README.md" -av . $HOME
+    source ~/.bash_profile
 }
 case "$1" in
     --status)
-        status
+        doStatus
         ;;
     --force)
         doIt
@@ -43,5 +50,4 @@ case "$1" in
         ;;
 esac
 unset doIt
-unset status
-source ~/.bash_profile
+unset doStatus
