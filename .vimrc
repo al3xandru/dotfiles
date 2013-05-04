@@ -216,10 +216,11 @@ let NERDTreeHighlightCursorline=1
 " Taglist settings
 let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 let Tlist_Show_One_File=1
-let TlisthighlightTag=1
+let Tlist_Auto_Highlight_Tag=1
 let Tlist_Use_Right_Window=0
 let Tlist_Close_On_Select=0
 let Tlist_GainFocus_On_ToggleOpen=1
+let Tlist_Sort_Type="name"
 nnoremap <silent> <F9> :TlistToggle<CR>
 map <silent> <Leader>s :TlistToggle<CR>
 
