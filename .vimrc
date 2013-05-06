@@ -139,7 +139,7 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
-let mapleader=","
+" let mapleader=","
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
