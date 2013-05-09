@@ -20,16 +20,16 @@ LIGHT_PURPLE="\[\033[1;35m\]"
  COLOR_NONE="\[\e[0m\]"
 
 # interesting but not as good as mine
-function parse_git_dirty() {
+function _parse_git_dirty() {
   [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
 }
 
-function new_parse_git_branch() {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+function _new_parse_git_branch() {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(_parse_git_dirty)/"
 }
 
-function parse_git_branch {
-  git rev-parse --git-dir &> /dev/null
+function _parse_git_branch {
+  # git rev-parse --git-dir &> /dev/null
   git_status="$(git status 2> /dev/null)"
   branch_pattern="^# On branch ([^${IFS}]*)"
   remote_pattern="# Your branch is (.*) of"
@@ -54,10 +54,10 @@ function parse_git_branch {
   fi
 }
 
-function prompt_func() {
+function _prompt_func() {
     previous_return_value=$?;
     # prompt="${TITLEBAR}$BLUE[$RED\w$GREEN$(__git_ps1)$YELLOW$(git_dirty_flag)$BLUE]$COLOR_NONE "
-    prompt="${TITLEBAR}${LIGHT_BLACK}[${BLUE}\W${GREEN}$(parse_git_branch)${LIGHT_BLACK}]${COLOR_NONE}"
+    prompt="${TITLEBAR}${LIGHT_BLACK}[${BLUE}\W${GREEN}$(_parse_git_branch)${LIGHT_BLACK}]${COLOR_NONE}"
     if test $previous_return_value -eq 0
     then
         PS1="${prompt}\$${COLOR_NONE} "
@@ -66,7 +66,7 @@ function prompt_func() {
     fi
 }
 
-PROMPT_COMMAND=prompt_func
+PROMPT_COMMAND=_prompt_func
 
 #PS1='[\[\e[1;34m\]\w\[\e[m\]]\n\[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
 #PS1='[\[\e[1;34m\]\w\[\e[m\]]\[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'

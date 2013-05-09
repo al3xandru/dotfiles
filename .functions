@@ -1,3 +1,7 @@
+# List defined functions 
+function funclist() {
+    declare -f | grep "()" | egrep -v "^[_ \$]"
+}
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$@"
