@@ -19,14 +19,6 @@ LIGHT_PURPLE="\[\033[1;35m\]"
   LIGHT_GRAY="\[\033[1;37m\]"
  COLOR_NONE="\[\e[0m\]"
 
-# interesting but not as good as mine
-function _parse_git_dirty() {
-  [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "*"
-}
-
-function _new_parse_git_branch() {
-  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(_parse_git_dirty)/"
-}
 
 function _parse_git_branch {
   # git rev-parse --git-dir &> /dev/null
@@ -34,9 +26,10 @@ function _parse_git_branch {
   branch_pattern="^# On branch ([^${IFS}]*)"
   remote_pattern="# Your branch is (.*) of"
   diverge_pattern="# Your branch and (.*) have diverged"
-  if [[ ! ${git_status} =~ "working directory clean" ]]; then
-    state="${RED}~"
-  fi
+  state=""
+#  if [[ ! ${git_status} =~ "working directory clean" ]]; then
+#    state="${RED}~"
+#  fi
   # add an else if or two here if you want to get more specific
   if [[ ${git_status} =~ ${remote_pattern} ]]; then
     if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
@@ -55,15 +48,16 @@ function _parse_git_branch {
 }
 
 function _prompt_func() {
-    previous_return_value=$?;
-    # prompt="${TITLEBAR}$BLUE[$RED\w$GREEN$(__git_ps1)$YELLOW$(git_dirty_flag)$BLUE]$COLOR_NONE "
-    prompt="${TITLEBAR}${LIGHT_BLACK}[${BLUE}\W${GREEN}$(_parse_git_branch)${LIGHT_BLACK}]${COLOR_NONE}"
-    if test $previous_return_value -eq 0
-    then
-        PS1="${prompt}\$${COLOR_NONE} "
-    else
-        PS1="${prompt}${RED}\$${COLOR_NONE} "
-    fi
+#    previous_return_value=$?;
+#    echo "prev: ${previous_return_value}"
+    prompt="${LIGHT_BLACK}[${BLUE}\W${GREEN}$(_parse_git_branch)${LIGHT_BLACK}]${COLOR_NONE}"
+    PS1="${prompt}\$${COLOR_NONE} "
+#    if [[ $previous_return_value -eq 0 ]]
+#    then
+#        PS1="${prompt}\$${COLOR_NONE} "
+#    else
+#        PS1="${prompt}${RED}\$${COLOR_NONE} "
+#    fi
 }
 
 PROMPT_COMMAND=_prompt_func
