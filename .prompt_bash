@@ -43,14 +43,14 @@ function _parse_git_branch {
       if [[ ${git_status} =~ ${diverge_pattern} ]]; then
         remote="${YELLOW}↕"
       fi
-      echo " (${branch})${remote}${state}"
+      echo "(${branch})${remote}${state}"
   fi
 }
 
 function _prompt_func() {
 #    previous_return_value=$?;
 #    echo "prev: ${previous_return_value}"
-    prompt="${BLUE}\W${GREEN}$(_parse_git_branch)${LIGHT_BLACK}"
+    prompt="${LIGHT_PURPLE}\W ${GREEN}$(_parse_git_branch)${LIGHT_BLACK}"
     PS1="${prompt}\$${COLOR_NONE} "
 #    if [[ $previous_return_value -eq 0 ]]
 #    then
