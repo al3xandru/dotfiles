@@ -35,9 +35,7 @@ def prepare_title(title):
     words = title.lower().split(' ')
     swords = []
     for w in words:
-        if len(w) < 3:
-            continue
-        if w in ('and', 'but', 'for', 'not', 'the', 'yet', 'who', 'with'):
+        if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'who', 'with'):
             continue
         swords.append(w)
     return ' '.join(swords)    
@@ -45,7 +43,6 @@ def prepare_title(title):
 def imdbapi_data(title, year=None):
   # first try http://imdbapi.org
   short_title = prepare_title(title)
-  #print("imdbapi stitle:", short_title)
   params = {
     'type': 'json',
     'q': short_title,
@@ -74,25 +71,21 @@ def imdbapi_data(title, year=None):
       #print("imdbapi: 1 result")
       return imdb_data, 1
     else:
-      #print("imdbapi: %s results" % len(imdb_data))
+      # print("imdbapi: %s results" % len(imdb_data))
+      # print("imdbapi: %s" % imdb_data[0])
       res = None
       max_match = 0
       for d in imdb_data:
-        #print("imdbapi: ", d.get('title', '').encode('utf8'))
         match = match_len(title, d.get('title', ''))
+        if year and year == d.get('year', 0):
+          match += 1
+        # print("imdbapi: %s, match: %s" % (d.get('title', '').encode('utf8'), match))
         if match > max_match:
           res = d
           max_match = match
       if max_match > 0:
         #print("imdb result:", res.get('title').encode('utf8'), "match:", max_match)
         return res, 1
-#      ltitle = title.lower()
-#      for d in imdb_data:
-#        if year:
-#          if ltitle == d.get('title', '').lower() and year == d.get('year'):
-#            return d, 1
-#        elif ltitle == d.get('title', '').lower():
-#          return d, 1
   
   return {}, 0
 
@@ -134,6 +127,7 @@ def omdbapi_data(title, year=None):
   if match_len(title, imdb_data.get('Title', '')) == 0:
     #os.system("open -a Safari \"http://www.omdbapi.com/?t=%s\"" % urllib.quote_plus(title))
     return {}, 0
+  # print("omdb_data: %s" % imdb_data)
   return imdb_data, 1
 
 def rotten_data(title, year=None):
@@ -159,21 +153,17 @@ def rotten_data(title, year=None):
       conn.close()
 
   if rotten_dt:
+    # print("rotten_data: %s" % rotten_dt['movies'][0])
     movie = None
     max_match = 0
     for mov in rotten_dt['movies']:
       match = match_len(title, mov.get('title', ''))
+      if year and year == mov.get('year', 0):
+        match += 1
       if match > max_match:
         movie = mov
         max_match = match
-      #if year:
-      #  if ltitle == movie.get('title', '').lower() and year == movie.get('year'):
-      #    if movie.has_key('alternate_ids') and movie['alternate_ids'].has_key('imdb'):
-      #      movie['imdb_url'] = "http://www.imdb.com/title/tt%s" % movie['alternate_ids']['imdb']            
-      #    return movie, 1
-      #elif ltitle == movie.get('title', '').lower():
-      #  if movie.has_key('alternate_ids') and movie['alternate_ids'].has_key('imdb'):
-      #    movie['imdb_url'] = "http://www.imdb.com/title/tt%s" % movie['alternate_ids']['imdb']                    
+
     if max_match > 0:
       return movie, 1
 
