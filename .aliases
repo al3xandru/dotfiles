@@ -39,7 +39,7 @@ alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 
 # One of @janmoesen’s ProTip™s
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-    alias "$method"="lwp-request -m '$method'"
+    alias "$method"="/usr/bin/curl -i -X '$method'"
 done
 
 # Mac OS: Quick way to rebuild the Launch Services database and get rid
