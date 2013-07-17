@@ -6,6 +6,29 @@
 # This loads pythonbrew https://github.com/utahta/pythonbrew
 [[ -s "$HOME/.pythonbrew/etc/bashrc" ]] && source "$HOME/.pythonbrew/etc/bashrc"
 
-export PATH="$HOME/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
+PATH="$HOME/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
 
-# see also ~/.exports
+if [ "$ANT_HOME" != "" ]; then
+    PATH=$ANT_HOME/bin:$PATH
+fi
+if [ "$GRADLE_HOME" != "" ]; then
+    PATH=$GRADLE_HOME/bin:$PATH
+fi
+if [ "$SBT_HOME" != "" ]; then
+    PATH=$SBT_HOME/bin:$PATH
+fi
+if [ "$CLOJURE_HOME" != "" ]; then
+    PATH=$CLOJURE_HOME:$PATH
+fi
+if [ "$JAVA_HOME" != "" ]; then
+    PATH=$JAVA_HOME/bin:$PATH
+fi
+
+# This loads pyenv
+if [ -d "$HOME/.pyenv" ]; then
+    PATH=$HOME/.pyenv/bin:$PATH
+    eval "$(pyenv init -)"
+fi
+
+
+export PATH
