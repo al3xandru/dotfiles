@@ -5,7 +5,7 @@
 # * ~/.flags can be used locally to enable/disable specific features
 # * ~/.path can be used to extend `$PATH`
 # * ~/.extra can be used for other setttings you don't want to commit
-for file in ~/.{flags,path,prompt_bash,exports,aliases,functions,extra}; do
+for file in ~/.{flags,exports,path,prompt_bash,aliases,functions,extra}; do
     [ -r "$file" ] && source "$file"
 done
 unset file
