@@ -23,10 +23,15 @@ fi
 # ENV VARIABLES
 #
 # /System/Library/Java/JavaVirtualMachines/
-MACOS_JVM_VERSION=jdk1.7.0_13.jdk
-MACOS_JVM=/Library/Java/JavaVirtualMachines/$MACOS_JVM_VERSION
-if [ -d "$MACOS_JVM" ]; then
-    export JAVA_HOME="$MACOS_JVM/Contents/Home"
+MACOS_JVMS=/Library/Java/JavaVirtualMachines/
+if [ -z "$MACOS_JVM_VERSION" ]; then
+    MACOS_JVM_VERSION=1.7
+fi
+if [ -d "$MACOS_JVMS" ]; then
+    MACOS_JVM_V=$(ls -1 "$MACOS_JVMS" | grep $MACOS_JVM_VERSION | sort -r | head -1)
+    if [ "$MACOS_JVM_V" != "" ]; then
+        export JAVA_HOME="$MACOS_JVMS/$MACOS_JVM_V/Contents/Home"
+    fi
 fi
 
 if [ -d "/usr/local/share/java/apache-ant-1.9.0" ]; then
