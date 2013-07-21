@@ -1,6 +1,11 @@
 #!/bin/bash
-SUBL="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
+if [ -d "/Applications/Sublime Text 3.app" ]; then
+    APPDIR="/Applications/Sublime Text 3.app"
+else
+    APPDIR="/Applications/ST3.app"
+fi
+SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
 "${SUBL}" -n
-sleep 2
+sleep 3
 "${SUBL}" -a "$@"
 
