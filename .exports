@@ -23,7 +23,7 @@ fi
 # ENV VARIABLES
 #
 # /System/Library/Java/JavaVirtualMachines/
-MACOS_JVMS=/Library/Java/JavaVirtualMachines/
+MACOS_JVMS=/Library/Java/JavaVirtualMachines
 if [ -z "$MACOS_JVM_VERSION" ]; then
     MACOS_JVM_VERSION=1.7
 fi
