@@ -2,10 +2,10 @@
 # Bash setup inspired by: https://github.com/mathiasbynens/dotfiles
 #
 # Load the shell dotfiles, and then some:
-# * ~/.flags can be used locally to enable/disable specific features
+# * ~/.precfg can be used locally to enable/disable specific features
 # * ~/.path can be used to extend `$PATH`
-# * ~/.extra can be used for other setttings you don't want to commit
-for file in ~/.{flags,exports,path,prompt_bash,aliases,functions,extra}; do
+# * ~/.postcfg can be used for other setttings you don't want to commit
+for file in ~/.{precfg,exports,path,prompt_bash,aliases,functions,postcfg}; do
     [ -r "$file" ] && source "$file"
 done
 unset file
