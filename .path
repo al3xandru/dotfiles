@@ -8,24 +8,24 @@
 
 PATH="$HOME/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
 
-if [ "$ANT_HOME" != "" ]; then
+if [[ "$ANT_HOME" != "" ]]; then
     PATH=$ANT_HOME/bin:$PATH
 fi
-if [ "$GRADLE_HOME" != "" ]; then
+if [[ "$GRADLE_HOME" != "" ]]; then
     PATH=$GRADLE_HOME/bin:$PATH
 fi
-if [ "$SBT_HOME" != "" ]; then
+if [[ "$SBT_HOME" != "" ]]; then
     PATH=$SBT_HOME/bin:$PATH
 fi
-if [ "$CLOJURE_HOME" != "" ]; then
+if [[ "$CLOJURE_HOME" != "" ]]; then
     PATH=$CLOJURE_HOME:$PATH
 fi
-if [ "$JAVA_HOME" != "" ]; then
+if [[ "$JAVA_HOME" != "" ]]; then
     PATH=$JAVA_HOME/bin:$PATH
 fi
 
 # This loads pyenv
-if [ -d "$HOME/.pyenv" ]; then
+if [[ -d "$HOME/.pyenv" ]]; then
     PATH=$HOME/.pyenv/bin:$PATH
     eval "$(pyenv init -)"
 fi
