@@ -97,4 +97,3 @@ function imgsize() {
         echo "Image file not found"
     fi
 }
-}
