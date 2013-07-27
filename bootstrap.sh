@@ -1,6 +1,6 @@
 #!/bin/bash
 cd "$(dirname "${BASH_SOURCE}")"
-git pull origin master
+
 function doStatus() {
     IFS=$'\n'
     for file in $(ls -A) ; do
@@ -40,6 +40,22 @@ case "$1" in
         ;;
     -f)
         doIt
+        ;;
+    --update)
+        git pull origin master
+        read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            doIt
+        fi
+        ;;
+    -u)        
+        git pull origin master
+        read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            doIt
+        fi
         ;;
     *)
 	    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1

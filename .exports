@@ -12,8 +12,8 @@ export LC_ALL="en_US.UTF-8"
 export GREP_OPTIONS="--color=auto"
 
 # Homebrew vim
-if [[ -h "/usr/local/bin/vim" ]]; then
-    if [[ `which vim` = "/usr/local/bin/vim" ]]; then
+if [ -h "/usr/local/bin/vim" ]; then
+    if [ `which vim` = "/usr/local/bin/vim" ]; then
         VIMLINK=`ls -l /usr/local/bin/vim | awk '{print $11}'`
         VIMDIR=`dirname $VIMLINK`
         export VIMRUNTIME="/usr/local/bin/$VIMDIR/../share/vim/vim73"
@@ -22,31 +22,55 @@ fi
 #
 # ENV VARIABLES
 #
-# /System/Library/Java/JavaVirtualMachines/
-MACOS_JVMS=/Library/Java/JavaVirtualMachines
-if [[ -z "$MACOS_JVM_VERSION" ]]; then
-    MACOS_JVM_VERSION=1.7
-fi
-if [[ -d "$MACOS_JVMS" ]]; then
-    MACOS_JVM_V=$(ls -1 "$MACOS_JVMS" | grep $MACOS_JVM_VERSION | sort -r | head -1)
-    if [ "$MACOS_JVM_V" != "" ]; then
-        export JAVA_HOME="$MACOS_JVMS/$MACOS_JVM_V/Contents/Home"
+
+# JVM
+# Mac locations:
+# - /System/Library/Java/JavaVirtualMachines/
+# - /Library/Java/JavaVirtualMachines
+# Mint locations:
+# - /usr/lib/jvm
+if [ -z "$JAVA_HOME" ]; then
+    vmdir=""
+    vmtype=`uname`
+    case "$vmtype" in
+        "Linux" )
+            vmdir="/usr/lib/jvm"
+            ;;
+        "Darwin" )
+            vmdir="/Library/Java/JavaVirtualMachines"
+            ;;
+    esac
+    if [ -z "$VM_VERSION" ]; then
+        VM_VERSION="1.7"
+    fi
+    if [ -d "$vmdir" ]; then
+        PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
+        if [ "$PJAVA_HOME" != "" ]; then
+            case "$vmtype" in
+                "Linux")
+                    export JAVA_HOME="$vmdir/$PJAVA_HOME"
+                    ;;
+                "Darwin")
+                    export JAVA_HOME="$vmdir/$PJAVA_HOME/Contents/Home"
+                    ;;
+            esac
+        fi
     fi
 fi
 
-if [[ -d "/usr/local/share/java/apache-ant-1.9.0" ]]; then
+if [ \( -z "$ANT_HOME" \) -a \( -d "/usr/local/share/java/apache-ant-1.9.0" \) ]; then
   export ANT_HOME=/usr/local/share/java/apache-ant-1.9.0
 fi
 
-if [[ -d "/usr/local/share/java/gradle-1.2" ]]; then
+if [ \( -z "$GRADLE_HOME" \) -a \( -d "/usr/local/share/java/gradle-1.2" \) ]; then
     export GRADLE_HOME=/usr/local/share/java/gradle-1.2
     export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled"
 fi
 
-if [[ -d "/usr/local/share/java/sbt" ]]; then
+if [ \( -z "$SBT_HOME" \) -a \( -d "/usr/local/share/java/sbt" \) ]; then
     export SBT_HOME=/usr/local/share/java/sbt
 fi
 
-if [[ -d "/usr/local/share/java/clojure-1.4.0" ]]; then
+if [ \( -z "$CLOJURE_HOME" \) -a \( -d "/usr/local/share/java/clojure-1.4.0" \) ]; then
     export CLOJURE_HOME=/usr/local/share/java/clojure-1.4.0
 fi

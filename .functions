@@ -2,10 +2,12 @@
 function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
+
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$@"
 }
+
 # Determine size of a file or total size of a directory
 function fs() {
     if du -b /dev/null > /dev/null 2>&1; then
@@ -13,12 +15,13 @@ function fs() {
     else
         local arg=-sh
     fi
-    if [[ -n "$@" ]]; then
+    if [ -n "$@" ]; then
         du $arg -- "$@"
     else
         du $arg .[^.]* *
     fi
 }
+
 # Create a data URL from a file
 function dataurl() {
     local mimeType=$(file -b --mime-type "$1")
@@ -27,6 +30,7 @@ function dataurl() {
     fi
     echo "data:${mimeType};base64,$(openssl base64 -in "$1" | tr -d '\n')"
 }
+
 # Syntax-highlight JSON strings or files
 # Usage: `json '{"foo":42}'` or `echo '{"foo":42}' | json`
 function json() {
@@ -36,6 +40,7 @@ function json() {
         python -mjson.tool | pygmentize -l javascript
     fi
 }
+
 # Escape UTF-8 characters into their 3-byte format
 function escape() {
     printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
@@ -67,11 +72,12 @@ function codepoint() {
 function appid() {
     grep 'CFBundleIdentifier' -A1 "$1Contents/Info.plist" | sed s/string//g | sed s/key//g | sed s/[\<\>\/]//g
 }
-# NPM
-function activate_npm {
+
+# Node.js NPM
+function nodejs_activate_npm {
     export PATH=/usr/local/share/npm/bin:${PATH}
 }
-function deactivate_npm {
+function nodejs_deactivate_npm {
     IFS=':' read -a path_segments <<< "${PATH}"
     NEW_PATH=""
     for ps in "${path_segments[@]}"; do
@@ -85,11 +91,12 @@ function deactivate_npm {
     done
     echo $NEW_PATH
 }
+
 # image handling
 # http://brettterpstra.com/2013/07/24/bash-image-tools-for-web-designers/
 function imgsize() {
     local width height
-    if [[ -f $1 ]]; then
+    if [ -f "$1" ]; then
         height=$(sips -g pixelHeight "$1"|tail -n 1|awk '{print $2}')
         width=$(sips -g pixelWidth "$1"|tail -n 1|awk '{print $2}')
         echo "${width} x ${height}"
