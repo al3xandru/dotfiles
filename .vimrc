@@ -48,6 +48,7 @@ set esckeys
 " 2. moving around, searching and patterns "
 set incsearch
 set hlsearch
+set smartcase
 set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz,*.exe
 
 " 4. displaying text
@@ -141,6 +142,13 @@ cnoreabbrev Q q
 " Change mapleader from <Leader> = \
 " let mapleader=","
 
+" make vertical line nav better
+nnoremap j gj
+nnoremap k gk
+
+" disable highlighted search 
+nmap <leader> q :nohlsearch<CR>
+
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -160,6 +168,8 @@ nnoremap <NL> i<CR><ESC>
 " Show special characters
 nmap <silent> <leader>ss :set nolist!<CR>
 
+" Buffer switch
+nmap <C-e> :e#<CR>
 
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
