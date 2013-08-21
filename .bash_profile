@@ -18,3 +18,13 @@ shopt -s histappend
 # if possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
 
+# add tab completion for jump (alias cj)
+_completejump() {
+    local curw=${COMP_WORDS[COMP_CWORD]}
+    #local wordlist=$(find $MARKPATH -type l | awk -F '/' '{print $NF}')
+    #COMREPLY=($(compgen -W '${wordlist[@]}' -- "$curw"))
+    COMPREPLY=( $(compgen -W "$( ls $MARKPATH )" -- $curw) )
+    return 0
+}
+
+complete -o "default" -o "nospace" -F _completejump cj unmark jump
