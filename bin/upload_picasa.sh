@@ -1,3 +1,3 @@
 #!/bin/sh
 # echo $@
-"$HOME/Dropbox/workspace/python/markdown/tools/picasa/picasa.py" --rename "$@"
+"$HOME/Dropbox/workspace/python/markdown/tools/picassa/picasa.py" --rename "$@"
