@@ -90,25 +90,30 @@ function appid() {
 
 # Switch DNS
 function switchdns() {
+    local flushdns="1"
     if [ -z "$1" ]; then
-        networksetup -setdnsservers Wi-Fi empty
+        sudo networksetup -setdnsservers Wi-Fi empty
     else
         case $1 in 
             aft)
-                networksetup -setdnsservers Wi-Fi 198.27.106.151 192.254.74.201 78.46.231.161
+                sudo networksetup -setdnsservers Wi-Fi 198.27.106.151 192.254.74.201 78.46.231.161
                 ;;
             upc)
-                networksetup -setdnsservers Wi-Fi 95.77.94.88, 78.96.7.88
+                sudo networksetup -setdnsservers Wi-Fi 95.77.94.88 78.96.7.88
                 ;;
             opendns)
-                networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+                sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
                 ;;
             *)
                 echo "Known options: aft, upc, opendns"
+                flushdns="0"
                 ;;
         esac               
     fi
-    sudo killall -HUP mDNSResponder
+    if [ ${flushdns} = "1" ]; then
+        echo "Flushing the DNS cache"
+        sudo killall -HUP mDNSResponder
+    fi
 }
 
 # Node.js NPM
