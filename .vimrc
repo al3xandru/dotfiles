@@ -240,6 +240,13 @@ let g:command_t_loaded = 1
 " map <unique> <Leader>t :CommandT<CR>
 let g:CommandTCancelMap='<C-x>'
 
+" CtrlP
+let g:loaded_ctrlp = 1
+map <unique> <Leader>t :CtrlP<CR>
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+let g:ctrlp_map = '<c-t>'
+let g:ctrlp_cmd = 'CtrlP'
+
 " PeepCode
 let g:peepopen_loaded = 1  "disabled
 
@@ -252,12 +259,6 @@ let g:autoclose_vim_commentmode=1
 " autoclose
 let g:autoclose_loaded = 1
 
-" CtrlP
-let g:loaded_ctrlp = 1
-map <unique> <Leader>t :CtrlP<CR>
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_map = '<c-t>'
-let g:ctrlp_cmd = 'CtrlP'
 
 " Taskpaper
 " let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
