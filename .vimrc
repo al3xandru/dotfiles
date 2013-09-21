@@ -246,6 +246,12 @@ let g:peepopen_loaded = 1  "disabled
 " vim-autoclose
 let g:autoclose_vim_commentmode=1
 
+" vim-autoclose
+" let g:loaded_AutoClose = 1
+
+" autoclose
+let g:autoclose_loaded = 1
+
 " CtrlP
 let g:loaded_ctrlp = 1
 map <unique> <Leader>t :CtrlP<CR>
