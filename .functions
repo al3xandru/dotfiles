@@ -88,6 +88,25 @@ function appid() {
     grep 'CFBundleIdentifier' -A1 "$1Contents/Info.plist" | sed s/string//g | sed s/key//g | sed s/[\<\>\/]//g
 }
 
+# Switch DNS
+function switchdns() {
+    if [ -z "$1" ]; then
+        networksetup -setdnsservers Wi-Fi empty
+    else
+        case $1 in 
+            aft)
+                networksetup -setdnsservers Wi-Fi 198.27.106.151 192.254.74.201 78.46.231.161
+                ;;
+            upc)
+                networksetup -setdnsservers Wi-Fi 95.77.94.88, 78.96.7.88
+                ;;
+            opendns)
+                networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+        esac               
+    fi
+    sudo killall -HUP mDNSResponder
+}
+
 # Node.js NPM
 function nodejs_activate_npm {
     export PATH=/usr/local/share/npm/bin:${PATH}
