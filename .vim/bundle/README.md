@@ -16,6 +16,16 @@ GitHub: <https://github.com/seletskiy/vim-autoclose>
 
 Original: [AutoClose - Inserts matching bracket, paren, brace or quote](http://www.vim.org/scripts/script.php?script_id=1849)
 
+# Townk/vim-autoclose #
+
+[Townk/vim-autoclose](https://github.com/Townk/vim-autoclose)
+
+This plugin for Vim enable an auto-close chars feature for you. 
+For instance if you type an '(', `autoclose` will automatically insert a ')' 
+and put the cursor between than. 
+
+<http://townk.github.com/vim-autoclose/>
+
 # command-t #
 
 Fast file navigation for VIM
