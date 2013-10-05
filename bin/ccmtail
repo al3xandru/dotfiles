@@ -1,0 +1,31 @@
+#!/bin/bash
+function killtails { 
+    echo ""
+    echo "Cleaning up..."
+    for pid in $(ps ax | grep "tail -f ${cluster_dir}/node" | grep -v grep | awk '{print $1}')
+    do
+        echo "Killing pid: ${pid}"
+        kill ${pid}
+    done
+    #rm -vf "${cluster_dir}/system.log"
+}
+trap "killtails" 2
+
+cluster_dir=$1
+cluster_name=$(basename ${cluster_dir})
+nodes=$(ls -A1 -I cluster.conf -I system.log ${cluster_dir})
+echo "Nodes in cluster '${cluster_name}':"
+echo "${nodes}"
+#touch "${cluster_dir}/system.log"
+for node in ${nodes}
+do
+    echo "Attaching tail to node: ${node}"
+    echo "${node}" & tail -f "${cluster_dir}/${node}/logs/system.log" | awk '{print "${node}:" $0}' >> ${cluster_dir}/system.log & 
+done
+tail -f "${cluster_dir}/system.log"
+#for node in ${nodes}
+#do
+#    ps ax | grep "tail -f \"${cluster_dir}/${node}/logs/system.log\"" | grep -v grep | awk '{print $1}'
+#    pid=$(ps ax | grep "tail -f \"${cluster_dir}/${node}/logs/system.log\"" | grep -v grep | awk '{print $1}')
+#    echo "Pid: ${pid}"
+#done
