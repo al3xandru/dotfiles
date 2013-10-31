@@ -62,8 +62,8 @@ if [ \( -z "$ANT_HOME" \) -a \( -d "/usr/local/share/java/apache-ant-1.9.0" \) ]
   export ANT_HOME=/usr/local/share/java/apache-ant-1.9.0
 fi
 
-if [ \( -z "$MVN_HOME" \) -a \( -d "/usr/local/share/java/maven-3.1.1" \) ]; then
-  export MVN_HOME=/usr/local/share/java/maven-3.1.1
+if [ \( -z "$MVN_HOME" \) -a \( -d "/usr/local/share/java/apache-maven-3.1.1" \) ]; then
+  export MVN_HOME=/usr/local/share/java/apache-maven-3.1.1
 fi
 
 if [ \( -z "$GRADLE_HOME" \) -a \( -d "/usr/local/share/java/gradle-1.2" \) ]; then
