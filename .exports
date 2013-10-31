@@ -7,6 +7,7 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 # Prefer US English and use UTF-8
 export LANG="en_US"
 export LC_ALL="en_US.UTF-8"
+export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
 
 # Always enable colored `grep` output
 export GREP_OPTIONS="--color=auto"
@@ -58,12 +59,18 @@ if [ -z "$JAVA_HOME" ]; then
     fi
 fi
 
-if [ \( -z "$ANT_HOME" \) -a \( -d "/usr/local/share/java/apache-ant-1.9.0" \) ]; then
-  export ANT_HOME=/usr/local/share/java/apache-ant-1.9.0
+if [ -z "$ANT_HOME" ]; then
+    ANT_HOME=$(find /usr/local/share/java -name "*ant*" -type d -depth 1)
+    if [ -n "$ANT_HOME" ]; then
+        export ANT_HOME
+    fi
 fi
 
-if [ \( -z "$MVN_HOME" \) -a \( -d "/usr/local/share/java/apache-maven-3.1.1" \) ]; then
-  export MVN_HOME=/usr/local/share/java/apache-maven-3.1.1
+if [ -z "$MVN_HOME" ]; then
+    MVN_HOME=$(find /usr/local/share/java -name "*maven*" -type d -depth 1)
+    if [ -n "$MVN_HOME" ]; then
+        export MVN_HOME
+    fi
 fi
 
 if [ \( -z "$GRADLE_HOME" \) -a \( -d "/usr/local/share/java/gradle-1.2" \) ]; then
