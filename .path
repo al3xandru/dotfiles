@@ -11,6 +11,9 @@ PATH="$HOME/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
 if [ "$ANT_HOME" != "" ]; then
     PATH=$ANT_HOME/bin:$PATH
 fi
+if [ "$MVN_HOME" != "" ]; then
+    PATH=$MVN_HOME/bin:$PATH
+fi
 if [ "$GRADLE_HOME" != "" ]; then
     PATH=$GRADLE_HOME/bin:$PATH
 fi
