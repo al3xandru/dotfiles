@@ -1,8 +1,6 @@
 #
 # BREWS: rvm, pythonbrew
 #
-# RVM
-[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
 # This loads pythonbrew https://github.com/utahta/pythonbrew
 #[ -s "$HOME/.pythonbrew/etc/bashrc" ] && source "$HOME/.pythonbrew/etc/bashrc"
 
@@ -33,5 +31,7 @@ if [ -d "$HOME/.pyenv" ]; then
     eval "$(pyenv init -)"
 fi
 
+# RVM
+[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
 
 export PATH
