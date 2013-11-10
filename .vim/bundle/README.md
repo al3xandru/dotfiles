@@ -86,7 +86,6 @@ Solarized colorscheme for vim.
 
 GitHub: <https://github.com/altercation/vim-colors-solarized>
 
-# vim-markdown #
 # vim-matchit #
 
 Allows configuring % to match more than just single characters.
@@ -112,3 +111,11 @@ GitHub: <https://github.com/tpope/vim-surround>
 Source code browser.
 
 GitHub: <https://github.com/thisivan/vim-taglist>
+
+# dash.vim #
+
+GitHub: <https://github.com/rizzatti/dash.vim>
+
+# vim-markdown #
+
+The current version is based on tpope/vim-markdown.
