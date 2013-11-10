@@ -31,7 +31,7 @@
 " 25. various
 
 " 1. important
-call pathogen#infect()
+"call pathogen#infect()
 
 set nocompatible
 set backspace=2
@@ -66,12 +66,7 @@ set listchars=tab:▸\ ,trail:·,eol:¬
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
 
 syntax on
-colorscheme desert256 
-
-let g:solarized_termtrans=1
-let g:solarized_termcolors=16
-let g:solarized_visibility="high"
-let g:solarized_contrast="high"
+colorscheme torte
 
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -214,56 +209,5 @@ if has("autocmd")
     autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif
 
-" NERDtree settings
-"let NERDTreeWinPos='right'
-nnoremap <silent> <F8> :NERDTreeToggle<CR>
-map <unique> <Leader>p :NERDTreeToggle<CR>
-let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
-let NERDTreeQuitOnOpen=0
-let NERDChristmasTree=1
-let NERDTreeHighlightCursorline=1
-
-" Taglist settings
-let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
-let Tlist_Show_One_File=1
-let Tlist_Auto_Highlight_Tag=1
-let Tlist_Use_Right_Window=0
-let Tlist_Close_On_Select=0
-let Tlist_GainFocus_On_ToggleOpen=1
-let Tlist_Sort_Type="name"
-nnoremap <silent> <F9> :TlistToggle<CR>
-map <silent> <Leader>s :TlistToggle<CR>
-
-" CommandT settings
-" disabled; using CtrlP
-let g:command_t_loaded = 1  
-" map <unique> <Leader>t :CommandT<CR>
-let g:CommandTCancelMap='<C-x>'
-
-" CtrlP
-let g:loaded_ctrlp = 0
-map <unique> <Leader>t :CtrlP<CR>
-set runtimepath^=~/.vim/bundle/ctrlp
-let g:ctrlp_map = '<c-t>'
-let g:ctrlp_cmd = 'CtrlP'
-
-" PeepCode
-let g:peepopen_loaded = 1  "disabled
-
-" vim-autoclose
-let g:autoclose_vim_commentmode=1
-
-" vim-autoclose
-" let g:loaded_AutoClose = 1
-
-" autoclose
-let g:autoclose_loaded = 1
-
-
-" Taskpaper
-" let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
-" command! -nargs=+ HiLink hi def link <args>
-" HiLink taskpaperListItem    Comment
-" HiLink taskpaperDone        Identifier
-" HiLink taskpaperComment     NonText
-" delcommand HiLink
+" Load Vundle
+source vundlebundles.vim
