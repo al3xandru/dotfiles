@@ -219,7 +219,7 @@ endif
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
-let NERDTreeQuitOnOpen=1
+let NERDTreeQuitOnOpen=0
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 
@@ -241,9 +241,9 @@ let g:command_t_loaded = 1
 let g:CommandTCancelMap='<C-x>'
 
 " CtrlP
-let g:loaded_ctrlp = 1
+let g:loaded_ctrlp = 0
 map <unique> <Leader>t :CtrlP<CR>
-set runtimepath^=~/.vim/bundle/ctrlp.vim
+set runtimepath^=~/.vim/bundle/ctrlp
 let g:ctrlp_map = '<c-t>'
 let g:ctrlp_cmd = 'CtrlP'
 
