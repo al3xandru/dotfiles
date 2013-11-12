@@ -1,4 +1,5 @@
 AP_AUTOCOMPLETE=False
+USE_DARWIN_BIND=False
 import sys
 try:
   import readline
@@ -17,7 +18,7 @@ else:
         return rlcompleter.Completer.complete(self, text, state)
 
   readline.parse_and_bind("tab: complete")
-  if sys.platform == 'darwin':
+  if USE_DARWIN_BIND and sys.platform == 'darwin':
     readline.parse_and_bind("bind ^I rl_complete")
   readline.set_completer(MyCompleter().complete)
   AP_AUTOCOMPLETE=True
