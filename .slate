@@ -9,51 +9,51 @@ config undoOps grid,layout,move,resize,push,nudge
 # config switchShowTitles true
 
 # undo
-bind z:alt;ctrl    undo
+bind z:alt;cmd    undo
 
 # Application Switcher
 # bind tab:ctrl switch window
 
 # Resize Bindings
 # Grid
-bind g:alt;ctrl    grid padding:5 1440x900:16,10 1680x1050:16,9
+bind g:alt;cmd    grid padding:5 1440x900:16,10 1680x1050:16,9
 # Enlarge: top-right-bottom-left
-bind 1:alt;ctrl;shift     resize +0 +10% bottom-left
-bind 2:alt;ctrl;shift     resize +10% +0 top-left
-bind 3:alt;ctrl;shift     resize +0 +10% top-left
-bind 4:alt;ctrl;shift     resize +10% +0 top-right
+bind 1:alt;cmd;shift     resize +0 +10% bottom-left
+bind 2:alt;cmd;shift     resize +10% +0 top-left
+bind 3:alt;cmd;shift     resize +0 +10% top-left
+bind 4:alt;cmd;shift     resize +10% +0 top-right
 # Shrink: top-right-bottom-left
-bind 5:alt;ctrl;shift     resize +0 -10% bottom-left
-bind 6:alt;ctrl;shift     resize -10% +0 top-left
-bind 7:alt;ctrl;shift     resize +0 -10% top-left 
-bind 8:alt;ctrl;shift     resize -10% +0 top-right
+bind 5:alt;cmd;shift     resize +0 -10% bottom-left
+bind 6:alt;cmd;shift     resize -10% +0 top-left
+bind 7:alt;cmd;shift     resize +0 -10% top-left 
+bind 8:alt;cmd;shift     resize -10% +0 top-right
 # Maximize vertically
 bind v:alt;ctrl     move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
 
 # Push Bindings
-bind [:alt;ctrl        push left
-bind ]:alt;ctrl        push right
-bind [:alt;ctrl;shift  push bottom
-bind ]:alt;ctrl;shift  push top
-bind f:alt;ctrl        move screenOriginX;screenOriginY screenSizeX;screenSizeY 
-bind h:alt;ctrl        push left  bar-resize:screenSizeX/3
-bind j:alt;ctrl        push left  bar-resize:screenSizeX/2
-bind k:alt;ctrl        push right bar-resize:screenSizeX/2
-bind l:alt;ctrl        push right bar-resize:screenSizeX/3
-bind u:alt;ctrl        push up    bar-resize:screenSizeY/2
-bind d:alt;ctrl        push down  bar-resize:screenSizeY/2
+bind [:alt;cmd        push left
+bind ]:alt;cmd        push right
+bind [:alt;cmd;shift  push bottom
+bind ]:alt;cmd;shift  push top
+bind f:alt;cmd        move screenOriginX;screenOriginY screenSizeX;screenSizeY 
+bind j:alt;ctrl;cmd   push left  bar-resize:screenSizeX/3
+bind j:alt;cmd        push left  bar-resize:screenSizeX/2
+bind k:alt;cmd        push right bar-resize:screenSizeX/2
+bind k:alt;ctrl;cmd   push right bar-resize:screenSizeX/3
+#bind u:alt;ctrl        push up    bar-resize:screenSizeY/2
+#bind d:alt;ctrl        push down  bar-resize:screenSizeY/2
 bind c:alt;ctrl        move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
 bind c:alt;ctrl;cmd   move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
 
 # Nudge Bindings
-bind right:ctrl nudge +10 +0
-bind left:ctrl  nudge -10 +0
-bind up:ctrl    nudge +0  -10
-bind down:ctrl  nudge +0  +10
+bind right:cmd nudge +10 +0
+bind left:cmd  nudge -10 +0
+bind up:cmd    nudge +0  -10
+bind down:cmd  nudge +0  +10
 
 # Throw Bindings
-bind 0:alt;ctrl         throw 1
-bind 9:alt;ctrl         throw 0
+bind 0:alt;cmd         throw 1
+bind 9:alt;cmd         throw 0
 
 #bind right:alt;cmd throw right resize
 #bind left:alt;cmd  throw left  resize
