@@ -16,6 +16,8 @@ if [ "$HOSTNAME" = "mandelbrot.local" ]; then
     BACKUP_TARGET="/Volumes/MBPRMountainLionTM/Backups.backupdb"
 elif [ "$HOSTNAME" = "macky.local" ]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
+elif [ "$HOSTNAME" = "leibniz.local" ]; then
+    BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
 else
     exit 1
 fi
