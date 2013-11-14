@@ -79,7 +79,7 @@ hi StatusLine ctermbg=59 ctermfg=69
 " GUI "
 set guioptions=aAce
 set selection=exclusive
-set gfn=Consolas:h12
+set gfn=Source\ Code\ Pro:h12
 if has("gui_macvim")
     set columns=125
     set lines=50
@@ -267,7 +267,7 @@ Bundle 'scrooloose/nerdtree'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
-let NERDTreeQuitOnOpen=0
+let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 
@@ -297,7 +297,7 @@ let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 let Tlist_Show_One_File=1
 let Tlist_Auto_Highlight_Tag=1
 let Tlist_Use_Right_Window=0
-let Tlist_Close_On_Select=0
+let Tlist_Close_On_Select=1
 let Tlist_GainFocus_On_ToggleOpen=1
 let Tlist_Sort_Type="name"
 nnoremap <silent> <F9> :TlistToggle<CR>
@@ -312,6 +312,7 @@ let g:peepopen_loaded = 1  "disabled
 " Dash.app
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
+:nmap <silent> <Leader>d <Plug>DashSearch
 
 " Markdown
 " Bundle 'file:///Users/alex/.dotfiles/...'
