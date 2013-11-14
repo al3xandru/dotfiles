@@ -46,10 +46,10 @@ bind c:alt;ctrl        move screenOriginX+(screenSizeX-windowSizeX)/2;screenOrig
 bind c:alt;ctrl;cmd   move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
 
 # Nudge Bindings
-bind right:cmd nudge +10 +0
-bind left:cmd  nudge -10 +0
-bind up:cmd    nudge +0  -10
-bind down:cmd  nudge +0  +10
+bind right:cmd;alt;ctrl nudge +10 +0
+bind left:cmd;alt;ctrl  nudge -10 +0
+bind up:cmd;alt;ctrl    nudge +0  -10
+bind down:cmd;alt;ctrl  nudge +0  +10
 
 # Throw Bindings
 bind 0:alt;cmd         throw 1
