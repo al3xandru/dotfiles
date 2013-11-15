@@ -142,7 +142,7 @@ nnoremap j gj
 nnoremap k gk
 
 " disable highlighted search 
-nmap <leader> q :nohlsearch<CR>
+nmap <Leader>S :nohlsearch<CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -151,6 +151,8 @@ map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 " Opens a tab edit command with the path of the currently edited file filled in 
 " Normal mode: <Leader>t
 map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+map <Leader>se :split <C-R>=expand("%:p:h") . "/" <CR>
+map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
@@ -161,7 +163,7 @@ map <silent> <Leader>pp <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <NL> i<CR><ESC>
 
 " Show special characters
-nmap <silent> <leader>ss :set nolist!<CR>
+nmap <silent> <Leader>c :set nolist!<CR>
 
 " Buffer switch
 nmap <C-e> :e#<CR>
@@ -312,7 +314,7 @@ let g:peepopen_loaded = 1  "disabled
 " Dash.app
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
-:nmap <silent> <Leader>d <Plug>DashSearch
+:nmap <silent> <Leader>h <Plug>DashSearch
 
 " Markdown
 " Bundle 'file:///Users/alex/.dotfiles/...'
