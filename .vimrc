@@ -79,7 +79,11 @@ hi StatusLine ctermbg=59 ctermfg=69
 " GUI "
 set guioptions=aAce
 set selection=exclusive
-set gfn=Source\ Code\ Pro:h12
+set gfn=Source\ Code\ Pro:h11
+"set gfn=Inconsolata:h13
+"set gfn=Bitstream\ Vera\ Sans\ Mono:h11
+"set gfn=Anonymous\ Pro:h12
+"set gfn=Cousine:h11
 if has("gui_macvim")
     set columns=125
     set lines=50
@@ -87,9 +91,6 @@ end
 
 " do not display the menu bar
 " set go-=T
-"set gfn=Inconsolata:h13
-"set gfn=Bitstream\ Vera\ Sans\ Mono:h11
-"set gfn=Anonymous\ Pro:h12
 "set columns=150
 
 "if (has("gui_macvim") || &t_Co == 256)
