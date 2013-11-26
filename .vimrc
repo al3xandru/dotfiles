@@ -60,13 +60,15 @@ set listchars=tab:▸\ ,trail:·,eol:¬
 
 
 " 5. syntax, highlighting and spelling"
-" Dark: darkblue, koehler, vividchalk, vibrantink, molokai, tango, relaxedgreen
-" Light: buttercream, papayawhip, winter
-" Grey: camo, earendel, inkpot, lucius
+" Pastel: desert256 jellybeans wombat256 ir_black molokai
+" Dark: dante, koehler, vividchalk, vibrantink, molokai, tango, fnaqeran,
+" marollocio, macvim, motus, railcast, tir_black
+" Light: buttercream, papayawhip, navajo, inkpot
+" Grey: inkpot, camo, earendel, lucius
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
 
 syntax on
-colorscheme torte
+colorscheme koehler
 
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -77,6 +79,7 @@ set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %Y]%<\ [a\%03.3b:h\%02.2B]
 hi StatusLine ctermbg=59 ctermfg=69 
 
 " GUI "
+set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
 set gfn=Source\ Code\ Pro:h11
@@ -85,8 +88,8 @@ set gfn=Source\ Code\ Pro:h11
 "set gfn=Anonymous\ Pro:h12
 "set gfn=Cousine:h11
 if has("gui_macvim")
-    set columns=125
-    set lines=50
+    set columns=150
+    set lines=70
 end
 
 " do not display the menu bar
@@ -180,6 +183,12 @@ set encoding=utf-8 nobomb
 
 " autocmds
 if has("autocmd")
+    " crontab -e
+    au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
+
+    " json is javascript
+    autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
+    
     autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
     autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
@@ -187,30 +196,6 @@ if has("autocmd")
     autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
 end
 
-function! IAWriter()
-    colorscheme iawriter
-    set background=light
-    set gfn=Cousine:h14         " font to use
-    " set lines=40 columns=100    " size of the editable area
-    set guioptions-=r           " remove right scrollbar
-    set laststatus=0            " don't show status line
-    set noruler                 " don't show ruler
-    set nonu                    " don't show line numbers
-    set linebreak               " break the lines on words
-    " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
-    " set fullscreen                      " go to fullescreen editing mode
-endfunction
-
-if has("autocmd")
-    " turn-on distraction free writing mode for markdown files
-    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-
-    " crontab -e
-    au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
-
-    " json is javascript
-    autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-endif
 
 " Load Vundle
 filetype off " required!
@@ -231,18 +216,9 @@ let g:autoclose_on = 1
 
 Bundle 'project.tar.gz'
 
+
 Bundle 'Colour-Sampler-Pack'
-" Dark: darkblue, koehler, vividchalk, vibrantink, molokai, tango, relaxedgreen
-" Light: buttercream, papayawhip, winter
-" Grey: camo, earendel, inkpot, lucius
-" Pastel: desert256 jellybeans wombat256 ir_black molokai
-
-colorscheme desert256
-
-let g:solarized_termtrans=1
-let g:solarized_termcolors=16
-let g:solarized_visibility="high"
-let g:solarized_contrast="high"
+colorscheme inkpot " desert256 dante navajo papayawhip
 
 
 " GitHub
@@ -255,8 +231,8 @@ Bundle 'Townk/vim-autoclose'
 Bundle 'kien/ctrlp.vim'
 " CtrlP
 let g:loaded_ctrlp = 0
-map <unique> <Leader>t :CtrlP<CR>
 set runtimepath^=~/.vim/bundle/ctrlp
+map <unique> <Leader>t :CtrlP<CR>
 let g:ctrlp_map = '<c-t>'
 let g:ctrlp_cmd = 'CtrlP'
 
@@ -290,6 +266,12 @@ Bundle 'davidoc/taskpaper.vim'
 
 
 Bundle 'altercation/vim-colors-solarized'
+let g:solarized_termtrans=1
+let g:solarized_termcolors=256
+let g:solarized_visibility="high"
+let g:solarized_contrast="high"
+
+
 Bundle 'edsono/vim-matchit'
 Bundle 'tpope/vim-surround'
 
@@ -307,16 +289,35 @@ nnoremap <silent> <F9> :TlistToggle<CR>
 map <silent> <Leader>s :TlistToggle<CR>
 
 
-" PeepCode
-Bundle 'mrchrisadams/vim-peepopen'
-let g:peepopen_loaded = 1  "disabled
-
-
 " Dash.app
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 :nmap <silent> <Leader>h <Plug>DashSearch
 
+
+Bundle 'jacekd/vim-iawriter'
+function! IAWriter()
+    colorscheme iawriter
+    set background=light
+    set gfn=Cousine:h12         " font to use
+    set guioptions-=r           " remove right scrollbar
+    set laststatus=0            " don't show status line
+    set noruler                 " don't show ruler
+    set nonu                    " don't show line numbers
+    set linebreak               " break the lines on words
+    " set linespace=5
+    " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
+    " set fullscreen                      " go to fullescreen editing mode
+endfunction
+
+if has("autocmd")
+    " turn-on distraction free writing mode for markdown files
+    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
+endif
+
+" PeepCode
+Bundle 'mrchrisadams/vim-peepopen'
+let g:peepopen_loaded = 1  "disabled
 " Markdown
 " Bundle 'file:///Users/alex/.dotfiles/...'
 " Bundle 'tpope/vim-markdown'

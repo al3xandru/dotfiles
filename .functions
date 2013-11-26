@@ -89,20 +89,24 @@ function appid() {
 }
 
 # Switch DNS
-function switchdns() {
+function dnsswitch() {
     local flushdns="1"
     if [ -z "$1" ]; then
         sudo networksetup -setdnsservers Wi-Fi empty
+        sudo networksetup -setdnsservers "USB Ethernet" empty
     else
         case $1 in 
             aft)
-                sudo networksetup -setdnsservers Wi-Fi 198.27.106.151 192.254.74.201 78.46.231.161
+                sudo networksetup -setdnsservers Wi-Fi 192.254.74.200 198.27.106.151
+                sudo networksetup -setdnsservers "USB Ethernet" 192.254.74.200 208.110.81.50 198.27.106.151
                 ;;
             upc)
                 sudo networksetup -setdnsservers Wi-Fi 95.77.94.88 78.96.7.88
+                sudo networksetup -setdnsservers "USB Ethernet" 95.77.94.88 78.96.7.88
                 ;;
             opendns)
                 sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+                sudo networksetup -setdnsservers "USB Ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
                 ;;
             *)
                 echo "Known options: aft, upc, opendns"
