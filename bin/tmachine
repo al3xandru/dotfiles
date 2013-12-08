@@ -13,7 +13,7 @@ backup () {
 
 
 if [ "$HOSTNAME" = "mandelbrot.local" ]; then
-    BACKUP_TARGET="/Volumes/MBPRMountainLionTM/Backups.backupdb"
+    BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
 elif [ "$HOSTNAME" = "macky.local" ]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
 elif [ "$HOSTNAME" = "leibniz.local" ]; then
