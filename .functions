@@ -119,6 +119,7 @@ function dnsswitch() {
         sudo killall -HUP mDNSResponder
     fi
 }
+alias switchdns=dnsswitch
 
 # Node.js NPM
 function nodejs_activate_npm {
