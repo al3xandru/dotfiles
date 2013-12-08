@@ -1,6 +1,16 @@
 # 
 # Bash setup inspired by: https://github.com/mathiasbynens/dotfiles
 #
+ostype=`uname`
+case "$ostype" in
+    "Darwin")
+        export _OSTYPE="Mac"
+        ;;
+    "Linux")
+        export _OSTYPE="Lin"
+        ;;
+esac
+unset ostype
 # Load the shell dotfiles, and then some:
 # * ~/.precfg can be used locally to enable/disable specific features
 # * ~/.path can be used to extend `$PATH`
@@ -9,6 +19,7 @@ for file in ~/.{precfg,exports,path,prompt_bash,aliases,functions,postcfg}; do
     [ -r "$file" ] && source "$file"
 done
 unset file
+unset _OSTYPE
 
 shopt -s histappend
 
@@ -17,14 +28,3 @@ shopt -s histappend
 
 # if possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
-
-# add tab completion for jump (alias cj)
-_completejump() {
-    local curw=${COMP_WORDS[COMP_CWORD]}
-    #local wordlist=$(find $MARKPATH -type l | awk -F '/' '{print $NF}')
-    #COMREPLY=($(compgen -W '${wordlist[@]}' -- "$curw"))
-    COMPREPLY=( $(compgen -W "$( ls $MARKPATH )" -- $curw) )
-    return 0
-}
-
-complete -o "default" -o "nospace" -F _completejump cj unmark jump

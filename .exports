@@ -1,6 +1,6 @@
 export EDITOR="$HOME/bin/editor.sh"
 export VISUAL="$HOME/bin/editor.sh"
-
+#
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 
@@ -32,12 +32,11 @@ fi
 # - /usr/lib/jvm
 if [ -z "$JAVA_HOME" ]; then
     vmdir=""
-    vmtype=`uname`
-    case "$vmtype" in
-        "Linux" )
+    case "$_OSTYPE" in
+        "Lin" )
             vmdir="/usr/lib/jvm"
             ;;
-        "Darwin" )
+        "Mac" )
             vmdir="/Library/Java/JavaVirtualMachines"
             ;;
     esac
@@ -47,11 +46,11 @@ if [ -z "$JAVA_HOME" ]; then
     if [ -d "$vmdir" ]; then
         PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
         if [ "$PJAVA_HOME" != "" ]; then
-            case "$vmtype" in
-                "Linux")
+            case "$_OSTYPE" in
+                "Lin")
                     export JAVA_HOME="$vmdir/$PJAVA_HOME"
                     ;;
-                "Darwin")
+                "Mac")
                     export JAVA_HOME="$vmdir/$PJAVA_HOME/Contents/Home"
                     ;;
             esac
@@ -59,29 +58,61 @@ if [ -z "$JAVA_HOME" ]; then
     fi
 fi
 
+function _findfirst {
+    local base_dir="$1"
+    local arg="$2"
+    case "$_OSTYPE" in
+        "Lin" )
+            echo $(find $base_dir -maxdepth 1 -name $arg -type d)
+            ;;
+        "Mac" )
+            echo $(find $base_dir -depth 1 -name $arg -type d | sort -r | head -1)
+            ;;
+    esac
+}
+
 if [ -z "$ANT_HOME" ]; then
-    ANT_HOME=$(find /usr/local/share/java -name "*ant*" -type d -depth 1)
+    ANT_HOME=$(_findfirst "/usr/local/share/java" "*ant*")
     if [ -n "$ANT_HOME" ]; then
         export ANT_HOME
+    else
+        unset ANT_HOME
     fi
 fi
 
 if [ -z "$MVN_HOME" ]; then
-    MVN_HOME=$(find /usr/local/share/java -name "*maven*" -type d -depth 1)
+    MVN_HOME=$(_findfirst "/usr/local/share/java" "*maven*")
     if [ -n "$MVN_HOME" ]; then
         export MVN_HOME
+    else
+        unset MVN_HOME
     fi
 fi
 
-if [ \( -z "$GRADLE_HOME" \) -a \( -d "/usr/local/share/java/gradle-1.2" \) ]; then
-    export GRADLE_HOME=/usr/local/share/java/gradle-1.2
-    export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled"
+if [ -z "$GRADLE_HOME" ]; then
+    GRADLE_HOME=$(_findfirst "/usr/local/share/java" "*gradle*")
+    if [ -n "$GRADLE_HOME" ]; then
+        export GRADLE_HOME
+        export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:MaxPermSize=128m -XX:+CMSClassUnloadingEnabled"
+    else
+        unset GRADLE_HOME
+    fi
 fi
 
-if [ \( -z "$SBT_HOME" \) -a \( -d "/usr/local/share/java/sbt" \) ]; then
-    export SBT_HOME=/usr/local/share/java/sbt
+if [ -z "$SBT_HOME" ]; then
+    SBT_HOME=$(_findfirst "/usr/local/share/java" "*sbt*")
+    if [ -n "$SBT_HOME" ]; then
+        export SBT_HOME
+    else
+        unset SBT_HOME
+    fi
 fi
 
-if [ \( -z "$CLOJURE_HOME" \) -a \( -d "/usr/local/share/java/clojure-1.4.0" \) ]; then
-    export CLOJURE_HOME=/usr/local/share/java/clojure-1.4.0
+if [ -z "$CLOJURE_HOME" ]; then
+    CLOJURE_HOME=$(_findfirst "/usr/local/share/java" "clojure")
+    if [ -n "$CLOJURE_HOME" ]; then
+        export CLOJURE_HOME
+    else
+        unset CLOJURE_HOME
+    fi
 fi

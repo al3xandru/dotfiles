@@ -18,6 +18,17 @@ function marks() {
     # ls -l "$MARKPATH" | sed 's/  / /g' | cut -d' ' -f9- | sed 's/ -/\t-/g' && echo
     ls -l "$MARKPATH" | tail -n +2 | sed 's/  / /g' | cut -d' ' -f9- | awk -F ' -> ' '{printf "%-10s -> %s\n", $1, $2}'
 }
+# add tab completion for jump (alias cj)
+_completejump() {
+    local curw=${COMP_WORDS[COMP_CWORD]}
+    #local wordlist=$(find $MARKPATH -type l | awk -F '/' '{print $NF}')
+    #COMREPLY=($(compgen -W '${wordlist[@]}' -- "$curw"))
+    COMPREPLY=( $(compgen -W "$( ls $MARKPATH )" -- $curw) )
+    return 0
+}
+
+complete -o "default" -o "nospace" -F _completejump cj unmark jump
+
 # Create a new directory and enter it
 function mkd() {
     mkdir -p "$@" && cd "$@"

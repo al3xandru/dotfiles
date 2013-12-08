@@ -3,31 +3,33 @@
 #
 # This loads pythonbrew https://github.com/utahta/pythonbrew
 #[ -s "$HOME/.pythonbrew/etc/bashrc" ] && source "$HOME/.pythonbrew/etc/bashrc"
-
-PATH="$HOME/bin:/usr/local/bin:$HOME/.rvm/bin:$PATH"
-
-if [ "$ANT_HOME" != "" ]; then
-    PATH=$ANT_HOME/bin:$PATH
+PATH="$HOME/bin:/usr/local/bin:$PATH"
+if [ -d "$HOME/.rvm" ]; then
+    PATH="$HOME/.rvm/bin:$PATH"
 fi
-if [ "$MVN_HOME" != "" ]; then
-    PATH=$MVN_HOME/bin:$PATH
-fi
+
 if [ "$GRADLE_HOME" != "" ]; then
-    PATH=$GRADLE_HOME/bin:$PATH
+    PATH="$GRADLE_HOME/bin:$PATH"
 fi
 if [ "$SBT_HOME" != "" ]; then
-    PATH=$SBT_HOME/bin:$PATH
+    PATH="$SBT_HOME/bin:$PATH"
 fi
 if [ "$CLOJURE_HOME" != "" ]; then
-    PATH=$CLOJURE_HOME:$PATH
+    PATH="$CLOJURE_HOME:$PATH"
+fi
+if [ "$MVN_HOME" != "" ]; then
+    PATH="$MVN_HOME/bin:$PATH"
+fi
+if [ "$ANT_HOME" != "" ]; then
+    PATH="$ANT_HOME/bin:$PATH"
 fi
 if [ "$JAVA_HOME" != "" ]; then
-    PATH=$JAVA_HOME/bin:$PATH
+    PATH="$JAVA_HOME/bin:$PATH"
 fi
 
 # This loads pyenv
 if [ -d "$HOME/.pyenv" ]; then
-    PATH=$HOME/.pyenv/bin:$PATH
+    PATH="$HOME/.pyenv/bin:$PATH"
     eval "$(pyenv init -)"
 fi
 
