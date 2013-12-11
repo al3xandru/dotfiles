@@ -149,11 +149,7 @@ nnoremap k gk
 nmap <Leader>S :nohlsearch<CR>
 
 " Opens an edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Opens a tab edit command with the path of the currently edited file filled in 
-" Normal mode: <Leader>t
 map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 map <Leader>se :split <C-R>=expand("%:p:h") . "/" <CR>
 map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
@@ -161,7 +157,7 @@ map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-map <silent> <Leader>pp <C-R>=expand("%:p:h") . "/" <CR>
+"map <silent> <Leader>r <C-R>=ESC :expand("%:p:h") . "/" <CR>
 
 " Insert a newline in normal mode
 nnoremap <NL> i<CR><ESC>
@@ -170,6 +166,7 @@ nnoremap <NL> i<CR><ESC>
 nmap <silent> <Leader>c :set nolist!<CR>
 
 " Buffer switch
+nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 
 " 19. the swap file
@@ -204,6 +201,10 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 " www.vim.org/scripts
+Bundle 'AutoTag'
+set tags=./tags;/
+
+
 Bundle 'HTML-AutoCloseTag'
 " Disable:
 " let b:mapped_auto_closetag = 1
@@ -232,8 +233,8 @@ Bundle 'kien/ctrlp.vim'
 " CtrlP
 let g:loaded_ctrlp = 0
 set runtimepath^=~/.vim/bundle/ctrlp
-map <unique> <Leader>t :CtrlP<CR>
-let g:ctrlp_map = '<c-t>'
+map <unique> <Leader>s :CtrlP<CR>
+let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 
 
@@ -286,7 +287,7 @@ let Tlist_Close_On_Select=1
 let Tlist_GainFocus_On_ToggleOpen=1
 let Tlist_Sort_Type="name"
 nnoremap <silent> <F9> :TlistToggle<CR>
-map <silent> <Leader>s :TlistToggle<CR>
+map <silent> <Leader>t :TlistToggle<CR>
 
 
 " Dash.app
@@ -334,9 +335,6 @@ Bundle 'git://git.wincent.com/command-t.git'
 let g:command_t_loaded = 1
 " map <unique> <Leader>t :CommandT<CR>
 " let g:CommandTCancelMap='<C-x>'
-
-
-
 
 
 filetype plugin indent on " required!
