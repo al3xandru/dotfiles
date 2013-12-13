@@ -40,6 +40,8 @@ def prepare_title(title):
         swords.append(w)
     return ' '.join(swords)    
 
+# http://stackoverflow.com/questions/1966503/does-imdb-provide-an-api
+# http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=lost
 def imdbapi_data(title, year=None):
   # first try http://imdbapi.org
   short_title = prepare_title(title)
@@ -61,6 +63,8 @@ def imdbapi_data(title, year=None):
     if response.status == 200:
       data = response.read()
       imdb_data = json.loads(data)
+  except ValueError:
+    pass
   except socket.error:
     pass
   finally:
@@ -221,12 +225,12 @@ def main(title, year=None, my_rating=""):
 #    os.system("open -a Safari \"http://www.rottentomatoes.com/search/?search=%s\"" % urllib.quote_plus(title))
 
 def print_output(data):
-  print(u"# Movie: %s (%s) #" % (data['title'], data['year']))
+  print(u"# Movie: %s (%s) " % (data['title'], data['year']))
   print("\n")
   print("Year :", data['year'], "   ")
   print("Genre:", ', '.join(data['genre']), "   ")
   print("")
-  print("## Ratings ##")
+  print("## Ratings ")
   print("")
   print("My rating        : %s   " % RATINGS[data.get('my_rating', '')].encode('utf8'))
   print("IMDB rating      : %s/10   " %  data['imdb_rating'])
