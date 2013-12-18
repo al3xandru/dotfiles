@@ -219,7 +219,14 @@ Bundle 'project.tar.gz'
 
 
 Bundle 'Colour-Sampler-Pack'
-colorscheme inkpot " desert256 dante navajo papayawhip
+if has("unix")
+    let s:uname = system("uname -s")
+    if s:uname == "Darwin"
+        colorscheme inkpot " desert256 dante navajo papayawhip
+    else
+        colorscheme desert256
+    endif
+endif
 
 
 " GitHub
