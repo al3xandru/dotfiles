@@ -108,7 +108,7 @@ function dnsswitch() {
     else
         case $1 in 
             aft)
-                sudo networksetup -setdnsservers Wi-Fi 192.254.74.200 198.27.106.151
+                sudo networksetup -setdnsservers Wi-Fi 192.254.74.200 208.110.81.50 198.27.106.151
                 sudo networksetup -setdnsservers "USB Ethernet" 192.254.74.200 208.110.81.50 198.27.106.151
                 ;;
             upc)
