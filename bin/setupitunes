@@ -17,32 +17,51 @@ else
         fi
     fi
 fi
+SYNOLOGY_ITUNES_FOLDER=/Volumes/music/alex/iTunes/iTunes
 EXTERNAL_ITUNES_FOLDER=/Volumes/MacArchive/iTunesAll/iTunes
 LOCAL_ITUNES_FOLDER=$HOME/Music/LocaliTunes
 ITUNES_TARGET_FOLDER=$HOME/Music/iTunes
-if [ -d "$EXTERNAL_ITUNES_FOLDER" ]; then
-    # external iTunes folder is plugged-in: let's use it instead of the local one
-    # try to rename local iTunes folder
-    if [ ! -L "$ITUNES_TARGET_FOLDER" ]; then
+
+# first let's try SYNOLOGY
+if [ -d "$SYNOLOGY_ITUNES_FOLDER" ]; then
+    # Synology is mounted
+    if [ ! L "$ITUNES_TARGET_FOLDER" ]; then
         if [ -d "$ITUNES_TARGET_FOLDER" ]; then
             echo "Local iTunes folder in place: trying to move it" 
             mv "$ITUNES_TARGET_FOLDER" "$LOCAL_ITUNES_FOLDER"
         else
             echo "No local iTunes folder in place" 
         fi
-        echo "Create symlink to external iTunes folder" 
+        echo "Create symlink to Synology iTunes folder" 
         ln -s "$EXTERNAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
     else
-        echo "Symlink to external iTunes folder exists" 
+        echo "Symlink to external iTunes folder exists"
     fi
 else
-    if [ -L "$ITUNES_TARGET_FOLDER" ]; then
-        rm "$ITUNES_TARGET_FOLDER"
-    fi
-    if [ -d "$LOCAL_ITUNES_FOLDER" ]; then
-        echo "Renaming local iTunes folder" 
-        mv "$LOCAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
+    # let's see if the external drive is plugged in
+    if [ -d "$EXTERNAL_ITUNES_FOLDER" ]; then
+        # try to rename local iTunes folder
+        if [ ! -L "$ITUNES_TARGET_FOLDER" ]; then
+            if [ -d "$ITUNES_TARGET_FOLDER" ]; then
+                echo "Local iTunes folder in place: trying to move it" 
+                mv "$ITUNES_TARGET_FOLDER" "$LOCAL_ITUNES_FOLDER"
+            else
+                echo "No local iTunes folder in place" 
+            fi
+            echo "Create symlink to external iTunes folder" 
+            ln -s "$EXTERNAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
+        else
+            echo "Symlink to external iTunes folder exists" 
+        fi
     else
-        echo "No local iTunes folder" 
+        if [ -L "$ITUNES_TARGET_FOLDER" ]; then
+            rm "$ITUNES_TARGET_FOLDER"
+        fi
+        if [ -d "$LOCAL_ITUNES_FOLDER" ]; then
+            echo "Renaming local iTunes folder" 
+            mv "$LOCAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
+        else
+            echo "No local iTunes folder" 
+        fi
     fi
 fi
