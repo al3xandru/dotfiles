@@ -23,14 +23,14 @@ LIGHT_PURPLE="\[\033[1;35m\]"
 function _parse_git_branch {
 # git rev-parse --git-dir &> /dev/null
     git_status="$(git status 2> /dev/null)"
-    branch_pattern="^# On branch ([^${IFS}]*)"
-    remote_pattern="# Your branch is (.*) of"
-    diverge_pattern="# Your branch and (.*) have diverged"
+    branch_pattern="On branch ([^${IFS}]*)"
+    remote_pattern="Your branch is (.*) of"
+    diverge_pattern="Your branch and (.*) have diverged"
     state=""
     if [[ ${git_status} =~ ${branch_pattern} ]]; then
         branch=${BASH_REMATCH[1]}
         if [[ ! ${git_status} =~ "working directory clean" ]]; then
-            state="${RED}~"
+            state="${RED}±"
         fi
         # add an else if or two here if you want to get more specific
         if [[ ${git_status} =~ ${remote_pattern} ]]; then
