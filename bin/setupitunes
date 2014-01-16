@@ -25,7 +25,7 @@ ITUNES_TARGET_FOLDER=$HOME/Music/iTunes
 # first let's try SYNOLOGY
 if [ -d "$SYNOLOGY_ITUNES_FOLDER" ]; then
     # Synology is mounted
-    if [ ! L "$ITUNES_TARGET_FOLDER" ]; then
+    if [ ! -L "$ITUNES_TARGET_FOLDER" ]; then
         if [ -d "$ITUNES_TARGET_FOLDER" ]; then
             echo "Local iTunes folder in place: trying to move it" 
             mv "$ITUNES_TARGET_FOLDER" "$LOCAL_ITUNES_FOLDER"
@@ -33,7 +33,7 @@ if [ -d "$SYNOLOGY_ITUNES_FOLDER" ]; then
             echo "No local iTunes folder in place" 
         fi
         echo "Create symlink to Synology iTunes folder" 
-        ln -s "$EXTERNAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
+        ln -s "$SYNOLOGY_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
     else
         echo "Symlink to external iTunes folder exists"
     fi
