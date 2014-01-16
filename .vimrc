@@ -228,6 +228,8 @@ if has("unix")
     endif
 endif
 
+Bundle 'VimClojure'
+let vimclojure#SetupKeyMap = 0
 
 " GitHub
 Bundle 'gmarik/vundle'
