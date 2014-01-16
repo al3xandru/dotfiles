@@ -109,7 +109,7 @@ if [ -z "$SBT_HOME" ]; then
 fi
 
 if [ -z "$CLOJURE_HOME" ]; then
-    CLOJURE_HOME=$(_findfirst "/usr/local/share/java" "clojure")
+    CLOJURE_HOME=$(_findfirst "/usr/local/share/java" "*clojure*")
     if [ -n "$CLOJURE_HOME" ]; then
         export CLOJURE_HOME
     else
