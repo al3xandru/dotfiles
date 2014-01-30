@@ -82,14 +82,19 @@ hi StatusLine ctermbg=59 ctermfg=69
 set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
-set gfn=Source\ Code\ Pro:h11
+"set gfn=Source\ Code\ Pro:h11,Anonymous\ Pro\ 9 
+if has("gui_macvim")
+    set columns=150
+    set lines=70
+    set gfn=Source\ Code\ Pro:h11
 "set gfn=Inconsolata:h13
 "set gfn=Bitstream\ Vera\ Sans\ Mono:h11
 "set gfn=Anonymous\ Pro:h12
 "set gfn=Cousine:h11
-if has("gui_macvim")
+end
+if has("gui_gtk2")
     set columns=150
-    set lines=70
+    set gfn=SourceCodePro\ 9,Anonymous\ Pro\ 9
 end
 
 " do not display the menu bar
