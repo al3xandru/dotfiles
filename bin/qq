@@ -2,7 +2,7 @@
 
 # notes folder, for note creation and limiting searches
 NOTESDIR_1="${HOME}/Dropbox/ka/knarc/Files"
-NOTESDIR_2="${HOME}/Dropbox/ka/rethinkb/Files"
+#NOTESDIR_2="${HOME}/Dropbox/ka/rethinkb/Files"
 NOTESDIR_3="${HOME}/Dropbox/ka/nvall"
 # extension used for your notes
 NOTESEXT="md"
@@ -30,7 +30,7 @@ then
 elif [[ "$1" == "-e" ]]; then
   shift
   INPUT=$@
-  ANSWER=`mdfind -onlyin "$NOTESDIR_1" -onlyin "$NOTESDIR_2" -onlyin "$NOTESDIR_3" "filename:.$NOTESEXT AND filename:\"$NOTESPRE\" AND ${INPUT%\?}"|head -n 1`
+  ANSWER=`mdfind -onlyin "$NOTESDIR_1" -onlyin "$NOTESDIR_3" "filename:.$NOTESEXT AND filename:\"$NOTESPRE\" AND ${INPUT%\?}"|head -n 1`
   if [[ "$ANSWER" == "" ]]; then
     echo "No results found for search."
     exit 2
@@ -40,7 +40,7 @@ elif [[ "$1" == "-e" ]]; then
 else
   INPUT=$@
   #echo "`mdfind -onlyin \"$NOTESDIR_1\" -onlyin \"$NOTESDIR_2\" -onlyin \"$NOTESDIR_3\" -interpret \"filename:.$NOTESEXT AND filename:\"$NOTESPRE\" AND ${INPUT%\?}\"`"|while read LINE; do
-  mdfind -onlyin "$NOTESDIR_1" -onlyin "$NOTESDIR_2" -onlyin "$NOTESDIR_3" -interpret "filename:.$NOTESEXT AND filename:$NOTESPRE AND ${INPUT%\?}"|while read LINE; do
+  mdfind -onlyin "$NOTESDIR_1" -onlyin "$NOTESDIR_3" -interpret "filename:.$NOTESEXT AND filename:$NOTESPRE AND ${INPUT%\?}"|while read LINE; do
       if [[ "$LINE" == "" ]]; then 
         echo "Sorry, I don't know the answer to that question."
         exit 1;
