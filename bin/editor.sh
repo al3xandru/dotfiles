@@ -10,11 +10,20 @@ if [ -x "/usr/local/bin/mmdc" ]; then
 else
     MARKDOWN_CMD="$VIM_CMD"
 fi
-if [ -x "/usr/local/bin/bbedit" ]; then
-    BBEDIT_CMD="/usr/local/bin/bbedit"
+if [ -x "/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl" ]; then
+    ED_CMD="/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl"
 else
-    BBEDIT_CMD="$VIM_CMD"
+    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ];
+        ED_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
+    else
+        ED_CMD="$VIM_CMD"
+    fi
 fi
+#if [ -x "/usr/local/bin/bbedit" ]; then
+    #BBEDIT_CMD="/usr/local/bin/bbedit"
+#else
+    #BBEDIT_CMD="$VIM_CMD"
+#fi
 case "$1" in
     *_EDITMSG|*MERGE_MSG|*_TAGMSG )
         $VIM_CMD "$1"
@@ -26,9 +35,9 @@ case "$1" in
         $MARKDOWN_CMD "$1"
         ;;
     *.txt )
-        $BBEDIT_CMD "$1"
+        $ED_CMD "$1"
         ;;
     * )
-        $BBEDIT_CMD -w "$1"
+        $ED_CMD -w "$1"
         ;;
 esac
