@@ -5,7 +5,5 @@ else
     APPDIR="/Applications/ST3.app"
 fi
 SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
-"${SUBL}" -n
-sleep 3
-"${SUBL}" -a "$@"
+"${SUBL}" -n; "${SUBL}" -a "$@"
 
