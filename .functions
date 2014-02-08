@@ -103,25 +103,39 @@ function appid() {
 function dnsswitch() {
     local flushdns="1"
     if [ -z "$1" ]; then
-        sudo networksetup -setdnsservers Wi-Fi empty
-        sudo networksetup -setdnsservers "USB Ethernet" empty
+        echo "Known options: aft, g(oogle), opendns, ub (unlock-us), upc"
+        flushdns="0"
     else
         case $1 in 
             aft)
+                echo "Switching DNS to AdFreeTime (aft)"
                 sudo networksetup -setdnsservers Wi-Fi 192.254.74.201 208.110.81.50 198.27.106.151
                 sudo networksetup -setdnsservers "USB Ethernet" 192.254.74.201 208.110.81.50 198.27.106.151
                 ;;
+            g)
+                echo "Switching DNS to Google (g)"
+                sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4
+                sudo networksetup -setdnsservers "usb ethernet" 8.8.8.8 8.8.4.4
+                ;;
+            opendns)
+                echo "Switching DNS to Opendns (opendns)"
+                sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+                sudo networksetup -setdnsservers "usb ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+                ;;
+            ub)
+                echo "Switching DNS to unblock-us.com (ub)"
+                sudo networksetup -setdnsservers Wi-Fi 208.122.23.23 208.122.23.22
+                sudo networksetup -setdnsservers "USB Ethernet" 208.122.23.23 208.122.23.22
+                ;;
             upc)
+                echo "Switching DNS to UPC (upc)"
                 sudo networksetup -setdnsservers Wi-Fi 95.77.94.88 78.96.7.88
                 sudo networksetup -setdnsservers "USB Ethernet" 95.77.94.88 78.96.7.88
                 ;;
-            opendns)
-                sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
-                sudo networksetup -setdnsservers "USB Ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
-                ;;
             *)
-                echo "Known options: aft, upc, opendns"
-                flushdns="0"
+                echo "Resetting DNS to defaults"
+                sudo networksetup -setdnsservers Wi-Fi empty
+                sudo networksetup -setdnsservers "USB Ethernet" empty
                 ;;
         esac               
     fi
