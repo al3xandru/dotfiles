@@ -2,6 +2,8 @@
 cd "$(dirname "${BASH_SOURCE}")"
 
 function doStatus() {
+    echo "Status of the target directory:"
+    echo ""
     IFS=$'\n'
     for file in $(ls -A) ; do
         if [ $file = ".git" ]; then
@@ -32,8 +34,20 @@ function doIt() {
     source ~/.bash_profile
 }
 case "$1" in
-    --status)
-        doStatus
+    -d)
+	    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+	    echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            doIt
+        fi
+        ;;
+
+    --do)
+	    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+	    echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            doIt
+        fi
         ;;
     --force)
         doIt
@@ -57,12 +71,24 @@ case "$1" in
             doIt
         fi
         ;;
+    -s)
+        doStatus
+        ;;
+    --status)
+        doStatus
+        ;;
+    --help)
+        echo "bootstrap.sh installs .dotfiles in your home dir"
+        echo ""
+        echo -e "\t-d --do\t\t\tAsks for confirmation before proceeding"
+        echo -e "\t-f --force\t\tProceeds with no confirmation"
+        echo -e "\t-u --update\t\tFirstly performs a git pull and then proceeds to upgrade"
+        echo -e "\t-s --status\t\tPerforms a diff and displays results"
+        echo -e "\t--help\t\t\tDisplays this help"
+        echo ""
+        ;;
     *)
-	    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
-	    echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            doIt
-        fi
+        doStatus
         ;;
 esac
 unset doIt
