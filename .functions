@@ -115,12 +115,12 @@ function dnsswitch() {
             g)
                 echo "Switching DNS to Google (g)"
                 sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4
-                sudo networksetup -setdnsservers "usb ethernet" 8.8.8.8 8.8.4.4
+                sudo networksetup -setdnsservers "USB ethernet" 8.8.8.8 8.8.4.4
                 ;;
             opendns)
                 echo "Switching DNS to Opendns (opendns)"
                 sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
-                sudo networksetup -setdnsservers "usb ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
+                sudo networksetup -setdnsservers "USB ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220 
                 ;;
             ub)
                 echo "Switching DNS to unblock-us.com (ub)"
