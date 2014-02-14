@@ -13,7 +13,7 @@ fi
 if [ -x "/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl" ]; then
     ED_CMD="/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl"
 else
-    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ];
+    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
         ED_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
     else
         ED_CMD="$VIM_CMD"
