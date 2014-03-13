@@ -5,5 +5,34 @@ else
     APPDIR="/Applications/ST3.app"
 fi
 SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
-"${SUBL}" -n; "${SUBL}" -a "$@"
+if [ $# = 1 ]; then
+    if [ -d "$1" ]; then
+        pushd "$1" > /dev/null
+        dirpath=$(pwd)
+        popd > /dev/null
+        echo "basename: ${dirpath##*/}"
+        echo "dirname : ${dirpath%/*}"
+        prj_file=$(find "$1" -name *.sublime-project | head -1)
+        if [ ! -f "${prj_file}" ]; then
+            prj_file="${dirpath%/*}/${dirpath##*/}.sublime-project"
+            if [ ! -f "${prj_file}" ]; then
+                prj_file=""
+            fi
+        fi
+        if [ -f "${prj_file}" ]; then
+            echo "Project file: ${prj_file}"
+            read -p "Do you want to open project file? " yn
+            case $yn in
+                [Yy]* ) "${SUBL}" "${prj_file}"; exit;;
+            esac
+        fi
+    fi
+fi
+echo "default behavior"
+"${SUBL}" "$@"
+#"${SUBL}" -n
+#echo "New ST3 window"
+#sleep 3
+#"${SUBL}" -a "$@"
+#echo "Added $@ to new window"
 
