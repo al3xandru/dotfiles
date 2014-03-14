@@ -7,7 +7,7 @@ NOTESDIR_3="${HOME}/Dropbox/ka/nvall"
 # extension used for your notes
 NOTESEXT="md"
 # the prefix you use to separate "Question" notes
-NOTESPRE="¿-"
+NOTESPRE="qq-"
 # editor command to use for modifying answers
 EDITOR="bbedit"
 
