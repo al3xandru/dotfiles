@@ -20,16 +20,6 @@ RATINGS = {
   '4'  : u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**'
 }
 
-#RATINGS = {
-#  '': '-',
-#  '1': '1 (bad. soo bad)',
-#  '2': '_2 (meh)_',
-#  '3': '*3 (good. i could recommend it)*',
-#  '+3': '**3++ (excellent. i could always see it again)**',
-#  '3+': '**3++ (excellent. i could always see it again)**',
-#  '3++': '**3++ (excellent. i could always see it again)**',
-#  '4': '**3++ (excellent. i could always see it again)**'
-#}
 
 def prepare_title(title):
     words = title.lower().split(' ')
@@ -44,6 +34,7 @@ def prepare_title(title):
 # http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=lost
 def imdbapi_data(title, year=None):
   # first try http://imdbapi.org
+  return {}, 0
   short_title = prepare_title(title)
   params = {
     'type': 'json',
@@ -63,6 +54,20 @@ def imdbapi_data(title, year=None):
     if response.status == 200:
       data = response.read()
       imdb_data = json.loads(data)
+      if isinstance(imdb_data, dict):
+        return imdb_data, 1
+      else:
+        res = None
+        max_match = 0
+        for d in imdb_data:
+          match = match_len(title, d.get('title', ''))
+          if year and year == d.get('year', 0):
+            match += 1
+          if match > max_match:
+            res = d
+            max_match = match
+        if max_match > 0:
+          return res, 1
   except ValueError:
     pass
   except socket.error:
@@ -70,37 +75,8 @@ def imdbapi_data(title, year=None):
   finally:
     if conn:
       conn.close()
-  if imdb_data:
-    if isinstance(imdb_data, dict):
-      #print("imdbapi: 1 result")
-      return imdb_data, 1
-    else:
-      # print("imdbapi: %s results" % len(imdb_data))
-      # print("imdbapi: %s" % imdb_data[0])
-      res = None
-      max_match = 0
-      for d in imdb_data:
-        match = match_len(title, d.get('title', ''))
-        if year and year == d.get('year', 0):
-          match += 1
-        # print("imdbapi: %s, match: %s" % (d.get('title', '').encode('utf8'), match))
-        if match > max_match:
-          res = d
-          max_match = match
-      if max_match > 0:
-        #print("imdb result:", res.get('title').encode('utf8'), "match:", max_match)
-        return res, 1
   
   return {}, 0
-
-def match_len(in_title, movie_title):
-  intitle_set = set()
-  movtitle_set = set()
-  for w in in_title.lower().split():
-    intitle_set.add(w)
-  for w in movie_title.lower().split():
-    movtitle_set.add(w)
-  return len(movtitle_set.intersection(intitle_set)) 
 
 def omdbapi_data(title, year=None):
   # now let's try www.omdbapi.com
@@ -193,9 +169,21 @@ def find_actors(d1, d2, d3):
         uniques[a] = True
   return actors
 
+def match_len(in_title, movie_title):
+  intitle_set = set()
+  movtitle_set = set()
+  for w in in_title.lower().split():
+    intitle_set.add(w)
+  for w in movie_title.lower().split():
+    movtitle_set.add(w)
+  return len(movtitle_set.intersection(intitle_set)) 
+
 def main(title, year=None, my_rating=""):
+  print("Trying: imdbapi.org")
   imdbapid, r1 = imdbapi_data(title, year)
+  print("Trying: www.omdbapi.com")
   omdbapid, r2 = omdbapi_data(title, year)
+  print("Trying: rottentomatoes.com")
   rottend, r3 = rotten_data(title, year)
   data = {
     'title': imdbapid.get('title', '') or rottend.get('title', '') or omdbapid.get('Title', '') ,
@@ -259,7 +247,7 @@ def print_output(data):
   print("")
   print("* * * * * * * * * *")
   print("")
-  print("### Plot ")
+  print("### Plot ###")
   print("")
   print(data['plot'].encode('utf8'))
   print("")
@@ -299,7 +287,6 @@ if __name__ == '__main__':
   main(title, year, my_rating)
 
 
-
 # Sample imdbapi.org result:
 #
 # [
@@ -311,4 +298,6 @@ if __name__ == '__main__':
 # Sample omdbapi.com:
 #
 # {"Title":"Lost Girl","Year":"2010","Rated":"18","Released":"12 Sep 2010","Runtime":"1 h","Genre":"Crime, Fantasy, Horror","Director":"N/A","Writer":"M.A. Lovretta","Actors":"Anna Silk, Kris Holden-Ried, Ksenia Solo, Richard Howland","Plot":"Lost Girl focuses on the gorgeous and charismatic Bo, a supernatural being called a succubus who feeds on the energy of humans...","Poster":"http://ia.media-imdb.com/images/M/MV5BMTY4NzA1MDAyMF5BMl5BanBnXkFtZTcwMzQ4MTkxNA@@._V1_SX300.jpg","imdbRating":"7.7","imdbVotes":"7,203","imdbID":"tt1429449","Response":"True"}
-#
+
+
+# vim: ts=2 shiftwidth=2:
