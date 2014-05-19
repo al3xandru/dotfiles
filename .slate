@@ -49,6 +49,6 @@ bind up:alt;cmd;ctrl    nudge +0  -25
 bind down:alt;cmd;ctrl  nudge +0  +25
 
 # Throw Bindings
-bind 0:cmd;ctrl     throw 1
-bind 9:cmd;ctrl     throw 0
+bind 0:cmd;ctrl     throw 0
+bind 9:cmd;ctrl     throw 1
 
