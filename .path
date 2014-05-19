@@ -8,6 +8,9 @@ if [ -d "$HOME/.rvm" ]; then
     PATH="$HOME/.rvm/bin:$PATH"
 fi
 
+if [ "$GOPATH" != "" ]; then
+    PATH="$GOPATH/bin:$PATH"
+fi
 if [ "$GRADLE_HOME" != "" ]; then
     PATH="$GRADLE_HOME/bin:$PATH"
 fi

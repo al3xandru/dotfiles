@@ -23,7 +23,9 @@ fi
 #
 # ENV VARIABLES
 #
-
+if [ -z "$GOPATH" ]; then
+    export GOPATH=$HOME/.golang
+fi
 # JVM
 # Mac locations:
 # - /System/Library/Java/JavaVirtualMachines/
@@ -61,16 +63,14 @@ fi
 function _findfirst {
     local base_dir="$1"
     local arg="$2"
-    if [ -d "$base_dir" ]; then
-        case "$_OSTYPE" in
-            "Lin" )
-                echo $(find $base_dir -maxdepth 1 -name $arg -type d)
-                ;;
-            "Mac" )
-                echo $(find $base_dir -depth 1 -name $arg -type d | sort -r | head -1)
-                ;;
-        esac
-    fi
+    case "$_OSTYPE" in
+        "Lin" )
+            echo $(find $base_dir -maxdepth 1 -name $arg -type d)
+            ;;
+        "Mac" )
+            echo $(find $base_dir -depth 1 -name $arg -type d | sort -r | head -1)
+            ;;
+    esac
 }
 
 if [ -z "$ANT_HOME" ]; then
