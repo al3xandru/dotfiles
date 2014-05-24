@@ -183,3 +183,22 @@ function imgsize() {
         echo "Image file not found"
     fi
 }
+
+# GOPATH
+function gopath {
+    if [ -z "$1" ]; then
+        export GOPATH=~/.golang
+    else
+        local dirn
+        if [ -d "$1" ]; then
+            if [ "$1" = "." ]; then
+                dirn=$(pwd)
+            else
+                dirn=$(cd $1; pwd)
+            fi
+            export GOPATH=${dirn}:$GOPATH
+            export PATH=${dirn}/bin:$PATH
+        fi
+    fi
+    go env
+}
