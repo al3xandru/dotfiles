@@ -288,7 +288,7 @@ let g:solarized_contrast="high"
 
 
 Bundle 'edsono/vim-matchit'
-Bundle 'tpope/fugitive'
+Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
 
 

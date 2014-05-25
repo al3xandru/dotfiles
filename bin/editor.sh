@@ -10,15 +10,20 @@ if [ -x "/usr/local/bin/mmdc" ]; then
 else
     MARKDOWN_CMD="$VIM_CMD"
 fi
-if [ -x "/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl" ]; then
-    ED_CMD="/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl"
+if [ -x "/usr/local/bin/atom" ]; then
+    ED_CMD="/usr/local/bin/atom"
 else
-    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
-        ED_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
-    else
-        ED_CMD="$VIM_CMD"
-    fi
+    ED_CMD="$VIM_CMD"
 fi
+#if [ -x "/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl" ]; then
+    #ED_CMD="/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl"
+#else
+    #if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
+        #ED_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
+    #else
+        #ED_CMD="$VIM_CMD"
+    #fi
+#fi
 #if [ -x "/usr/local/bin/bbedit" ]; then
     #BBEDIT_CMD="/usr/local/bin/bbedit"
 #else
