@@ -1,4 +1,4 @@
-#!/usr/local/env python
+#!/usr/bin/env python
 
 import argparse
 import codecs
@@ -15,11 +15,12 @@ FILE_EXT = '.md'
 SAVE_DIR = os.path.expanduser('~/Dropbox/ka/nvall')
 SEARCH_DIRS = (SAVE_DIR, os.path.expanduser('~/Dropbox/ka/knarc/Files'))
 
-def main(action, args):
+def main(action, args, output='text'):
 	if action == 'add':
 		add(args)
 	else:
-		search(args)
+		results = search(args)
+		output_results(output, results, args)
 
 def add(args):
 	new_file = os.path.join(SAVE_DIR, "%s.md" % ' '.join(args))
@@ -51,28 +52,62 @@ def search(args):
 	if DEBUG:
 		print "[DEBUG]: %s" % cmd
 	results = subprocess.check_output(cmd)
-	if results:
-		output_results(results)
-	else:
-		url = "nvalt://find/qq-%s" % urllib.quote(' '.join(args))
+
+	return results
+
+def output_results(outformat, results, query):
+	if outformat == 'text':
+		output_as_text(results, query)
+	elif outformat == 'alfred':
+		output_as_xml(results, query)
+	elif outformat == 'launchbar':
+		output_as_list(results, query)
+
+
+def output_as_text(results, query):
+	if not results:
+		print "Tough question... nothing :-("
+		return
+
+	i = 1
+	for line in results.splitlines(False):
+		bname = os.path.basename(line)[:-len(FILE_EXT)]
+		question = bname[len(FILE_PREFIX):]
+		with codecs.open(line, 'r', 'utf8') as fin:
+			for li in fin:
+				if li.strip():
+					break
+		print("%s. %s?\n[%s]\n%s" % (i, question, line, li))
+		i += 1
+
+
+def output_as_list(results, query):
+	if not results:
+		print "Tough question..."
+	for line in results.splitlines(False):
+		print line
+
+def output_as_xml(results, query):
+	if not results:
+		url = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
 		root = ET.Element('items')
 		item = ET.SubElement(root, 'item',
 			{'uid': 'notfound', 'arg': url, 'valid': 'yes'})
 		ET.SubElement(item, 'title').text = u'Tough question...'
 		ET.SubElement(item, 'subtitle').text = u'Create an answer'
 		ET.SubElement(item, 'icon').text = u'qq.png'
-		print ET.tostring(root).encode('utf8')
+		print(ET.tostring(root).encode('utf8'))
+		return
 
-def output_results(result_output):
 	root = ET.Element('items')
 
 	xml_result = u""
 	i = 0
-	for line in result_output.splitlines(False):
+	for line in results.splitlines(False):
 		bname = os.path.basename(line)[:-len(FILE_EXT)]
 		question = bname[len(FILE_PREFIX):]
 		url = "nvalt://find/%s" % urllib.quote(bname)
-		item = ET.SubElement(root, 'item', 
+		item = ET.SubElement(root, 'item',
 			{'uid': question.replace(' ', ''), 'arg': url, 'valid': 'yes'})
 		ET.SubElement(item, 'title').text = question + '?'
 		with codecs.open(line, 'r', 'utf8') as fin:
@@ -85,12 +120,13 @@ def output_results(result_output):
 	print ET.tostring(root).encode('utf8')
 
 if __name__ == '__main__':
-	if len(sys.argv) < 2:
-		print "ERROR: Usage %s [-a|--add] question" % sys.argv[0]
-		sys.exit(1)
-	action = 'search'
-	idx = 1
-	if sys.argv[1] in ('-a', '--add'):
-		action = 'add'
-		idx = 2
-	main(action, sys.argv[idx:])
+	parser = argparse.ArgumentParser(description='Quick Question')
+	parser.add_argument('-a', '--add', action='store_true')
+	parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred'])
+	parser.add_argument('query', nargs='*')
+	options = parser.parse_args()
+
+	action = 'add' if options.add else 'search'
+	outputf = options.output or 'text'
+
+	main(action, options.query, outputf)
