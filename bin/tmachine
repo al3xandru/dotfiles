@@ -12,13 +12,14 @@ backup () {
 }
 
 
-if [ "$HOSTNAME" = "mandelbrot.*" ]; then
+if [[ "$HOSTNAME" = mandelbrot.* ]]; then
     BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
-elif [ "$HOSTNAME" = "macky.*" ]; then 
+elif [[ "$HOSTNAME" = macky.* ]]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
-elif [ "$HOSTNAME" = "leibniz.*" ]; then
+elif [[ "$HOSTNAME" = leibniz.* ]]; then
     BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
 else
+    echo "Unknown machine name: ${HOSTNAME}"
     exit 1
 fi
 TODAY=`date +"%Y%m%d"`
