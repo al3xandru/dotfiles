@@ -12,11 +12,11 @@ backup () {
 }
 
 
-if [ "$HOSTNAME" = "mandelbrot.local" ]; then
+if [ "$HOSTNAME" = "mandelbrot.*" ]; then
     BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
-elif [ "$HOSTNAME" = "macky.local" ]; then 
+elif [ "$HOSTNAME" = "macky.*" ]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
-elif [ "$HOSTNAME" = "leibniz.local" ]; then
+elif [ "$HOSTNAME" = "leibniz.*" ]; then
     BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
 else
     exit 1
