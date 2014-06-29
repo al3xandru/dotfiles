@@ -12,7 +12,7 @@ CONF_FILES=("${HOME}"/.MacOSX-renamed/environment.donotuse
 )
 
 if [ -z "$TARGET_DIR" ]; then
-    TARGET_DIR="${HOME}/Dropbox/Application Support/configfiles"
+    TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/configfiles"
 fi
 MACHINE_NAME=`hostname`
 
