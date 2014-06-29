@@ -247,7 +247,7 @@ def print_output(data):
   print("")
   print("* * * * * * * * * *")
   print("")
-  print("### Plot ###")
+  print("### Plot")
   print("")
   print(data['plot'].encode('utf8'))
   print("")
