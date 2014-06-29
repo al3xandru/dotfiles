@@ -44,3 +44,5 @@ done
 # of duplicates in the Open With submenu.
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
 alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed -r'
+# human logger in audo
+alias do!="python $HOME/workspace/miscellaneous/audo/hulogger.py"
