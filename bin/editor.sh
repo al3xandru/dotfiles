@@ -10,39 +10,45 @@ if [ -x "/usr/local/bin/mmdc" ]; then
 else
     MARKDOWN_CMD="$VIM_CMD"
 fi
-if [ -x "/usr/local/bin/atom" ]; then
-    ED_CMD="/usr/local/bin/atom"
-else
-    ED_CMD="$VIM_CMD"
+if [ -x "/usr/local/bin/bbedit" ]; then
+    BBEDIT_CMD="/usr/local/bin/bbedit"
 fi
-#if [ -x "/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl" ]; then
-    #ED_CMD="/Applications/Sublime Text3 3.app/Contents/SharedSupport/bin/subl"
-#else
-    #if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
-        #ED_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
-    #else
-        #ED_CMD="$VIM_CMD"
-    #fi
-#fi
-#if [ -x "/usr/local/bin/bbedit" ]; then
-    #BBEDIT_CMD="/usr/local/bin/bbedit"
-#else
-    #BBEDIT_CMD="$VIM_CMD"
-#fi
+if [ -x "/usr/local/bin/atom" ]; then
+    ATOM_CMD="/usr/local/bin/atom"
+else
+    ATOM_CMD="$VIM_CMD"
+fi
+if [ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]; then
+    SUBL_CMD="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+else
+    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
+        SUBL_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
+    else
+        if [ -x "/Applications/ST2.app/Contents/SharedSupport/bin/subl" ]; then
+            SUBL_CMD="/Applications/ST2.app/Contents/SharedSupport/bin/subl"
+        fi
+    fi
+fi
+if [ -z "$BBEDIT_CMD" ]; then
+    TXT_ED_CMD="$VIM_CMD"
+else
+    TXT_ED_CMD="$BBEDIT_CMD"
+fi
+ED_CMD="$SUBL_CMD"
 case "$1" in
     *_EDITMSG|*MERGE_MSG|*_TAGMSG )
-        $VIM_CMD "$1"
+        ${VIM_CMD} "$1"
         ;;
     *crontab.* )
-        $VIM_CMD "$1"
+        ${VIM_CMD} "$1"
         ;;
     *.md|*.markdown|*.mdown|*.mkdown )
-        $MARKDOWN_CMD "$1"
+        ${MARKDOWN_CMD} "$1"
         ;;
     *.txt )
-        $ED_CMD "$1"
+        ${TXT_ED_CMD} "$1"
         ;;
     * )
-        $ED_CMD -w "$1"
+        "$ED_CMD" -w "$1"
         ;;
 esac
