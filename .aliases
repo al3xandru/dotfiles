@@ -14,7 +14,7 @@ alias lt='ls -AlFpt ${colorflag}'
 alias m='mvim'
 alias t='tvim'
 alias mmc='mmdc'
-
+alias e="$EDITOR"
 # IP addresses
 alias localip="ipconfig getifaddr en1"
 # alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
@@ -45,4 +45,4 @@ done
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
 alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed -r'
 # human logger in audo
-alias do!="python $HOME/workspace/miscellaneous/audo/humlog.py"
+alias do!="python $HOME/workspace/miscellaneous/audo/hulogger.py"
