@@ -1,12 +1,34 @@
 #!/bin/bash
-conflicted_files=`find ~/Dropbox \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \)`
-#echo -n "'$conflicted_files'"
-#count_files=`echo -n $conflicted_files | wc -l`
-if [ "$conflicted_files" != "" ]; then
-    echo "Conflicted files:"
-    echo "$conflicted_files"
-    read -p "Do you want to delete them? (y/n): "
-    if [ $REPLY = "y" ]; then
-        find ~/Dropbox \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \) -exec rm -vf {} \;
-    fi
+DROPBOXDIR="$HOME/Dropbox"
+
+function notify {
+	say "Conflicted files in Dropbox"
+}
+
+function find_conflicts {
+	echo "find_conflicts"
+	if [ `find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -regex ".*/.dropbox.cache/.*" \) | wc -l ` -gt 0 ]; then 
+		notify
+	fi
+}
+
+function clean_conflicts {
+	echo "clean_conflicts"
+	conflicted_files=`find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \)`
+	#echo -n "'$conflicted_files'"
+	#count_files=`echo -n $conflicted_files | wc -l`
+	if [ "$conflicted_files" != "" ]; then
+	    echo "Conflicted files:"
+	    echo "$conflicted_files"
+	    read -p "Do you want to delete conflict files? (y/n): "
+	    if [ $REPLY = "y" ]; then
+	        find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \) -exec rm -vf {} \;
+	    fi
+	fi	
+}
+
+if [ "$1" == "-s" ]; then
+	find_conflicts
+else
+	clean_conflicts
 fi

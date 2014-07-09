@@ -5,36 +5,42 @@ if [ -x "/usr/local/bin/vim" ]; then
 else
     VIM_CMD="/usr/bin/vim"
 fi
+
+# currently not used
+MVIM_CMD=$(which mvim)
+if [ -z "$MVIM_CMD" ]; then
+	MVIM_CMD="$VIM_CMD"
+fi
+
 if [ -x "/usr/local/bin/mmdc" ]; then
     MARKDOWN_CMD="/usr/local/bin/mmdc"
 else
     MARKDOWN_CMD="$VIM_CMD"
 fi
+
 if [ -x "/usr/local/bin/bbedit" ]; then
     BBEDIT_CMD="/usr/local/bin/bbedit"
 fi
+
 if [ -x "/usr/local/bin/atom" ]; then
     ATOM_CMD="/usr/local/bin/atom"
 else
     ATOM_CMD="$VIM_CMD"
 fi
-if [ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]; then
-    SUBL_CMD="/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
-else
-    if [ -x "/Applications/ST3.app/Contents/SharedSupport/bin/subl" ]; then
-        SUBL_CMD="/Applications/ST3.app/Contents/SharedSupport/bin/subl"
-    else
-        if [ -x "/Applications/ST2.app/Contents/SharedSupport/bin/subl" ]; then
-            SUBL_CMD="/Applications/ST2.app/Contents/SharedSupport/bin/subl"
-        fi
-    fi
-fi
+
 if [ -z "$BBEDIT_CMD" ]; then
     TXT_ED_CMD="$VIM_CMD"
 else
     TXT_ED_CMD="$BBEDIT_CMD"
 fi
-ED_CMD="$SUBL_CMD"
+
+SUBL_CMD=$(which subl)
+if [ -z "$SUBL_CMD" ]; then
+	ED_CMD="$TXT_ED_CMD"
+else
+	ED_CMD="$SUBL_CMD"
+fi
+
 case "$1" in
     *_EDITMSG|*MERGE_MSG|*_TAGMSG )
         ${VIM_CMD} "$1"
@@ -49,6 +55,6 @@ case "$1" in
         ${TXT_ED_CMD} "$1"
         ;;
     * )
-        "$ED_CMD" -w "$1"
+        "$ED_CMD" "$1"
         ;;
 esac
