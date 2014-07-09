@@ -51,7 +51,7 @@ case "$1" in
     *.md|*.markdown|*.mdown|*.mkdown )
         ${MARKDOWN_CMD} "$1"
         ;;
-    *.txt )
+    *.txt|*.log )
         ${TXT_ED_CMD} "$1"
         ;;
     * )
