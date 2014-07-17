@@ -17,8 +17,8 @@ if [ $# = 1 ]; then
         pushd "$1" > /dev/null
         dirpath=$(pwd)
         popd > /dev/null
-        echo "basename: ${dirpath##*/}"
-        echo "dirname : ${dirpath%/*}"
+        # echo "basename: ${dirpath##*/}"
+        # echo "dirname : ${dirpath%/*}"
         prj_file=$(find "$1" -name *.sublime-project | head -1)
         if [ ! -f "${prj_file}" ]; then
             prj_file="${dirpath%/*}/${dirpath##*/}.sublime-project"
@@ -30,10 +30,10 @@ if [ $# = 1 ]; then
             echo "Project file: ${prj_file}"
             read -p "Do you want to open project file? " yn
             case $yn in
-                [Yy]* ) "${SUBL}" "${prj_file}"; exit;;
+                [Yy]* ) "${SUBL}" --project "${prj_file}"; exit;;
             esac
         fi
     fi
 fi
 # echo "default behavior"
-"${SUBL}" "$@"
+"${SUBL}" -n "$@"
