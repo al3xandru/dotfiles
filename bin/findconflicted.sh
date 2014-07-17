@@ -6,21 +6,19 @@ function notify {
 }
 
 function find_conflicts {
-	echo "find_conflicts"
 	if [ `find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -regex ".*/.dropbox.cache/.*" \) | wc -l ` -gt 0 ]; then 
 		notify
 	fi
 }
 
 function clean_conflicts {
-	echo "clean_conflicts"
 	conflicted_files=`find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \)`
 	#echo -n "'$conflicted_files'"
 	#count_files=`echo -n $conflicted_files | wc -l`
 	if [ "$conflicted_files" != "" ]; then
-	    echo "Conflicted files:"
+	    echo "There are some conflicted files:"
 	    echo "$conflicted_files"
-	    read -p "Do you want to delete conflict files? (y/n): "
+	    read -p "Do you want to delete these conflict files? (y/n): "
 	    if [ $REPLY = "y" ]; then
 	        find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \) -exec rm -vf {} \;
 	    fi
