@@ -36,4 +36,4 @@ if [ $# = 1 ]; then
     fi
 fi
 # echo "default behavior"
-"${SUBL}" -n "$@"
+"${SUBL}" -na "$@"

@@ -6,7 +6,7 @@
 [color]
 	ui = auto
 [core]
-	excludesfile = /Users/alex/.gitignore_global
+	excludesfile = /Users/apopescu/.gitignore_global
 	quotepath = false
 [alias]
     a = add
@@ -39,7 +39,7 @@
     loggd = log --pretty=oneline --abbrev-commit --graph --decorate
     logf = log --pretty=fuller
     origin = remote show origin
-
+    findalias = "!grepalias() { git config --global --get-regexp alias | grep -i \"$1\" | awk -v nr=2 '{sub(/^alias\\./,\"\")};{printf \"\\033[31m%_10s\\033[1;35m\", $1};{sep=FS};{for (x=nr; x<=NF; x++) {printf \"%s%s\", sep, $x; }; print \"\\033[0;39m\"}'; }; grepalias"
 #    dx = !git diff | mate
 #    dv = !git diff | vim
 #    ph = push

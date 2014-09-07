@@ -3,7 +3,7 @@
 # notes folder, for note creation and limiting searches
 NOTESDIR_1="${HOME}/Dropbox/ka/knarc/Files"
 #NOTESDIR_2="${HOME}/Dropbox/ka/rethinkb/Files"
-NOTESDIR_3="${HOME}/Dropbox/ka/nvall"
+NOTESDIR_3="${HOME}/Dropbox/Dox/nvall"
 # extension used for your notes
 NOTESEXT="md"
 # the prefix you use to separate "Question" notes

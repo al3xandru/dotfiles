@@ -11,6 +11,8 @@ fi
 alias ll='ls -AlFp ${colorflag}'
 alias l='ls -1AFp ${colorflag}'
 alias lt='ls -AlFpt ${colorflag}'
+alias grep='grep --color'
+alias tree='tree -C'
 alias m='mvim'
 alias t='tvim'
 alias mmc='mmdc'
@@ -22,8 +24,9 @@ alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 
 # Directories:
-alias ..="cd .."
-alias ...="cd .. ; cd .."
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 
 # Jump
 alias jump="cj"
@@ -45,4 +48,4 @@ done
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
 alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed -r'
 # human logger in audo
-alias do!="python $HOME/workspace/miscellaneous/audo/hulogger.py"
+alias todo="python $HOME/workspace/miscellaneous/audo/humlog.py"

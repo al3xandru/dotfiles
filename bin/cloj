@@ -1,5 +1,5 @@
 #!/bin/bash
-CLJ_JAR=clojure-1.5.1.jar
+CLJ_JAR=clojure-1.6.0.jar
 if [ -a "$CLOJURE_HOME/jline-0.9.94.jar" ]; then
     echo "Clojure REPL (jline)"
     java -cp $CLOJURE_HOME/jline-0.9.94.jar:$CLOJURE_HOME/$CLJ_JAR jline.ConsoleRunner clojure.main

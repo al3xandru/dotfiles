@@ -9,10 +9,11 @@ import urllib
 
 from xml.etree import ElementTree as ET
 
+
 DEBUG = False
 FILE_PREFIX = 'qq-'
 FILE_EXT = '.md'
-SAVE_DIR = os.path.expanduser('~/Dropbox/ka/nvall')
+SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/nvall')
 SEARCH_DIRS = (SAVE_DIR, os.path.expanduser('~/Dropbox/ka/knarc/Files'))
 
 def main(action, args, output='text'):
@@ -59,9 +60,9 @@ def output_results(outformat, results, query):
 	if outformat == 'text':
 		output_as_text(results, query)
 	elif outformat == 'alfred':
-		output_as_alfred_xml(results, query)
+		output_as_xml(results, query)
 	elif outformat == 'launchbar':
-		output_as_launchbar_xml(results, query)
+		output_as_list(results, query)
 
 
 def output_as_text(results, query):
@@ -81,39 +82,13 @@ def output_as_text(results, query):
 		i += 1
 
 
-def output_as_launchbar_xml(results, query):
+def output_as_list(results, query):
 	if not results:
-		root = ET.Element('items')
-		item = ET.SubElement(root, 'item')
-		ET.SubElement(item, 'title').text = u'Tough question...'
-		ET.SubElement(item, 'subtitle').text = u'Create an answer'
-		ET.SubElement(item, 'icon').text = u'qq.png'
-		ET.SubElement(item, 'url').text = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
-		print(ET.tostring(root).encode('utf8'))
-		return
-
-	root = ET.Element('items')
-
-	i = 0
+		print "Tough question..."
 	for line in results.splitlines(False):
-		bname = os.path.basename(line)[:-len(FILE_EXT)]
-		question = bname[len(FILE_PREFIX):]
+		print line
 
-		item = ET.SubElement(root, 'item')
-		ET.SubElement(item,	'title').text = question + '?'
-		ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.quote(bname)
-		ET.SubElement(item, 'path').text = line
-		ET.SubElement(item, 'icon').text = u'qq.png'
-		with codecs.open(line, 'r', 'utf8') as fin:
-			for li in fin:
-				if li.strip():
-					ET.SubElement(item, 'subtitle').text = li.strip()
-					break
-
-		i += 1
-	print ET.tostring(root).encode('utf8')
-
-def output_as_alfred_xml(results, query):
+def output_as_xml(results, query):
 	if not results:
 		url = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
 		root = ET.Element('items')

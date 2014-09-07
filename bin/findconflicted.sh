@@ -2,7 +2,8 @@
 DROPBOXDIR="$HOME/Dropbox"
 
 function notify {
-	say "Conflicted files in Dropbox"
+	# say "Conflicted files in Dropbox"
+    echo
 }
 
 function find_conflicts {
