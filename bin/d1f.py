@@ -45,6 +45,11 @@ def get_link(filename):
                 title = li.strip()[8:]
                 break
 
+    if not title:
+        title = "Surprise"
+    elif title.strip().startswith('#'):
+        title = title[title.find(' ')+1:]
+
     return bname, url, title
 
 def output_results(output, results, query):
@@ -67,8 +72,6 @@ def output_as_markdown(results, query):
         _, url, title = get_link(line)
         if not title:
             print "<%s>" % url
-        elif title.strip().startswith('#'):
-            print "[%s](%s)" % (title[title.find(' ')+1:], url)
         else:
             print "[%s](%s)" % (title, url)
 
@@ -99,32 +102,23 @@ def output_as_launchbar_xml(results, query):
     if not results:
         root = ET.Element('items')
         item = ET.SubElement(root, 'item')
-        ET.SubElement(item, 'title').text = u'Tough question...'
-        ET.SubElement(item, 'subtitle').text = u'Create an answer'
-        ET.SubElement(item, 'icon').text = u'qq.png'
-        ET.SubElement(item, 'url').text = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
+        ET.SubElement(item, 'title').text = u'No entries found'
+        ET.SubElement(item, 'subtitle').text = u'Check out all entries'
+        ET.SubElement(item, 'icon').text = u'dayone.png'
+        ET.SubElement(item, 'url').text = "dayone://entries"
         print(ET.tostring(root).encode('utf8'))
         return
 
     root = ET.Element('items')
 
-    i = 0
     for line in results.splitlines(False):
-        bname = os.path.basename(line)[:-len(FILE_EXT)]
-        question = bname[len(FILE_PREFIX):]
+        file_id, url, title = get_link(line)
 
         item = ET.SubElement(root, 'item')
-        ET.SubElement(item, 'title').text = question + '?'
-        ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.quote(bname)
-        ET.SubElement(item, 'path').text = line
-        ET.SubElement(item, 'icon').text = u'qq.png'
-        with codecs.open(line, 'r', 'utf8') as fin:
-            for li in fin:
-                if li.strip():
-                    ET.SubElement(item, 'subtitle').text = li.strip()
-                    break
+        ET.SubElement(item, 'title').text = title
+        ET.SubElement(item, 'url').text = url
+        ET.SubElement(item, 'icon').text = u'dayone.png'
 
-        i += 1
     print ET.tostring(root).encode('utf8')
 
 if __name__ == '__main__':
