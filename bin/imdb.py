@@ -1,11 +1,14 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
+# vim: ts=2:
 from __future__ import print_function
 import httplib
 import json
 import os
 import sys
 import socket
+import subprocess
+import tempfile
 import urllib
 
 
@@ -22,18 +25,21 @@ RATINGS = {
 
 
 def prepare_title(title):
-    words = title.lower().split(' ')
-    swords = []
-    for w in words:
-        if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'who', 'with'):
-            continue
-        swords.append(w)
-    return ' '.join(swords)    
+  words = title.lower().split(' ')
+  swords = []
+  for w in words:
+    if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'who', 'with'):
+      continue
+    swords.append(w)
+  return ' '.join(swords)    
 
 # http://stackoverflow.com/questions/1966503/does-imdb-provide-an-api
 # http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=lost
 def imdbapi_data(title, year=None):
-  # first try http://imdbapi.org
+  """ http://imdbapi.org
+
+  This website has been down for a while.
+  """
   return {}, 0
   short_title = prepare_title(title)
   params = {
@@ -44,8 +50,10 @@ def imdbapi_data(title, year=None):
   }
   if year:
     params['year'] = year
+  
   qs = urllib.urlencode(params)
   imdb_data = {}
+
   conn = None
   try:
     conn = httplib.HTTPConnection("imdbapi.org")
@@ -75,11 +83,12 @@ def imdbapi_data(title, year=None):
   finally:
     if conn:
       conn.close()
-  
+
   return {}, 0
 
+
 def omdbapi_data(title, year=None):
-  # now let's try www.omdbapi.com
+  """ Another service to try is www.omdbapi.com """
   short_title = prepare_title(title)
   imdb_data = {}
   params = {
@@ -90,6 +99,7 @@ def omdbapi_data(title, year=None):
   if year:
     params['y'] = year
   qs = urllib.urlencode(params)
+
   conn = None
   try:
     conn = httplib.HTTPConnection("www.omdbapi.com")
@@ -105,12 +115,13 @@ def omdbapi_data(title, year=None):
       conn.close()
 
   if match_len(title, imdb_data.get('Title', '')) == 0:
-    #os.system("open -a Safari \"http://www.omdbapi.com/?t=%s\"" % urllib.quote_plus(title))
     return {}, 0
-  # print("omdb_data: %s" % imdb_data)
+
   return imdb_data, 1
 
+
 def rotten_data(title, year=None):
+  """ Try RottenTomatoes service """
   short_title = prepare_title(title)
   params = {
     'q': short_title, 
@@ -120,6 +131,7 @@ def rotten_data(title, year=None):
   }
   qs = urllib.urlencode(params)
   rotten_dt = {}
+
   conn = None
   try:
     conn = httplib.HTTPConnection("api.rottentomatoes.com")
@@ -149,6 +161,7 @@ def rotten_data(title, year=None):
 
   return {}, 0
 
+
 def find_actors(d1, d2, d3):
   actors = []
   uniques = {}
@@ -169,6 +182,7 @@ def find_actors(d1, d2, d3):
         uniques[a] = True
   return actors
 
+
 def match_len(in_title, movie_title):
   intitle_set = set()
   movtitle_set = set()
@@ -178,13 +192,15 @@ def match_len(in_title, movie_title):
     movtitle_set.add(w)
   return len(movtitle_set.intersection(intitle_set)) 
 
-def main(title, year=None, my_rating=""):
+
+def main(title, year=None, my_rating="", to_dayone=False):
   print("Trying: imdbapi.org")
   imdbapid, r1 = imdbapi_data(title, year)
   print("Trying: www.omdbapi.com")
   omdbapid, r2 = omdbapi_data(title, year)
   print("Trying: rottentomatoes.com")
   rottend, r3 = rotten_data(title, year)
+
   data = {
     'title': imdbapid.get('title', '') or rottend.get('title', '') or omdbapid.get('Title', '') ,
     'year': year or imdbapid.get('year', '') or rottend.get('year', '') or omdbapid.get('Year'),
@@ -206,67 +222,103 @@ def main(title, year=None, my_rating=""):
     'poster_rotten': rottend.get('posters', {}).get('original')
   }
 
-  print_output(data)
-#  if r1 == 0:
-#    os.system("open -a Safari \"http://www.imdb.com/find?q=%s\"" % urllib.quote_plus(title))
-#  if r3 == 0:
-#    os.system("open -a Safari \"http://www.rottentomatoes.com/search/?search=%s\"" % urllib.quote_plus(title))
+  generate_output(data, to_dayone)
 
-def print_output(data):
-  print(u"# Movie: %s (%s) " % (data['title'], data['year']))
-  print("\n")
-  print("Year :", data['year'], "   ")
-  print("Genre:", ', '.join(data['genre']), "   ")
+  # generate search links if needed
   print("")
-  print("## Ratings ")
-  print("")
-  print("My rating        : %s   " % RATINGS[data.get('my_rating', '')].encode('utf8'))
-  print("IMDB rating      : %s/10   " %  data['imdb_rating'])
-  print("Tomato rating    : %s   " % data['audience_rating'])
-  print("Tomato score     : %s   " % data['audience_score'])
-  print("Critics rating   : %s   " % data['critics_rating'])
-  print("Critics score    : %s   " % data['critics_score'])
-  print("")
+  print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
+  print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
+
+
+def generate_output(data, to_dayone=False):
+  print_to(sys.stdout, data)
+  if to_dayone:
+    tmpf = tempfile.NamedTemporaryFile()
+
+    try:
+      print_to(tmpf, data)
+      cat_cmd = subprocess.Popen(['cat', tmpf.name], stdout=subprocess.PIPE)
+      subprocess.check_call(['/usr/local/bin/dayone', 'new', '-'], stdin=cat_cmd.stdout)
+      cat_cmd.wait()
+    finally:
+      tmpf.close()
+
+
+def print_to(stream, data):
+  """ Write data to the stream. """
+  stream.write(u"# Movie: %s (%s) " % (data['title'], data['year']))
+  stream.write("\n\n")
+  stream.write("Year : %s   \n" % data['year'])
+  stream.write("Genre: %s   \n" % ', '.join(data['genre']))
+  stream.write("\n")
+
+  # Ratings
+  stream.write("## Ratings \n\n")
+  stream.write("My rating        : %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
+  stream.write("IMDB rating      : %s/10   \n" %  data['imdb_rating'])
+  stream.write("Tomato rating    : %s   \n" % data['audience_rating'])
+  stream.write("Tomato score     : %s   \n" % data['audience_score'])
+  stream.write("Critics rating   : %s   \n" % data['critics_rating'])
+  stream.write("Critics score    : %s   \n" % data['critics_score'])
+  stream.write("\n")
+
+  # Links
   if data['imdb_url'] or data['rotten_url']:
-    print("Links:\n")
+    stream.write("Links:\n\n")
     if data['imdb_url']:
-      print("*   <%s>" % data['imdb_url'])
+      stream.write("*   <%s>\n" % data['imdb_url'])
     if data['rotten_url']:
-      print("*   <%s>" % data['rotten_url'])
-  print("")
-  print(u"Critics consensus:\n\n> %s   " % data['critics_consensus'].encode('utf8'))
-  print("")
-  print("* * * * * * * * * * *")
-  print("")
-  print("Directors: ", ', '.join(data['directors']).encode('utf8'))
-  print("")
-  print("Actors :")
-  print("")
+      stream.write("*   <%s>\n" % data['rotten_url'])
+  stream.write("\n")
+
+  # Critics
+  if data['critics_consensus']:
+    stream.write(u"Critics consensus:\n\n> %s   " % data['critics_consensus'].encode('utf8'))
+    stream.write("\n")
+  stream.write("* * * * * * * * * * *")
+  stream.write("\n\n")
+
+  # Director(s) & Actors
+  stream.write("Directors: %s\n\n" % ', '.join(data['directors']).encode('utf8'))
+  stream.write("\n")
+  stream.write("Actors :")
+  stream.write("\n\n")
   for d in data['actors']:
-    print("*   " + d.encode('utf8'))
-  print("")
-  print("* * * * * * * * * *")
-  print("")
-  print("### Plot")
-  print("")
-  print(data['plot'].encode('utf8'))
-  print("")
-  print(data['synopsis'].encode('utf8'))
+    stream.write("*   " + d.encode('utf8') + "\n")
+  stream.write("\n")
+  stream.write("* * * * * * * * * *")
+  stream.write("\n\n")
+
+  # Plot
+  stream.write("### Plot")
+  stream.write("\n\n")
+  stream.write(data['plot'].encode('utf8'))
+  stream.write("\n\n")
+  stream.write(data['synopsis'].encode('utf8'))
+  stream.write("\n\n")
+
+  # Posters 
   if data['poster_imdb']:
-    print("")
-    print("![Poster imdb %s](%s)" % (data['title'], data['poster_imdb']))
+    stream.write("![Poster imdb %s](%s)\n" % (data['title'], data['poster_imdb']))
   if data['poster_rotten']:
-    print("")
-    print("![Poster %s](%s)" % (data['title'], data['poster_rotten']))
-  print("")
+    stream.write("![Poster %s](%s)\n" % (data['title'], data['poster_rotten']))
+  stream.write("\n")
+
+  # Tags
   tags = "#movie:%s" % data['year']
   for g in data['genre']:
     tags += " #movie:%s" % g.lower().replace(' ', '-')
   tags += " #movie"
-  print(tags)
+  stream.write(tags)
+  stream.write("\n")
+
+  # Flush stream
+  stream.flush()
+
 
 if __name__ == '__main__':
   # print("Args: ", sys.argv[1:])
+  to_dayone = False
   year = None
   title_words = []
   my_rating = ""
@@ -280,11 +332,13 @@ if __name__ == '__main__':
         pass
     elif sys.argv[idx].startswith('--rating='):
       my_rating = sys.argv[idx][9:]
+    elif sys.argv[idx] == '--dayone':
+      to_dayone = True
     else:
       title_words.append(sys.argv[idx])
     idx += 1
   title = ' '.join(title_words)
-  main(title, year, my_rating)
+  main(title, year, my_rating, to_dayone)
 
 
 # Sample imdbapi.org result:
