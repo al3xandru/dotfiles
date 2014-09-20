@@ -88,14 +88,13 @@ def output_as_alfred_xml(results, query):
 
     root = ET.Element('items')
 
-    xml_result = u""
-    i = 0
     for line in results.splitlines(False):
         fid, url, title = get_link(line)
         item = ET.SubElement(root, 'item',
             {'uid': fid, 'arg': url, 'valid': 'yes'})
         ET.SubElement(item, 'title').text = title
-        i += 1
+        ET.SubElement(item, 'subtitle').text = url  # os.path.basename(line)[:-len(FILE_EXT)]
+
     print ET.tostring(root).encode('utf8')
 
 def output_as_launchbar_xml(results, query):
@@ -116,6 +115,7 @@ def output_as_launchbar_xml(results, query):
 
         item = ET.SubElement(root, 'item')
         ET.SubElement(item, 'title').text = title
+        ET.SubElement(item, 'subtitle').text = url
         ET.SubElement(item, 'url').text = url
         ET.SubElement(item, 'icon').text = u'dayone.png'
 
