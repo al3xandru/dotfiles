@@ -85,7 +85,8 @@ set selection=exclusive
 if has("gui_macvim")
     set columns=150
     set lines=70
-    set gfn=ProFontX:h10
+    set gfn=ProFontX:h12
+    "set gfn=monofur:h15
     "set gfn=Source\ Code\ Pro:h11
     "set gfn=Inconsolata:h13
     "set gfn=Bitstream\ Vera\ Sans\ Mono:h11
