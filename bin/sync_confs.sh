@@ -1,6 +1,7 @@
 #!/bin/bash
 declare -a CONF_FILES
 CONF_FILES=("${HOME}"/.MacOSX-renamed/environment.donotuse
+    "${HOME}/Library/Application Support/Karabiner/private.xml"
     "${HOME}"/"Library/Application Support/LaunchBar/Configuration.plist"
     "${HOME}"/"Library/Application Support/LaunchBar/CustomShortcuts.plist"
     "${HOME}"/"Library/Application Support/BetterTouchTool/bttdata2"
