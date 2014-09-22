@@ -12,6 +12,7 @@ do
 done
 
 SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
+"${SUBL}" -b
 if [ $# = 1 ]; then
     if [ -d "$1" ]; then
         pushd "$1" > /dev/null
