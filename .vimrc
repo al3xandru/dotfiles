@@ -94,8 +94,8 @@ if has("gui_macvim")
     "set gfn=Cousine:h11
 end
 if has("gui_gtk2")
-    set columns=150
-    set gfn=SourceCodePro\ 9,Anonymous\ Pro\ 9
+    set columns=120
+    set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
 end
 
 " do not display the menu bar
