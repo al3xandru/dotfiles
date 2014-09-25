@@ -1,0 +1,18 @@
+if [ -x /usr/local/bin/ksdiff ]; then
+    echo "Using ksdiff"
+    ksdiff --partial-changeset --relative-path "$1" -- "$2" "$3"
+else
+    if [ -x /usr/local/bin/bbdiff ]; then
+        bbdiff --wait --resume "$3" "$2"
+    else
+        if [ -x /usr/local/bin/vimdiff ]; then
+            /usr/local/bin/vimdiff "$2" "$3"
+        else
+            if [ -x /usr/bin/vimdiff ]; then
+                /usr/bin/vimdiff "$2" "$3"
+            else
+                diff "$2" "$3"
+            fi
+        fi
+    fi
+fi

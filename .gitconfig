@@ -6,7 +6,7 @@
 [color]
 	ui = auto
 [core]
-	excludesfile = /Users/apopescu/.gitignore_global
+	excludesfile = .gitignore_global
 	quotepath = false
 [alias]
     a = add
@@ -52,12 +52,15 @@
     default = upstream
 
 [diff]
-	tool = Kaleidoscope
+	tool = xdiff
 [difftool]
 	prompt = false
 
 # REMOTE: the new version
 # LOCAL: the old version
+[difftool "xdiff"]
+    cmd = xdiff "$MERGED" "$LOCAL" "$REMOTE"
+    prompt = false
 [difftool "bbdiff"]
     cmd = bbdiff --wait --resume "$REMOTE" "$LOCAL" 
     prompt = false
