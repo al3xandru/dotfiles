@@ -35,7 +35,7 @@ if [ -d "$SYNOLOGY_ITUNES_FOLDER" ]; then
         echo "Create symlink to Synology iTunes folder" 
         ln -s "$SYNOLOGY_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
     else
-        echo "Symlink to external iTunes folder exists"
+        echo "Symlink to external iTunes folder exists $(ls -Gl $ITUNES_TARGET_FOLDER | awk '{print $9 $10 $11}')"
     fi
 else
     # let's see if the external drive is plugged in
@@ -48,10 +48,10 @@ else
             else
                 echo "No local iTunes folder in place" 
             fi
-            echo "Create symlink to external iTunes folder" 
+            echo "Create symlink to external HDD iTunes folder" 
             ln -s "$EXTERNAL_ITUNES_FOLDER" "$ITUNES_TARGET_FOLDER"
         else
-            echo "Symlink to external iTunes folder exists" 
+            echo "Symlink to external iTunes folder exists $(ls -Gl $ITUNES_TARGET_FOLDER | awk '{print $9 $10 $11}')"
         fi
     else
         if [ -L "$ITUNES_TARGET_FOLDER" ]; then
