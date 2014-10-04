@@ -104,7 +104,7 @@ def output_as_launchbar_xml(results, query):
 		item = ET.SubElement(root, 'item')
 		ET.SubElement(item,	'title').text = question + '?'
 		ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.quote(bname)
-		ET.SubElement(item, 'path').text = line
+		# ET.SubElement(item, 'path').text = line
 		ET.SubElement(item, 'icon').text = u'qq.png'
 		with codecs.open(line, 'r', 'utf8') as fin:	
 			for li in fin:

@@ -109,9 +109,9 @@ function dnsswitch() {
         case $1 in 
             aft)
                 echo "Switching DNS to AdFreeTime (aft)"
-                sudo networksetup -setdnsservers Wi-Fi 192.169.71.180 208.110.81.51 192.254.74.201
-                sudo networksetup -setdnsservers "USB Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
-                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
+                sudo networksetup -setdnsservers Wi-Fi 192.169.71.180 208.110.81.51 192.254.74.200
+                sudo networksetup -setdnsservers "USB Ethernet" 192.169.71.180 208.110.81.51 192.254.74.200
+                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 192.169.71.180 208.110.81.51 192.254.74.200
                 ;;
             g)
                 echo "Switching DNS to Google (g)"

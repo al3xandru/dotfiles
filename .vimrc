@@ -343,9 +343,9 @@ let g:peepopen_loaded = 1  "disabled
 " Bundle 'greyblake/vim-preview'
 " Bundle 'waylan/vim-markdown-extra-preview'
 
-Bundle 'jnwhiteh/vim-golang'
-set runtimepath+=$GOROOT/misc/vim
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
+" Bundle 'jnwhiteh/vim-golang'
+" set runtimepath+=$GOROOT/misc/vim
+" autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 " External Git
 Bundle 'git://git.wincent.com/command-t.git'
