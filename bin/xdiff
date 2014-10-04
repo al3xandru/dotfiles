@@ -1,21 +1,27 @@
+if [ $# -eq 2 ]; then
+    OLD=$1
+    NEW=$2
+else
+    OLD=$2
+    NEW=$3
+fi
 if [ -x /usr/local/bin/ksdiff ]; then
-    echo "Using ksdiff"
     if [ $# -eq 2 ]; then
-        ksdiff "$1" "$2"
+        ksdiff "$OLD" "$NEW"
     else
-        ksdiff --partial-changeset --relative-path "$1" -- "$2" "$3"
+        ksdiff --partial-changeset --relative-path "$1" -- "$OLD" "$NEW"
     fi
 else
     if [ -x /usr/local/bin/bbdiff ]; then
-        bbdiff --wait --resume "$3" "$2"
+        bbdiff --wait --resume "$NEW" "$OLD"
     else
         if [ -x /usr/local/bin/vimdiff ]; then
-            /usr/local/bin/vimdiff "$2" "$3"
+            /usr/local/bin/vimdiff "$OLD" "$NEW"
         else
             if [ -x /usr/bin/vimdiff ]; then
-                /usr/bin/vimdiff "$2" "$3"
+                /usr/bin/vimdiff "$OLD" "$NEW"
             else
-                diff "$2" "$3"
+                diff "$OLD" "$NEW"
             fi
         fi
     fi
