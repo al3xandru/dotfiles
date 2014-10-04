@@ -1,6 +1,10 @@
 if [ -x /usr/local/bin/ksdiff ]; then
     echo "Using ksdiff"
-    ksdiff --partial-changeset --relative-path "$1" -- "$2" "$3"
+    if [ $# -eq 2 ]; then
+        ksdiff "$1" "$2"
+    else
+        ksdiff --partial-changeset --relative-path "$1" -- "$2" "$3"
+    fi
 else
     if [ -x /usr/local/bin/bbdiff ]; then
         bbdiff --wait --resume "$3" "$2"
