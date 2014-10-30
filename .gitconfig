@@ -33,6 +33,7 @@
     dth = difftool HEAD
     dtc = difftool --staged
     who = shortlog -s --
+    logl = log --oneline --graph --decorate --all --stat
     logp = log -p
     logd = log --oneline --decorate
     logg = log --graph
