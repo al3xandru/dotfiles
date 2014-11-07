@@ -12,6 +12,7 @@ from xml.etree import ElementTree as ET
 DEBUG = False
 FILE_EXT = '.doentry'
 SEARCH_DIRS = (os.path.expanduser('~/Library/Mobile Documents/5U8NS4GX82~com~dayoneapp~dayone/Documents/Journal_dayone/'), )
+# SEARCH_DIRS = (os.path.expanduser('~/Dropbox/Apps/Day One/Journal_dayone/'), )
 
 def main(query, output='text'):
     results = search(query)
@@ -29,30 +30,49 @@ def search(query):
     if DEBUG:
         print "[DEBUG]: %s" % cmd
     results = subprocess.check_output(cmd)
-
+    if DEBUG:
+        for r in results.splitlines():
+            print "[DEBUG]: %s" % r
     return results
 
 def get_link(filename):
     bname = os.path.basename(filename)[:-len(FILE_EXT)]
     url = "dayone://edit?entryId=%s" % bname
     title = ""
-    with codecs.open(filename, 'r', 'utf8') as fin:
-        title_line_next = False
-        for li in fin:
-            if not title_line_next and (li.strip() and li.lower().find('<key>entry text</key>') != -1):
-                title_line_next = True
-            elif title_line_next:
-                title = li.strip()[8:]
-                break
 
+    if os.path.isdir(filename):
+        return bname, 'n/a', 'dir'
+
+    _, ext = os.path.splitext(filename)
+    if ext == '.jpg':
+        title = os.path.basename(filename)
+    else:
+        with codecs.open(filename, 'r', 'utf8') as fin:
+            title_line_next = False
+            for li in fin:
+                if not title_line_next and (li.strip() and li.lower().find('<key>entry text</key>') != -1):
+                    title_line_next = True
+                elif title_line_next:
+                    _ltitle = li.strip().replace('<string>', '').replace('</string>', '')
+                    if not _ltitle.startswith('<![CDATA['):
+                        title = _ltitle.strip()
+                        break
     if not title:
-        title = "Surprise"
+        title = u'Picture only (?)'
     elif title.strip().startswith('#'):
         title = title[title.find(' ')+1:]
+
 
     return bname, url, title
 
 def output_results(output, results, query):
+    """Support different output formats:
+
+    - Alfred (custom XML)
+    - LaunchBar (custom XML)
+    - Markdown
+    - text
+    """
     if output == 'alfred':
         output_as_alfred_xml(results, query)
     elif output == 'launchbar':
@@ -71,9 +91,9 @@ def output_as_markdown(results, query):
     for line in results.splitlines(False):
         _, url, title = get_link(line)
         if not title:
-            print "<%s>" % url
+            print ("<%s>" % url).encode('utf8')
         else:
-            print "[%s](%s)" % (title, url)
+            print ("[%s](%s)" % (title, url)).encode('utf8')
 
 def output_as_alfred_xml(results, query):
     if not results:
@@ -123,10 +143,13 @@ def output_as_launchbar_xml(results, query):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='DayOne Finder')
-    parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred', 'md', 'markdown'])
+    parser.add_argument('--debug', action='store_true', help='Enable debug details')
+    parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred', 'md', 'markdown'],
+        help='Specifies the output format')
     parser.add_argument('query', nargs='*')
     options = parser.parse_args()
 
+    DEBUG = DEBUG or options.debug
     outputf = options.output or 'text'
 
     main(u' '.join(options.query), outputf)
