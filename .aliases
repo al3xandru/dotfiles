@@ -8,6 +8,8 @@ fi
 #
 # ALIASES
 #
+alias back='cd -'
+alias b='back'
 alias ll='ls -AlFp ${colorflag}'
 alias l='ls -1AFp ${colorflag}'
 alias lt='ls -AlFpt ${colorflag}'
@@ -30,6 +32,7 @@ alias ....='cd ../../..'
 
 # Jump
 alias jump="cj"
+alias j='jump'
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'

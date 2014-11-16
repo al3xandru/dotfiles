@@ -3,6 +3,12 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+# backup a file
+function backup() {
+    cp -v "$1"{,.orig}
+}
+
+# Jump
 # http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
 export MARKPATH=$HOME/.marks
 function cj() {
@@ -28,6 +34,7 @@ _completejump() {
 }
 
 complete -o "default" -o "nospace" -F _completejump cj unmark jump
+# end jump
 
 # Create a new directory and enter it
 function mkd() {
