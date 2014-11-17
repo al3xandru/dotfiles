@@ -11,6 +11,8 @@
 [alias]
     a = add
     br = branch -a
+    b = branch -a
+    nb = checkout -b
     newb = checkout -b
     newbr = checkout -b
     s = status
@@ -34,6 +36,7 @@
     dtc = difftool --staged
     who = shortlog -s --
     logl = log --oneline --graph --decorate --all --stat
+    l = log --oneline --graph --decorate --all --stat
     logp = log -p
     logd = log --oneline --decorate
     logg = log --graph
