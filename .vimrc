@@ -258,7 +258,8 @@ let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 
 
-Bundle 'msanders/snipmate.vim'
+Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
 Bundle 'scrooloose/syntastic'
 
 
@@ -316,8 +317,6 @@ endfunction
 "endif
 
 " OmniCompletion
-" Python alternative to jedi-vim
-" Bundle 'pythoncomplete'
 Bundle 'OmniCppComplete'
 Bundle 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
@@ -349,7 +348,7 @@ filetype plugin indent on " required!
 " let g:autoclose_on = 1
 
 " Bundle 'project.tar.gz'
-
+" Bundle 'msanders/snipmate.vim'
 " Bundle 'thisivan/vim-taglist'
 "let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 "let Tlist_Show_One_File=1
