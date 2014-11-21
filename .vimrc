@@ -204,6 +204,7 @@ if has("autocmd")
     autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
 end
 
 
@@ -289,19 +290,11 @@ Bundle 'edsono/vim-matchit'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
 
-
-Bundle 'thisivan/vim-taglist'
-" Taglist settings
-let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
-let Tlist_Show_One_File=1
-let Tlist_Auto_Highlight_Tag=1
-let Tlist_Use_Right_Window=0
-let Tlist_Close_On_Select=1
-let Tlist_GainFocus_On_ToggleOpen=1
-let Tlist_Sort_Type="name"
-nnoremap <silent> <F9> :TlistToggle<CR>
-map <silent> <Leader>t :TlistToggle<CR>
-
+Bundle 'majutsushi/tagbar'
+let g:tagbar_autoclose = 1
+let g:tagbar_showlinenumbers = 1
+map <silent> <Leader>t :TagbarToggle<CR>
+nmap <silent> <F9> :TagbarToggle<CR>
 
 " Dash.app
 Bundle 'rizzatti/funcoo.vim'
@@ -344,6 +337,8 @@ let g:jedi#completions_command = "<C-Space>"
 "let g:jedi#usages_command = ""
 "let g:jedi#rename_command = ""
 
+Bundle 'VictorDenisov/javacomplete'
+
 Bundle 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
@@ -361,6 +356,17 @@ filetype plugin indent on " required!
 " let g:autoclose_on = 1
 
 " Bundle 'project.tar.gz'
+
+" Bundle 'thisivan/vim-taglist'
+"let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+"let Tlist_Show_One_File=1
+"let Tlist_Auto_Highlight_Tag=1
+"let Tlist_Use_Right_Window=0
+"let Tlist_Close_On_Select=1
+"let Tlist_GainFocus_On_ToggleOpen=1
+"let Tlist_Sort_Type="name"
+"nnoremap <silent> <F9> :TlistToggle<CR>
+"map <silent> <Leader>t :TlistToggle<CR>
 
 " Bundle 'git://git.wincent.com/command-t.git'
 " CommandT settings
