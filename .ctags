@@ -1,0 +1,34 @@
+--recurse=yes
+--tag-relative=yes
+--exclude=.git
+
+--langdef=Clojure
+--langmap=Clojure:.clj
+--regex-clojure=/\([ \t]*create-ns[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/n,namespace/
+--regex-clojure=/\([ \t]*def[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/d,definition/
+--regex-clojure=/\([ \t]*defn-?[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/f,function/
+--regex-clojure=/\([ \t]*defmacro[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/m,macro/
+--regex-clojure=/\([ \t]*definline[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/i,inline/
+--regex-clojure=/\([ \t]*defmulti[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/a,multimethod definition/
+--regex-clojure=/\([ \t]*defmethod[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/b,multimethod instance/
+--regex-clojure=/\([ \t]*defonce[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/c,definition (once)/
+--regex-clojure=/\([ \t]*defstruct[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/s,struct/
+--regex-clojure=/\([ \t]*intern[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/v,intern/
+--regex-clojure=/\([ \t]*ns[ \t]+([-[:alnum:]*+!_:\/.?]+)/\1/n,namespace/
+
+--langmap=php:.engine.inc.module.theme.install.php --PHP-kinds=+cf-v
+
+--langmap=javascript:.js
+--regex-javascript=/^[ \t]*var ([a-zA-Z_$][0-9a-zA-Z_$]*).*$/\1/v,variable/
+--regex-javascript=/^[ \t]*this\.([a-zA-Z_$][0-9a-zA-Z_$]*)[ \t]*=.*$/\1/e,export/
+--regex-javascript=/^[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*):.*$/\1/p,property/
+--regex-javascript=/^\<function\>[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*)/\1/f,function/
+
+--langdef=coffee
+--langmap=coffee:.coffee
+--regex-coffee=/^class @?([a-zA-Z_$][0-9a-zA-Z_$]*)( extends [a-zA-Z_$][0-9a-zA-Z_$]*)?$/\1/c,class/
+--regex-coffee=/^[ \t]*(@|this\.)([a-zA-Z_$][0-9a-zA-Z_$]*).*$/\2/e,export/
+--regex-coffee=/^[ \t]*@?([a-zA-Z_$][0-9a-zA-Z_$]*):.*[-=]>.*$/\1/f,function/
+--regex-coffee=/^[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*)[ \t]+=.*[-=]>.*$/\1/f,function/
+--regex-coffee=/^[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*)[ \t]+=[^->\n]*$/\1/v,variable/
+--regex-coffee=/^[ \t]*@?([a-zA-Z_$][0-9a-zA-Z_$]*):.*$/\1/p,property/

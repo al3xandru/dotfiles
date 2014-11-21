@@ -51,13 +51,21 @@ set hlsearch
 set smartcase
 set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz,*.exe
 
+" 3. tags
+" omnicomplete
+set omnifunc=syntaxcomplete#Complete
+" http://vim.wikia.com/wiki/Make_Vim_completion_popup_menu_work_just_like_in_an_IDE
+set completeopt=longest,menuone
+" http://stackoverflow.com/questions/7722177/how-do-i-map-ctrl-x-ctrl-o-to-ctrl-space-in-terminal-vim
+inoremap <C-Space> <C-x><C-o>
+inoremap <C-@> <C-Space>
+
 " 4. displaying text
 filetype on
 filetype plugin on
 filetype plugin indent on
 
 set listchars=tab:▸\ ,trail:·,eol:¬
-
 
 " 5. syntax, highlighting and spelling"
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
@@ -72,7 +80,6 @@ colorscheme koehler
 
 set thesaurus+=~/.vim/mthesaur.txt
 
-
 " 6. multiple windows "
 set title
 set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %Y]%<\ [a\%03.3b:h\%02.2B]
@@ -85,13 +92,13 @@ set selection=exclusive
 if has("gui_macvim")
     set columns=150
     set lines=70
-    set gfn=ProFontX:h12
-    "set gfn=monofur:h15
-    "set gfn=Source\ Code\ Pro:h11
-    "set gfn=Inconsolata:h13
-    "set gfn=Bitstream\ Vera\ Sans\ Mono:h11
     "set gfn=Anonymous\ Pro:h12
     "set gfn=Cousine:h11
+    "set gfn=Inconsolata:h13
+    set gfn=Input\ Mono:h12
+    "set gfn=monofur:h15
+    "set gfn=ProFontX:h12
+    "set gfn=Source\ Code\ Pro:h11
 end
 if has("gui_gtk2")
     set columns=120
@@ -205,6 +212,7 @@ filetype off " required!
 
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
+Bundle 'gmarik/vundle'
 
 " www.vim.org/scripts
 Bundle 'AutoTag'
@@ -214,14 +222,6 @@ set tags=./tags;/
 Bundle 'HTML-AutoCloseTag'
 " Disable:
 " let b:mapped_auto_closetag = 1
-
-
-Bundle 'AutoClose'
-" Disable:
-let g:autoclose_loaded = 1
-let g:autoclose_on = 1
-
-Bundle 'project.tar.gz'
 
 
 Bundle 'Colour-Sampler-Pack'
@@ -234,11 +234,8 @@ if has("unix")
     endif
 endif
 
-Bundle 'VimClojure'
-let vimclojure#SetupKeyMap = 0
 
 " GitHub
-Bundle 'gmarik/vundle'
 Bundle 'Townk/vim-autoclose'
 " Disable: 
 " let g:loaded_AutoClose = 1
@@ -327,14 +324,55 @@ function! IAWriter()
     " set fullscreen                      " go to fullescreen editing mode
 endfunction
 
-if has("autocmd")
-    " turn-on distraction free writing mode for markdown files
-    " au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-endif
+"if has("autocmd")
+"    " turn-on distraction free writing mode for markdown files
+"    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
+"endif
+
+" OmniCompletion
+" Python alternative to jedi-vim
+" Bundle 'pythoncomplete'
+Bundle 'OmniCppComplete'
+Bundle 'davidhalter/jedi-vim'
+let g:jedi#use_splits_not_buffers = "top"
+let g:jedi#popup_on_dot = 0
+let g:jedi#completions_command = "<C-Space>"
+"let g:jedi#completions_enabled = 0
+"let g:jedi#goto_assignments_command = ""
+"let g:jedi#goto_definitions_command = ""
+"let g:jedi#documentation_command = ""
+"let g:jedi#usages_command = ""
+"let g:jedi#rename_command = ""
+
+Bundle 'VimClojure'
+let vimclojure#SetupKeyMap = 0
+
+Bundle 'jnwhiteh/vim-golang'
+set runtimepath+=$GOROOT/misc/vim
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
+
+filetype plugin indent on " required!
+
+" Old, unused 
+" Bundle 'AutoClose'
+" Disable:
+" let g:autoclose_loaded = 1
+" let g:autoclose_on = 1
+
+" Bundle 'project.tar.gz'
+
+" Bundle 'git://git.wincent.com/command-t.git'
+" CommandT settings
+" disabled; using CtrlP
+" let g:command_t_loaded = 1
+" map <unique> <Leader>t :CommandT<CR>
+" let g:CommandTCancelMap='<C-x>'
 
 " PeepCode
-Bundle 'mrchrisadams/vim-peepopen'
-let g:peepopen_loaded = 1  "disabled
+" Bundle 'mrchrisadams/vim-peepopen'
+" let g:peepopen_loaded = 1  "disabled
+
 " Markdown
 " Bundle 'file:///Users/alex/.dotfiles/...'
 " Bundle 'tpope/vim-markdown'
@@ -343,17 +381,8 @@ let g:peepopen_loaded = 1  "disabled
 " Bundle 'greyblake/vim-preview'
 " Bundle 'waylan/vim-markdown-extra-preview'
 
-" Bundle 'jnwhiteh/vim-golang'
-" set runtimepath+=$GOROOT/misc/vim
-" autocmd FileType go autocmd BufWritePre <buffer> Fmt
-
-" External Git
-Bundle 'git://git.wincent.com/command-t.git'
-" CommandT settings
-" disabled; using CtrlP
-let g:command_t_loaded = 1
-" map <unique> <Leader>t :CommandT<CR>
-" let g:CommandTCancelMap='<C-x>'
-
-
-filetype plugin indent on " required!
+" Bundle 'Vim-JDE'
+" Bundle 'javacomplete'
+"
+" YouCompleteMe breaks MacVim and vim
+" Bundle 'Valloric/YouCompleteMe'
