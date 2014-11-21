@@ -218,11 +218,19 @@ Bundle 'HTML-AutoCloseTag'
 
 
 Bundle 'Colour-Sampler-Pack'
+Bundle '256-grayvim'
+Bundle 'blacklight'
+Bundle 'MochaLatte'
+Bundle 'zefei/cake16'
+Bundle 'blerins/flattown'
+Bundle 'nice/sweater'
+Bundle 'zeis/vim-kolor'
+
 if has("unix")
     let s:uname = system("uname -s")
-    " desert256 dante navajo papayawhip
+    " inkpot liquidcarbon kolor desert256 dante navajo papayawhip
     if s:uname =~ "Darwin"
-        colorscheme inkpot
+        colorscheme kolor
     else
         colorscheme navajo 
     endif
@@ -274,10 +282,10 @@ Bundle 'davidoc/taskpaper.vim'
 
 
 Bundle 'altercation/vim-colors-solarized'
-let g:solarized_termtrans=1
+let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
-let g:solarized_contrast="high"
+let g:solarized_contrast="normal"
 
 
 Bundle 'edsono/vim-matchit'
@@ -338,7 +346,7 @@ Bundle 'jnwhiteh/vim-golang'
 set runtimepath+=$GOROOT/misc/vim
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
-
+" https://github.com/joyent/node/wiki/Vim-Plugins
 filetype plugin indent on " required!
 
 " Old, unused 
