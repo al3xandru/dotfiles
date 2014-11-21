@@ -1,7 +1,9 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
-# vim: ts=2:
+# vim: ts=2 shiftwidth=2:
 from __future__ import print_function
+
+import argparse
 import httplib
 import json
 import os
@@ -10,6 +12,8 @@ import socket
 import subprocess
 import tempfile
 import urllib
+import urllib2
+import urlparse
 
 
 RATINGS = {
@@ -23,6 +27,9 @@ RATINGS = {
   '4'  : u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**'
 }
 
+_API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0', 
+        'alpo', 
+        '808a49948b398609e61e62917bd235a8c8139866')
 
 def prepare_title(title):
   words = title.lower().split(' ')
@@ -193,21 +200,21 @@ def match_len(in_title, movie_title):
   return len(movtitle_set.intersection(intitle_set)) 
 
 
-def main(title, year=None, my_rating="", to_dayone=False):
+def main(title, opts):
   print("Trying: imdbapi.org")
-  imdbapid, r1 = imdbapi_data(title, year)
+  imdbapid, r1 = imdbapi_data(title, opts.year)
   print("Trying: www.omdbapi.com")
-  omdbapid, r2 = omdbapi_data(title, year)
+  omdbapid, r2 = omdbapi_data(title, opts.year)
   print("Trying: rottentomatoes.com")
-  rottend, r3 = rotten_data(title, year)
+  rottend, r3 = rotten_data(title, opts.year)
 
   data = {
     'title': imdbapid.get('title', '') or rottend.get('title', '') or omdbapid.get('Title', '') ,
-    'year': year or imdbapid.get('year', '') or rottend.get('year', '') or omdbapid.get('Year'),
+    'year': opts.year or imdbapid.get('year', '') or rottend.get('year', '') or omdbapid.get('Year'),
     'genre': imdbapid.get('genres', []) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': imdbapid.get('imdb_url', '') or rottend.get('imdb_url', '') or omdbapid.get('imdb_url', ''),
     'rotten_url': rottend.get('links', {}).get('alternate', ''),
-    'my_rating': my_rating,
+    'my_rating': opts.rating,
     'imdb_rating': imdbapid.get('rating', 'n/a'),
     'critics_rating': rottend.get('ratings', {}).get('critics_rating', 'n/a'),
     'critics_score': rottend.get('ratings', {}).get('critics_score', 'n/a'),
@@ -222,13 +229,55 @@ def main(title, year=None, my_rating="", to_dayone=False):
     'poster_rotten': rottend.get('posters', {}).get('original')
   }
 
-  generate_output(data, to_dayone)
+  generate_output(data, opts.dayone)
 
+  track(data, opts)
+    
   # generate search links if needed
   print("")
   print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
   print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
 
+def track(data, opts):
+  """TODO: Docstring for track.
+
+  :param data: 
+  :param opts: 
+  :returns: 
+
+  """
+  if not opts.track:
+    return
+
+  imdb_id = get_imdb_id(data, opts.imdb)
+
+  if not imdb_id:
+    print('No IMDB id; cannot post to trakt.tv')
+    return
+
+  json_data = {'username': _API[1], 'password': _API[2],
+               'movies': [{'imdb_id': imdb_id, 'title': data['title'], 'year': int(data['year'])}]}
+  req = urllib2.Request(_API[0])
+  req.add_header('Content-Type', 'application/json')
+  res = urllib2.urlopen(req, json.dumps(json_data))
+  if res.code == 200:
+    print('SUCCESS:', res.read())
+  else:
+    print("NOT SAVED (%s): %s" % (res.code, res.read()))
+
+
+
+def get_imdb_id(data, id):
+  if not id:
+    id = data['imdb_url']
+  if not id:
+    return None
+
+  if id.startswith('http'):
+    _, _, path, _, _, _ = urlparse.urlparse(id)
+    id = [t for t in path.split('/') if t][-1]
+
+  return id
 
 def generate_output(data, to_dayone=False):
   print_to(sys.stdout, data)
@@ -318,27 +367,18 @@ def print_to(stream, data):
 
 if __name__ == '__main__':
   # print("Args: ", sys.argv[1:])
-  to_dayone = False
-  year = None
-  title_words = []
-  my_rating = ""
-  idx = 1
-  while idx < len(sys.argv):
-    if sys.argv[idx].startswith('--year='):
-      try:
-        year = int(sys.argv[idx][7:])
-        # idx += 1
-      except ValueError:
-        pass
-    elif sys.argv[idx].startswith('--rating='):
-      my_rating = sys.argv[idx][9:]
-    elif sys.argv[idx] == '--dayone':
-      to_dayone = True
-    else:
-      title_words.append(sys.argv[idx])
-    idx += 1
-  title = ' '.join(title_words)
-  main(title, year, my_rating, to_dayone)
+  parser = argparse.ArgumentParser(description='Movie details')
+  parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
+  parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
+  parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
+  parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
+  parser.add_argument('-y', '--year', action='store', type=int)
+  parser.add_argument('title', nargs='+')
+
+  opts = parser.parse_args()
+  title = u' '.join(opts.title)
+
+  main(title, opts)
 
 
 # Sample imdbapi.org result:
@@ -354,4 +394,3 @@ if __name__ == '__main__':
 # {"Title":"Lost Girl","Year":"2010","Rated":"18","Released":"12 Sep 2010","Runtime":"1 h","Genre":"Crime, Fantasy, Horror","Director":"N/A","Writer":"M.A. Lovretta","Actors":"Anna Silk, Kris Holden-Ried, Ksenia Solo, Richard Howland","Plot":"Lost Girl focuses on the gorgeous and charismatic Bo, a supernatural being called a succubus who feeds on the energy of humans...","Poster":"http://ia.media-imdb.com/images/M/MV5BMTY4NzA1MDAyMF5BMl5BanBnXkFtZTcwMzQ4MTkxNA@@._V1_SX300.jpg","imdbRating":"7.7","imdbVotes":"7,203","imdbID":"tt1429449","Response":"True"}
 
 
-# vim: ts=2 shiftwidth=2:
