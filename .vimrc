@@ -105,14 +105,6 @@ if has("gui_gtk2")
     set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
 end
 
-" do not display the menu bar
-" set go-=T
-"set columns=150
-
-"if (has("gui_macvim") || &t_Co == 256)
-"    colorscheme desert256
-"end
-
 function! FullScrHoriz()
     set fuopt+=maxhorz
     set fullscreen
@@ -228,10 +220,11 @@ Bundle 'HTML-AutoCloseTag'
 Bundle 'Colour-Sampler-Pack'
 if has("unix")
     let s:uname = system("uname -s")
-    if s:uname == "Darwin"
-        colorscheme inkpot " desert256 dante navajo papayawhip
+    " desert256 dante navajo papayawhip
+    if s:uname =~ "Darwin"
+        colorscheme inkpot
     else
-        colorscheme desert256
+        colorscheme navajo 
     endif
 endif
 
