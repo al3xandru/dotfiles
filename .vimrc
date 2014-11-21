@@ -390,5 +390,7 @@ filetype plugin indent on " required!
 " Bundle 'Vim-JDE'
 " Bundle 'javacomplete'
 "
-" YouCompleteMe breaks MacVim and vim
+" YouCompleteMe requires the same version of
+" Python to be used for vim, MacVim, and itself
+" both at compile time and runtime 
 " Bundle 'Valloric/YouCompleteMe'
