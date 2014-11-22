@@ -180,7 +180,9 @@ nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 
 " bind K to grep word under cursor
-nnoremap K :grep! "\c<C-R><C-W>\b"<CR>:cw<CR>
+" nnoremap K :grep! "\b<C-R><C-W>\b" *<CR>:cw<CR>
+nmap <Leader>f :vimgrep! /\<<C-R><C-W>\>/j *<CR>:cw<CR>
+nmap <Leader>F :vimgrep! /\<C-R><C-W>\>/j **/*<CR>:cw<CR>
 
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
