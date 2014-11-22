@@ -41,6 +41,9 @@ set backspace=indent,eol,start
 set clipboard=unnamed
 " Enhance command-line completion
 set wildmenu
+set wildignore+=.hg,.git,.svn  " version control
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.pyc,*.class,*.luac " compiled
+set wildignore+=*.DS_Store
 " Allow cursor keys in insert mode
 set esckeys
 
@@ -50,6 +53,7 @@ set incsearch
 set hlsearch
 set smartcase
 set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz,*.exe
+set scrolloff=5
 
 " 3. tags
 " omnicomplete
@@ -82,7 +86,8 @@ set thesaurus+=~/.vim/mthesaur.txt
 
 " 6. multiple windows "
 set title
-set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %Y]%<\ [a\%03.3b:h\%02.2B]
+set laststatus=2
+set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %y]%<\ [a\%03.3b:h\%02.2B]
 hi StatusLine ctermbg=59 ctermfg=69 
 
 " GUI "
@@ -174,6 +179,9 @@ nmap <silent> <Leader>c :set nolist!<CR>
 nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 
+" bind K to grep word under cursor
+nnoremap K :grep! "\c<C-R><C-W>\b"<CR>:cw<CR>
+
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -221,9 +229,10 @@ Bundle 'Colour-Sampler-Pack'
 Bundle '256-grayvim'
 Bundle 'blacklight'
 Bundle 'MochaLatte'
-Bundle 'zefei/cake16'
 Bundle 'blerins/flattown'
+Bundle 'gregsexton/Atom'
 Bundle 'nice/sweater'
+Bundle 'zefei/cake16'
 Bundle 'zeis/vim-kolor'
 
 if has("unix")
@@ -260,6 +269,7 @@ Bundle 'scrooloose/nerdtree'
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
+nmap <Leader>sp :NERDTreeFind<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
@@ -324,6 +334,35 @@ endfunction
 "    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
 "endif
 
+Bundle 'bling/vim-airline'
+let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:airline_section_z='%4l:%-3c %3p%%'   
+let g:airline_mode_map={
+       \ '__' : '-',
+       \ 'n'  : 'N',
+       \ 'i'  : 'I',
+       \ 'R'  : 'R',
+       \ 'c'  : 'C',
+       \ 'v'  : 'V',
+       \ 'V'  : 'V',
+       \ '' : 'V',
+       \ 's'  : 'S',
+       \ 'S'  : 'S',
+       \ '' : 'S',
+       \ }
+
+
+Bundle 'Lokaltog/vim-easymotion'
+map ' <Plug>(easymotion-prefix)
+nmap 's <Plug>(easymotion-s2)
+nmap 'S <Plug>(easymotion-s)
+
+
+Bundle 'corntrace/bufexplorer'
+Bundle 'airblade/vim-gitgutter'
+let g:gitgutter_max_signs = 250
+
+
 " OmniCompletion
 Bundle 'OmniCppComplete'
 Bundle 'davidhalter/jedi-vim'
@@ -346,7 +385,10 @@ Bundle 'jnwhiteh/vim-golang'
 set runtimepath+=$GOROOT/misc/vim
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
-" https://github.com/joyent/node/wiki/Vim-Plugins
+Bundle 'derekwyatt/vim-scala'
+
+" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
+
 filetype plugin indent on " required!
 
 " Old, unused 
