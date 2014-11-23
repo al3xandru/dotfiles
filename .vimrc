@@ -156,7 +156,7 @@ nnoremap j gj
 nnoremap k gk
 
 " disable highlighted search 
-nmap <Leader>S :nohlsearch<CR>
+nnoremap <Leader>S :nohlsearch<CR>
 
 " Opens an edit command with the path of the currently edited file filled in
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -166,11 +166,12 @@ map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
-cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-"map <silent> <Leader>r <C-R>=ESC :expand("%:p:h") . "/" <CR>
+cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 
 " Insert a newline in normal mode
-nnoremap <NL> i<CR><ESC>
+nnoremap <S-Enter> O<Esc>
+nnoremap <CR> o<Esc>
+nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 
 " Show special characters
 nmap <silent> <Leader>c :set nolist!<CR>
@@ -179,10 +180,11 @@ nmap <silent> <Leader>c :set nolist!<CR>
 nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 
-" bind K to grep word under cursor
-" nnoremap K :grep! "\b<C-R><C-W>\b" *<CR>:cw<CR>
-nmap <Leader>f :vimgrep! /\<<C-R><C-W>\>/j *<CR>:cw<CR>
-nmap <Leader>F :vimgrep! /\<C-R><C-W>\>/j **/*<CR>:cw<CR>
+" bind f and F to vimgrep word under cursor
+nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
+nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
+" bind r to replace word under cursor
+nnoremap <Leader>r :%s/\<<C-r><C-w>\>//c<Left><Left>
 
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
