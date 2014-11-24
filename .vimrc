@@ -367,18 +367,32 @@ Bundle 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 
 
+Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-easytags'
+let g:easytags_cmd = '/usr/local/bin/ctags'
+let g:easytags_async = 1
+let g:easytags_dynamic_files = 1
+let g:easytags_auto_highlight = 0
+let g:easytags_include_members = 1
+let g:easytags_updatetime_min = 60000
+
+
 " OmniCompletion
 Bundle 'OmniCppComplete'
+
+
 Bundle 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
 let g:jedi#popup_on_dot = 0
+"let g:jedi#show_call_signatures = 1
 let g:jedi#completions_command = "<C-Space>"
+let g:jedi#goto_assignments_command = "<Leader>pa"
+let g:jedi#goto_definitions_command = "<Leader>pd"
+let g:jedi#documentation_command = "<Leader>ph"
+let g:jedi#usages_command = "<Leader>pn"
+let g:jedi#rename_command = "<Leader>pr"
 "let g:jedi#completions_enabled = 0
-"let g:jedi#goto_assignments_command = ""
-"let g:jedi#goto_definitions_command = ""
-"let g:jedi#documentation_command = ""
-"let g:jedi#usages_command = ""
-"let g:jedi#rename_command = ""
+
 
 Bundle 'VictorDenisov/javacomplete'
 
