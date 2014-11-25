@@ -3,7 +3,7 @@
 backup () {
     if [ -d "$BACKUP_TARGET" ]; then
         TODAY=`date +"%Y%m%d %H:%M"`
-#        /System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper > /dev/null 2>&1
+        # /System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper > /dev/null 2>&1
         /usr/bin/tmutil startbackup -b
         if [ $? -eq 0 ]; then
             echo "${TODAY}" >> $HOME/Library/Logs/com.mypopescu.timemachine.log
@@ -13,7 +13,8 @@ backup () {
 
 
 if [[ "$HOSTNAME" = mandelbrot.* ]]; then
-    BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
+    # BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
+    BACKUP_TARGET="/Volumes/RMBPTM/Backups.backupdb"
 elif [[ "$HOSTNAME" = macky.* ]]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
 elif [[ "$HOSTNAME" = leibniz.* ]]; then
