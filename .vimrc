@@ -81,6 +81,7 @@ set listchars=tab:▸\ ,trail:·,eol:¬
 
 syntax on
 colorscheme koehler
+set colorcolumn=80,120
 
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -155,6 +156,10 @@ cnoreabbrev Q q
 nnoremap j gj
 nnoremap k gk
 
+" vertical resize
+nmap <C-w>> :vertical resize +20<CR>
+nmap <C-w>< :vertical resize -20<CR>
+
 " disable highlighted search 
 nnoremap <Leader>S :nohlsearch<CR>
 
@@ -181,10 +186,17 @@ nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 
 " bind f and F to vimgrep word under cursor
-nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
-nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
+"nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
+"nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
+" Using the_silver_searcher to look for word under cursor in current dir
+nnoremap <Leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+"nnoremap <Leader>g :execute 'Ag! --' . &filetype . ' "\b"' . expand("<cword>") . '"\b" ' . fnameescape(expand("%:p:h"))
+" Using Ack to search the word under cursor in the current dir
+" nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+
 " bind r to replace word under cursor
 nnoremap <Leader>r :%s/\<<C-r><C-w>\>//c<Left><Left>
+
 
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -209,6 +221,10 @@ if has("autocmd")
     autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
     autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+    if filereadable(expand("~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim"))
+        autocmd FileType html,htm,xhtml,xml source ~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim
+    end
 end
 
 
@@ -273,7 +289,7 @@ Bundle 'scrooloose/nerdtree'
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
-nmap <Leader>sp :NERDTreeFind<CR>
+nmap <Leader>ps :NERDTreeFind<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
@@ -375,6 +391,10 @@ let g:easytags_dynamic_files = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_include_members = 1
 let g:easytags_updatetime_min = 60000
+
+
+Bundle 'mileszs/ack.vim'
+Bundle 'rking/ag.vim'
 
 
 " OmniCompletion
