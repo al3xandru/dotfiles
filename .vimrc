@@ -81,7 +81,20 @@ set listchars=tab:▸\ ,trail:·,eol:¬
 
 syntax on
 colorscheme koehler
+
 set colorcolumn=80,120
+" http://vim.wikia.com/wiki/Highlight_current_line
+set cursorline
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
+function! SetCursorLineColors()
+    hi CursorLine    ctermbg=88 guibg=#870000
+    hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
+endfunction
+call SetCursorLineColors()
 
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -264,6 +277,7 @@ if has("unix")
         colorscheme navajo 
     endif
 endif
+call SetCursorLineColors()
 
 
 " GitHub
@@ -416,12 +430,15 @@ let g:jedi#rename_command = "<Leader>pr"
 
 Bundle 'VictorDenisov/javacomplete'
 
+
 Bundle 'VimClojure'
 let vimclojure#SetupKeyMap = 0
+
 
 Bundle 'jnwhiteh/vim-golang'
 set runtimepath+=$GOROOT/misc/vim
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
 
 Bundle 'derekwyatt/vim-scala'
 
@@ -474,3 +491,4 @@ filetype plugin indent on " required!
 " Python to be used for vim, MacVim, and itself
 " both at compile time and runtime 
 " Bundle 'Valloric/YouCompleteMe'
+" let g:ycm_auto_trigger = 0
