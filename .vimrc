@@ -310,7 +310,13 @@ let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 
 
-Bundle 'SirVer/ultisnips'
+if has("python")
+    Bundle 'SirVer/ultisnips'
+else
+    Bundle 'MarcWeber/vim-addon-mw-utils'
+    Bundle 'tomtom/tlib_vim'
+    Bundle 'garbas/vim-snipmate'
+endif
 Bundle 'honza/vim-snippets'
 Bundle 'scrooloose/syntastic'
 
