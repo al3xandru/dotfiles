@@ -91,7 +91,7 @@ augroup CursorLine
   au WinLeave * setlocal nocursorline
 augroup END
 function! SetCursorLineColors()
-    hi CursorLine    ctermbg=88 guibg=#870000
+    hi CursorLine    ctermbg=52 guibg=#5f0000
     hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
 endfunction
 call SetCursorLineColors()
