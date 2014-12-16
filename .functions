@@ -31,7 +31,9 @@ function dropbox_conflicts() {
                 fi
             fi	
             ;;
-
+        *)
+            echo "Usage dropbox_conflicts wc | ls | rm"
+            ;;
     esac
 }
 
