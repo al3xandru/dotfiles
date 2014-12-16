@@ -8,6 +8,33 @@ function backup() {
     cp -v "$1"{,.orig}
 }
 
+# Dropbox functions
+function dropbox_conflicts() {
+    local DROPBOXDIR="$HOME/Dropbox"
+    local cmd="$1"
+    local findcmd=`find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -regex ".*/.dropbox.cache/.*" \)` 
+    case $cmd in
+        wc)
+            echo "Found $($findcmd | wc -l) conflicts"
+            ;;
+        ls)
+            $findcmd
+            ;;
+        rm)
+            local conflicted_files=$findcmd
+            if [ "$conflicted_files" != "" ]; then
+                echo "There are some conflicted files:"
+                echo "$conflicted_files"
+                read -p "Do you want to delete these conflict files? (y/n): "
+                if [ $REPLY = "y" ]; then
+                    find "$DROPBOXDIR" \( -regex ".*/.* conflicted .*" -and \! -path "*/.dropbox.cache/*" \) -exec rm -vf {} \;
+                fi
+            fi	
+            ;;
+
+    esac
+}
+
 # Jump
 # http://jeroenjanssens.com/2013/08/16/quickly-navigate-your-filesystem-from-the-command-line.html
 export MARKPATH=$HOME/.marks
