@@ -86,9 +86,9 @@ set colorcolumn=80,120
 " http://vim.wikia.com/wiki/Highlight_current_line
 set cursorline
 augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
+  autocmd!
+  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  autocmd WinLeave * setlocal nocursorline
 augroup END
 function! SetCursorLineColors()
     hi CursorLine    ctermbg=52 guibg=#5f0000
@@ -222,22 +222,25 @@ set encoding=utf-8 nobomb
 
 " autocmds
 if has("autocmd")
-    " crontab -e
-    au BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
+    augroup vimrc
+        autocmd!
+        " crontab -e
+        autocmd BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
 
-    " json is javascript
-    autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-    
-    autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
-    autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
-    autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-    autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
-    autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
-    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+        " json is javascript
+        autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 
-    if filereadable(expand("~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim"))
-        autocmd FileType html,htm,xhtml,xml source ~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim
-    end
+        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+        autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
+        autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+        autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+        autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
+        autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+        if filereadable(expand("~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim"))
+            autocmd FileType html,htm,xhtml,xml source ~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim
+        end
+    augroup END
 end
 
 
