@@ -231,12 +231,13 @@ def main(title, opts):
 
   generate_output(data, opts.dayone)
 
-  track(data, opts)
+  # track(data, opts)
     
   # generate search links if needed
   print("")
   print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
   print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
+  print("http://trakt.tv/search?query=%s" % urllib.quote_plus(title))
 
 def track(data, opts):
   """TODO: Docstring for track.
