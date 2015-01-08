@@ -3,6 +3,15 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+# iTerm2 tab title
+function tabtitle() {
+    local t=$1
+    if [ -z "$t" ]; then
+        t=$(basename $PWD)
+    fi
+    echo -e "\033];$t\007"
+}
+
 # backup a file
 function backup() {
     cp -v "$1"{,.orig}
