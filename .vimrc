@@ -244,6 +244,21 @@ if has("autocmd")
 end
 
 
+if has("unix")
+    let s:uname = system("uname -s")
+    if s:uname =~ "Darwin"
+        function! s:setupMarkdownPreview()
+            nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+        endfunction
+
+        augroup vimrc_md
+            autocmd!
+            autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
+        augroup END
+    endif
+endif
+
+
 " Load Vundle
 filetype off " required!
 
@@ -419,6 +434,25 @@ let g:easytags_updatetime_min = 60000
 Bundle 'mileszs/ack.vim'
 Bundle 'rking/ag.vim'
 
+" Language support
+Bundle 'applescript.vim'
+
+Bundle 'VimClojure'
+let vimclojure#SetupKeyMap = 0
+
+Bundle 'jnwhiteh/vim-golang'
+set runtimepath+=$GOROOT/misc/vim
+augroup vim_golang
+    autocmd!
+    autocmd FileType go autocmd BufWritePre <buffer> Fmt
+augroup END
+
+" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
+
+Bundle 'jsatt/python_fn'
+Bundle 'hdima/python-syntax'
+
+Bundle 'derekwyatt/vim-scala'
 
 " OmniCompletion
 Bundle 'OmniCppComplete'
@@ -440,18 +474,10 @@ let g:jedi#rename_command = "<Leader>pr"
 Bundle 'VictorDenisov/javacomplete'
 
 
-Bundle 'VimClojure'
-let vimclojure#SetupKeyMap = 0
 
 
-Bundle 'jnwhiteh/vim-golang'
-set runtimepath+=$GOROOT/misc/vim
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 
-Bundle 'derekwyatt/vim-scala'
-
-" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
 
 filetype plugin indent on " required!
 
