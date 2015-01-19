@@ -59,8 +59,21 @@ def process(dir, allowed_extensions, excluded_extensions, fout):
     :returns: TODO
 
     """
+    _ignore = set()
     for root, dirs, files in os.walk(dir):
+        if treat_as_file(root) or root in _ignore:
+            for d in dirs:
+                _ignore.add(os.path.join(root, d))
+            continue
         _display = False
+        for f in [f for f in dirs if treat_as_file(f)]:
+            if not _display:
+                fout.write(os.linesep)
+                fout.write('[' + os.path.abspath(root) + ']')
+                fout.write(os.linesep)
+                _display = True
+            fout.write(f)
+            fout.write(os.linesep)
         for f in [f for f in files if accept(f, allowed_extensions, excluded_extensions)]:
             if not _display:
                 fout.write(os.linesep)
@@ -70,6 +83,14 @@ def process(dir, allowed_extensions, excluded_extensions, fout):
             fout.write(f)
             fout.write(os.linesep)
 
+
+def treat_as_file(file):
+    _, ext = os.path.splitext(file)
+    if not ext:
+        return False
+
+    return ext.lower() in ('.app', '.key', '.kth', '.oo3', '..popclipext', '.1pif')
+    
 
 def accept(file, allowed_extensions, excluded_extensions):
     """
@@ -92,16 +113,30 @@ def accept(file, allowed_extensions, excluded_extensions):
     return False
 
 
+def display_shortcuts():
+    print "Recipes:\n"
+    print "Archives:"
+    # print "-t all -i /
+    print "Datastax:"
+    print "-t all -i ~/Documents/MyDocs/50-projects/datastax/ -i ~/Documents/MyDocs/60-job/datastax/ -i /Volumes/archives/alx/DataStax/ -o ~/Documents/MyDocs/index/datastax.index.txt"
+    print ""
+    print "Docs:"
+    print "-t docs -i ~/Dropbox/Magic\ Briefcase/Papers/ -i ~/Dropbox/Magic\ Briefcase/OtherPapers/ -i /Volumes/docs/ -o ~/Documents/MyDocs/index/docs.index.txt"
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-t', '--type', action='store', required=True)
+    parser.add_argument('-v', action='store_true', help='Display shortcuts')
+    parser.add_argument('-t', '--type', action='store', 
+                        help="Supported options: %s" % TYPES.keys())
     parser.add_argument('-i', '--input', action='append')
     parser.add_argument('-x', '--exclude', action='append')
     parser.add_argument('-o', '--output', nargs='?')
     
     opts = parser.parse_args()
-    print opts
     if not opts.input:
         opts.input = [os.path.abspath('.')]
     
-    main(opts)
+    if opts.v:
+        display_shortcuts()
+    else:
+        main(opts)
