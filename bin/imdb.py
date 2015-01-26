@@ -35,7 +35,7 @@ def prepare_title(title):
   words = title.lower().split(' ')
   swords = []
   for w in words:
-    if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'who', 'with'):
+    if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'with'):
       continue
     swords.append(w)
   return ' '.join(swords)    
@@ -83,6 +83,80 @@ def imdbapi_data(title, year=None):
             max_match = match
         if max_match > 0:
           return res, 1
+  except ValueError:
+    pass
+  except socket.error:
+    pass
+  finally:
+    if conn:
+      conn.close()
+
+  return {}, 0
+
+
+
+def themoviedb_data(title, year=None):
+  short_title = prepare_title(title)
+  params = {
+    'api_key': '99026a194a4dbafd98c3070108bc93db',
+    'query': short_title
+  }
+  if year:
+    params['year'] = year
+
+  qs = urllib.urlencode(params)
+  imdb_data = {}
+
+  conn = None
+  try:
+    conn = httplib.HTTPConnection('api.themoviedb.org')
+    conn.request('GET', '/3/search/movie?' + qs)
+    response = conn.getresponse()
+    if response.status != 200:
+      return {}, 0
+
+    data = response.read()
+    jdata = json.loads(data)
+    if ('results' in jdata) and len(jdata['results']) == 1:
+      movie_id = jdata['results'][0]['id']
+      imdb_data['title'] = jdata['results'][0]['title']
+    else:
+      movie_id = None
+      max_match = 0
+      for r in jdata['results']:
+        match = match_len(title, r['title'])
+        if year and r['release_date'][:4] == str(year):
+          match += 1
+        if match > max_match:
+          movie_id = r['id']
+          max_match = match
+    
+    if not movie_id:
+      return {}, 0
+    
+    conn = httplib.HTTPConnection('api.themoviedb.org')
+    conn.request('GET', "/3/movie/%s?api_key=%s" % (movie_id, params['api_key']))
+    response = conn.getresponse()
+    if response.status != 200:
+      return {}, 0
+    data = json.loads(response.read())
+    imdb_data['year'] = data['release_date'][:4]
+    imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % data['imdb_id']
+    imdb_data['genres'] = [t['name'] for t in data['genres']]
+    imdb_data['plot'] = data['overview']
+
+    conn = httplib.HTTPConnection('api.themoviedb.org')
+    conn.request('GET', "/3/movie/%s/credits?api_key=%s" % (movie_id, params['api_key']))
+    response = conn.getresponse()
+    if response.status != 200:
+      return imdb_data, 1
+
+    data = json.loads(response.read())
+    imdb_data['actors'] = [t['name'] for t in data['cast']]
+    imdb_data['directors'] = [t['name'] for t in data['crew'] if t['job'].lower() == 'director']
+
+    return imdb_data, 1
+
   except ValueError:
     pass
   except socket.error:
@@ -201,8 +275,10 @@ def match_len(in_title, movie_title):
 
 
 def main(title, opts):
-  print("Trying: imdbapi.org")
-  imdbapid, r1 = imdbapi_data(title, opts.year)
+  #print("Trying: imdbapi.org")
+  #imdbapid, r1 = imdbapi_data(title, opts.year)
+  print("Trying: themoviedb.org")
+  imdbapid, r1 = themoviedb_data(title, opts.year)
   print("Trying: www.omdbapi.com")
   omdbapid, r2 = omdbapi_data(title, opts.year)
   print("Trying: rottentomatoes.com")
