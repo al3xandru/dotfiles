@@ -440,12 +440,23 @@ Bundle 'applescript.vim'
 Bundle 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
-Bundle 'jnwhiteh/vim-golang'
-set runtimepath+=$GOROOT/misc/vim
-augroup vim_golang
+Bundle 'fatih/vim-go'
+augroup vim_go
     autocmd!
-    autocmd FileType go autocmd BufWritePre <buffer> Fmt
+    autocmd FileType go nmap <Leader>gs <Plug>(go-implements)
+    autocmd FileType go nmap <Leader>gi <Plug>(go-info)
+    autocmd FileType go nmap <Leader>gd <Plug>(go-doc)
+    autocmd FileType go nmap <Leader>gdv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <Leader>gdb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <Leader>gr <Plug>(go-run)
+    autocmd FileType go nmap <Leader>gb <Plug>(go-build)
+    autocmd FileType go nmap <Leader>gt <Plug>(go-test)
+    autocmd FileType go nmap <Leader>gc <Plug>(go-coverage)
 augroup END
+let g:go_fmt_autosave = 0
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
 
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
 
