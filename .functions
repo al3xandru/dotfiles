@@ -247,3 +247,8 @@ function gopath {
     fi
     go env
 }
+
+function goprj {
+    mkdir -p "$1/"{bin,pkg,src}    
+    cd "$1"
+}
