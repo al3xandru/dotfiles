@@ -27,10 +27,10 @@ function dropbox_conflicts() {
             echo "Found $($findcmd | wc -l) conflicts"
             ;;
         ls)
-            $findcmd
+            echo "$findcmd"
             ;;
         rm)
-            local conflicted_files=$findcmd
+            local conflicted_files="$findcmd"
             if [ "$conflicted_files" != "" ]; then
                 echo "There are some conflicted files:"
                 echo "$conflicted_files"
