@@ -109,8 +109,8 @@ set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCurs
 set guioptions=aAce
 set selection=exclusive
 if has("gui_macvim")
-    set columns=150
-    set lines=70
+    set columns=105
+    set lines=80
     "set gfn=Anonymous\ Pro:h12
     "set gfn=Cousine:h11
     "set gfn=Inconsolata:h13
@@ -120,7 +120,7 @@ if has("gui_macvim")
     "set gfn=Source\ Code\ Pro:h11
 end
 if has("gui_gtk2")
-    set columns=120
+    set columns=105
     set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
 end
 
@@ -185,6 +185,7 @@ map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
 
 " Insert a newline in normal mode
 nnoremap <S-Enter> O<Esc>
@@ -414,9 +415,13 @@ Bundle 'Lokaltog/vim-easymotion'
 map ' <Plug>(easymotion-prefix)
 nmap 's <Plug>(easymotion-s2)
 nmap 'S <Plug>(easymotion-s)
+nmap 'w <Plug>(easymotion-bd-w)
+nmap 't <Plug>(easymotion-bd-t)
+nmap 'e <Plug>(easymotion-bd-e)
 
 
 Bundle 'corntrace/bufexplorer'
+
 Bundle 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 
@@ -429,6 +434,7 @@ let g:easytags_dynamic_files = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_include_members = 1
 let g:easytags_updatetime_min = 60000
+let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
 
 
 Bundle 'mileszs/ack.vim'
@@ -445,13 +451,13 @@ augroup vim_go
     autocmd!
     autocmd FileType go nmap <Leader>gs <Plug>(go-implements)
     autocmd FileType go nmap <Leader>gi <Plug>(go-info)
-    autocmd FileType go nmap <Leader>gd <Plug>(go-doc)
-    autocmd FileType go nmap <Leader>gdv <Plug>(go-doc-vertical)
-    autocmd FileType go nmap <Leader>gdb <Plug>(go-doc-browser)
-    autocmd FileType go nmap <Leader>gr <Plug>(go-run)
-    autocmd FileType go nmap <Leader>gb <Plug>(go-build)
-    autocmd FileType go nmap <Leader>gt <Plug>(go-test)
-    autocmd FileType go nmap <Leader>gc <Plug>(go-coverage)
+    autocmd FileType go nmap <Leader>gh <Plug>(go-doc)
+    autocmd FileType go nmap <Leader>ghv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <Leader>ghb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <Leader>ger <Plug>(go-run)
+    autocmd FileType go nmap <Leader>geb <Plug>(go-build)
+    autocmd FileType go nmap <Leader>get <Plug>(go-test)
+    autocmd FileType go nmap <Leader>gec <Plug>(go-coverage)
 augroup END
 let g:go_fmt_autosave = 0
 let g:go_highlight_functions = 1
@@ -501,20 +507,15 @@ let g:jedi#use_splits_not_buffers = "top"
 let g:jedi#popup_on_dot = 0
 "let g:jedi#show_call_signatures = 1
 let g:jedi#completions_command = "<C-Space>"
-let g:jedi#goto_assignments_command = "<Leader>pa"
-let g:jedi#goto_definitions_command = "<Leader>pd"
-let g:jedi#documentation_command = "<Leader>ph"
-let g:jedi#usages_command = "<Leader>pn"
-let g:jedi#rename_command = "<Leader>pr"
+let g:jedi#goto_assignments_command = "<Leader>ga"
+let g:jedi#goto_definitions_command = "<Leader>gd"
+let g:jedi#documentation_command = "<Leader>gh"
+let g:jedi#usages_command = "<Leader>gu"
+let g:jedi#rename_command = "<Leader>gr"
 "let g:jedi#completions_enabled = 0
 
 
 Bundle 'VictorDenisov/javacomplete'
-
-
-
-
-
 
 
 filetype plugin indent on " required!
