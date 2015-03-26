@@ -35,6 +35,7 @@
 
 set nocompatible
 set backspace=2
+set sessionoptions-=options
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
@@ -163,7 +164,7 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
-" let mapleader=","
+let mapleader="'"
 
 " make vertical line nav better
 nnoremap j gj
@@ -198,6 +199,16 @@ nmap <silent> <Leader>c :set nolist!<CR>
 " Buffer switch
 nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
+" Tab switch
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab> :tabnext<CR>
+inoremap <C-S-tab> <ESC>:tabprevious<CR>
+inoremap <C-tab> <ESC>:tabnext
+" Window switch
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 " bind f and F to vimgrep word under cursor
 "nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
@@ -209,8 +220,9 @@ nnoremap <Leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
 " bind r to replace word under cursor
-nnoremap <Leader>r :%s/\<<C-r><C-w>\>//c<Left><Left>
-
+nnoremap <Leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+" display :Errors
+map <Leader>l :Errors<CR>
 
 " 19. the swap file
 set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -412,18 +424,21 @@ let g:airline_mode_map={
 
 
 Bundle 'Lokaltog/vim-easymotion'
-map ' <Plug>(easymotion-prefix)
-nmap 's <Plug>(easymotion-s2)
-nmap 'S <Plug>(easymotion-s)
-nmap 'w <Plug>(easymotion-bd-w)
-nmap 't <Plug>(easymotion-bd-t)
-nmap 'e <Plug>(easymotion-bd-e)
+"map ' <Plug>(easymotion-prefix)
+nmap ,s <Plug>(easymotion-s2)
+nmap ,S <Plug>(easymotion-s)
+nmap ,w <Plug>(easymotion-bd-w)
+nmap ,e <Plug>(easymotion-bd-e)
+nmap ,t <Plug>(easymotion-bd-t)
 
 
 Bundle 'corntrace/bufexplorer'
 
 Bundle 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
+let g:gitgutter_realtime = 0
+map <Leader>G :GitGutterSignsToggle<CR>
+
 
 
 Bundle 'xolox/vim-misc'
