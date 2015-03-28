@@ -35,11 +35,12 @@
 
 set nocompatible
 set backspace=2
-set sessionoptions-=options
 " Allow backspace in insert mode
 set backspace=indent,eol,start
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
 set clipboard=unnamed
+set sessionoptions-=options
+
 " Enhance command-line completion
 set wildmenu
 set wildignore+=.hg,.git,.svn  " version control
@@ -164,11 +165,12 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
-let mapleader="'"
+let mapleader=","
 
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
+inoremap qq <esc>
 
 " vertical resize
 nmap <C-w>> :vertical resize +20<CR>
@@ -425,11 +427,11 @@ let g:airline_mode_map={
 
 Bundle 'Lokaltog/vim-easymotion'
 "map ' <Plug>(easymotion-prefix)
-nmap ,s <Plug>(easymotion-s2)
-nmap ,S <Plug>(easymotion-s)
-nmap ,w <Plug>(easymotion-bd-w)
-nmap ,e <Plug>(easymotion-bd-e)
-nmap ,t <Plug>(easymotion-bd-t)
+nmap 's <Plug>(easymotion-s2)
+nmap 'S <Plug>(easymotion-s)
+nmap 'w <Plug>(easymotion-bd-w)
+nmap 'e <Plug>(easymotion-bd-e)
+nmap 't <Plug>(easymotion-bd-t)
 
 
 Bundle 'corntrace/bufexplorer'
