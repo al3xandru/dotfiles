@@ -82,8 +82,8 @@
 ;;; Display
 (setq default-frame-alist
       '(
-        (width . 105)
-        (height . 65)
+        (width . 110)
+        (height . 70)
 	(cursor-color . "#ffd700")
 	(font . "Input Mono:11")
         ))
@@ -170,11 +170,12 @@
 
 ;; org-mode
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
-(setq org-default-notes-file (concat org-directory "instant-notes.org"))
+(setq org-default-notes-file (concat org-directory "/instant-notes.org"))
 (setq org-log-done t
       org-todo-keywords '((sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
-      org-todo-keyword-faces '(("WIP" . (:foreground "blue" :weight bold))
-			       ("CANCELED" . (:foreground "grey" :weight lighter))))
+      org-todo-keyword-faces '(("WIP" . (:foreground "#7c2acd" :weight bold))
+			       ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
+			       ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
@@ -182,12 +183,16 @@
 (global-set-key "\C-cl" 'org-store-link)
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+datetree org-default-notes-file)
-	 "* TODO %?\n  %i" :empty-lines 1 1 :prepend)
+      '(("a" "Todo" entry (file+datetree org-default-notes-file)
+	 "* TODO %?\n  %i" :empty-lines 1)
+	("b" "Todo with ref" entry (file+datetree org-default-notes-file)
+	 "* TODO %?\n  %a\n  %i" :empty-lines 1)
 	("c" "Task" checkitem (file+datetree org-default-notes-file)
-	 "+ [ ] %?\n  %i\n  %T" :empty-lines 1 1 :prepend)
-	("n" "Note" item (file+datetree org-default-notes-file)
-	 "- %? (%T)")))
+	 "- [ ] %?\n  %i\n  %T" :empty-lines 1)
+	("d" "Task" checkitem (file+datetree org-default-notes-file)
+	 "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
+	("e" "Note" item (file+datetree org-default-notes-file)
+	 "+ %? (%T)")))
 
 
 ;; speedbar
@@ -239,7 +244,7 @@
  ;; remove echo delay
  company-echo-delay 0
  ;; don't complete in certain modes
- company-global-modes '(not git-commit-mode))
+ company-global-modes '(not git-commit-mode org-mode))
 
 (with-eval-after-load 'company
   (add-to-list 'company-backends 'company-anaconda)
