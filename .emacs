@@ -1,12 +1,15 @@
 ;; Commentary: Emacs 24 config file
 ;;; Inspired by http://www.aaronbedra.com/emacs.d/
 
-;; user details
+;; ** user details **
 (setq user-mail-address "alex@mypopescu.com")
 
-;; environment
+;; ** environment **
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
-;; package management
+;; ** package management
 (require 'cl)
 (require 'package)
 (package-initialize)
@@ -15,7 +18,9 @@
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/"))
 
-(defvar my-packages '(flycheck
+(defvar my-packages '(ag
+		      exec-path-from-shell
+		      flycheck
                       flycheck-clojure
                       flycheck-pyflakes
                       flycheck-rust
@@ -54,6 +59,7 @@
   (loop for p in my-packages
 	when (not (package-installed-p p)) do (return nil)
 	finally (return t)))
+
 (unless (my-packages-installed-p)
   ;; check for new packages (package versions)
   (message "%s" "Refreshing package database...")
@@ -62,7 +68,12 @@
     (when (not (package-installed-p p))
       (package-install p))))
 
-;;; Start-up options
+;; *** start-up options ***
+;;; Backups
+;; uncomment next line for disabling backup files
+;; (setq make-backup-files nil)
+(setq backup-directory-alist `(("." . "~/tmp")))
+
 ;;; Splash screen
 (setq inhibit-startup-message t
       initial-scratch-message nil
@@ -71,8 +82,8 @@
 ;;; Display
 (setq default-frame-alist
       '(
-        (width . 100)
-        (height . 60)
+        (width . 105)
+        (height . 65)
 	(cursor-color . "#ffd700")
 	(font . "Input Mono:11")
         ))
@@ -81,25 +92,27 @@
 (blink-cursor-mode 0)
 (setq ring-bell-function 'ignore)
 
-;;; Backups
-;; uncomment next line for disabling backup files
-;; (setq make-backup-files nil)
-(setq backup-directory-alist `(("." . "~/tmp")))
 
 ;;; Editing defaults
 (prefer-coding-system 'utf-8)
 (setq buffer-file-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+
+;;; line numbers
+(global-linum-mode t)
+(setq column-number-mode t)
+(show-paren-mode 1)
+(setq show-paren-delay 0.2)
+
+;;; indentation
 (setq indent-tabs-mode nil)
 (electric-indent-mode 1)
 (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1)))
 
-;; line numbers
-(global-linum-mode t)
-(setq column-number-mode t)
-;; electric pairs
+;;; electric pairs
 (electric-pair-mode 1)
+;; configure electric pairs
 ;; (setq electric-pair-pairs '(
 ;; 			    (?\" . ?\")
 ;; 			    (?\{ . ?\})
@@ -107,42 +120,53 @@
 
 ;;; Key bindings
 (global-set-key (kbd "C-x O") 'previous-multiframe-window)
+;; (global-set-key (kbd "C-*")
+;; 		(lambda ()
+;; 		  (interactive)
+;; 		  (re-search-forward (format "\\b%s\\b" (thing-at-point 'word)))))
+(define-key isearch-mode-map (kbd "C-*")
+  (lambda ()
+	  "Reset current isearch to a word-mode search of the word under point"
+	  (interactive)
+	  (setq isearch-word t
+	        isearch-string ""
+	        isearch-message "")
+	  (isearch-yank-string (word-at-point))))
 
 ;;; Themes
 (if window-system
     (load-theme 'misterioso t)
   (load-theme 'wombat t))
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(custom-enabled-themes (quote (misterioso)))
-;;  '(custom-safe-themes
-;;    (quote
-;;     ("8d6fb24169d94df45422617a1dfabf15ca42a97d594d28b3584dc6db711e0e0b" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "764e3a6472a3a4821d929cdbd786e759fab6ef6c2081884fca45f1e1e3077d1d" default))))
 
 
-;;; plugins
+;;; *** plugins ***
+;; exec-path-from-shell
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+;; ido flx-ido
+(setq ido-create-new-buffer 'always
+      ido-enable-prefix nil
+      ido-enable-flex-matching t
+      ido-everywhere t
+      ido-use-filename-at-point 'guess)
+(ido-mode 1)
+
+(require 'flx-ido)
+(flx-ido-mode 1)
+
+;; disable ido faces to see flx highlights
+(setq ido-use-faces nil)
+;; uncomment to disable flx highlights
+;; (setq flx-ido-use-faces nil)
+
+
 ;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (with-eval-after-load 'flycheck
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
-;; speedbar
-(setq speedbar-show-unknown-files t)
-(setq sr-speedbar-right-side nil)
-;(setq speedbar-use-images nil) ; use text for buttons
-;; (add-hook 'speedbar-mode-hook
-;; 	  (lambda()
-;; 	    (speedbar-add-supported-extension "\\.rb")
-;; 	    (speedbar-add-supported-extension "\\.ru")
-;; 	    (speedbar-add-supported-extension "\\.erb")
-;; 	    (speedbar-add-supported-extension "\\.rjs")
-;; 	    (speedbar-add-supported-extension "\\.rhtml")
-;; 	    (speedbar-add-supported-extension "\\.rake")))
-(global-set-key "\C-ct" 'sr-speedbar-toggle)
-
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+	flycheck-idle-change-delay 1.0))
 
 ;; org-mode
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
@@ -158,22 +182,28 @@
 (global-set-key "\C-cl" 'org-store-link)
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+datetree "~/Dropbox/Dox/TaskPaper/instant-notes.org")
+      '(("t" "Todo" entry (file+datetree org-default-notes-file)
 	 "* TODO %?\n  %i" :empty-lines 1 1 :prepend)
-	("c" "Task" checkitem (file+datetree "~/Dropbox/Dox/TaskPaper/instant-notes.org")
+	("c" "Task" checkitem (file+datetree org-default-notes-file)
 	 "+ [ ] %?\n  %i\n  %T" :empty-lines 1 1 :prepend)
-	("n" "Note" item (file+datetree "~/Dropbox/Dox/TaskPaper/instant-notes.org"))))
+	("n" "Note" item (file+datetree org-default-notes-file)
+	 "- %? (%T)")))
 
- ;; flx-ido
-(require 'flx-ido)
-(ido-mode 1)
-(ido-everywhere 1)
-(flx-ido-mode 1)
-;; disable ido faces to see flx highlights
-(setq ido-enable-flex-matching t)
-(setq ido-use-faces nil)
-;; uncomment to disable flx highlights
-;; (setq flx-ido-use-faces nil)
+
+;; speedbar
+(setq speedbar-show-unknown-files t)
+(setq sr-speedbar-right-side nil)
+;(setq speedbar-use-images nil) ; use text for buttons
+;; (add-hook 'speedbar-mode-hook
+;; 	  (lambda()
+;; 	    (speedbar-add-supported-extension "\\.rb")
+;; 	    (speedbar-add-supported-extension "\\.ru")
+;; 	    (speedbar-add-supported-extension "\\.erb")
+;; 	    (speedbar-add-supported-extension "\\.rjs")
+;; 	    (speedbar-add-supported-extension "\\.rhtml")
+;; 	    (speedbar-add-supported-extension "\\.rake")))
+(global-set-key "\C-ct" 'sr-speedbar-toggle)
+
 
 ;; projectile
 (projectile-global-mode)
@@ -216,6 +246,12 @@
   (add-to-list 'company-backends 'company-go))
 (add-hook 'python-mode-hook 'anaconda-mode)
 
+;; markdown-mode
+(setq markdown-command "~/bin/emarkdown")
+(setq auto-mode-alist
+      (cons '("\\.\\(md\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -231,3 +267,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; coding: utf-8
