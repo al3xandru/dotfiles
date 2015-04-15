@@ -41,6 +41,7 @@
                       erlang
                       go-mode
                       go-direx
+		      go-eldoc
                       json-mode
                       markdown-mode
                       php-mode
@@ -132,6 +133,14 @@
 	        isearch-string ""
 	        isearch-message "")
 	  (isearch-yank-string (word-at-point))))
+;; show current file path in mini buffer
+(defun show-file-name ()
+  "Show the full path file name in the minibuffer"
+  (interactive)
+  (message (buffer-file-name))
+  (kill-new (file-truename buffer-file-name)))
+(global-set-key "\C-cz" 'show-file-name)
+
 
 ;;; Themes
 (if window-system
@@ -142,7 +151,8 @@
 ;;; *** plugins ***
 ;; exec-path-from-shell
 (when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
 
 ;; ido flx-ido
 (setq ido-create-new-buffer 'always
@@ -244,12 +254,20 @@
  ;; remove echo delay
  company-echo-delay 0
  ;; don't complete in certain modes
- company-global-modes '(not git-commit-mode org-mode))
+ company-global-modes '(not git-commit-mode markdown-mode org-mode))
 
 (with-eval-after-load 'company
   (add-to-list 'company-backends 'company-anaconda)
   (add-to-list 'company-backends 'company-go))
 (add-hook 'python-mode-hook 'anaconda-mode)
+
+;; go-mode
+(add-hook 'go-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+	    (local-set-key (kbd "C-c C-g") 'go-goto-imports)
+	    (local-set-key (kbd "C-c C-k") 'godoc)))
+
 
 ;; markdown-mode
 (setq markdown-command "~/bin/emarkdown")
