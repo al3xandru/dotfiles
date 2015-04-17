@@ -110,22 +110,22 @@ hi StatusLine ctermbg=59 ctermfg=69
 set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
-if has("gui_macvim")
+if has("gui_running")
+    if has("gui_macvim")
+	"set gfn=Anonymous\ Pro:h12
+	"set gfn=Cousine:h11
+	"set gfn=Inconsolata:h13
+	set gfn=Input\ Mono:h12
+	"set gfn=monofur:h15
+	"set gfn=ProFontX:h12
+	"set gfn=Source\ Code\ Pro:h11
+    elseif has("gui_gtk2")
+	set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
+    endif
+
     set columns=105
     set lines=80
-    "set gfn=Anonymous\ Pro:h12
-    "set gfn=Cousine:h11
-    "set gfn=Inconsolata:h13
-    set gfn=Input\ Mono:h12
-    "set gfn=monofur:h15
-    "set gfn=ProFontX:h12
-    "set gfn=Source\ Code\ Pro:h11
-end
-if has("gui_gtk2")
-    set columns=105
-    set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
-end
-
+endif
 function! FullScrHoriz()
     set fuopt+=maxhorz
     set fullscreen
