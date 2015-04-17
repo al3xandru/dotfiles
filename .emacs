@@ -193,15 +193,15 @@
 (global-set-key "\C-cl" 'org-store-link)
 
 (setq org-capture-templates
-      '(("a" "Todo" entry (file+datetree org-default-notes-file)
+      '(("t" "Todo" entry (file+datetree org-default-notes-file)
 	 "* TODO %?\n  %i" :empty-lines 1)
-	("b" "Todo with ref" entry (file+datetree org-default-notes-file)
+	("r" "Todo with ref" entry (file+datetree org-default-notes-file)
 	 "* TODO %?\n  %a\n  %i" :empty-lines 1)
 	("c" "Task" checkitem (file+datetree org-default-notes-file)
 	 "- [ ] %?\n  %i\n  %T" :empty-lines 1)
-	("d" "Task" checkitem (file+datetree org-default-notes-file)
+	("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
 	 "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
-	("e" "Note" item (file+datetree org-default-notes-file)
+	("n" "Note" item (file+datetree org-default-notes-file)
 	 "+ %? (%T)")))
 
 
