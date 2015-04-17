@@ -119,6 +119,11 @@
 ;; 			    (?\{ . ?\})
 ;; 			    ))
 
+;;; ctags
+(setq tags-case-fold-search t)
+(setq tags-revert-without-query t)
+(setq large-file-warning-threshold 30000000)
+
 ;;; Key bindings
 (global-set-key (kbd "C-x O") 'previous-multiframe-window)
 ;; (global-set-key (kbd "C-*")
@@ -237,6 +242,7 @@
 		"*.class"
 		"*.o") projectile-globally-ignored-files))
 
+(setq projectile-tags-command "/usr/local/bin/ctags -Re -f\"%s\" %s")
 
 ;; neotree
 (global-set-key [f5] 'neotree-toggle)
@@ -274,6 +280,9 @@
 (setq auto-mode-alist
       (cons '("\\.\\(md\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
 
+
+;; web-mode
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
