@@ -1,6 +1,8 @@
 --recurse=yes
 --tag-relative=yes
 --exclude=.git
+--exclude=.svn
+--exclude=*.log
 
 --langdef=Clojure
 --langmap=Clojure:.clj
@@ -25,11 +27,24 @@
 --regex-coffee=/^[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*)[ \t]+=[^->\n]*$/\1/v,variable/
 --regex-coffee=/^[ \t]*@?([a-zA-Z_$][0-9a-zA-Z_$]*):.*$/\1/p,property/
 
+--langdef=js
 --langmap=javascript:.js
 --regex-javascript=/^[ \t]*var ([a-zA-Z_$][0-9a-zA-Z_$]*).*$/\1/v,variable/
 --regex-javascript=/^[ \t]*this\.([a-zA-Z_$][0-9a-zA-Z_$]*)[ \t]*=.*$/\1/e,export/
 --regex-javascript=/^[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*):.*$/\1/p,property/
 --regex-javascript=/^\<function\>[ \t]*([a-zA-Z_$][0-9a-zA-Z_$]*)/\1/f,function/
+--regex-javascript=/([A-Za-z0-9._$]+)[ t]*[:=][ t]*{/1/,object/
+--regex-javascript=/([A-Za-z0-9._$]+)[ t]*[:=][ t]*[/1/,array/
+--regex-javascript=/([^= ]+)[ t]*=[ t]*[^"]'[^']*/1/,string/
+--regex-javascript=/([^= ]+)[ t]*=[ t]*[^']"[^"]*/1/,string/
+
+--langdef=less
+--langmap=less:.less
+--regex-less=/^[ t]*.([A-Za-z0-9_-]+)/1/c,class,classes/
+--regex-less=/^[ t]*#([A-Za-z0-9_-]+)/1/i,id,ids/
+--regex-less=/^[ t]*(([A-Za-z0-9_-]+[ tn,]+)+){/1/t,tag,tags/
+--regex-less=/^[ t]*@medias+([A-Za-z0-9_-]+)/1/m,media,medias/
+
 
 --langmap=php:.engine.inc.module.theme.install.php --PHP-kinds=+cf-v
 
