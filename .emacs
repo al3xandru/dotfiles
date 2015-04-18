@@ -19,41 +19,42 @@
 	     '("melpa" . "http://melpa.milkbox.net/packages/"))
 
 (defvar my-packages '(ag
+		      company
+		      company-anaconda
+		      company-go
+		      company-inf-ruby
+		      company-quickhelp
+		      dash-at-point
 		      exec-path-from-shell
 		      flycheck
-                      flycheck-clojure
-                      flycheck-pyflakes
-                      flycheck-rust
-                      sr-speedbar
-                      projectile
-                      projectile-speedbar
-                      flx-ido
-                      neotree
-                      company
-                      company-anaconda
-                      company-go
-                      company-inf-ruby
-                      company-quickhelp
-                      ;; modes
-                      applescript-mode
-                      clojure-mode
-                      csharp-mode
-                      erlang
-                      go-mode
-                      go-direx
+		      flycheck-clojure
+		      flycheck-pyflakes
+		      flycheck-rust
+		      flx-ido
+		      ggtags
+		      neotree
+		      sr-speedbar
+		      projectile
+		      projectile-speedbar
+		      ;; modes
+		      applescript-mode
+		      clojure-mode
+		      csharp-mode
+		      erlang
+		      go-mode
+		      go-direx
 		      go-eldoc
-                      json-mode
-                      markdown-mode
-                      php-mode
-                      scala-mode
-                      web-mode
-                      yaml-mode
-                      ;; themes
-                      color-theme
-                      ample-theme
-                      color-theme-sanityinc-tomorrow
-                      ir-black-theme
-                      solarized-theme)
+		      json-mode
+		      markdown-mode
+		      php-mode
+		      scala-mode
+		      web-mode
+		      yaml-mode
+		      ;; themes
+		      color-theme
+		      color-theme-sanityinc-tomorrow
+		      ir-black-theme
+		      solarized-theme)
   "Packages that should be installed at launch")
 
 (defun my-packages-installed-p ()
@@ -83,7 +84,7 @@
 ;;; Display
 (setq default-frame-alist
       '(
-        (width . 110)
+        (width . 105)
         (height . 70)
 	(cursor-color . "#ffd700")
 	(font . "Input Mono:11")
@@ -187,10 +188,15 @@
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
 (setq org-default-notes-file (concat org-directory "/instant-notes.org"))
 (setq org-log-done t
-      org-todo-keywords '((sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
-      org-todo-keyword-faces '(("WIP" . (:foreground "#7c2acd" :weight bold))
+      org-todo-keywords '((sequence "MUST" "SHOULD" "WANT" "WIP" "|" "DONE" "CANCELED" "WAIT")
+			  (sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
+      org-todo-keyword-faces '(("MUST" . (:foreground "#ed2200" :weight bold))
+			       ("SHOULD" . (:foreground "#ed2200" :weight bold :slant italic))
+			       ("WANT" . (:foreground "#ed2200" :slant italic))
+			       ("WIP" . (:foreground "#7c2acd" :weight bold))
 			       ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
 			       ("WAIT" . (:foreground "#ff7f00" :slant italic))))
+
 
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
@@ -199,9 +205,9 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-	 "* TODO %?\n  %i" :empty-lines 1)
+	 "* MUST %?\n  %i" :empty-lines 1)
 	("r" "Todo with ref" entry (file+datetree org-default-notes-file)
-	 "* TODO %?\n  %a\n  %i" :empty-lines 1)
+	 "* MUST %?\n  %a\n  %i" :empty-lines 1)
 	("c" "Task" checkitem (file+datetree org-default-notes-file)
 	 "- [ ] %?\n  %i\n  %T" :empty-lines 1)
 	("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
