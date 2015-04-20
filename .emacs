@@ -14,47 +14,47 @@
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives
+	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (defvar my-packages '(ag
-		      company
-		      company-anaconda
-		      company-go
-		      company-inf-ruby
-		      company-quickhelp
-		      dash-at-point
-		      exec-path-from-shell
-		      flycheck
-		      flycheck-clojure
-		      flycheck-pyflakes
-		      flycheck-rust
-		      flx-ido
-		      ggtags
-		      neotree
-		      sr-speedbar
-		      projectile
-		      projectile-speedbar
-		      ;; modes
-		      applescript-mode
-		      clojure-mode
-		      csharp-mode
-		      erlang
-		      go-mode
-		      go-direx
-		      go-eldoc
-		      json-mode
-		      markdown-mode
-		      php-mode
-		      scala-mode
-		      web-mode
-		      yaml-mode
-		      ;; themes
-		      color-theme
-		      color-theme-sanityinc-tomorrow
-		      ir-black-theme
-		      solarized-theme)
+                      company
+                      company-anaconda
+                      company-go
+                      company-inf-ruby
+                      company-quickhelp
+                      dash-at-point
+                      exec-path-from-shell
+                      flycheck
+                      flycheck-clojure
+                      flycheck-pyflakes
+                      flycheck-rust
+                      flx-ido
+                      ggtags
+                      neotree
+                      sr-speedbar
+                      projectile
+                      projectile-speedbar
+                      ;; modes
+                      applescript-mode
+                      clojure-mode
+                      csharp-mode
+                      erlang
+                      go-mode
+                      go-direx
+                      go-eldoc
+                      json-mode
+                      markdown-mode
+                      php-mode
+                      scala-mode2
+                      web-mode
+                      yaml-mode
+                      ;; themes
+                      color-theme
+                      color-theme-sanityinc-tomorrow
+                      ir-black-theme
+                      solarized-theme)
   "Packages that should be installed at launch")
 
 (defun my-packages-installed-p ()
@@ -81,14 +81,16 @@
       initial-scratch-message nil
       ;;initial-major-mode 'org-mode)
       )
+;;; Themes
+(if window-system
+    (load-theme 'misterioso t)
+  (load-theme 'wombat t))
 ;;; Display
 (setq default-frame-alist
-      '(
-        (width . 105)
+      '((width . 105)
         (height . 70)
-	(cursor-color . "#ffd700")
-	(font . "Input Mono:11")
-        ))
+        (cursor-color . "#ffd700")
+        (font . "Input Mono:11")))
 
 ;; (setq-default cursor-type 'bar)
 (blink-cursor-mode 0)
@@ -127,18 +129,23 @@
 
 ;;; Key bindings
 (global-set-key (kbd "C-x O") 'previous-multiframe-window)
+
+(global-set-key (kbd "C-.") 'imenu)
+
 ;; (global-set-key (kbd "C-*")
 ;; 		(lambda ()
 ;; 		  (interactive)
 ;; 		  (re-search-forward (format "\\b%s\\b" (thing-at-point 'word)))))
-(define-key isearch-mode-map (kbd "C-*")
+(define-key isearch-mode-map (kbd "*")
   (lambda ()
 	  "Reset current isearch to a word-mode search of the word under point"
 	  (interactive)
 	  (setq isearch-word t
 	        isearch-string ""
-	        isearch-message "")
+	        isearch-message ""
+            isearch-case-fold-search t)
 	  (isearch-yank-string (word-at-point))))
+
 ;; show current file path in mini buffer
 (defun show-file-name ()
   "Show the full path file name in the minibuffer"
@@ -148,17 +155,36 @@
 (global-set-key "\C-cz" 'show-file-name)
 
 
-;;; Themes
-(if window-system
-    (load-theme 'misterioso t)
-  (load-theme 'wombat t))
 
 
 ;;; *** plugins ***
+;; dash-at-point
+(global-set-key "\C-chd" 'dash-at-point)
+(global-set-key "\C-che" 'dash-at-point-with-docset)
+(add-to-list 'dash-at-point-mode-alist '((clojure-mode . "clojure")
+                                         (go-mode . "go")
+                                         (java-mode . "java7")
+                                         (python-mode . "python2")
+                                         (ruby-mode . "ruby")
+                                         (scala-mode . "scala")))
+
+;; emacs-eclim
+(require 'eclim)
+(require 'company-emacs-eclim)
+(global-eclim-mode)
+(custom-set-variables
+  '(eclim-eclipse-dirs '("/Applications/eclipse"))
+  '(eclim-executable "/Applications/eclipse/eclim"))
+(setq help-at-pt-display-when-idle t
+      help-at-pt-timer-delay 0.5)
+(help-at-pt-set-timer)
+
+
 ;; exec-path-from-shell
 (when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-env "GOPATH"))
+  (exec-path-from-shell-copy-env "GOPATH")
+  (exec-path-from-shell-initialize))
+;; (setenv "PATH" (concat "~/.pyenv/versions/2.7.9/bin" ":" (getenv "PATH")))
 
 ;; ido flx-ido
 (setq ido-create-new-buffer 'always
@@ -184,19 +210,21 @@
   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
 	flycheck-idle-change-delay 1.0))
 
+
 ;; org-mode
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
-(setq org-default-notes-file (concat org-directory "/instant-notes.org"))
+(setq org-default-notes-file (concat org-directory "/instant-notes.text"))
 (setq org-log-done t
       org-todo-keywords '((sequence "MUST" "SHOULD" "WANT" "WIP" "|" "DONE" "CANCELED" "WAIT")
-			  (sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
+                          (sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#ed2200" :weight bold))
 			       ("SHOULD" . (:foreground "#ed2200" :weight bold :slant italic))
 			       ("WANT" . (:foreground "#ed2200" :slant italic))
 			       ("WIP" . (:foreground "#7c2acd" :weight bold))
 			       ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
 			       ("WAIT" . (:foreground "#ff7f00" :slant italic))))
-
+(add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
@@ -270,8 +298,9 @@
 
 (with-eval-after-load 'company
   (add-to-list 'company-backends 'company-anaconda)
-  (add-to-list 'company-backends 'company-go))
-(add-hook 'python-mode-hook 'anaconda-mode)
+  (add-to-list 'company-backends 'company-go)
+  (add-to-list 'company-backends 'company-emacs-eclim))
+
 
 ;; go-mode
 (add-hook 'go-mode-hook
@@ -287,9 +316,19 @@
       (cons '("\\.\\(md\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
 
 
+;; python-mode
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'eldoc-mode)
+
+
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(setq web-mode-markup-indent-offset 2
+      web-mode-css-indent-offset 2
+      web-mode-code-indent-offset 2)
 
+
+;;; Custom
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
