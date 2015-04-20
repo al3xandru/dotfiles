@@ -169,15 +169,16 @@
                                          (scala-mode . "scala")))
 
 ;; emacs-eclim
-(require 'eclim)
-(require 'company-emacs-eclim)
-(global-eclim-mode)
-(custom-set-variables
-  '(eclim-eclipse-dirs '("/Applications/eclipse"))
-  '(eclim-executable "/Applications/eclipse/eclim"))
-(setq help-at-pt-display-when-idle t
-      help-at-pt-timer-delay 0.5)
-(help-at-pt-set-timer)
+;;(require 'eclim)
+;;(require 'company-emacs-eclim)
+;;(global-eclim-mode)
+;;(custom-set-variables
+;;  '(eclim-eclipse-dirs '("/Applications/eclipse"))
+;;  '(eclim-executable "/Applications/eclipse/eclim"))
+;;(setq help-at-pt-display-when-idle t
+;;      help-at-pt-timer-delay 0.5)
+;;(help-at-pt-set-timer)
+;;(add-to-list 'company-backends 'company-emacs-eclim)
 
 
 ;; exec-path-from-shell
@@ -218,11 +219,11 @@
       org-todo-keywords '((sequence "MUST" "SHOULD" "WANT" "WIP" "|" "DONE" "CANCELED" "WAIT")
                           (sequence "TODO" "WIP" "|" "DONE" "CANCELED" "WAIT"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#ed2200" :weight bold))
-			       ("SHOULD" . (:foreground "#ed2200" :weight bold :slant italic))
-			       ("WANT" . (:foreground "#ed2200" :slant italic))
-			       ("WIP" . (:foreground "#7c2acd" :weight bold))
-			       ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
-			       ("WAIT" . (:foreground "#ff7f00" :slant italic))))
+                               ("SHOULD" . (:foreground "#ed2200" :weight bold :slant italic))
+                               ("WANT" . (:foreground "#ed2200" :slant italic))
+                               ("WIP" . (:foreground "#7c2acd" :weight bold))
+                               ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
+                               ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
@@ -233,15 +234,15 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-	 "* MUST %?\n  %i" :empty-lines 1)
-	("r" "Todo with ref" entry (file+datetree org-default-notes-file)
-	 "* MUST %?\n  %a\n  %i" :empty-lines 1)
-	("c" "Task" checkitem (file+datetree org-default-notes-file)
-	 "- [ ] %?\n  %i\n  %T" :empty-lines 1)
-	("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
-	 "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
-	("n" "Note" item (file+datetree org-default-notes-file)
-	 "+ %? (%T)")))
+         "* MUST %?\n  %i" :empty-lines 1)
+        ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
+         "* MUST %?\n  %a\n  %i" :empty-lines 1)
+        ("c" "Task" checkitem (file+datetree org-default-notes-file)
+         "- [ ] %?\n  %i\n  %T" :empty-lines 1)
+        ("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
+         "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
+        ("n" "Note" item (file+datetree org-default-notes-file)
+         "+ %? (%T)")))
 
 
 ;; speedbar
@@ -298,8 +299,7 @@
 
 (with-eval-after-load 'company
   (add-to-list 'company-backends 'company-anaconda)
-  (add-to-list 'company-backends 'company-go)
-  (add-to-list 'company-backends 'company-emacs-eclim))
+  (add-to-list 'company-backends 'company-go))
 
 
 ;; go-mode
