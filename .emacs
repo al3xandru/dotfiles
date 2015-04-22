@@ -31,9 +31,9 @@
 (require 'package)
 (package-initialize)
 (add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/"))
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
 (add-to-list 'package-archives
-	     '("marmalade" . "http://marmalade-repo.org/packages/"))
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (defvar my-packages '(ag
                       company
@@ -78,8 +78,8 @@
 
 (defun my-packages-installed-p ()
   (loop for p in my-packages
-	when (not (package-installed-p p)) do (return nil)
-	finally (return t)))
+    when (not (package-installed-p p)) do (return nil)
+    finally (return t)))
 
 (unless (my-packages-installed-p)
   ;; check for new packages (package versions)
@@ -122,9 +122,9 @@
 (electric-pair-mode 1)
 ;; configure electric pairs
 ;; (setq electric-pair-pairs '(
-;; 			    (?\" . ?\")
-;; 			    (?\{ . ?\})
-;; 			    ))
+;;              (?\" . ?\")
+;;              (?\{ . ?\})
+;;              ))
 
 ;;; ctags
 (setq tags-case-fold-search t)
@@ -137,18 +137,18 @@
 (global-set-key (kbd "C-.") 'imenu)
 
 ;; (global-set-key (kbd "C-*")
-;; 		(lambda ()
-;; 		  (interactive)
-;; 		  (re-search-forward (format "\\b%s\\b" (thing-at-point 'word)))))
+;;      (lambda ()
+;;        (interactive)
+;;        (re-search-forward (format "\\b%s\\b" (thing-at-point 'word)))))
 (define-key isearch-mode-map (kbd "*")
   (lambda ()
-	  "Reset current isearch to a word-mode search of the word under point"
-	  (interactive)
-	  (setq isearch-word t
-	        isearch-string ""
-	        isearch-message ""
+      "Reset current isearch to a word-mode search of the word under point"
+      (interactive)
+      (setq isearch-word t
+            isearch-string ""
+            isearch-message ""
             isearch-case-fold-search t)
-	  (isearch-yank-string (word-at-point))))
+      (isearch-yank-string (word-at-point))))
 
 ;; show current file path in mini buffer
 (defun show-file-name ()
@@ -213,7 +213,7 @@
 (with-eval-after-load 'flycheck
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
-	flycheck-idle-change-delay 1.0))
+        flycheck-idle-change-delay 1.0))
 
 
 ;; org-mode
@@ -255,13 +255,13 @@
 (setq sr-speedbar-right-side nil)
 ;(setq speedbar-use-images nil) ; use text for buttons
 ;; (add-hook 'speedbar-mode-hook
-;; 	  (lambda()
-;; 	    (speedbar-add-supported-extension "\\.rb")
-;; 	    (speedbar-add-supported-extension "\\.ru")
-;; 	    (speedbar-add-supported-extension "\\.erb")
-;; 	    (speedbar-add-supported-extension "\\.rjs")
-;; 	    (speedbar-add-supported-extension "\\.rhtml")
-;; 	    (speedbar-add-supported-extension "\\.rake")))
+;;    (lambda()
+;;      (speedbar-add-supported-extension "\\.rb")
+;;      (speedbar-add-supported-extension "\\.ru")
+;;      (speedbar-add-supported-extension "\\.erb")
+;;      (speedbar-add-supported-extension "\\.rjs")
+;;      (speedbar-add-supported-extension "\\.rhtml")
+;;      (speedbar-add-supported-extension "\\.rake")))
 (global-set-key "\C-ct" 'sr-speedbar-toggle)
 
 
@@ -272,15 +272,15 @@
 (setq projectile-completion-system 'ido)
 (setq projectile-globally-ignored-directories
     (append '(".git"
-	      ".svn"
-	      "build"
-	      "target") projectile-globally-ignored-directories))
+              ".svn"
+              "build"
+              "target") projectile-globally-ignored-directories))
 
 (setq projectile-globally-ignored-files
       (append '("*.pyc"
-		"*.pyo"
-		"*.class"
-		"*.o") projectile-globally-ignored-files))
+                "*.pyo"
+                "*.class"
+                "*.o") projectile-globally-ignored-files))
 
 (setq projectile-tags-command "/usr/local/bin/ctags -Re -f\"%s\" %s")
 
@@ -309,10 +309,10 @@
 
 ;; go-mode
 (add-hook 'go-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
-	    (local-set-key (kbd "C-c C-g") 'go-goto-imports)
-	    (local-set-key (kbd "C-c C-k") 'godoc)))
+      (lambda ()
+        (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+        (local-set-key (kbd "C-c C-g") 'go-goto-imports)
+        (local-set-key (kbd "C-c C-k") 'godoc)))
 
 
 ;; markdown-mode
