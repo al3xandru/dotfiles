@@ -94,7 +94,8 @@
 ;; uncomment next line for disabling backup files
 ;; (setq make-backup-files nil)
 (setq backup-directory-alist `(("." . "~/tmp")))
-
+;; Sessions
+(desktop-save-mode 1)
 
 ;; (setq-default cursor-type 'bar)
 (blink-cursor-mode 0)
@@ -220,16 +221,16 @@
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
 (setq org-default-notes-file (concat org-directory "/instant-notes.text"))
 (setq org-log-done t
-      org-todo-keywords '((sequence "MUST" "SHOULD" "WANT" "WIP" "WAIT" "|" "DONE" "FILED" "CANCELED")
-                          (sequence "TODO" "WIP" "WAIT" "|" "DONE" "FILED" "CANCELED"))
+      org-todo-keywords '((sequence "MUST" "SHLD" "WANT" "WIPR" "WAIT" "|" "DONE" "TASK" "VOID")
+                          (sequence "TODO" "WIPR" "WAIT" "|" "DONE" "TASK" "VOID"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
                                ("TODO" . (:foreground "#fe2500" :weight bold))
-                               ("SHOULD" . (:foreground "#cc1b00" :weight bold :slant italic))
-                               ("WANT" . (:foreground "#8a0f00" :slant italic))
-                               ("WIP" . (:foreground "#6495ed" :weight bold))
-                               ("FILED" . (:foreground "#698b69" :slant italic))
+                               ("SHLD" . (:foreground "#cc1b00" :weight bold :slant italic))
+                               ("WANT" . (:foreground "#cd4f39" :slant italic))
+                               ("WIPR" . (:foreground "#6495ed" :weight bold))
+                               ("TASK" . (:foreground "#698b69" :slant italic))
                                ("DONE" . (:foreground "#698b69"))
-                               ("CANCELED" . (:foreground "#ffd39b" :weight normal :strike-through t))
+                               ("VOID" . (:foreground "#ffd39b" :weight normal :strike-through t))
                                ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 (setq org-agenda-span 14
       org-agenda-start-on-weekday 1)
@@ -244,9 +245,9 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-         "* MUST %?\n  %i" :empty-lines 1)
+         "* TODO %?\n  %i" :empty-lines 1)
         ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
-         "* MUST %?\n  %a\n  %i" :empty-lines 1)
+         "* TODO %?\n  %a\n  %i" :empty-lines 1)
         ("c" "Task" checkitem (file+datetree org-default-notes-file)
          "- [ ] %?\n  %i\n  %T" :empty-lines 1)
         ("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
