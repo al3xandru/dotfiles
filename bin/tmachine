@@ -4,7 +4,7 @@ backup () {
     if [ -d "$BACKUP_TARGET" ]; then
         TODAY=`date +"%Y%m%d %H:%M"`
         # /System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper > /dev/null 2>&1
-        /usr/bin/tmutil startbackup -b
+        /usr/bin/tmutil startbackup -b -d ${DEST_ID}
         if [ $? -eq 0 ]; then
             echo "${TODAY}" >> $HOME/Library/Logs/com.mypopescu.timemachine.log
         fi
@@ -15,10 +15,12 @@ backup () {
 if [[ "$HOSTNAME" = mandelbrot.* ]]; then
     # BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
     BACKUP_TARGET="/Volumes/RMBPTM/Backups.backupdb"
+    DEST_ID="B003E734-E489-47C6-AEA2-055359E7C713"
 elif [[ "$HOSTNAME" = macky.* ]]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
 elif [[ "$HOSTNAME" = leibniz.* ]]; then
     BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
+    DEST_ID="AD0278CA-5A21-487D-A3ED-F4CDDC1F3196"
 else
     echo "Unknown machine name: ${HOSTNAME}"
     exit 1
