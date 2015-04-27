@@ -234,6 +234,7 @@
                                ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 (setq org-agenda-span 14
       org-agenda-start-on-weekday 1)
+(setq org-use-speed-commands t)
 
 (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
@@ -246,11 +247,11 @@
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
          "* TODO %?\n  %i" :empty-lines 1)
-        ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
+        ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
          "* TODO %?\n  %a\n  %i" :empty-lines 1)
         ("c" "Task" checkitem (file+datetree org-default-notes-file)
          "- [ ] %?\n  %i\n  %T" :empty-lines 1)
-        ("l" "Task with ref" checkitem (file+datetree org-default-notes-file)
+        ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
          "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
         ("n" "Note" item (file+datetree org-default-notes-file)
          "+ %? (%T)")))
