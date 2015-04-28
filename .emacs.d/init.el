@@ -246,16 +246,15 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-         "* TODO %?\n  %i" :empty-lines 1)
+         "* TODO %? %u\n  %i" :empty-lines 1)
         ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
-         "* TODO %?\n  %a\n  %i" :empty-lines 1)
+         "* TODO %? %u\n  %a\n  %i" :empty-lines 1)
         ("c" "Task" checkitem (file+datetree org-default-notes-file)
-         "- [ ] %?\n  %i\n  %T" :empty-lines 1)
+         "- [ ] %? %U\n  %i" :empty-lines 1)
         ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
-         "- [ ] %?\n  %a\n  %i\n  %T" :empty-lines 1)
+         "- [ ] %? %U\n  %a\n  %i" :empty-lines 1)
         ("n" "Note" item (file+datetree org-default-notes-file)
-         "+ %? (%T)")))
-
+         "+ %? %U")))
 
 ;; speedbar
 (setq speedbar-show-unknown-files t)
