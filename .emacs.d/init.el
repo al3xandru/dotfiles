@@ -246,41 +246,38 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-         "* TODO %? %U\n  %i" :empty-lines 1)
-        ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
-         "* TODO %? %U\n  %a\n  %i" :empty-lines 1)
+         "* TODO %?\n  %U\n  %i" :empty-lines 1)
+        ("T" "Todo with clipboard" entry (file+datetree org-default-notes-file)
+         "* TODO %?\n  %c\n  %U\n  %i" :empty-lines 1)
         ("c" "Task" checkitem (file+datetree org-default-notes-file)
-         "- [ ] %? %U\n  %i" :empty-lines 1)
-        ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
-         "- [ ] %? %U\n  %a\n  %i" :empty-lines 1)
+         "- [ ] %?\n  %U\n  %i" :empty-lines 1)
+        ("C" "Task with clipboard" checkitem (file+datetree org-default-notes-file)
+         "- [ ] %?\n  %c\n  %U\n  %i" :empty-lines 1)
         ("n" "Note" item (file+datetree org-default-notes-file)
-         "+ %? %U")))
+         "+ %? %U")
+        ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
+         "+ %? %U\n  %c")
+        ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        ("R" "Task with ref" checkitem (file+datetree org-default-notes-file)
+         "- [ ] %?\n  %U\n  %a\n  %i" :empty-lines 1)))
 
 (require 'org-agenda)
 (setq org-agenda-custom-commands
-             '(("w" "Weekly tasks"
-                (
-                 (tags-todo "star"
-                            ((org-agenda-overriding-header "This week")
-                             (org-agenda-sorting-strategy '(priority-down))))
+      '(("w" "Weekly tasks"
+         (
+          (tags-todo "star|DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
+                     ((org-agenda-overriding-header "This week")
+                      (org-agenda-sorting-strategy '(priority-down category-keep))))
 
-                 (tags-todo "DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
-                            ((org-agenda-overriding-header "Prescheduled")))
+          (agenda ""
+                  ((org-agenda-entry-types '(:deadline :scheduled))
+                   (org-agenda-span 'week)
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
-                 (agenda ""
-                         (
-                          (org-agenda-entry-types '(:deadline :scheduled))
-                          (org-agenda-span 'week)
-                          (org-agenda-skip-function
-                           '(org-agenda-skip-entry-if 'todo 'done))))
-                 
-                 
-                 (todo "WAIT" (
-                               (org-agenda-overriding-header "WAITING FOR")
-                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
-                 )
-                ))
-             )
+          (todo "WAIT"
+                ((org-agenda-overriding-header "WAITING FOR")
+                 (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) ) )) )
 
 ;; speedbar
 (setq speedbar-show-unknown-files t)
