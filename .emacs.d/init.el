@@ -266,7 +266,7 @@
 (setq org-agenda-custom-commands
       '(("w" "Weekly tasks"
          (
-          (tags-todo "star|DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
+          (tags-todo "star"
                      ((org-agenda-overriding-header "This week")
                       (org-agenda-sorting-strategy '(priority-down category-keep))))
 
@@ -275,6 +275,10 @@
                    (org-agenda-span 'week)
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
+          ;; (tags-todo "DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
+          ;;            ((org-agenda-overriding-header "Scheduled")
+          ;;             (org-agenda-sorting-strategy '(priority-down category-keep))))
+          
           (todo "WAIT"
                 ((org-agenda-overriding-header "WAITING FOR")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) ) )) )
