@@ -246,15 +246,41 @@
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+datetree org-default-notes-file)
-         "* TODO %? %u\n  %i" :empty-lines 1)
+         "* TODO %? %U\n  %i" :empty-lines 1)
         ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
-         "* TODO %? %u\n  %a\n  %i" :empty-lines 1)
+         "* TODO %? %U\n  %a\n  %i" :empty-lines 1)
         ("c" "Task" checkitem (file+datetree org-default-notes-file)
          "- [ ] %? %U\n  %i" :empty-lines 1)
         ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
          "- [ ] %? %U\n  %a\n  %i" :empty-lines 1)
         ("n" "Note" item (file+datetree org-default-notes-file)
          "+ %? %U")))
+
+(require 'org-agenda)
+(setq org-agenda-custom-commands
+             '(("w" "Weekly tasks"
+                (
+                 (tags-todo "star"
+                            ((org-agenda-overriding-header "This week")
+                             (org-agenda-sorting-strategy '(priority-down))))
+
+                 (tags-todo "DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
+                            ((org-agenda-overriding-header "Prescheduled")))
+
+                 (agenda ""
+                         (
+                          (org-agenda-entry-types '(:deadline :scheduled))
+                          (org-agenda-span 'week)
+                          (org-agenda-skip-function
+                           '(org-agenda-skip-entry-if 'todo 'done))))
+                 
+                 
+                 (todo "WAIT" (
+                               (org-agenda-overriding-header "WAITING FOR")
+                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                 )
+                ))
+             )
 
 ;; speedbar
 (setq speedbar-show-unknown-files t)
