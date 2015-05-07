@@ -35,24 +35,32 @@
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
 
-(defvar my-packages '(ag
+(defvar my-packages '(ace-jump-mode
+                      ag
                       company
                       company-anaconda
                       company-go
                       company-inf-ruby
                       company-quickhelp
                       dash-at-point
+                      ;; eldoc
                       exec-path-from-shell
+                      evil
                       flycheck
                       flycheck-clojure
                       ;; flycheck-pyflakes
                       flycheck-rust
                       flx-ido
                       ggtags
+                      golden-ratio
                       neotree
                       sr-speedbar
                       projectile
                       projectile-speedbar
+                      smartparens
+                      ;; use-package
+                      whitespace
+                      yasnippet
                       ;; modes
                       applescript-mode
                       clojure-mode
@@ -96,6 +104,8 @@
 (setq backup-directory-alist `(("." . "~/tmp")))
 ;; Sessions
 (desktop-save-mode 1)
+;; auto-refresh
+(global-auto-revert-mode 1)
 
 ;; (setq-default cursor-type 'bar)
 (blink-cursor-mode 0)
@@ -113,6 +123,10 @@
 (setq column-number-mode t)
 (show-paren-mode 1)
 (setq show-paren-delay 0.2)
+(global-hl-line-mode t)
+
+;;; yes-or-no
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;;; indentation
 (setq-default indent-tabs-mode nil)
@@ -152,17 +166,44 @@
       (isearch-yank-string (word-at-point))))
 
 ;; show current file path in mini buffer
-(defun show-file-name ()
+(defun alpo/show-file-name ()
   "Show the full path file name in the minibuffer"
   (interactive)
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
-(global-set-key "\C-cz" 'show-file-name)
+(global-set-key "\C-cz" 'alpo/show-file-name)
 
 
 
 
 ;;; *** plugins ***
+;; ace-jump
+(setq ace-jump-mode-scope 'frame)
+
+(eval-after-load "ace-jump-mode" '(ace-jump-mode-enable-mark-sync))
+(global-set-key (kbd "C-c SPC") 'ace-jump-mode)
+(global-set-key (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+
+
+;; company
+(add-hook 'after-init-hook 'global-company-mode)
+(global-set-key (kbd "M-RET") 'company-complete)
+(global-set-key (kbd "s-/") 'company-complete)
+(setq
+ ;; never start auto-completion unless asked
+ company-idle-delay 5
+ ;; autocomplete right after .
+ company-minimum-prefix-length 0
+ ;; remove echo delay
+ company-echo-delay 0
+ ;; don't complete in certain modes
+ company-global-modes '(not git-commit-mode markdown-mode org-mode))
+
+(with-eval-after-load 'company
+  (add-to-list 'company-backends 'company-anaconda)
+  (add-to-list 'company-backends 'company-go))
+
+
 ;; dash-at-point
 (global-set-key "\C-chd" 'dash-at-point)
 (global-set-key "\C-che" 'dash-at-point-with-docset)
@@ -192,6 +233,13 @@
   (exec-path-from-shell-initialize))
 ;; (setenv "PATH" (concat "~/.pyenv/versions/2.7.9/bin" ":" (getenv "PATH")))
 
+
+;; evil
+(require 'evil)
+(evil-mode 1)
+(setq evil-default-state 'emacs)
+
+
 ;; ido flx-ido
 (setq ido-create-new-buffer 'always
       ido-enable-prefix nil
@@ -217,6 +265,19 @@
         flycheck-idle-change-delay 1.0))
 
 
+;; golden-ratio
+(require 'golden-ratio)
+(golden-ratio-mode 1)
+(setq golden-ratio-exclude-modes '("ediff-mode"
+                                   "eshell-mode"
+                                   "dired-mode"))
+
+
+;; neotree
+(global-set-key [f5] 'neotree-toggle)
+(global-set-key "\C-cs" 'neotree-toggle)
+
+
 ;; org-mode
 (setq org-directory "~/Dropbox/Dox/TaskPaper")
 (setq org-default-notes-file (concat org-directory "/instant-notes.text"))
@@ -238,8 +299,33 @@
 (add-to-list 'auto-mode-alist '("\\.text\\'" . org-mode))
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
+(defun alpo/resize-agenda-window ()
+  "Resizes the agenda window to 25% of current frame"
+  (interactive)
+  (let (frmh wndh opth)
+    (setq frmh (frame-height (selected-frame)))
+    (setq wndh (window-total-height (selected-window)))
+    (setq opth (/ frmh 4))
+    (if (< opth 10) (setq opth 10))
+    (message "Agenda window height: %d (frame: %d)" opth frmh)
+    (shrink-window (- wndh opth))))
+
+(defun alpo/agenda-with-resize ()
+  "Display org agenda but also resize"
+  (interactive)
+  (org-agenda)
+  (alpo/resize-agenda-window))
+
+
 (global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-ca" 'alpo/agenda-with-resize)
+;;(global-set-key "\C-ca" 'org-agenda)
+;; (global-set-key "\C-ca"
+;;                 '(lambda ()
+;;                    (interactive)
+;;                    (org-agenda)
+;;                    (balance-windows)
+;;                    (shrink-window 10)))
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cl" 'org-store-link)
 
@@ -265,7 +351,7 @@
 (setq org-agenda-custom-commands
       '(("w" "Weekly tasks"
          (
-          (tags-todo "star"
+          (tags-todo "star|DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
                      ((org-agenda-overriding-header "This week")
                       (org-agenda-sorting-strategy '(priority-down category-keep))))
 
@@ -281,20 +367,6 @@
           (todo "WAIT"
                 ((org-agenda-overriding-header "WAITING FOR")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) ) )) )
-
-;; speedbar
-(setq speedbar-show-unknown-files t)
-(setq sr-speedbar-right-side nil)
-;(setq speedbar-use-images nil) ; use text for buttons
-;; (add-hook 'speedbar-mode-hook
-;;    (lambda()
-;;      (speedbar-add-supported-extension "\\.rb")
-;;      (speedbar-add-supported-extension "\\.ru")
-;;      (speedbar-add-supported-extension "\\.erb")
-;;      (speedbar-add-supported-extension "\\.rjs")
-;;      (speedbar-add-supported-extension "\\.rhtml")
-;;      (speedbar-add-supported-extension "\\.rake")))
-(global-set-key "\C-ct" 'sr-speedbar-toggle)
 
 
 ;; projectile
@@ -316,27 +388,32 @@
 
 (setq projectile-tags-command "/usr/local/bin/ctags -Re -f\"%s\" %s")
 
-;; neotree
-(global-set-key [f5] 'neotree-toggle)
-(global-set-key "\C-cs" 'neotree-toggle)
 
-;; company
-(add-hook 'after-init-hook 'global-company-mode)
-(global-set-key (kbd "M-RET") 'company-complete)
-(global-set-key (kbd "s-/") 'company-complete)
-(setq
- ;; never start auto-completion unless asked
- company-idle-delay 5
- ;; autocomplete right after .
- company-minimum-prefix-length 0
- ;; remove echo delay
- company-echo-delay 0
- ;; don't complete in certain modes
- company-global-modes '(not git-commit-mode markdown-mode org-mode))
+;; smartparens
+(require 'smartparens-config)
 
-(with-eval-after-load 'company
-  (add-to-list 'company-backends 'company-anaconda)
-  (add-to-list 'company-backends 'company-go))
+
+;; speedbar
+(setq speedbar-show-unknown-files t)
+(setq sr-speedbar-right-side nil)
+;(setq speedbar-use-images nil) ; use text for buttons
+;; (add-hook 'speedbar-mode-hook
+;;    (lambda()
+;;      (speedbar-add-supported-extension "\\.rb")
+;;      (speedbar-add-supported-extension "\\.ru")
+;;      (speedbar-add-supported-extension "\\.erb")
+;;      (speedbar-add-supported-extension "\\.rjs")
+;;      (speedbar-add-supported-extension "\\.rhtml")
+;;      (speedbar-add-supported-extension "\\.rake")))
+(global-set-key "\C-ct" 'sr-speedbar-toggle)
+
+
+;; whitespace
+(require 'whitespace)
+
+;;       ;;
+;; Modes ;;
+;;       ;;
 
 
 ;; go-mode
