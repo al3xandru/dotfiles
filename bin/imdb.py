@@ -6,7 +6,6 @@ from __future__ import print_function
 import argparse
 import httplib
 import json
-import os
 import sys
 import socket
 import subprocess
@@ -21,15 +20,16 @@ RATINGS = {
   '1': u'\u2606 (bad. soo bad)',
   '2': u'\u2606\u2606 _(meh)_',
   '3': u'\u2605\u2605\u2605 *(good. i could recommend it)*',
-  '+3' : u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
-  '3+' : u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
+  '+3': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
+  '3+': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
   '3++': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
-  '4'  : u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**'
+  '4': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**'
 }
 
-_API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0', 
-        'alpo', 
+_API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0',
+        'alpo',
         '808a49948b398609e61e62917bd235a8c8139866')
+
 
 def prepare_title(title):
   words = title.lower().split(' ')
@@ -39,6 +39,7 @@ def prepare_title(title):
       continue
     swords.append(w)
   return ' '.join(swords)    
+
 
 # http://stackoverflow.com/questions/1966503/does-imdb-provide-an-api
 # http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=lost
@@ -92,7 +93,6 @@ def imdbapi_data(title, year=None):
       conn.close()
 
   return {}, 0
-
 
 
 def themoviedb_data(title, year=None):
@@ -315,6 +315,7 @@ def main(title, opts):
   print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
   print("http://trakt.tv/search?query=%s" % urllib.quote_plus(title))
 
+  
 def track(data, opts):
   """TODO: Docstring for track.
 
@@ -343,7 +344,6 @@ def track(data, opts):
     print("NOT SAVED (%s): %s" % (res.code, res.read()))
 
 
-
 def get_imdb_id(data, id):
   if not id:
     id = data['imdb_url']
@@ -355,6 +355,7 @@ def get_imdb_id(data, id):
     id = [t for t in path.split('/') if t][-1]
 
   return id
+
 
 def generate_output(data, to_dayone=False):
   print_to(sys.stdout, data)
