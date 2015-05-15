@@ -237,7 +237,12 @@
 ;; evil
 (require 'evil)
 (evil-mode 1)
-(setq evil-default-state 'emacs)
+(setq evil-default-state 'emacs
+      evil-leader/leader ","
+      evil-leader/in-all-states t)
+;; state: 'emacs 'normal 'insert
+;;(evil-set-initial-state 'mode 'state)
+(evil-set-initial-state 'org-mode 'emacs)
 
 
 ;; ido flx-ido
@@ -268,9 +273,13 @@
 ;; golden-ratio
 (require 'golden-ratio)
 (golden-ratio-mode 1)
-(setq golden-ratio-exclude-modes '("ediff-mode"
+(setq golden-ratio-exclude-modes '("dired-mode"
+                                   "ediff-mode"
                                    "eshell-mode"
-                                   "dired-mode"))
+                                   "neotree-mode"
+                                   "speedbar-mode"))
+(setq golden-ration-exclude-buffer-names '(" *NeoTree*"
+                                           " *SPEEDBAR*"))
 
 
 ;; neotree
@@ -394,8 +403,10 @@
 
 
 ;; speedbar
-(setq speedbar-show-unknown-files t)
-(setq sr-speedbar-right-side nil)
+(setq speedbar-show-unknown-files t
+      sr-speedbar-right-side nil)
+(setq sr-speedbar-max-width 10
+      sr-speedbar-default-width 20)
 ;(setq speedbar-use-images nil) ; use text for buttons
 ;; (add-hook 'speedbar-mode-hook
 ;;    (lambda()
