@@ -1,5 +1,6 @@
-# This is the default .slate file.
-# If no ~/.slate file exists this is the file that will be used.
+# Slate config
+# original: https://github.com/jigish/slate
+# fork    : https://github.com/mattr-/slate
 
 config defaultToCurrentScreen true
 config nudgePercentOf screenSize
@@ -8,11 +9,16 @@ config resizePercentOf screenSize
 config undoOps grid,layout,move,resize,push,nudge
 # config switchShowTitles true
 
+# monitor aliases
+alias mon-laptop 1920x1200
+alias mon-monoprice 2560x1440
+
 # Undo
 bind z:cmd;ctrl    undo
 
 # Grid
-bind g:cmd;ctrl    grid padding:5 1440x900:16,10 1680x1050:16,9
+bind g:cmd;ctrl    grid padding:5
+bind esc:ctrl      grid padding:5
 
 # Resize Bindings
 # Enlarge: top-right-bottom-left
@@ -52,3 +58,17 @@ bind down:alt;cmd;ctrl  nudge +0  +25
 bind 0:cmd;ctrl     throw 0
 bind 9:cmd;ctrl     throw 1
 
+# Work messenger layout
+alias 2-top-l move screenOriginX;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+alias 2-bot-l move screenOriginX;screenOriginY+screenSizeY/2  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+alias 2-top-c move screenOriginX+screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+alias 2-top-r move screenOriginX+2*screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+
+layout workMsg 'Slack' ${2-top-l}
+layout workMsg 'Textual 5':REPEAT ${2-top-l}
+layout workMsg 'Salesforce Chatter' ${2-top-l}
+layout workMsg 'HipChat' ${2-bot-l}
+layout workMsg 'The Hit List' ${2-top-c}
+layout workMsg 'TaskPaper' ${2-top-r}
+
+bind w:alt;cmd;ctrl layout workMsg
