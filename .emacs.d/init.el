@@ -142,9 +142,9 @@
 ;;              ))
 
 ;;; ctags
-(setq tags-case-fold-search t)
-(setq tags-revert-without-query t)
-(setq large-file-warning-threshold 30000000)
+(setq tags-case-fold-search t
+      tags-revert-without-query t
+      large-file-warning-threshold 30000000)
 
 ;;; Key bindings
 (global-set-key (kbd "C-x O") 'previous-multiframe-window)
@@ -205,8 +205,8 @@
 
 
 ;; dash-at-point
-(global-set-key "\C-chd" 'dash-at-point)
-(global-set-key "\C-che" 'dash-at-point-with-docset)
+(global-set-key "\C-ch" 'dash-at-point)
+(global-set-key "\C-cH" 'dash-at-point-with-docset)
 (add-to-list 'dash-at-point-mode-alist '((clojure-mode . "clojure")
                                          (go-mode . "go")
                                          (java-mode . "java7")
@@ -288,8 +288,10 @@
 
 
 ;; org-mode
-(setq org-directory "~/Dropbox/Dox/TaskPaper")
-(setq org-default-notes-file (concat org-directory "/instant-notes.text"))
+(setq org-directory "~/Dropbox/Dox/TaskPaper"
+      org-default-notes-file (concat org-directory "/instant-notes.text")
+      org-agenda-files '("~/Dropbox/Dox/TaskPaper/instant-notes.text"
+                         "~/Dropbox/Dox/TaskPaper/habits.text"))
 (setq org-log-done t
       org-todo-keywords '((sequence "TODO(t)" "MUST(m)" "WANT(w)" "WISH(i)" "WIPR(p)" "WAIT(d)" "|" "DONE(x)" "FILED(f)" "VOID(c)"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
@@ -327,14 +329,8 @@
 
 
 (global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'alpo/agenda-with-resize)
-;;(global-set-key "\C-ca" 'org-agenda)
-;; (global-set-key "\C-ca"
-;;                 '(lambda ()
-;;                    (interactive)
-;;                    (org-agenda)
-;;                    (balance-windows)
-;;                    (shrink-window 10)))
+;; (global-set-key "\C-ca" 'alpo/agenda-with-resize)
+(global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\C-cl" 'org-store-link)
 
@@ -369,13 +365,17 @@
                    (org-agenda-span 'week)
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
-          ;; (tags-todo "DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
-          ;;            ((org-agenda-overriding-header "Scheduled")
-          ;;             (org-agenda-sorting-strategy '(priority-down category-keep))))
-          
           (todo "WAIT"
                 ((org-agenda-overriding-header "WAITING FOR")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) ) )) )
+
+;; habits
+(add-to-list 'org-modules 'org-habit)
+(setq org-habit-show-done-always-green t
+      org-habit-show-habits-only-for-today t
+      org-habit-graph-column 55
+      org-habit-following-days 3
+      org-habit-preceding-days 7)
 
 
 ;; projectile
@@ -462,8 +462,7 @@
  '(custom-enabled-themes (quote (sanityinc-tomorrow-eighties)))
  '(custom-safe-themes
    (quote
-    ("7dd0db710296c4cec57c39068bfffa63861bf919fb6be1971012ca42346a417f" "3a69621a68c2d3550a4c777ffc000e1ea66f5bc2f61112814c591e1bda3f5704" "9bc1eec9b485726318efd9341df6da8b53fa684931d33beba57ed7207f2090d6" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "a041a61c0387c57bb65150f002862ebcfe41135a3e3425268de24200b82d6ec9" "5cd698ce53179b1e4eaa7917c992832a220600c973967904fea71e3980a46532" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8d6fb24169d94df45422617a1dfabf15ca42a97d594d28b3584dc6db711e0e0b" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "764e3a6472a3a4821d929cdbd786e759fab6ef6c2081884fca45f1e1e3077d1d" default)))
- '(org-agenda-files (quote ("~/Dropbox/Dox/TaskPaper/instant-notes.text"))))
+    ("7dd0db710296c4cec57c39068bfffa63861bf919fb6be1971012ca42346a417f" "3a69621a68c2d3550a4c777ffc000e1ea66f5bc2f61112814c591e1bda3f5704" "9bc1eec9b485726318efd9341df6da8b53fa684931d33beba57ed7207f2090d6" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "a041a61c0387c57bb65150f002862ebcfe41135a3e3425268de24200b82d6ec9" "5cd698ce53179b1e4eaa7917c992832a220600c973967904fea71e3980a46532" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8d6fb24169d94df45422617a1dfabf15ca42a97d594d28b3584dc6db711e0e0b" "08efabe5a8f3827508634a3ceed33fa06b9daeef9c70a24218b70494acdf7855" "764e3a6472a3a4821d929cdbd786e759fab6ef6c2081884fca45f1e1e3077d1d" default))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
