@@ -249,6 +249,11 @@ function gopath {
 }
 
 function goprj {
-    mkdir -p "$1/"{bin,pkg,src}    
-    cd "$1"
+    if [ -z "$1" ]; then
+        echo "Project name required"
+    else
+        mkdir -p "$1/"{bin,pkg,src}    
+        cd "$1"
+        gopath .
+    fi
 }
