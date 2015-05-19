@@ -49,3 +49,11 @@
 .vim/bundle/vim-scala
 .vim/bundle/vim-snippets
 .vim/bundle/vim-surround
+# emacs
+.emacs.d/.emacs.desktop*
+.emacs.d/.python-environments
+.emacs.d/SessionDesktop.el
+.emacs.d/bookmarks
+.emacs.d/elpa
+.emacs.d/ido.last
+.emacs.d/projectile-bookmarks.eld
