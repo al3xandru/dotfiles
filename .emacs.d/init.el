@@ -358,7 +358,7 @@
          (
           (tags-todo "star|DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
                      ((org-agenda-overriding-header "This week")
-                      (org-agenda-sorting-strategy '(priority-down category-keep))))
+                      (org-agenda-sorting-strategy '(todo-state-up priority-down habit-down))))
 
           (agenda ""
                   ((org-agenda-entry-types '(:deadline :scheduled))
