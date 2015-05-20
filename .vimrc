@@ -143,6 +143,24 @@ set number
 set ruler
 set visualbell t_vb=
 
+" http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+function! ToggleLineNo()
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+    else
+        set nonumber
+        set relativenumber
+    endif
+endfunction
+nnoremap <C-n> :call ToggleLineNo()<cr>
+augroup lineno
+    autocmd!
+    autocmd FocusLost * :set norelativenumber
+    autocmd FocusLost * :set number
+    autocmd InsertEnter * :set norelativenumber
+    autocmd InsertEnter * :set number
+augroup END
 
 " 14. tabs and indenting
 set expandtab
