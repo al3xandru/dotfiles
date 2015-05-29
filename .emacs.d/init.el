@@ -53,6 +53,7 @@
                       flx-ido
                       ggtags
                       golden-ratio
+                      org
                       neotree
                       sr-speedbar
                       projectile
@@ -129,7 +130,10 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;;; indentation
-(setq-default indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil
+              tab-width 4)
+(setq indent-tabs-mode nil
+      tab-width 4)
 (electric-indent-mode 1)
 (add-hook 'yaml-mode-hook (lambda () (electric-indent-local-mode -1)))
 
@@ -290,10 +294,9 @@
 ;; org-mode
 (setq org-directory "~/Dropbox/Dox/TaskPaper"
       org-default-notes-file (concat org-directory "/instant-notes.text")
-      org-agenda-files '("~/Dropbox/Dox/TaskPaper/instant-notes.text"
-                         "~/Dropbox/Dox/TaskPaper/habits.text"))
+      org-agenda-files '("~/Dropbox/Dox/TaskPaper/instant-notes.text"))
 (setq org-log-done t
-      org-todo-keywords '((sequence "TODO(t)" "MUST(m)" "WANT(w)" "WISH(i)" "WIPR(p)" "WAIT(d)" "|" "DONE(x)" "FILED(f)" "VOID(c)"))
+      org-todo-keywords '((sequence "MUST(m)" "WANT(w)" "WISH(i)" "TODO(t)" "WIPR(p)" "WAIT(s)" "|" "DONE(d)" "FILED(f)" "AXED(x)"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
                                ("TODO" . (:foreground "#fe2500" :weight bold))
                                ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
@@ -301,7 +304,7 @@
                                ("WIPR" . (:foreground "#6495ed" :weight bold))
                                ("FILED" . (:foreground "#698b69" :slant italic))
                                ("DONE" . (:foreground "#698b69"))
-                               ("VOID" . (:foreground "#ffd39b" :weight normal :strike-through t))
+                               ("AXED" . (:foreground "#ffd39b" :weight normal :strike-through t))
                                ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 (setq org-agenda-span 14
       org-agenda-start-on-weekday 1)
@@ -356,18 +359,30 @@
 (setq org-agenda-custom-commands
       '(("w" "Weekly tasks"
          (
-          (tags-todo "star|DEADLINE<=\"<+1w>\"-star|SCHEDULED<=\"<+1w>\"-star"
-                     ((org-agenda-overriding-header "This week")
+          (tags-todo "S"
+                     ((org-agenda-overriding-header "Prioritized for this week:")
                       (org-agenda-sorting-strategy '(todo-state-up priority-down habit-down))))
 
-          (agenda ""
+          (agenda "Agenda"
                   ((org-agenda-entry-types '(:deadline :scheduled))
                    (org-agenda-span 'week)
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
+          (tags-todo "DEADLINE<\"<+1w>\"-S|SCHEDULED<\"<+1w>\"-S"
+                     ((org-agenda-overriding-header "Scheduled for next 7 days:")
+                      (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down habit-down))))
+
           (todo "WAIT"
-                ((org-agenda-overriding-header "WAITING FOR")
+                ((org-agenda-overriding-header "Parked/Waiting for")
                  (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline)))) ) )) )
+
+(add-to-list 'org-agenda-custom-commands
+             '("q" "Testing"
+               (
+                (tags-todo "SCHEDULED>=\"<+0d>\""
+                           ((org-agenda-sorting-strategy '(todo-state-down))
+                            (org-agenda-overriding-header "Scheduled for next 7 days")))
+                )))
 
 ;; habits
 (add-to-list 'org-modules 'org-habit)
@@ -432,13 +447,18 @@
       (lambda ()
         (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
         (local-set-key (kbd "C-c C-g") 'go-goto-imports)
-        (local-set-key (kbd "C-c C-k") 'godoc)))
+        (local-set-key (kbd "C-c C-k") 'godoc)
+        (local-set-key (kbd "C-c C-f") 'gofmt)))
+(add-hook 'go-mode-hook 'company-mode)
 
 
 ;; markdown-mode
-(setq markdown-command "~/bin/emarkdown")
-(setq auto-mode-alist
-      (cons '("\\.\\(md\\|markdown\\)\\'" . markdown-mode) auto-mode-alist))
+(setq markdown-command "~/bin/emarkdown"
+      markdown-italic-underscore t
+      markdown-hr-strings '("* * * * *\n\n")
+      markdown-reference-location 'end)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 
 
 ;; python-mode
@@ -448,6 +468,7 @@
 
 ;; web-mode
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tmpl\\'" . web-mode))
 (setq web-mode-markup-indent-offset 2
       web-mode-css-indent-offset 2
       web-mode-code-indent-offset 2)
