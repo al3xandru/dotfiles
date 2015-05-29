@@ -3,6 +3,17 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+# cd & tabtitle
+function cf() {
+    local t=$1
+    if [ -z "$t" ]; then
+        cd ~
+    else
+        cd "$t"
+    fi
+    echo -e "\033];$(basename $PWD)\007"
+}
+
 # iTerm2 tab title
 function tabtitle() {
     local t=$1
