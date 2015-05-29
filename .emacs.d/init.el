@@ -296,7 +296,7 @@
       org-default-notes-file (concat org-directory "/instant-notes.text")
       org-agenda-files '("~/Dropbox/Dox/TaskPaper/instant-notes.text"))
 (setq org-log-done t
-      org-todo-keywords '((sequence "MUST(m)" "WANT(w)" "WISH(i)" "TODO(t)" "WIPR(p)" "WAIT(s)" "|" "DONE(d)" "FILED(f)" "AXED(x)"))
+      org-todo-keywords '((sequence "MUST(m)" "WANT(w)" "WISH(i)" "TODO(t)" "WIPR(p)" "WAIT(s)" "|" "DONE(d)" "FILED(f)" "SKIP(x)"))
       org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
                                ("TODO" . (:foreground "#fe2500" :weight bold))
                                ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
@@ -304,6 +304,7 @@
                                ("WIPR" . (:foreground "#6495ed" :weight bold))
                                ("FILED" . (:foreground "#698b69" :slant italic))
                                ("DONE" . (:foreground "#698b69"))
+                               ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))
                                ("AXED" . (:foreground "#ffd39b" :weight normal :strike-through t))
                                ("WAIT" . (:foreground "#ff7f00" :slant italic))))
 (setq org-agenda-span 14
