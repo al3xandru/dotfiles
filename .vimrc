@@ -156,10 +156,8 @@ endfunction
 nnoremap <C-n> :call ToggleLineNo()<cr>
 augroup lineno
     autocmd!
-    autocmd FocusLost * :set norelativenumber
-    autocmd FocusLost * :set number
-    autocmd InsertEnter * :set norelativenumber
-    autocmd InsertEnter * :set number
+    autocmd FocusLost * set norelativenumber | set number
+    autocmd InsertEnter * set norelativenumber | set number
 augroup END
 
 " 14. tabs and indenting
