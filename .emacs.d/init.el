@@ -46,6 +46,9 @@
                       ;; eldoc
                       exec-path-from-shell
                       evil
+                      evil-easymotion
+                      evil-leader
+                      evil-org
                       flycheck
                       flycheck-clojure
                       ;; flycheck-pyflakes
