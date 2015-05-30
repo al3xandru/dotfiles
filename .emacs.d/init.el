@@ -55,6 +55,9 @@
                       flx-ido
                       ggtags
                       golden-ratio
+                      helm
+                      helm-ag
+                      helm-projectile
                       org
                       neotree
                       sr-speedbar
@@ -245,12 +248,12 @@
       evil-leader/leader ","
       evil-shift-width 4
       evil-leader/in-all-states t)
+(require 'evil)
+(evil-mode 1)
 ;; state: 'emacs 'normal 'insert
 ;;(evil-set-initial-state 'mode 'state)
 (evil-set-initial-state 'org-mode 'emacs)
 
-(require 'evil)
-(evil-mode 1)
 
 
 ;; evil-easymotion
@@ -261,16 +264,16 @@
       ido-enable-prefix nil
       ido-enable-flex-matching t
       ido-everywhere t
-      ido-use-filename-at-point 'guess)
-(ido-mode 1)
-
-(require 'flx-ido)
-(flx-ido-mode 1)
-
-;; disable ido faces to see flx highlights
-(setq ido-use-faces nil)
+      ido-use-filename-at-point 'guess
+      ido-use-faces nil) ;; disable ido faces to see flx highlights
 ;; uncomment to disable flx highlights
 ;; (setq flx-ido-use-faces nil)
+;; (ido-mode 1)
+
+;; (require 'flx-ido)
+;; (flx-ido-mode 1)
+
+
 
 
 ;; flycheck
@@ -283,14 +286,25 @@
 
 ;; golden-ratio
 (require 'golden-ratio)
-(golden-ratio-mode 1)
 (setq golden-ratio-exclude-modes '("dired-mode"
                                    "ediff-mode"
                                    "eshell-mode"
                                    "neotree-mode"
                                    "speedbar-mode"))
-(setq golden-ration-exclude-buffer-names '(" *NeoTree*"
+(setq golden-ratio-exclude-buffer-names '(" *NeoTree*"
                                            " *SPEEDBAR*"))
+(defun alpo/helm-alive-p ()
+  (if (boundp 'helm-alive-p)
+      (symbol-value 'helm-alive-p)))
+(add-to-list 'golden-ratio-inhibit-functions 'alpo/helm-alive-p)
+
+(golden-ratio-mode 1)
+
+
+;; helm
+(require 'helm-config)
+(helm-mode 1)
+(helm-projectile-on)
 
 
 ;; neotree
@@ -408,7 +422,7 @@
 (projectile-global-mode)
 ;;(setq projectile-indexing-method 'native)
 (setq projectile-use-native-indexing t)
-(setq projectile-completion-system 'ido)
+(setq projectile-completion-system 'helm)
 (setq projectile-globally-ignored-directories
     (append '(".git"
               ".svn"
