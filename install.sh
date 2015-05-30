@@ -17,7 +17,7 @@ function doStatus() {
     fi
 
 
-    arr=("." ".git" ".gitignore" ".gitmodules" "README.md" "bootstrap.sh" "install.sh" ".DS_Store")
+    arr=("." ".git" ".gitignore" ".gitmodules" ".rsyncexclude" "README.md" "bootstrap.sh" "install.sh" ".DS_Store")
     
     echo ""
     echo "2) Comparing dirs"
