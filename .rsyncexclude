@@ -1,0 +1,16 @@
+.aliases
+.exports
+.functions
+.path
+.prompt_bash
+.slate
+.vimrc
+.emacs.d/init.el
+.git/
+.gitignore
+.gitmodules
+bootstrap.sh
+install.sh
+README.md
+.DS_Store
+.rsyncexclude
