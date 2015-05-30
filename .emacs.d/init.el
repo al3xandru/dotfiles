@@ -47,7 +47,6 @@
                       exec-path-from-shell
                       evil
                       evil-easymotion
-                      evil-leader
                       evil-org
                       flycheck
                       flycheck-clojure
@@ -242,15 +241,20 @@
 
 
 ;; evil
-(require 'evil)
-(evil-mode 1)
 (setq evil-default-state 'emacs
       evil-leader/leader ","
+      evil-shift-width 4
       evil-leader/in-all-states t)
 ;; state: 'emacs 'normal 'insert
 ;;(evil-set-initial-state 'mode 'state)
 (evil-set-initial-state 'org-mode 'emacs)
 
+(require 'evil)
+(evil-mode 1)
+
+
+;; evil-easymotion
+(evilem-default-keybindings "SPC")
 
 ;; ido flx-ido
 (setq ido-create-new-buffer 'always
