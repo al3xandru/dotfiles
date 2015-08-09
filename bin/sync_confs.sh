@@ -2,6 +2,7 @@
 declare -a CONF_FILES
 CONF_FILES=("${HOME}"/.MacOSX-renamed/environment.donotuse
     "${HOME}/Library/Application Support/Karabiner/private.xml"
+    "${HOME}/Library/Application Support/KeyRemap4MacBook/private.xml"
     "${HOME}"/"Library/Application Support/LaunchBar/Configuration.plist"
     "${HOME}"/"Library/Application Support/LaunchBar/CustomShortcuts.plist"
     "${HOME}"/"Library/Application Support/BetterTouchTool/bttdata2"
@@ -9,13 +10,12 @@ CONF_FILES=("${HOME}"/.MacOSX-renamed/environment.donotuse
     "${HOME}"/Library/Preferences/com.apple.Safari.plist
     "${HOME}"/Library/Colors/SkimNotes.clr
     "${HOME}"/Library/Colors/Solarized.clr
-    "${HOME}"/"Library/Containers/com.multimarkdown.composer.mac/Data/Library/Application Support/MultiMarkdown Composer/Styles/mMyword.style"
 )
 
 if [ -z "$TARGET_DIR" ]; then
     TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/configfiles"
 fi
-MACHINE_NAME=`hostname`
+MACHINE_NAME=`hostname -s`
 
 echo "Synching config files for machine: ${MACHINE_NAME}"
 echo "into: ${TARGET_DIR}"
@@ -25,7 +25,9 @@ for fi in "${CONF_FILES[@]}"
     do
         must_copy="false"
         fname=`basename "$fi"`
-        tfile="${TARGET_DIR}"/"${MACHINE_NAME}"-"${fname}"
+        fdname=`dirname "$fi"`
+        dname=`basename "$fdname"`
+        tfile="${TARGET_DIR}"/"${MACHINE_NAME}-${dname}-${fname}"
         echo "Processing: '$fi'"
         echo "Target    : '$tfile'"
         if [ -e "$tfile" ]; then
