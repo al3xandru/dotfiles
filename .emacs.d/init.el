@@ -47,6 +47,7 @@
                       exec-path-from-shell
                       evil
                       evil-easymotion
+                      evil-leader
                       evil-org
                       flycheck
                       flycheck-clojure
@@ -244,20 +245,24 @@
 
 
 ;; evil
+(require 'evil)
 (setq evil-default-state 'emacs
       evil-leader/leader ","
       evil-shift-width 4
       evil-leader/in-all-states t)
-(require 'evil)
 (evil-mode 1)
 ;; state: 'emacs 'normal 'insert
 ;;(evil-set-initial-state 'mode 'state)
 (evil-set-initial-state 'org-mode 'emacs)
 
 
-
 ;; evil-easymotion
 (evilem-default-keybindings "SPC")
+
+
+;; evil-org-mode
+(require 'evil-org)
+
 
 ;; ido flx-ido
 (setq ido-create-new-buffer 'always
@@ -360,7 +365,9 @@
 (global-set-key "\C-cl" 'org-store-link)
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+datetree org-default-notes-file)
+      '(("l" "Log" item (file+datetree org-default-notes-file)
+         "+ [%<%H:%M>] %?")
+        ("t" "Todo" entry (file+datetree org-default-notes-file)
          "* TODO %?\n  %U\n  %i" :empty-lines 1)
         ("T" "Todo with clipboard" entry (file+datetree org-default-notes-file)
          "* TODO %?\n  %c\n  %U\n  %i" :empty-lines 1)
@@ -413,7 +420,26 @@
       org-habit-graph-column 55
       org-habit-following-days 3
       org-habit-preceding-days 7)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (add-hook 'after-save-hook 'org-html-export-to-html nil t)))
 
+(require 'org)
+
+;; http://orgmode.org/manual/Adding-hyperlink-types.html#Adding-hyperlink-types
+(org-add-link-type "omnifocus" 'alpo/org-omnifocus-open-link)
+(org-add-link-type "mailplane" 'alpo/org-mailplane-open-link)
+
+(defun alpo/org-omnifocus-open-link (path)
+  "Open an omnifocus url scheme"
+  (message "Open OmniFocus link: omnifocus:%s" path)
+  (shell-command (concat "open \"omnifocus:" path "\"")))
+
+(defun alpo/org-mailplane-open-link (path)
+  "Open a Mailplane url scheme"
+  (let ((escpath (replace-regexp-in-string " " "%20" path)))
+       (message "Open Mailplane link: mailplane:%s" escpath)
+       (shell-command (concat "open \"mailplane:" escpath "\""))))
 
 ;; (require 'org-bullets)
 ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
