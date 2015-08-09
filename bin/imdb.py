@@ -454,6 +454,7 @@ if __name__ == '__main__':
   parser.add_argument('title', nargs='+')
 
   opts = parser.parse_args()
+  opts.dayone = True  # enable DayOne by default
   title = u' '.join(opts.title)
 
   main(title, opts)
