@@ -15,7 +15,8 @@ backup () {
 if [[ "$HOSTNAME" = mandelbrot.* ]]; then
     # BACKUP_TARGET="/Volumes/rMBPTimeMachine/Backups.backupdb"
     BACKUP_TARGET="/Volumes/RMBPTM/Backups.backupdb"
-    DEST_ID="B003E734-E489-47C6-AEA2-055359E7C713"
+    # DEST_ID="B003E734-E489-47C6-AEA2-055359E7C713"
+    DEST_ID="D43D3373-258F-4042-A62C-67E9999A1EAF"
 elif [[ "$HOSTNAME" = macky.* ]]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
 elif [[ "$HOSTNAME" = leibniz.* ]]; then
