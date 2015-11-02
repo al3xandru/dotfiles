@@ -340,6 +340,7 @@ Bundle 'kien/ctrlp.vim'
 let g:loaded_ctrlp = 0
 set runtimepath^=~/.vim/bundle/ctrlp
 map <unique> <Leader>s :CtrlP<CR>
+map <unique> <Leader>T :CtrlPBufTag<CR>
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 
