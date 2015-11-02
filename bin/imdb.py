@@ -377,6 +377,7 @@ def print_to(stream, data):
   stream.write("\n\n")
   stream.write("Year : %s   \n" % data['year'])
   stream.write("Genre: %s   \n" % ', '.join(data['genre']))
+  stream.write("Tagline: \n")
   stream.write("\n")
 
   # Ratings
