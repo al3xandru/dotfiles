@@ -326,29 +326,29 @@ end
 " Load Vundle
 filetype off " required!
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
 
 " www.vim.org/scripts
-Bundle 'AutoTag'
+Plugin 'AutoTag'
 set tags=./tags;/
 
 
-Bundle 'HTML-AutoCloseTag'
+Plugin 'HTML-AutoCloseTag'
 " Disable:
 " let b:mapped_auto_closetag = 1
 
 
-Bundle 'Colour-Sampler-Pack'
-Bundle '256-grayvim'
-Bundle 'blacklight'
-Bundle 'MochaLatte'
-Bundle 'blerins/flattown'
-Bundle 'gregsexton/Atom'
-Bundle 'nice/sweater'
-Bundle 'zefei/cake16'
-Bundle 'zeis/vim-kolor'
+Plugin 'Colour-Sampler-Pack'
+Plugin '256-grayvim'
+Plugin 'blacklight'
+Plugin 'MochaLatte'
+Plugin 'blerins/flattown'
+Plugin 'gregsexton/Atom'
+Plugin 'nice/sweater'
+Plugin 'zefei/cake16'
+Plugin 'zeis/vim-kolor'
 
 if has("unix")
     let s:uname = system("uname -s")
@@ -363,15 +363,15 @@ call SetCursorLineColors()
 
 
 " GitHub
-Bundle 'duff/vim-scratch'
+Plugin 'duff/vim-scratch'
 
 
-Bundle 'Townk/vim-autoclose'
+Plugin 'Townk/vim-autoclose'
 " Disable: 
 " let g:loaded_AutoClose = 1
 
 
-Bundle 'kien/ctrlp.vim'
+Plugin 'kien/ctrlp.vim'
 " CtrlP
 let g:loaded_ctrlp = 0
 set runtimepath^=~/.vim/bundle/ctrlp
@@ -381,7 +381,7 @@ let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 
 
-Bundle 'kien/rainbow_parentheses.vim'
+Plugin 'kien/rainbow_parentheses.vim'
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -389,10 +389,10 @@ au Syntax * RainbowParenthesesLoadBraces
 
 
 
-Bundle 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdcommenter'
 
 
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 " NERDtree settings
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
@@ -405,23 +405,23 @@ let NERDTreeHighlightCursorline=1
 
 
 if has("python")
-    Bundle 'SirVer/ultisnips'
+    Plugin 'SirVer/ultisnips'
 else
-    Bundle 'MarcWeber/vim-addon-mw-utils'
-    Bundle 'tomtom/tlib_vim'
-    Bundle 'garbas/vim-snipmate'
+    Plugin 'MarcWeber/vim-addon-mw-utils'
+    Plugin 'tomtom/tlib_vim'
+    Plugin 'garbas/vim-snipmate'
 endif
-Bundle 'honza/vim-snippets'
-Bundle 'scrooloose/syntastic'
-Bundle 'Shougo/vimproc.vim'
-Bundle 'Shougo/unite.vim'
+Plugin 'honza/vim-snippets'
+Plugin 'scrooloose/syntastic'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/unite.vim'
 nnoremap <leader>uf :Unite -start-insert file/async<CR>
 nnoremap <leader>ud :Unite -start-insert file_rec/async<CR>
 nnoremap <leader>ub :Unite buffer bookmark<CR>
 nnoremap <leader>ut :Unite tab<CR>
 
 " Taskpaper
-Bundle 'davidoc/taskpaper.vim'
+Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
 " command! -nargs=+ HiLink hi def link <args>
@@ -431,31 +431,31 @@ let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " delcommand HiLink '
 
 
-Bundle 'altercation/vim-colors-solarized'
+Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
 
 
-Bundle 'edsono/vim-matchit'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
+Plugin 'edsono/vim-matchit'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
 
-Bundle 'majutsushi/tagbar'
+Plugin 'majutsushi/tagbar'
 let g:tagbar_autoclose = 1
 let g:tagbar_showlinenumbers = 1
 map <silent> <Leader>t :TagbarToggle<CR>
 nmap <silent> <F9> :TagbarToggle<CR>
 
 " Dash.app
-Bundle 'rizzatti/funcoo.vim'
-Bundle 'rizzatti/dash.vim'
+Plugin 'rizzatti/funcoo.vim'
+Plugin 'rizzatti/dash.vim'
 :nmap <silent> <Leader>h <Plug>DashSearch
 
 
 
-Bundle 'bling/vim-airline'
+Plugin 'bling/vim-airline'
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -473,7 +473,7 @@ let g:airline_mode_map={
        \ }
 
 
-Bundle 'Lokaltog/vim-easymotion'
+Plugin 'Lokaltog/vim-easymotion'
 "map ' <Plug>(easymotion-prefix)
 nmap "s <Plug>(easymotion-s2)
 nmap "S <Plug>(easymotion-s)
@@ -482,17 +482,17 @@ nmap "e <Plug>(easymotion-bd-e)
 nmap "t <Plug>(easymotion-bd-t)
 
 
-Bundle 'corntrace/bufexplorer'
+Plugin 'corntrace/bufexplorer'
 
-Bundle 'airblade/vim-gitgutter'
+Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 map <Leader>G :GitGutterSignsToggle<CR>
 
 
 
-Bundle 'xolox/vim-misc'
-Bundle 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
 let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:easytags_async = 1
 let g:easytags_dynamic_files = 1
@@ -502,16 +502,16 @@ let g:easytags_updatetime_min = 60000
 let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
 
 
-Bundle 'mileszs/ack.vim'
-Bundle 'rking/ag.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'rking/ag.vim'
 
 " Language support
-Bundle 'applescript.vim'
+Plugin 'applescript.vim'
 
-Bundle 'VimClojure'
+Plugin 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
-Bundle 'fatih/vim-go'
+Plugin 'fatih/vim-go'
 augroup vim_go
     autocmd!
     autocmd FileType go nmap <Leader>gs <Plug>(go-implements)
@@ -557,17 +557,17 @@ let g:tagbar_type_go = {
 \ }
 
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
-Bundle 'mattn/emmet-vim'
-Bundle 'jsatt/python_fn'
-Bundle 'hdima/python-syntax'
+Plugin 'mattn/emmet-vim'
+Plugin 'jsatt/python_fn'
+Plugin 'hdima/python-syntax'
 
-Bundle 'derekwyatt/vim-scala'
+Plugin 'derekwyatt/vim-scala'
 
 " OmniCompletion
-Bundle 'OmniCppComplete'
+Plugin 'OmniCppComplete'
 
 
-Bundle 'davidhalter/jedi-vim'
+Plugin 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
 let g:jedi#popup_on_dot = 0
 "let g:jedi#show_call_signatures = 1
@@ -581,7 +581,7 @@ let g:jedi#rename_command = "<Leader>gr"
 
 
 " Markdown
-Bundle 'jacekd/vim-iawriter'
+Plugin 'jacekd/vim-iawriter'
 function! IAWriter()
     colorscheme iawriter
     set background=light
@@ -613,24 +613,24 @@ if has("unix")
         augroup END
     endif
 endif
-"Bundle 'plasticboy/vim-markdown'
+"Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
 
 
-Bundle 'VictorDenisov/javacomplete'
+Plugin 'VictorDenisov/javacomplete'
 
 
-
+call vundle#end()
 filetype plugin indent on " required!
 
 " Old, unused 
-" Bundle 'AutoClose'
+" Plugin 'AutoClose'
 " Disable:
 " let g:autoclose_loaded = 1
 " let g:autoclose_on = 1
 
-" Bundle 'project.tar.gz'
-" Bundle 'msanders/snipmate.vim'
-" Bundle 'thisivan/vim-taglist'
+" Plugin 'project.tar.gz'
+" Plugin 'msanders/snipmate.vim'
+" Plugin 'thisivan/vim-taglist'
 "let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 "let Tlist_Show_One_File=1
 "let Tlist_Auto_Highlight_Tag=1
@@ -641,7 +641,7 @@ filetype plugin indent on " required!
 "nnoremap <silent> <F9> :TlistToggle<CR>
 "map <silent> <Leader>t :TlistToggle<CR>
 
-" Bundle 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git'
 " CommandT settings
 " disabled; using CtrlP
 " let g:command_t_loaded = 1
@@ -649,21 +649,21 @@ filetype plugin indent on " required!
 " let g:CommandTCancelMap='<C-x>'
 
 " PeepCode
-" Bundle 'mrchrisadams/vim-peepopen'
+" Plugin 'mrchrisadams/vim-peepopen'
 " let g:peepopen_loaded = 1  "disabled
 
 " Markdown
-" Bundle 'file:///Users/alex/.dotfiles/...'
-" Bundle 'tpope/vim-markdown'
-" Bundle 'jtratner/vim-flavored-markdown'
-" Bundle 'greyblake/vim-preview'
-" Bundle 'waylan/vim-markdown-extra-preview'
+" Plugin 'file:///Users/alex/.dotfiles/...'
+" Plugin 'tpope/vim-markdown'
+" Plugin 'jtratner/vim-flavored-markdown'
+" Plugin 'greyblake/vim-preview'
+" Plugin 'waylan/vim-markdown-extra-preview'
 
-" Bundle 'Vim-JDE'
-" Bundle 'javacomplete'
+" Plugin 'Vim-JDE'
+" Plugin 'javacomplete'
 "
 " YouCompleteMe requires the same version of
 " Python to be used for vim, MacVim, and itself
 " both at compile time and runtime 
-" Bundle 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 " let g:ycm_auto_trigger = 0
