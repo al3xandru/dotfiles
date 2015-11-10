@@ -19,6 +19,7 @@ alias a='atom'
 alias v='mvim'
 alias m='mvim'
 alias t='tvim'
+alias n='nvim'
 alias mmc='mmdc'
 #alias e="$EDITOR"
 alias e='emacs'
