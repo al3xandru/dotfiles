@@ -30,9 +30,10 @@
 " 24. multi-byte characters
 " 25. various
 
-" 1. important
+" 1. important 
 "call pathogen#infect()
 
+set lazyredraw
 set nocompatible
 set backspace=2
 " Allow backspace in insert mode
@@ -46,22 +47,29 @@ set wildmenu
 set wildignore+=.hg,.git,.svn  " version control
 set wildignore+=*.o,*.obj,*.exe,*.dll,*.pyc,*.class,*.luac " compiled
 set wildignore+=*.DS_Store
+set wildignore+=*.aux,*.toc " Latex intermediary files
 " Allow cursor keys in insert mode
 set esckeys
 
+" autosave on focus lost
+au FocusLost * :wa
 
 " 2. moving around, searching and patterns "
 set incsearch
 set hlsearch
+set ignorecase
 set smartcase
+set showmatch
 set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz,*.exe
 set scrolloff=5
 
 " 3. tags
 " omnicomplete
 set omnifunc=syntaxcomplete#Complete
+" https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
+set complete=.,w,b,u,t
 " http://vim.wikia.com/wiki/Make_Vim_completion_popup_menu_work_just_like_in_an_IDE
-set completeopt=longest,menuone
+set completeopt=longest,menu,preview
 " http://stackoverflow.com/questions/7722177/how-do-i-map-ctrl-x-ctrl-o-to-ctrl-space-in-terminal-vim
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
@@ -71,7 +79,9 @@ filetype on
 filetype plugin on
 filetype plugin indent on
 
+set synmaxcol=500
 set listchars=tab:▸\ ,trail:·,eol:¬
+set showbreak=↪
 
 " 5. syntax, highlighting and spelling"
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
@@ -98,6 +108,8 @@ function! SetCursorLineColors()
 endfunction
 call SetCursorLineColors()
 
+set matchtime=3
+set dictionary=/usr/share/dict/words
 set thesaurus+=~/.vim/mthesaur.txt
 
 " 6. multiple windows "
@@ -111,16 +123,23 @@ set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCurs
 set guioptions=aAce
 set selection=exclusive
 if has("gui_running")
+    set go-=T
+    set go-=l
+    set go-=L
+    set go-=r
+    set go-=R
     if has("gui_macvim")
-	"set gfn=Anonymous\ Pro:h12
-	"set gfn=Cousine:h11
-	"set gfn=Inconsolata:h13
-	set gfn=Input\ Mono:h12
-	"set gfn=monofur:h15
-	"set gfn=ProFontX:h12
-	"set gfn=Source\ Code\ Pro:h11
+        "set gfn=Anonymous\ Pro:h12
+        "set gfn=Consolas:h12
+        "set gfn=Cousine:h11
+        set gfn=Hack:h11
+        "set gfn=Inconsolata:h13
+        "set gfn=Input\ Mono:h11
+        "set gfn=monofur:h15
+        "set gfn=ProFontX:h12
+        "set gfn=Source\ Code\ Pro:h11
     elseif has("gui_gtk2")
-	set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
+        set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
     set columns=105
@@ -137,11 +156,15 @@ endfunction
 command! Fullscr call FullScrHoriz()
 command! Nofullscr call BackFullScrHoriz()
 
+" splits
+set splitbelow
+set splitright
 
 " 11.messages and info
 set number
 set ruler
 set visualbell t_vb=
+set relativenumber
 
 " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
 function! ToggleLineNo()
@@ -158,6 +181,7 @@ augroup lineno
     autocmd!
     autocmd FocusLost * set norelativenumber | set number
     autocmd InsertEnter * set norelativenumber | set number
+    autocmd InsertLeave * set relativenumber | set nonumber
 augroup END
 
 " 14. tabs and indenting
@@ -166,12 +190,15 @@ set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set smartindent
+set autoindent
 
 
 " 15. folding
 set foldenable
 set foldmethod=indent
 set foldlevel=100
+"HTML folding tag
+nnoremap <leader>ft Vatzf
 
 
 " 17. mapping
@@ -183,10 +210,12 @@ cnoreabbrev Q q
 " Change mapleader from <Leader> = \
 let mapleader=","
 
+inoremap jk <esc>
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
-inoremap qq <esc>
+" make ; behave like : (save the Shift)
+nnoremap ; :
 
 " vertical resize
 nmap <C-w>> :vertical resize +20<CR>
@@ -194,6 +223,9 @@ nmap <C-w>< :vertical resize -20<CR>
 
 " disable highlighted search 
 nnoremap <Leader>S :nohlsearch<CR>
+"reselect pasted text
+nnoremap <leader>v V`] 
+
 
 " Opens an edit command with the path of the currently edited file filled in
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -243,9 +275,23 @@ nnoremap <Leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
 map <Leader>l :Errors<CR>
 
 " 19. the swap file
-set backupdir=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set directory=~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backup
+set noswapfile
+set undofile
+set history=10000
+set backupdir=~/.vim/tmp/backup// "~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set directory=~/.vim/tmp/swap// "~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set undodir=~/.vim/tmp/undo//
 
+if !isdirectory(expand(&backupdir))
+    call mkdir(expand(&backupdir), "p")
+endif
+if !isdirectory(expand(&directory))
+    call mkdir(expand(&directory), "p")
+endif
+if !isdirectory(expand(&undodir))
+    call mkdir(expand(&undodir), "p")
+endif
 
 " 24. multi-byte characters
 setglobal fileencoding=utf-8
@@ -275,19 +321,6 @@ if has("autocmd")
 end
 
 
-if has("unix")
-    let s:uname = system("uname -s")
-    if s:uname =~ "Darwin"
-        function! s:setupMarkdownPreview()
-            nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
-        endfunction
-
-        augroup vimrc_md
-            autocmd!
-            autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
-        augroup END
-    endif
-endif
 
 
 " Load Vundle
@@ -330,6 +363,9 @@ call SetCursorLineColors()
 
 
 " GitHub
+Bundle 'duff/vim-scratch'
+
+
 Bundle 'Townk/vim-autoclose'
 " Disable: 
 " let g:loaded_AutoClose = 1
@@ -343,6 +379,14 @@ map <unique> <Leader>s :CtrlP<CR>
 map <unique> <Leader>T :CtrlPBufTag<CR>
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
+
+
+Bundle 'kien/rainbow_parentheses.vim'
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
 
 
 Bundle 'scrooloose/nerdcommenter'
@@ -369,10 +413,16 @@ else
 endif
 Bundle 'honza/vim-snippets'
 Bundle 'scrooloose/syntastic'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/unite.vim'
+nnoremap <leader>uf :Unite -start-insert file/async<CR>
+nnoremap <leader>ud :Unite -start-insert file_rec/async<CR>
+nnoremap <leader>ub :Unite buffer bookmark<CR>
+nnoremap <leader>ut :Unite tab<CR>
 
-
-Bundle 'davidoc/taskpaper.vim'
 " Taskpaper
+Bundle 'davidoc/taskpaper.vim'
+let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
 " command! -nargs=+ HiLink hi def link <args>
 " HiLink taskpaperListItem    Comment
@@ -404,25 +454,6 @@ Bundle 'rizzatti/dash.vim'
 :nmap <silent> <Leader>h <Plug>DashSearch
 
 
-Bundle 'jacekd/vim-iawriter'
-function! IAWriter()
-    colorscheme iawriter
-    set background=light
-    set gfn=Cousine:h12         " font to use
-    set guioptions-=r           " remove right scrollbar
-    set laststatus=0            " don't show status line
-    set noruler                 " don't show ruler
-    set nonu                    " don't show line numbers
-    set linebreak               " break the lines on words
-    " set linespace=5
-    " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
-    " set fullscreen                      " go to fullescreen editing mode
-endfunction
-
-"if has("autocmd")
-"    " turn-on distraction free writing mode for markdown files
-"    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-"endif
 
 Bundle 'bling/vim-airline'
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
@@ -444,11 +475,11 @@ let g:airline_mode_map={
 
 Bundle 'Lokaltog/vim-easymotion'
 "map ' <Plug>(easymotion-prefix)
-nmap 's <Plug>(easymotion-s2)
-nmap 'S <Plug>(easymotion-s)
-nmap 'w <Plug>(easymotion-bd-w)
-nmap 'e <Plug>(easymotion-bd-e)
-nmap 't <Plug>(easymotion-bd-t)
+nmap "s <Plug>(easymotion-s2)
+nmap "S <Plug>(easymotion-s)
+nmap "w <Plug>(easymotion-bd-w)
+nmap "e <Plug>(easymotion-bd-e)
+nmap "t <Plug>(easymotion-bd-t)
 
 
 Bundle 'corntrace/bufexplorer'
@@ -526,7 +557,7 @@ let g:tagbar_type_go = {
 \ }
 
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
-
+Bundle 'mattn/emmet-vim'
 Bundle 'jsatt/python_fn'
 Bundle 'hdima/python-syntax'
 
@@ -549,7 +580,44 @@ let g:jedi#rename_command = "<Leader>gr"
 "let g:jedi#completions_enabled = 0
 
 
+" Markdown
+Bundle 'jacekd/vim-iawriter'
+function! IAWriter()
+    colorscheme iawriter
+    set background=light
+    set gfn=Cousine:h12         " font to use
+    set guioptions-=r           " remove right scrollbar
+    set noruler                 " don't show ruler
+    set linebreak               " break the lines on words
+    set linespace=5
+    "set nonu                    " don't show line numbers
+    "set laststatus=0            " don't show status line
+    " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
+    " set fullscreen                      " go to fullescreen editing mode
+endfunction
+"if has("autocmd")
+"    " turn-on distraction free writing mode for markdown files
+"    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
+"endif
+
+if has("unix")
+    let s:uname = system("uname -s")
+    if s:uname =~ "Darwin"
+        function! s:setupMarkdownPreview()
+            nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+        endfunction
+
+        augroup vimrc_md
+            autocmd!
+            autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
+        augroup END
+    endif
+endif
+"Bundle 'plasticboy/vim-markdown'
+
+
 Bundle 'VictorDenisov/javacomplete'
+
 
 
 filetype plugin indent on " required!
@@ -587,7 +655,6 @@ filetype plugin indent on " required!
 " Markdown
 " Bundle 'file:///Users/alex/.dotfiles/...'
 " Bundle 'tpope/vim-markdown'
-" Bundle 'plasticboy/vim-markdown'
 " Bundle 'jtratner/vim-flavored-markdown'
 " Bundle 'greyblake/vim-preview'
 " Bundle 'waylan/vim-markdown-extra-preview'
