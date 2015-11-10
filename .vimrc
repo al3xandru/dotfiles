@@ -87,7 +87,7 @@ set showbreak=↪
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
 " Dark: dante, koehler, vividchalk, vibrantink, molokai, tango, fnaqeran,
 " marollocio, macvim, motus, railcast, tir_black
-" Light: buttercream, papayawhip, navajo, inkpot
+" Light: buttercream, papayawhip, navajo, inkpot, sweater
 " Grey: inkpot, camo, earendel, lucius
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
 
@@ -324,6 +324,7 @@ end
 
 
 " Load Vundle
+" Only Plugin settings are allowed until vundle#end()
 filetype off " required!
 
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -350,16 +351,6 @@ Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 
-if has("unix")
-    let s:uname = system("uname -s")
-    " inkpot liquidcarbon kolor desert256 dante navajo papayawhip
-    if s:uname =~ "Darwin"
-        colorscheme kolor
-    else
-        colorscheme navajo 
-    endif
-endif
-call SetCursorLineColors()
 
 
 " GitHub
@@ -403,7 +394,7 @@ let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 
-
+" snippets
 if has("python")
     Plugin 'SirVer/ultisnips'
 else
@@ -412,7 +403,12 @@ else
     Plugin 'garbas/vim-snipmate'
 endif
 Plugin 'honza/vim-snippets'
+
+
 Plugin 'scrooloose/syntastic'
+
+" Unite
+" Note: vimproc requires compiling a c file
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Shougo/unite.vim'
 nnoremap <leader>uf :Unite -start-insert file/async<CR>
@@ -423,12 +419,6 @@ nnoremap <leader>ut :Unite tab<CR>
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
-" let g:task_paper_styles={'done': 'ctermfg=208 ctermbg=208', 'today': 'ctermfg=92 ctermbg=59', 'progress': '', 'highlight': 'term=bold ctermfg=DarkBlue ctermbg=LightYellow' }
-" command! -nargs=+ HiLink hi def link <args>
-" HiLink taskpaperListItem    Comment
-" HiLink taskpaperDone        Identifier
-" HiLink taskpaperComment     NonText
-" delcommand HiLink '
 
 
 Plugin 'altercation/vim-colors-solarized'
@@ -556,8 +546,12 @@ let g:tagbar_type_go = {
     \ 'ctagsargs' : '-sort -silent'
 \ }
 
-" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
+" HTML Zen Coding
 Plugin 'mattn/emmet-vim'
+
+" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
+
+" Python
 Plugin 'jsatt/python_fn'
 Plugin 'hdima/python-syntax'
 
@@ -622,6 +616,18 @@ Plugin 'VictorDenisov/javacomplete'
 call vundle#end()
 filetype plugin indent on " required!
 
+if has("unix")
+    let s:uname = system("uname -s")
+    " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
+    if s:uname =~ "Darwin"
+        colorscheme flattown
+    else
+        colorscheme navajo 
+    endif
+endif
+call SetCursorLineColors()
+
+" **************
 " Old, unused 
 " Plugin 'AutoClose'
 " Disable:
