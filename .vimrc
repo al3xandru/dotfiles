@@ -45,8 +45,12 @@ set sessionoptions-=options
 " Enhance command-line completion
 set wildmenu
 set wildignore+=.hg,.git,.svn  " version control
-set wildignore+=*.o,*.obj,*.exe,*.dll,*.pyc,*.class,*.luac " compiled
-set wildignore+=*.DS_Store
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.pyc,*.pyo,*.class,*.luac " compiled
+set wildignore+=*.DS_Store,*.sw?
+set wildignore+=.idea/**
+set wildignore+=*.png,*.jpg,*.gif,*.bmp
+set wildignore+=*.egg,*.egg-info,*.gem
+set wildignore+=*.zip,*.tar.gz,*.gzip,*.rar
 set wildignore+=*.aux,*.toc " Latex intermediary files
 " Allow cursor keys in insert mode
 set esckeys
@@ -60,7 +64,6 @@ set hlsearch
 set ignorecase
 set smartcase
 set showmatch
-set wildignore+=*.o,*.obj,.git,.svn,.hg,*.class,*.pyo,*.pyc,*.so,*.dll,*.swp,*.zip,*.tar.gz,*.exe
 set scrolloff=5
 
 " 3. tags
@@ -393,7 +396,9 @@ Plugin 'scrooloose/nerdtree'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
 nmap <Leader>ps :NERDTreeFind<CR>
-let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$']
+let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
+    \ '\.egg$', '\.idea$',
+    \ '\.bzr', '\.git', '\.hg', '\.svn']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
@@ -411,11 +416,12 @@ Plugin 'honza/vim-snippets'
 
 Plugin 'scrooloose/syntastic'
 
-" Unite
+" Unite: can replace CtrlP, Tagbar
 " Note: vimproc requires compiling a c file
 "Plugin 'Shougo/vimproc.vim'
 "Plugin 'Shougo/unite.vim'
 "Plugin 'Shougo/unite-outline'
+"Plugin 'Shougo/vimfiler.vim'
 "Plugin 'Shougo/neoyank.vim'
 "Plugin 'tsukkee/unite-tag'
 "Plugin 'Shougo/unite-help'
@@ -484,7 +490,7 @@ nmap "e <Plug>(easymotion-bd-e)
 nmap "t <Plug>(easymotion-bd-t)
 
 
-Plugin 'corntrace/bufexplorer'
+Plugin 'jlanzarotta/bufexplorer'
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
