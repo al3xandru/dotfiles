@@ -164,7 +164,6 @@ set splitright
 set number
 set ruler
 set visualbell t_vb=
-set relativenumber
 
 " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
 function! ToggleLineNo()
@@ -183,6 +182,7 @@ augroup lineno
     autocmd InsertEnter * set norelativenumber | set number
     autocmd InsertLeave * set relativenumber | set nonumber
 augroup END
+set relativenumber
 
 " 14. tabs and indenting
 set expandtab
@@ -196,6 +196,7 @@ set autoindent
 " 15. folding
 set foldenable
 set foldmethod=indent
+set foldnestmax=10
 set foldlevel=100
 "HTML folding tag
 nnoremap <leader>ft Vatzf
@@ -216,22 +217,12 @@ nnoremap j gj
 nnoremap k gk
 " make ; behave like : (save the Shift)
 nnoremap ; :
+nnoremap <tab> %
+vnoremap <tab> %
 
 " vertical resize
-nmap <C-w>> :vertical resize +20<CR>
-nmap <C-w>< :vertical resize -20<CR>
-
-" disable highlighted search 
-nnoremap <Leader>S :nohlsearch<CR>
-"reselect pasted text
-nnoremap <leader>v V`] 
-
-
-" Opens an edit command with the path of the currently edited file filled in
-map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>se :split <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>ve :vsplit <C-R>=expand("%:p:h") . "/" <CR>
+nmap <C-w>< :vertical resize +20<CR>
+nmap <C-w>> :vertical resize -20<CR>
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
@@ -243,8 +234,6 @@ nnoremap <S-Enter> O<Esc>
 nnoremap <CR> o<Esc>
 nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 
-" Show special characters
-nmap <silent> <Leader>c :set nolist!<CR>
 
 " Buffer switch
 nmap <C-a> :bNext<CR>
@@ -260,6 +249,20 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" Show special characters
+nmap <silent> <Leader>c :set nolist!<CR>
+" disable highlighted search 
+nnoremap <Leader>S :nohlsearch<CR>
+nnoremap <Leader><space> :nohlsearch<CR>
+"reselect pasted text
+nnoremap <leader>v V`] 
+
+" Opens an edit command with the path of the currently edited file filled in
+map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+map <Leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
+map <Leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
+map <Leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
+
 " bind f and F to vimgrep word under cursor
 "nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
@@ -273,6 +276,7 @@ nnoremap <Leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p
 nnoremap <Leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
 " display :Errors
 map <Leader>l :Errors<CR>
+
 
 " 19. the swap file
 set backup
@@ -367,7 +371,7 @@ Plugin 'kien/ctrlp.vim'
 let g:loaded_ctrlp = 0
 set runtimepath^=~/.vim/bundle/ctrlp
 map <unique> <Leader>s :CtrlP<CR>
-map <unique> <Leader>T :CtrlPBufTag<CR>
+map <unique> <Leader>t :CtrlPBufTag<CR>
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 
@@ -409,12 +413,20 @@ Plugin 'scrooloose/syntastic'
 
 " Unite
 " Note: vimproc requires compiling a c file
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/unite.vim'
-nnoremap <leader>uf :Unite -start-insert file/async<CR>
-nnoremap <leader>ud :Unite -start-insert file_rec/async<CR>
-nnoremap <leader>ub :Unite buffer bookmark<CR>
-nnoremap <leader>ut :Unite tab<CR>
+"Plugin 'Shougo/vimproc.vim'
+"Plugin 'Shougo/unite.vim'
+"Plugin 'Shougo/unite-outline'
+"Plugin 'Shougo/neoyank.vim'
+"Plugin 'tsukkee/unite-tag'
+"Plugin 'Shougo/unite-help'
+"nnoremap <leader>uf :<C-u>Unite -start-insert file/async<CR>
+"nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+"nnoremap <leader>ud :<C-u>Unite -start-insert file_rec/async<CR>
+"nnoremap <leader>ub :<C-u>Unite buffer bookmark<CR>
+"nnoremap <leader>ut :<C-u>Unite tab<CR>
+"nnoremap <leader>uo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
+"nnoremap <leader>uy :<C-u>Unite history/yank<CR>
+
 
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
@@ -435,7 +447,7 @@ Plugin 'tpope/vim-surround'
 Plugin 'majutsushi/tagbar'
 let g:tagbar_autoclose = 1
 let g:tagbar_showlinenumbers = 1
-map <silent> <Leader>t :TagbarToggle<CR>
+map <silent> <Leader>o :TagbarToggle<CR>
 nmap <silent> <F9> :TagbarToggle<CR>
 
 " Dash.app
@@ -552,8 +564,14 @@ Plugin 'mattn/emmet-vim'
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
 
 " Python
-Plugin 'jsatt/python_fn'
+"breaks ]c in vimdiff Plugin 'jsatt/python_fn'
+"not very useful Plugin 'ikirudennis/python.vim' 
 Plugin 'hdima/python-syntax'
+Plugin 'klen/python-mode'
+let g:pymode_options_max_line_length=99
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
+let g:pymode_lint_ignore = "E501"
+let g:pymode_syntax_slow_sync = 0
 
 Plugin 'derekwyatt/vim-scala'
 
@@ -598,7 +616,11 @@ if has("unix")
     let s:uname = system("uname -s")
     if s:uname =~ "Darwin"
         function! s:setupMarkdownPreview()
-            nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+            if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
+                nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+            else
+                nnoremap <leader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
+            endif
         endfunction
 
         augroup vimrc_md
@@ -607,7 +629,9 @@ if has("unix")
         augroup END
     endif
 endif
-"Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+"Couldn't get it to work
+"Plugin 'greyblake/vim-preview'
 
 
 Plugin 'VictorDenisov/javacomplete'
