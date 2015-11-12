@@ -488,6 +488,7 @@ nmap "t <Plug>(easymotion-bd-t)
 
 Plugin 'jlanzarotta/bufexplorer'
 
+
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
