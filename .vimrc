@@ -145,7 +145,7 @@ if has("gui_running")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
-    set columns=105
+    set columns=120
     set lines=80
 endif
 function! FullScrHoriz()
@@ -314,7 +314,7 @@ if has("autocmd")
         " json is javascript
         autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 
-        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab
+        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab autoindent
         autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
         autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
         autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
@@ -347,7 +347,7 @@ Plugin 'HTML-AutoCloseTag'
 " Disable:
 " let b:mapped_auto_closetag = 1
 
-
+" color schemes
 Plugin 'Colour-Sampler-Pack'
 Plugin '256-grayvim'
 Plugin 'blacklight'
@@ -358,9 +358,15 @@ Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 
+Plugin 'altercation/vim-colors-solarized'
+let g:solarized_termtrans=0
+let g:solarized_termcolors=256
+let g:solarized_visibility="high"
+let g:solarized_contrast="normal"
 
 
 " GitHub
+" Scratch files :scratch :Sscratch
 Plugin 'duff/vim-scratch'
 
 
@@ -391,7 +397,6 @@ Plugin 'scrooloose/nerdcommenter'
 
 
 Plugin 'scrooloose/nerdtree'
-" NERDtree settings
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 map <unique> <Leader>p :NERDTreeToggle<CR>
@@ -434,16 +439,7 @@ Plugin 'scrooloose/syntastic'
 "nnoremap <leader>uy :<C-u>Unite history/yank<CR>
 
 
-" Taskpaper
-Plugin 'davidoc/taskpaper.vim'
-let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 
-
-Plugin 'altercation/vim-colors-solarized'
-let g:solarized_termtrans=0
-let g:solarized_termcolors=256
-let g:solarized_visibility="high"
-let g:solarized_contrast="normal"
 
 
 Plugin 'edsono/vim-matchit'
@@ -570,20 +566,12 @@ Plugin 'mattn/emmet-vim'
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
 
 " Python
-"breaks ]c in vimdiff Plugin 'jsatt/python_fn'
-"not very useful Plugin 'ikirudennis/python.vim' 
 Plugin 'hdima/python-syntax'
 Plugin 'klen/python-mode'
 let g:pymode_options_max_line_length=99
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
 let g:pymode_lint_ignore = "E501"
 let g:pymode_syntax_slow_sync = 0
-
-Plugin 'derekwyatt/vim-scala'
-
-" OmniCompletion
-Plugin 'OmniCppComplete'
-
 
 Plugin 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
@@ -597,27 +585,27 @@ let g:jedi#usages_command = "<Leader>gu"
 let g:jedi#rename_command = "<Leader>gr"
 "let g:jedi#completions_enabled = 0
 
+"breaks ]c in vimdiff Plugin 'jsatt/python_fn'
+"not very useful Plugin 'ikirudennis/python.vim' 
+
+
+Plugin 'derekwyatt/vim-scala'
+
+" OmniCompletion
+Plugin 'OmniCppComplete'
+
+" outliner .otl
+Plugin 'vimoutliner/vimoutliner'
+
+" Java completion
+Plugin 'VictorDenisov/javacomplete'
+
 
 " Markdown
-Plugin 'jacekd/vim-iawriter'
-function! IAWriter()
-    colorscheme iawriter
-    set background=light
-    set gfn=Cousine:h12         " font to use
-    set guioptions-=r           " remove right scrollbar
-    set noruler                 " don't show ruler
-    set linebreak               " break the lines on words
-    set linespace=5
-    "set nonu                    " don't show line numbers
-    "set laststatus=0            " don't show status line
-    " set fuoptions=bacground:#00f5f6f6   " macvim specific setting for editor's background color
-    " set fullscreen                      " go to fullescreen editing mode
-endfunction
-"if has("autocmd")
-"    " turn-on distraction free writing mode for markdown files
-"    au BufNewFile,BufRead *.{md,mdown,mkd,mkdn,markdown,mdwn} call IAWriter()
-"endif
-
+" Basics
+Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+" Markdown preview
+"Plugin 'greyblake/vim-preview' could not get it to work
 if has("unix")
     let s:uname = system("uname -s")
     if s:uname =~ "Darwin"
@@ -635,12 +623,44 @@ if has("unix")
         augroup END
     endif
 endif
-Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
-"Couldn't get it to work
-"Plugin 'greyblake/vim-preview'
+" Markdown editing
+Plugin 'junegunn/goyo.vim'
+
+Plugin 'reedes/vim-colors-pencil'
+let g:pencil_higher_contrast_ui = 1
+let g:pencil_neutral_code_bg = 1
+let g:pencil_terminal_italics = 1
+
+let g:iawriter_active = 0
+let g:iawriter_save_colorscheme = ""
+let g:iawriter_save_bgr = ""
+function! IAWriter()
+    if g:iawriter_active == 0
+        let g:iawriter_save_colorscheme = g:colors_name
+        if exists( "&background" )
+            let g:iawriter_save_bgr = &background
+        endif
+        set background=light
+        colorscheme pencil
+        call goyo#execute(0, '')
+        let g:iawriter_active = 1
+        echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . "]"
+    else
+        call goyo#execute(0, '') 
+        execute printf("colorscheme %s", g:iawriter_save_colorscheme)
+        if g:iawriter_save_bgr
+            execute printf("set background=%s", g:iawriter_save_bgr)
+        endif
+        let g:iawriter_active = 0
+        echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil]"
+    endif
+endfunction
+nnoremap <leader>me :call IAWriter()<cr>
 
 
-Plugin 'VictorDenisov/javacomplete'
+" Taskpaper
+Plugin 'davidoc/taskpaper.vim'
+let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 
 
 call vundle#end()
