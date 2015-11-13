@@ -3,7 +3,7 @@
 #
 # This loads pythonbrew https://github.com/utahta/pythonbrew
 #[ -s "$HOME/.pythonbrew/etc/bashrc" ] && source "$HOME/.pythonbrew/etc/bashrc"
-PATH="$HOME/bin:/usr/local/bin:$PATH"
+PATH="$HOME/perl5/bin:$HOME/bin:/usr/local/bin:$PATH"
 
 if [ "$GOROOTPATH" != "" ]; then
     PATH="$GOROOTPATH/bin:$PATH"
