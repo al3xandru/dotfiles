@@ -202,9 +202,11 @@ set foldmethod=indent
 set foldnestmax=10
 set foldlevel=100
 "HTML folding tag
-nnoremap <leader>ft Vatzf
+nnoremap <leader>zha Vatzf
 
 
+" 16 diff mode
+set diffopt=filler,vertical
 " 17. mapping
 
 " abbreviations
@@ -213,6 +215,7 @@ cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
 let mapleader=","
+let maplocalleader="\\"
 
 inoremap jk <esc>
 " make vertical line nav better
@@ -253,32 +256,31 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " Show special characters
-nmap <silent> <Leader>c :set nolist!<CR>
+nmap <silent> <leader>c :set nolist!<CR>
 " disable highlighted search 
-nnoremap <Leader>S :nohlsearch<CR>
-nnoremap <Leader><space> :nohlsearch<CR>
+nnoremap <leader><space> :nohlsearch<CR>
 "reselect pasted text
 nnoremap <leader>v V`] 
 
 " Opens an edit command with the path of the currently edited file filled in
-map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
-map <Leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>ee :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to vimgrep word under cursor
-"nnoremap <Leader>f :vimgrep! /\<<C-r><C-w>\>/j *<CR>:cw<CR>
+nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj 
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap <Leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap <leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>g :execute 'Ag! --' . &filetype . ' "\b"' . expand("<cword>") . '"\b" ' . fnameescape(expand("%:p:h"))
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
 " bind r to replace word under cursor
-nnoremap <Leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+nnoremap <leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
 " display :Errors
-map <Leader>l :Errors<CR>
+nnoremap <leader>l :Errors<CR>
 
 
 " 19. the swap file
@@ -368,6 +370,19 @@ let g:solarized_contrast="normal"
 " GitHub
 " Scratch files :scratch :Sscratch
 Plugin 'duff/vim-scratch'
+Plugin 'fmoralesc/vim-pad'
+" https://github.com/fmoralesc/vim-pad/issues/81
+let g:pad#dir='~/Dropbox/Dox/nvall'
+let g:pad#default_file_extension='md'
+let g:pad#search_backend='ag'
+let g:pad#query_dirnames=0
+let g:pad#query_filenames=1
+let g:pad#rename_files=0
+let g:pad#read_nchars_from_files=50
+let g:pad#title_first_line=0
+let g:pad#window_height=12
+let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
+"let g:pad#open_in_split=0
 
 
 Plugin 'Townk/vim-autoclose'
@@ -379,8 +394,8 @@ Plugin 'kien/ctrlp.vim'
 " CtrlP
 let g:loaded_ctrlp = 0
 set runtimepath^=~/.vim/bundle/ctrlp
-map <unique> <Leader>s :CtrlP<CR>
-map <unique> <Leader>t :CtrlPBufTag<CR>
+nnoremap <unique> <leader>s :CtrlP<CR>
+nnoremap <unique> <leader>t :CtrlPBufTag<CR>
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 
@@ -399,8 +414,9 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/nerdtree'
 "let NERDTreeWinPos='right'
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
-map <unique> <Leader>p :NERDTreeToggle<CR>
-nmap <Leader>ps :NERDTreeFind<CR>
+nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+nnoremap <unique> <leader>p :NERDTreeToggle<CR>
+nnoremap <leader>fp :NERDTreeFind<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
     \ '\.egg$', '\.idea$',
     \ '\.bzr', '\.git', '\.hg', '\.svn']
@@ -437,7 +453,14 @@ Plugin 'scrooloose/syntastic'
 "nnoremap <leader>ut :<C-u>Unite tab<CR>
 "nnoremap <leader>uo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
 "nnoremap <leader>uy :<C-u>Unite history/yank<CR>
-
+Plugin 'Shougo/neocomplete.vim'
+augroup neocomplete
+    autocmd!
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+augroup END
 
 
 
@@ -449,13 +472,13 @@ Plugin 'tpope/vim-surround'
 Plugin 'majutsushi/tagbar'
 let g:tagbar_autoclose = 1
 let g:tagbar_showlinenumbers = 1
-map <silent> <Leader>o :TagbarToggle<CR>
-nmap <silent> <F9> :TagbarToggle<CR>
+nnoremap <silent> <leader>o :TagbarToggle<CR>
+nnoremap <silent> <F9> :TagbarToggle<CR>
 
 " Dash.app
 Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/dash.vim'
-:nmap <silent> <Leader>h <Plug>DashSearch
+nnoremap <silent> <leader>h <Plug>DashSearch
 
 
 
@@ -477,22 +500,30 @@ let g:airline_mode_map={
        \ }
 
 
-Plugin 'Lokaltog/vim-easymotion'
+Plugin 'easymotion/vim-easymotion'
+" Disable default mappings
+let g:EasyMotion_do_mapping=0
 "map ' <Plug>(easymotion-prefix)
 nmap "s <Plug>(easymotion-s2)
-nmap "S <Plug>(easymotion-s)
-nmap "w <Plug>(easymotion-bd-w)
-nmap "e <Plug>(easymotion-bd-e)
+vmap "s <Plug>(easymotion-s2)
 nmap "t <Plug>(easymotion-bd-t)
+vmap "t <Plug>(easymotion-bd-t)
+nmap "f <Plug>(easymotion-bd-f)
+vmap "f <Plug>(easymotion-bd-f)
+nmap "w <Plug>(easymotion-bd-wl)
+vmap "w <Plug>(easymotion-bd-wl)
+nmap "e <Plug>(easymotion-bd-el)
+vmap "e <Plug>(easymotion-bd-el)
 
 
+" This could be replaced by CtrlP
 Plugin 'jlanzarotta/bufexplorer'
 
 
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
-map <Leader>G :GitGutterSignsToggle<CR>
+nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 
 
 
@@ -519,15 +550,15 @@ let vimclojure#SetupKeyMap = 0
 Plugin 'fatih/vim-go'
 augroup vim_go
     autocmd!
-    autocmd FileType go nmap <Leader>gs <Plug>(go-implements)
-    autocmd FileType go nmap <Leader>gi <Plug>(go-info)
-    autocmd FileType go nmap <Leader>gh <Plug>(go-doc)
-    autocmd FileType go nmap <Leader>ghv <Plug>(go-doc-vertical)
-    autocmd FileType go nmap <Leader>ghb <Plug>(go-doc-browser)
-    autocmd FileType go nmap <Leader>ger <Plug>(go-run)
-    autocmd FileType go nmap <Leader>geb <Plug>(go-build)
-    autocmd FileType go nmap <Leader>get <Plug>(go-test)
-    autocmd FileType go nmap <Leader>gec <Plug>(go-coverage)
+    autocmd FileType go nmap <leader>gs <Plug>(go-implements)
+    autocmd FileType go nmap <leader>gi <Plug>(go-info)
+    autocmd FileType go nmap <leader>gh <Plug>(go-doc)
+    autocmd FileType go nmap <leader>ghv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <leader>ghb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <leader>ger <Plug>(go-run)
+    autocmd FileType go nmap <leader>geb <Plug>(go-build)
+    autocmd FileType go nmap <leader>get <Plug>(go-test)
+    autocmd FileType go nmap <leader>gec <Plug>(go-coverage)
 augroup END
 let g:go_fmt_autosave = 0
 let g:go_highlight_functions = 1
@@ -579,11 +610,11 @@ let g:jedi#use_splits_not_buffers = "top"
 let g:jedi#popup_on_dot = 0
 "let g:jedi#show_call_signatures = 1
 let g:jedi#completions_command = "<C-Space>"
-let g:jedi#goto_assignments_command = "<Leader>ga"
-let g:jedi#goto_definitions_command = "<Leader>gd"
-let g:jedi#documentation_command = "<Leader>gh"
-let g:jedi#usages_command = "<Leader>gu"
-let g:jedi#rename_command = "<Leader>gr"
+let g:jedi#goto_assignments_command = "<leader>ga"
+let g:jedi#goto_definitions_command = "<leader>gd"
+let g:jedi#documentation_command = "<leader>gh"
+let g:jedi#usages_command = "<leader>gu"
+let g:jedi#rename_command = "<leader>gr"
 "let g:jedi#completions_enabled = 0
 
 "breaks ]c in vimdiff Plugin 'jsatt/python_fn'
@@ -612,9 +643,9 @@ if has("unix")
     if s:uname =~ "Darwin"
         function! s:setupMarkdownPreview()
             if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
-                nnoremap <leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+                nnoremap <silent><leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
             else
-                nnoremap <leader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
+                nnoremap <silent><leader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
             endif
         endfunction
 
@@ -656,7 +687,7 @@ function! IAWriter()
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil]"
     endif
 endfunction
-nnoremap <leader>me :call IAWriter()<cr>
+nnoremap <silent><leader>me :call IAWriter()<cr>
 
 
 " Taskpaper
