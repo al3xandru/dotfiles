@@ -478,7 +478,8 @@ nnoremap <silent> <F9> :TagbarToggle<CR>
 " Dash.app
 Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/dash.vim'
-nnoremap <silent> <leader>h <Plug>DashSearch
+" noremap do *not* work with <Plug>
+nmap <leader>h <Plug>DashSearch
 
 
 
