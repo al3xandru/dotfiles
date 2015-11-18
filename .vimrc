@@ -256,9 +256,9 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 
 " Show special characters
-nmap <silent> <leader>c :set nolist!<CR>
+nmap <silent> <leader>ch :set nolist!<CR>
 " disable highlighted search 
-nnoremap <leader><space> :nohlsearch<CR>
+nnoremap <silent><leader><space> :nohlsearch<CR>
 "reselect pasted text
 nnoremap <leader>v V`] 
 
@@ -504,17 +504,27 @@ let g:airline_mode_map={
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
+let g:EasyMotion_use_upper=1
+let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
+let g:EasyMotion_inc_highlight=1
+let g:EasyMotion_move_highlight=1
+let g:EasyMotion_landing_highlight=0
+let g:EasyMotion_add_search_history=0
 "map ' <Plug>(easymotion-prefix)
-nmap "s <Plug>(easymotion-s2)
-vmap "s <Plug>(easymotion-s2)
-nmap "t <Plug>(easymotion-bd-t)
-vmap "t <Plug>(easymotion-bd-t)
-nmap "f <Plug>(easymotion-bd-f)
-vmap "f <Plug>(easymotion-bd-f)
-nmap "w <Plug>(easymotion-bd-wl)
-vmap "w <Plug>(easymotion-bd-wl)
-nmap "e <Plug>(easymotion-bd-el)
-vmap "e <Plug>(easymotion-bd-el)
+nmap <leader><leader>s <Plug>(easymotion-sn)
+vmap <leader><leader>s <Plug>(easymotion-sn)
+nmap <leader><leader>w <Plug>(easymotion-bd-w)
+vmap <leader><leader>w <Plug>(easymotion-bd-w)
+nmap <leader><leader>e <Plug>(easymotion-bd-e)
+vmap <leader><leader>e <Plug>(easymotion-bd-e)
+nmap <leader><leader>n <Plug>(easymotion-next)
+vmap <leader><leader>n <Plug>(easymotion-next)
+nmap <leader><leader>p <Plug>(easymotion-next)
+vmap <leader><leader>p <Plug>(easymotion-next)
+"nmap "t <Plug>(easymotion-bd-t)
+"vmap "t <Plug>(easymotion-bd-t)
+"nmap "f <Plug>(easymotion-bd-f)
+"vmap "f <Plug>(easymotion-bd-f)
 
 
 " This could be replaced by CtrlP
@@ -676,16 +686,28 @@ function! IAWriter()
         set background=light
         colorscheme pencil
         call goyo#execute(0, '')
+        augroup lineno
+            autocmd!
+            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   set norelativenumber | set nonumber
+            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
+            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
+        augroup END
         let g:iawriter_active = 1
-        echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . "]"
+        echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . ", background:" . g:iawriter_save_bgr . "]"
     else
+        augroup lineno
+            autocmd!
+            autocmd FocusLost * set norelativenumber | set number
+            autocmd InsertEnter * set norelativenumber | set number
+            autocmd InsertLeave * set relativenumber | set nonumber
+        augroup END
         call goyo#execute(0, '') 
         execute printf("colorscheme %s", g:iawriter_save_colorscheme)
         if g:iawriter_save_bgr
             execute printf("set background=%s", g:iawriter_save_bgr)
         endif
         let g:iawriter_active = 0
-        echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil]"
+        echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
     endif
 endfunction
 nnoremap <silent><leader>me :call IAWriter()<cr>
