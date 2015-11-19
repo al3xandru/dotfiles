@@ -251,8 +251,10 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 " window vertical resize
-nmap <C-w>< :vertical resize -10<CR>
-nmap <C-w>> :vertical resize +10<CR>
+nmap <silent><C-w>< :vertical resize -10<CR>
+nmap <silent><C-w>> :vertical resize +10<CR>
+nmap <silent><C-w>- :resize -10<CR>
+nmap <silent><C-w>+ :resize +10<CR>
 
 " Show special characters
 nmap <silent> <leader>ch :set nolist!<CR>
@@ -438,20 +440,20 @@ Plugin 'scrooloose/syntastic'
 
 " Unite: can replace CtrlP, Tagbar
 " Note: vimproc requires compiling a c file
-"Plugin 'Shougo/vimproc.vim'
-"Plugin 'Shougo/unite.vim'
-"Plugin 'Shougo/unite-outline'
-"Plugin 'Shougo/vimfiler.vim'
-"Plugin 'Shougo/neoyank.vim'
-"Plugin 'tsukkee/unite-tag'
-"Plugin 'Shougo/unite-help'
-"nnoremap <leader>uf :<C-u>Unite -start-insert file/async<CR>
-"nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
-"nnoremap <leader>ud :<C-u>Unite -start-insert file_rec/async<CR>
-"nnoremap <leader>ub :<C-u>Unite buffer bookmark<CR>
-"nnoremap <leader>ut :<C-u>Unite tab<CR>
-"nnoremap <leader>uo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
-"nnoremap <leader>uy :<C-u>Unite history/yank<CR>
+Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/unite-outline'
+Plugin 'Shougo/vimfiler.vim'
+Plugin 'Shougo/neoyank.vim'
+Plugin 'tsukkee/unite-tag'
+Plugin 'Shougo/unite-help'
+nnoremap <leader>uf :<C-u>Unite -start-insert file/async<CR>
+nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+nnoremap <leader>ud :<C-u>Unite -start-insert file_rec/async<CR>
+nnoremap <leader>ub :<C-u>Unite buffer bookmark<CR>
+nnoremap <leader>ut :<C-u>Unite tab<CR>
+nnoremap <leader>uo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
+nnoremap <leader>uy :<C-u>Unite history/yank<CR>
 Plugin 'Shougo/neocomplete.vim'
 augroup neocomplete
     autocmd!
