@@ -56,7 +56,7 @@ set wildignore+=*.aux,*.toc " Latex intermediary files
 set esckeys
 
 " autosave on focus lost
-au FocusLost * :wa
+autocmd FocusLost, BufLeave * silent! :wall
 
 " 2. moving around, searching and patterns "
 set incsearch
@@ -106,7 +106,7 @@ augroup CursorLine
   autocmd WinLeave * setlocal nocursorline
 augroup END
 function! SetCursorLineColors()
-    hi CursorLine    ctermbg=52 guibg=#5f0000
+    hi CursorLine    ctermbg=52 guibg=#424242
     hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
 endfunction
 call SetCursorLineColors()
@@ -178,7 +178,7 @@ function! ToggleLineNo()
         set relativenumber
     endif
 endfunction
-nnoremap <C-n> :call ToggleLineNo()<cr>
+nnoremap <silent><C-n> :call ToggleLineNo()<cr>
 augroup lineno
     autocmd!
     autocmd FocusLost * set norelativenumber | set number
@@ -226,10 +226,6 @@ nnoremap ; :
 nnoremap <tab> %
 vnoremap <tab> %
 
-" vertical resize
-nmap <C-w>< :vertical resize +20<CR>
-nmap <C-w>> :vertical resize -20<CR>
-
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
@@ -254,6 +250,9 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+" window vertical resize
+nmap <C-w>< :vertical resize -10<CR>
+nmap <C-w>> :vertical resize +10<CR>
 
 " Show special characters
 nmap <silent> <leader>ch :set nolist!<CR>
