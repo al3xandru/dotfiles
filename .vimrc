@@ -217,7 +217,7 @@ cnoreabbrev Q q
 let mapleader=","
 let maplocalleader="\\"
 
-inoremap jk <esc>
+inoremap wq <esc>
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
@@ -269,12 +269,14 @@ nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
-" bind f and F to vimgrep word under cursor
-nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj 
+" bind f and F to perform searches for the word under cursor
+" grep results go into quicklist: copen/cclose
+nnoremap <leader>F :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+"nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
+
 " Using the_silver_searcher to look for word under cursor in current dir
 nnoremap <leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
-"nnoremap <Leader>g :execute 'Ag! --' . &filetype . ' "\b"' . expand("<cword>") . '"\b" ' . fnameescape(expand("%:p:h"))
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -372,18 +374,21 @@ let g:solarized_contrast="normal"
 " Scratch files :scratch :Sscratch
 Plugin 'duff/vim-scratch'
 Plugin 'fmoralesc/vim-pad'
-" https://github.com/fmoralesc/vim-pad/issues/81
 let g:pad#dir='~/Dropbox/Dox/nvall'
-let g:pad#default_file_extension='md'
+let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
 let g:pad#query_dirnames=0
 let g:pad#query_filenames=1
 let g:pad#rename_files=0
-let g:pad#read_nchars_from_files=50
+let g:pad#read_nchars_from_files=0
 let g:pad#title_first_line=0
 let g:pad#window_height=12
 let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
 "let g:pad#open_in_split=0
+let g:pad#set_mappings=0
+nmap <leader>pal <Plug>(pad-list)
+nmap <leader>pan <Plug>(pad-new)
+nmap <leader>pas <Plug>(pad-search)
 
 
 Plugin 'Townk/vim-autoclose'
