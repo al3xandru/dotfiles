@@ -376,8 +376,24 @@ let g:solarized_contrast="normal"
 
 
 " GitHub
+" Text objects
+" Line: l
+Plugin 'kana/vim-textobj-user'
+Plugin 'kana/vim-textobj-line'
+" CamelCase 
+Plugin 'bkad/CamelCaseMotion' 
+map <leader>ww <Plug>CamelCaseMotion_w
+map <leader>we <Plug>CamelCaseMotion_e
+map <leader>wb <Plug>CamelCaseMotion_b
+"Function arguments: a
+Plugin 'argtextobj.vim' 
+" Indent: i 
+Plugin 'michaeljsmith/vim-indent-object' 
+
+
 " Scratch files :scratch :Sscratch
 Plugin 'duff/vim-scratch'
+
 Plugin 'fmoralesc/vim-pad'
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
@@ -401,21 +417,24 @@ Plugin 'Townk/vim-autoclose'
 " let g:loaded_AutoClose = 1
 
 
-Plugin 'kien/ctrlp.vim'
 " CtrlP
-let g:loaded_ctrlp = 0
+Plugin 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp
-nnoremap <unique> <leader>s :CtrlP<CR>
-nnoremap <unique> <leader>t :CtrlPBufTag<CR>
+let g:loaded_ctrlp = 0
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
+nnoremap <unique> <leader>s :CtrlP<CR>
+nnoremap <unique> <leader>t :CtrlPBufTag<CR>
 
 
 Plugin 'kien/rainbow_parentheses.vim'
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+augroup rainbowpar
+    autocmd!
+    autocmd VimEnter * RainbowParenthesesToggle
+    autocmd Syntax * RainbowParenthesesLoadRound
+    autocmd Syntax * RainbowParenthesesLoadSquare
+    autocmd Syntax * RainbowParenthesesLoadBraces
+augroup END
 
 
 
@@ -425,16 +444,17 @@ Plugin 'scrooloose/nerdcommenter'
 
 Plugin 'scrooloose/nerdtree'
 "let NERDTreeWinPos='right'
-nnoremap <silent> <F8> :NERDTreeToggle<CR>
-nnoremap <silent> <S-F8> :NERDTreeFind<CR>
-nnoremap <unique> <leader>p :NERDTreeToggle<CR>
-nnoremap <leader>fp :NERDTreeFind<CR>
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
     \ '\.egg$', '\.idea$',
     \ '\.bzr', '\.git', '\.hg', '\.svn']
 let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
+nnoremap <silent> <F8> :NERDTreeToggle<CR>
+nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+nnoremap <unique> <leader>p :NERDTreeToggle<CR>
+nnoremap <leader>fp :NERDTreeFind<CR>
+
 
 " snippets
 if has("python")
@@ -475,11 +495,10 @@ augroup neocomplete
 augroup END
 
 
-
-
 Plugin 'edsono/vim-matchit'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
+
 
 Plugin 'majutsushi/tagbar'
 let g:tagbar_autoclose = 1
@@ -551,6 +570,7 @@ nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 
 
 Plugin 'xolox/vim-misc'
+
 Plugin 'xolox/vim-easytags'
 let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:easytags_async = 1
@@ -571,18 +591,6 @@ Plugin 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
 Plugin 'fatih/vim-go'
-augroup vim_go
-    autocmd!
-    autocmd FileType go nmap <leader>gs <Plug>(go-implements)
-    autocmd FileType go nmap <leader>gi <Plug>(go-info)
-    autocmd FileType go nmap <leader>gh <Plug>(go-doc)
-    autocmd FileType go nmap <leader>ghv <Plug>(go-doc-vertical)
-    autocmd FileType go nmap <leader>ghb <Plug>(go-doc-browser)
-    autocmd FileType go nmap <leader>ger <Plug>(go-run)
-    autocmd FileType go nmap <leader>geb <Plug>(go-build)
-    autocmd FileType go nmap <leader>get <Plug>(go-test)
-    autocmd FileType go nmap <leader>gec <Plug>(go-coverage)
-augroup END
 let g:go_fmt_autosave = 0
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
@@ -614,6 +622,18 @@ let g:tagbar_type_go = {
     \ 'ctagsbin'  : 'gotags',
     \ 'ctagsargs' : '-sort -silent'
 \ }
+augroup vim_go
+    autocmd!
+    autocmd FileType go nmap <leader>gs <Plug>(go-implements)
+    autocmd FileType go nmap <leader>gi <Plug>(go-info)
+    autocmd FileType go nmap <leader>gh <Plug>(go-doc)
+    autocmd FileType go nmap <leader>ghv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <leader>ghb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <leader>ger <Plug>(go-run)
+    autocmd FileType go nmap <leader>geb <Plug>(go-build)
+    autocmd FileType go nmap <leader>get <Plug>(go-test)
+    autocmd FileType go nmap <leader>gec <Plug>(go-coverage)
+augroup END
 
 " HTML Zen Coding
 Plugin 'mattn/emmet-vim'
@@ -681,10 +701,12 @@ endif
 " Markdown editing
 Plugin 'junegunn/goyo.vim'
 
+
 Plugin 'reedes/vim-colors-pencil'
 let g:pencil_higher_contrast_ui = 1
 let g:pencil_neutral_code_bg = 1
 let g:pencil_terminal_italics = 1
+
 
 let g:iawriter_active = 0
 let g:iawriter_save_colorscheme = ""
