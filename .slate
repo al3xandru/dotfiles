@@ -35,13 +35,15 @@ bind 8:alt;cmd;ctrl     resize -10% +0 top-right
 # Push Bindings
 bind [:cmd;ctrl     push left
 bind [:alt;cmd;ctrl push bottom
+bind ':cmd;ctrl     push bottom
 bind ]:cmd;ctrl     push right
 bind ]:alt;cmd;ctrl push top
+bind =:cmd;ctrl     push top
 bind f:cmd;ctrl     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
-bind j:alt;cmd;ctrl push left  bar-resize:screenSizeX/3
+bind j:shift;cmd;ctrl push left  bar-resize:screenSizeX/3
 bind j:cmd;ctrl     push left  bar-resize:screenSizeX/2
 bind k:cmd;ctrl     push right bar-resize:screenSizeX/2
-bind k:alt;cmd;ctrl push right bar-resize:screenSizeX/3
+bind k:shift;cmd;ctrl push right bar-resize:screenSizeX/3
 # Maximize vertically
 bind v:alt;cmd;ctrl move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
 # Center window
@@ -49,10 +51,14 @@ bind c:cmd;ctrl     move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY
 bind c:alt;cmd;ctrl move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
 
 # Nudge Bindings
-bind right:alt;cmd;ctrl nudge +25 +0
-bind left:alt;cmd;ctrl  nudge -25 +0
-bind up:alt;cmd;ctrl    nudge +0  -25
-bind down:alt;cmd;ctrl  nudge +0  +25
+bind l:alt;cmd;ctrl  nudge +25 +0
+bind h:alt;cmd;ctrl  nudge -25 +0
+bind k:alt;cmd;ctrl  nudge +0  -25
+bind j:alt;cmd;ctrl  nudge +0  +25
+#bind right:alt;cmd;ctrl nudge +25 +0
+#bind left:alt;cmd;ctrl  nudge -25 +0
+#bind up:alt;cmd;ctrl    nudge +0  -25
+#bind down:alt;cmd;ctrl  nudge +0  +25
 
 # Throw Bindings
 bind 0:cmd;ctrl     throw 0
