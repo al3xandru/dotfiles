@@ -70,7 +70,8 @@ set scrolloff=5
 " omnicomplete
 set omnifunc=syntaxcomplete#Complete
 " https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
-set complete=.,w,b,u,t
+" kspell: dictionary completion only when spell enabled set spell 
+set complete=.,w,b,u,t,i,kspell
 " http://vim.wikia.com/wiki/Make_Vim_completion_popup_menu_work_just_like_in_an_IDE
 set completeopt=longest,menu,preview
 " http://stackoverflow.com/questions/7722177/how-do-i-map-ctrl-x-ctrl-o-to-ctrl-space-in-terminal-vim
@@ -97,7 +98,7 @@ set showbreak=↪
 syntax on
 colorscheme koehler
 
-set colorcolumn=80,120
+set colorcolumn=81,121
 " http://vim.wikia.com/wiki/Highlight_current_line
 set cursorline
 augroup CursorLine
@@ -359,6 +360,10 @@ Plugin 'blacklight'
 Plugin 'MochaLatte'
 Plugin 'blerins/flattown'
 Plugin 'gregsexton/Atom'
+" After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
+"   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
+"   White|WhiteLowContrast]
+Plugin 'jonathanfilip/vim-lucius'
 Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
@@ -415,6 +420,7 @@ au Syntax * RainbowParenthesesLoadBraces
 
 
 Plugin 'scrooloose/nerdcommenter'
+"Plugin 'tpope/vim-commentary'
 
 
 Plugin 'scrooloose/nerdtree'
