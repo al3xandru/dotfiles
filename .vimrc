@@ -410,10 +410,16 @@ let g:pad#window_height=12
 let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
 "let g:pad#open_in_split=0
 let g:pad#set_mappings=0
-nmap <leader>pal <Plug>(pad-list)
-nmap <leader>pan <Plug>(pad-new)
-nmap <leader>pas <Plug>(pad-search)
+nmap <leader>qql <Plug>(pad-list)
+nmap <leader>qqn <Plug>(pad-new)
+nmap <leader>qqs <Plug>(pad-search)
 
+Plugin 'xolox/vim-notes'
+let g:notes_directories=['~/Dropbox/Dox/nvall']
+let g:notes_suffix='.md'
+let g:title_sync='no'
+let g:notes_smart_quotes=0
+let g:notes_list_bullets=['*', '-', '+']
 
 Plugin 'Townk/vim-autoclose'
 " Disable: 
