@@ -218,7 +218,7 @@ cnoreabbrev Q q
 let mapleader=","
 let maplocalleader="\\"
 
-inoremap wq <esc>
+inoremap jk <esc>
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
@@ -256,6 +256,9 @@ nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
 nmap <silent><C-w>+ :resize +10<CR>
+" open tag in tab
+nnoremap <C-\> <C-w><C-]><C-w>T
+inoremap <C-\> <C-w><C-]><C-w>T
 
 " Show special characters
 nmap <silent> <leader>ch :set nolist!<CR>
@@ -272,12 +275,14 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap <leader>F :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+nnoremap <leader>F  :grep -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap <leader>Fd :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap <leader>f :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap <leader>f  :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
+nnoremap <leader>fd :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -694,6 +699,7 @@ if has("unix")
 
         augroup vimrc_md
             autocmd!
+            autocmd FileType markdown setlocal textwidth=80
             autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
         augroup END
     endif
