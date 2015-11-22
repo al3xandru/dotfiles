@@ -350,8 +350,6 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " www.vim.org/scripts
-Plugin 'AutoTag'
-set tags=./tags;/
 
 
 Plugin 'HTML-AutoCloseTag'
@@ -428,8 +426,9 @@ set runtimepath^=~/.vim/bundle/ctrlp
 let g:loaded_ctrlp = 0
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
-nnoremap <unique> <leader>s :CtrlP<CR>
-nnoremap <unique> <leader>t :CtrlPBufTag<CR>
+nnoremap <unique> <leader>p :CtrlP<CR>
+nnoremap <unique> <leader>pt :CtrlPBufTag<CR>
+nnoremap <unique> <leader>pb :CtrlPBuffer<CR>
 
 
 Plugin 'kien/rainbow_parentheses.vim'
@@ -457,8 +456,8 @@ let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
 nnoremap <silent> <S-F8> :NERDTreeFind<CR>
-nnoremap <unique> <leader>p :NERDTreeToggle<CR>
-nnoremap <leader>fp :NERDTreeFind<CR>
+nnoremap <unique> <leader>d :NERDTreeToggle<CR>
+nnoremap <leader>df :NERDTreeFind<CR>
 
 
 " snippets
@@ -564,7 +563,7 @@ vmap <leader><leader>p <Plug>(easymotion-next)
 
 
 " This could be replaced by CtrlP
-Plugin 'jlanzarotta/bufexplorer'
+"Plugin 'jlanzarotta/bufexplorer'
 
 
 Plugin 'airblade/vim-gitgutter'
@@ -576,6 +575,9 @@ nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 
 Plugin 'xolox/vim-misc'
 
+" Check tagfiles: echo tagfiles()
+set tags=./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
+"Plugin 'AutoTag'
 Plugin 'xolox/vim-easytags'
 let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:easytags_async = 1
@@ -584,10 +586,20 @@ let g:easytags_auto_highlight = 0
 let g:easytags_include_members = 1
 let g:easytags_updatetime_min = 60000
 let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
+"let g:easytags_languages = {
+            "\ 'language': {
+            "\   'cmd': g:easytags_cmd,
+            "\   'args': [],
+            "\   'fileoutput_opt': '-f',
+            "\   'stdout_opt': '-f-',
+            "\   'recurse_flag': '-R'
+            "\ }
+"\}
 
-
+" Ack and Ag
 Plugin 'mileszs/ack.vim'
 Plugin 'rking/ag.vim'
+
 
 " Language support
 Plugin 'applescript.vim'
