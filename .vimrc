@@ -275,7 +275,7 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap <leader>F  :grep -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap <leader>F  :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
 nnoremap <leader>Fd :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
