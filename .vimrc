@@ -268,28 +268,28 @@ nnoremap <silent><leader><space> :nohlsearch<CR>
 nnoremap <leader>v V`] 
 
 " Opens an edit command with the path of the currently edited file filled in
-nnoremap <leader>ee :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap <leader>F  :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
-nnoremap <leader>Fd :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+nnoremap <leader>g :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
+nnoremap <leader>sg :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap <leader>f  :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
-nnoremap <leader>fd :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap <leader>a :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
+nnoremap <leader>sa :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
 " bind r to replace word under cursor
 nnoremap <leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
 " display :Errors
-nnoremap <leader>l :Errors<CR>
+"nnoremap <leader>l :Errors<CR>
 
 
 " 19. the swap file
@@ -349,54 +349,324 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
-" www.vim.org/scripts
 
-
-Plugin 'HTML-AutoCloseTag'
-" Disable:
-" let b:mapped_auto_closetag = 1
-
-" color schemes
+" Color schemes {{{1
 Plugin 'Colour-Sampler-Pack'
 Plugin '256-grayvim'
 Plugin 'blacklight'
 Plugin 'MochaLatte'
-Plugin 'blerins/flattown'
-Plugin 'gregsexton/Atom'
-" After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
-"   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
-"   White|WhiteLowContrast]
-Plugin 'jonathanfilip/vim-lucius'
-Plugin 'nice/sweater'
-Plugin 'zefei/cake16'
-Plugin 'zeis/vim-kolor'
-
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
+Plugin 'blerins/flattown'
+Plugin 'gregsexton/Atom'
+Plugin 'jonathanfilip/vim-lucius'
+" After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
+"   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
+"   White|WhiteLowContrast]
+Plugin 'nice/sweater'
+Plugin 'zefei/cake16'
+Plugin 'zeis/vim-kolor'
+" }}}
 
 
-" GitHub
-" Text objects
+" Extra text objects {{{1
 " Line: l
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-line'
 " CamelCase 
 Plugin 'bkad/CamelCaseMotion' 
-map <leader>ww <Plug>CamelCaseMotion_w
-map <leader>we <Plug>CamelCaseMotion_e
-map <leader>wb <Plug>CamelCaseMotion_b
+nmap <leader>cw <Plug>CamelCaseMotion_w
+vmap <leader>cw <Plug>CamelCaseMotion_w
+nmap <leader>ce <Plug>CamelCaseMotion_e
+vmap <leader>ce <Plug>CamelCaseMotion_e
+nmap <leader>cb <Plug>CamelCaseMotion_b
+vmap <leader>cb <Plug>CamelCaseMotion_b
 "Function arguments: a
 Plugin 'argtextobj.vim' 
 " Indent: i 
 Plugin 'michaeljsmith/vim-indent-object' 
+" }}}
 
 
-" Scratch files :scratch :Sscratch
+"
+" Important {{{1
+"
+Plugin 'kien/ctrlp.vim'
+set runtimepath^=~/.vim/bundle/ctrlp
+let g:loaded_ctrlp = 0
+let g:ctrlp_map = '<F7>'
+let g:ctrlp_cmd = 'CtrlP'
+nnoremap <unique> <leader>p :CtrlP<CR>
+nnoremap <unique> <leader>P :CtrlPBufTag<CR>
+nnoremap <unique> <leader>b :CtrlPBuffer<CR>
+" Replaced by CtrlPBuffer Plugin 'jlanzarotta/bufexplorer'
+
+
+Plugin 'majutsushi/tagbar'
+let g:tagbar_autoclose = 1
+let g:tagbar_showlinenumbers = 1
+nnoremap <silent> <leader>o :TagbarToggle<CR>
+nnoremap <silent> <F9> :TagbarToggle<CR>
+
+
+Plugin 'al3xandru/nerdcommenter'
+" Plugin 'scrooloose/nerdcommenter'
+" Plugin 'tpope/vim-commentary'
+
+
+Plugin 'scrooloose/nerdtree'
+"let NERDTreeWinPos='right'
+let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
+    \ '\.egg$', '\.idea$',
+    \ '\.bzr', '\.git', '\.hg', '\.svn']
+let NERDTreeQuitOnOpen=1
+let NERDChristmasTree=1
+let NERDTreeHighlightCursorline=1
+nnoremap <unique> <leader>t :NERDTreeToggle<CR>
+nnoremap <leader>T :NERDTreeFind<CR>
+nnoremap <silent> <F8> :NERDTreeToggle<CR>
+nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+
+
+Plugin 'scrooloose/syntastic'
+"}}}
+
+"
+" Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{1
+"
+set tags=./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
+"Plugin 'AutoTag'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
+let g:easytags_cmd = '/usr/local/bin/ctags'
+let g:easytags_async = 1
+let g:easytags_dynamic_files = 1
+let g:easytags_auto_highlight = 0
+let g:easytags_include_members = 1
+let g:easytags_updatetime_min = 60000
+let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
+"let g:easytags_languages = {
+            "\ 'language': {
+            "\   'cmd': g:easytags_cmd,
+            "\   'args': [],
+            "\   'fileoutput_opt': '-f',
+            "\   'stdout_opt': '-f-',
+            "\   'recurse_flag': '-R'
+            "\ }
+"\}
+
+Plugin 'Shougo/neocomplete.vim'
+augroup neocomplete
+    autocmd!
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+augroup END
+"}}}
+
+" Search: Ack and Ag {{{1
+Plugin 'mileszs/ack.vim'
+Plugin 'rking/ag.vim'
+"}}}
+
+"
+" Snippets {{{1
+"
+if has("python")
+    Plugin 'SirVer/ultisnips'
+else
+    Plugin 'MarcWeber/vim-addon-mw-utils'
+    Plugin 'tomtom/tlib_vim'
+    Plugin 'garbas/vim-snipmate'
+endif
+Plugin 'honza/vim-snippets'
+"}}}
+
+"
+" Language support {{{1
+"
+Plugin 'applescript.vim'
+
+
+Plugin 'VimClojure'
+let vimclojure#SetupKeyMap = 0
+
+
+" C/C++ 
+Plugin 'OmniCppComplete'
+
+" Go {{{2
+Plugin 'fatih/vim-go'
+let g:go_fmt_autosave = 0
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
+augroup go
+    autocmd!
+    autocmd FileType go nmap <localleader>gs <Plug>(go-implements)
+    autocmd FileType go nmap <localleader>gi <Plug>(go-info)
+    autocmd FileType go nmap <localleader>gh <Plug>(go-doc)
+    autocmd FileType go nmap <localleader>ghv <Plug>(go-doc-vertical)
+    autocmd FileType go nmap <localleader>ghb <Plug>(go-doc-browser)
+    autocmd FileType go nmap <localleader>ger <Plug>(go-run)
+    autocmd FileType go nmap <localleader>geb <Plug>(go-build)
+    autocmd FileType go nmap <localleader>get <Plug>(go-test)
+    autocmd FileType go nmap <localleader>gec <Plug>(go-coverage)
+augroup END
+"}}}
+
+" HTML Zen Coding
+Plugin 'mattn/emmet-vim'
+
+
+" Java completion
+Plugin 'VictorDenisov/javacomplete'
+
+
+" Markdown {{{2
+Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+" Markdown preview {{{3
+"Plugin 'greyblake/vim-preview' could not get it to work
+if has("unix")
+    let s:uname = system("uname -s")
+    if s:uname =~ "Darwin"
+        function! s:setupMarkdownPreview()
+            if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
+                nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+            else
+                nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
+            endif
+        endfunction
+
+    endif
+endif
+"}}}
+" Markdown editing {{{3
+Plugin 'junegunn/goyo.vim'
+
+
+Plugin 'reedes/vim-colors-pencil'
+let g:pencil_higher_contrast_ui = 1
+let g:pencil_neutral_code_bg = 1
+let g:pencil_terminal_italics = 1
+
+
+let g:iawriter_active = 0
+let g:iawriter_save_colorscheme = ""
+let g:iawriter_save_bgr = ""
+function! IAWriter()
+    if g:iawriter_active == 0
+        let g:iawriter_save_colorscheme = g:colors_name
+        if exists( "&background" )
+            let g:iawriter_save_bgr = &background
+        endif
+        set background=light
+        colorscheme pencil
+        call goyo#execute(0, '')
+        augroup lineno
+            autocmd!
+            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   set norelativenumber | set nonumber
+            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
+            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
+        augroup END
+        let g:iawriter_active = 1
+        echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . ", background:" . g:iawriter_save_bgr . "]"
+    else
+        augroup lineno
+            autocmd!
+            autocmd FocusLost * set norelativenumber | set number
+            autocmd InsertEnter * set norelativenumber | set number
+            autocmd InsertLeave * set relativenumber | set nonumber
+        augroup END
+        call goyo#execute(0, '') 
+        execute printf("colorscheme %s", g:iawriter_save_colorscheme)
+        if g:iawriter_save_bgr
+            execute printf("set background=%s", g:iawriter_save_bgr)
+        endif
+        let g:iawriter_active = 0
+        echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
+    endif
+endfunction
+augroup markdown
+    autocmd!
+    autocmd FileType markdown setlocal textwidth=80
+    autocmd FileType markdown nnoremap <silent><localleader>me :call IAWriter()<CR>
+    autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
+augroup END
+
+"}}}
+"}}}
+
+" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
+
+
+" Python {{{2
+Plugin 'hdima/python-syntax'
+Plugin 'klen/python-mode'
+let g:pymode_options_max_line_length=99
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
+let g:pymode_lint_ignore = "E501"
+let g:pymode_syntax_slow_sync = 0
+
+Plugin 'davidhalter/jedi-vim'
+let g:jedi#use_splits_not_buffers = "top"
+let g:jedi#popup_on_dot = 0
+"let g:jedi#show_call_signatures = 1
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#goto_assignments_command = "<localleader>ga"
+let g:jedi#goto_definitions_command = "<localleader>gd"
+let g:jedi#documentation_command = "<localleader>gh"
+let g:jedi#usages_command = "<localleader>gu"
+let g:jedi#rename_command = "<localleader>gr"
+"let g:jedi#completions_enabled = 0
+"}}}
+
+
+Plugin 'derekwyatt/vim-scala'
+
+
+" Taskpaper
+Plugin 'davidoc/taskpaper.vim'
+let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
+" }}}
+
+"
+" Scratch files, notes, outliner etc. {{{1
+" :scratch :Sscratch
 Plugin 'duff/vim-scratch'
 
+" :Pad
 Plugin 'fmoralesc/vim-pad'
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
@@ -414,6 +684,7 @@ nmap <leader>qql <Plug>(pad-list)
 nmap <leader>qqn <Plug>(pad-new)
 nmap <leader>qqs <Plug>(pad-search)
 
+" :Note
 Plugin 'xolox/vim-notes'
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
@@ -421,21 +692,19 @@ let g:title_sync='no'
 let g:notes_smart_quotes=0
 let g:notes_list_bullets=['*', '-', '+']
 
-Plugin 'Townk/vim-autoclose'
-" Disable: 
-" let g:loaded_AutoClose = 1
+" outliner .otl
+Plugin 'vimoutliner/vimoutliner'
+"}}}
 
+"
+" Enhancements {{{1
+"
+"{{{2
+Plugin 'HTML-AutoCloseTag'
+" Disable: let b:mapped_auto_closetag = 1
 
-" CtrlP
-Plugin 'kien/ctrlp.vim'
-set runtimepath^=~/.vim/bundle/ctrlp
-let g:loaded_ctrlp = 0
-let g:ctrlp_map = '<F7>'
-let g:ctrlp_cmd = 'CtrlP'
-nnoremap <unique> <leader>p :CtrlP<CR>
-nnoremap <unique> <leader>pt :CtrlPBufTag<CR>
-nnoremap <unique> <leader>pb :CtrlPBuffer<CR>
-
+" Improved %
+Plugin 'edsono/vim-matchit'
 
 Plugin 'kien/rainbow_parentheses.vim'
 augroup rainbowpar
@@ -446,82 +715,9 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 
-
-
-Plugin 'scrooloose/nerdcommenter'
-"Plugin 'tpope/vim-commentary'
-
-
-Plugin 'scrooloose/nerdtree'
-"let NERDTreeWinPos='right'
-let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
-    \ '\.egg$', '\.idea$',
-    \ '\.bzr', '\.git', '\.hg', '\.svn']
-let NERDTreeQuitOnOpen=1
-let NERDChristmasTree=1
-let NERDTreeHighlightCursorline=1
-nnoremap <silent> <F8> :NERDTreeToggle<CR>
-nnoremap <silent> <S-F8> :NERDTreeFind<CR>
-nnoremap <unique> <leader>d :NERDTreeToggle<CR>
-nnoremap <leader>df :NERDTreeFind<CR>
-
-
-" snippets
-if has("python")
-    Plugin 'SirVer/ultisnips'
-else
-    Plugin 'MarcWeber/vim-addon-mw-utils'
-    Plugin 'tomtom/tlib_vim'
-    Plugin 'garbas/vim-snipmate'
-endif
-Plugin 'honza/vim-snippets'
-
-
-Plugin 'scrooloose/syntastic'
-
-" Unite: can replace CtrlP, Tagbar
-" Note: vimproc requires compiling a c file
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/unite-outline'
-Plugin 'Shougo/vimfiler.vim'
-Plugin 'Shougo/neoyank.vim'
-Plugin 'tsukkee/unite-tag'
-Plugin 'Shougo/unite-help'
-nnoremap <leader>uf :<C-u>Unite -start-insert file/async<CR>
-nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
-nnoremap <leader>ud :<C-u>Unite -start-insert file_rec/async<CR>
-nnoremap <leader>ub :<C-u>Unite buffer bookmark<CR>
-nnoremap <leader>ut :<C-u>Unite tab<CR>
-nnoremap <leader>uo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
-nnoremap <leader>uy :<C-u>Unite history/yank<CR>
-Plugin 'Shougo/neocomplete.vim'
-augroup neocomplete
-    autocmd!
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup END
-
-
-Plugin 'edsono/vim-matchit'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-
-
-Plugin 'majutsushi/tagbar'
-let g:tagbar_autoclose = 1
-let g:tagbar_showlinenumbers = 1
-nnoremap <silent> <leader>o :TagbarToggle<CR>
-nnoremap <silent> <F9> :TagbarToggle<CR>
-
-" Dash.app
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'rizzatti/dash.vim'
-" noremap do *not* work with <Plug>
-nmap <leader>h <Plug>DashSearch
-
+Plugin 'Townk/vim-autoclose'
+" Disable: let g:loaded_AutoClose = 1
+"}}}
 
 
 Plugin 'bling/vim-airline'
@@ -568,217 +764,50 @@ vmap <leader><leader>p <Plug>(easymotion-next)
 "vmap "f <Plug>(easymotion-bd-f)
 
 
-" This could be replaced by CtrlP
-"Plugin 'jlanzarotta/bufexplorer'
+Plugin 'tpope/vim-surround'
 
 
+" Dash.app
+Plugin 'rizzatti/funcoo.vim'
+Plugin 'rizzatti/dash.vim'
+" noremap do *not* work with <Plug>
+nmap <leader>h <Plug>DashSearch
+
+" Git {{{2
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 
 
+Plugin 'tpope/vim-fugitive'
+"}}}
+"}}}
 
-Plugin 'xolox/vim-misc'
-
-" Check tagfiles: echo tagfiles()
-set tags=./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
-"Plugin 'AutoTag'
-Plugin 'xolox/vim-easytags'
-let g:easytags_cmd = '/usr/local/bin/ctags'
-let g:easytags_async = 1
-let g:easytags_dynamic_files = 1
-let g:easytags_auto_highlight = 0
-let g:easytags_include_members = 1
-let g:easytags_updatetime_min = 60000
-let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
-"let g:easytags_languages = {
-            "\ 'language': {
-            "\   'cmd': g:easytags_cmd,
-            "\   'args': [],
-            "\   'fileoutput_opt': '-f',
-            "\   'stdout_opt': '-f-',
-            "\   'recurse_flag': '-R'
-            "\ }
-"\}
-
-" Ack and Ag
-Plugin 'mileszs/ack.vim'
-Plugin 'rking/ag.vim'
-
-
-" Language support
-Plugin 'applescript.vim'
-
-Plugin 'VimClojure'
-let vimclojure#SetupKeyMap = 0
-
-Plugin 'fatih/vim-go'
-let g:go_fmt_autosave = 0
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-augroup vim_go
-    autocmd!
-    autocmd FileType go nmap <leader>gs <Plug>(go-implements)
-    autocmd FileType go nmap <leader>gi <Plug>(go-info)
-    autocmd FileType go nmap <leader>gh <Plug>(go-doc)
-    autocmd FileType go nmap <leader>ghv <Plug>(go-doc-vertical)
-    autocmd FileType go nmap <leader>ghb <Plug>(go-doc-browser)
-    autocmd FileType go nmap <leader>ger <Plug>(go-run)
-    autocmd FileType go nmap <leader>geb <Plug>(go-build)
-    autocmd FileType go nmap <leader>get <Plug>(go-test)
-    autocmd FileType go nmap <leader>gec <Plug>(go-coverage)
-augroup END
-
-" HTML Zen Coding
-Plugin 'mattn/emmet-vim'
-
-" Node.js https://github.com/joyent/node/wiki/Vim-Plugins
-
-" Python
-Plugin 'hdima/python-syntax'
-Plugin 'klen/python-mode'
-let g:pymode_options_max_line_length=99
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
-let g:pymode_lint_ignore = "E501"
-let g:pymode_syntax_slow_sync = 0
-
-Plugin 'davidhalter/jedi-vim'
-let g:jedi#use_splits_not_buffers = "top"
-let g:jedi#popup_on_dot = 0
-"let g:jedi#show_call_signatures = 1
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#goto_assignments_command = "<leader>ga"
-let g:jedi#goto_definitions_command = "<leader>gd"
-let g:jedi#documentation_command = "<leader>gh"
-let g:jedi#usages_command = "<leader>gu"
-let g:jedi#rename_command = "<leader>gr"
-"let g:jedi#completions_enabled = 0
-
-"breaks ]c in vimdiff Plugin 'jsatt/python_fn'
-"not very useful Plugin 'ikirudennis/python.vim' 
-
-
-Plugin 'derekwyatt/vim-scala'
-
-" OmniCompletion
-Plugin 'OmniCppComplete'
-
-" outliner .otl
-Plugin 'vimoutliner/vimoutliner'
-
-" Java completion
-Plugin 'VictorDenisov/javacomplete'
-
-
-" Markdown
-" Basics
-Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
-" Markdown preview
-"Plugin 'greyblake/vim-preview' could not get it to work
-if has("unix")
-    let s:uname = system("uname -s")
-    if s:uname =~ "Darwin"
-        function! s:setupMarkdownPreview()
-            if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
-                nnoremap <silent><leader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
-            else
-                nnoremap <silent><leader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
-            endif
-        endfunction
-
-        augroup vimrc_md
-            autocmd!
-            autocmd FileType markdown setlocal textwidth=80
-            autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
-        augroup END
-    endif
-endif
-" Markdown editing
-Plugin 'junegunn/goyo.vim'
-
-
-Plugin 'reedes/vim-colors-pencil'
-let g:pencil_higher_contrast_ui = 1
-let g:pencil_neutral_code_bg = 1
-let g:pencil_terminal_italics = 1
-
-
-let g:iawriter_active = 0
-let g:iawriter_save_colorscheme = ""
-let g:iawriter_save_bgr = ""
-function! IAWriter()
-    if g:iawriter_active == 0
-        let g:iawriter_save_colorscheme = g:colors_name
-        if exists( "&background" )
-            let g:iawriter_save_bgr = &background
-        endif
-        set background=light
-        colorscheme pencil
-        call goyo#execute(0, '')
-        augroup lineno
-            autocmd!
-            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   set norelativenumber | set nonumber
-            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
-            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
-        augroup END
-        let g:iawriter_active = 1
-        echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . ", background:" . g:iawriter_save_bgr . "]"
-    else
-        augroup lineno
-            autocmd!
-            autocmd FocusLost * set norelativenumber | set number
-            autocmd InsertEnter * set norelativenumber | set number
-            autocmd InsertLeave * set relativenumber | set nonumber
-        augroup END
-        call goyo#execute(0, '') 
-        execute printf("colorscheme %s", g:iawriter_save_colorscheme)
-        if g:iawriter_save_bgr
-            execute printf("set background=%s", g:iawriter_save_bgr)
-        endif
-        let g:iawriter_active = 0
-        echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
-    endif
-endfunction
-nnoremap <silent><leader>me :call IAWriter()<cr>
-
-
-" Taskpaper
-Plugin 'davidoc/taskpaper.vim'
-let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
-
+"
+" Experimental {{{1
+"
+" Unite: can replace CtrlP, Tagbar
+" Note: vimproc requires compiling a c file
+Plugin 'Shougo/vimproc.vim'
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/unite-outline'
+Plugin 'Shougo/vimfiler.vim'
+Plugin 'Shougo/neoyank.vim'
+Plugin 'Shougo/unite-help'
+Plugin 'tsukkee/unite-tag'
+nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+nnoremap <leader>ft :<C-u>Unite tab<CR>
+nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
+nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
+nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
+nnoremap <leader>fh :<C-u>Unite history/yank<CR>
+"}}}
 
 call vundle#end()
 filetype plugin indent on " required!
 
+" set color scheme
 if has("unix")
     let s:uname = system("uname -s")
     " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
@@ -790,15 +819,14 @@ if has("unix")
 endif
 call SetCursorLineColors()
 
-" **************
-" Old, unused 
+" * * * * * * * * * * * * * * * * * * * * * * * * * *
+" Old, unused {{{ 
 " Plugin 'AutoClose'
 " Disable:
 " let g:autoclose_loaded = 1
 " let g:autoclose_on = 1
 
 " Plugin 'project.tar.gz'
-" Plugin 'msanders/snipmate.vim'
 " Plugin 'thisivan/vim-taglist'
 "let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 "let Tlist_Show_One_File=1
@@ -817,16 +845,6 @@ call SetCursorLineColors()
 " map <unique> <Leader>t :CommandT<CR>
 " let g:CommandTCancelMap='<C-x>'
 
-" PeepCode
-" Plugin 'mrchrisadams/vim-peepopen'
-" let g:peepopen_loaded = 1  "disabled
-
-" Markdown
-" Plugin 'file:///Users/alex/.dotfiles/...'
-" Plugin 'tpope/vim-markdown'
-" Plugin 'jtratner/vim-flavored-markdown'
-" Plugin 'greyblake/vim-preview'
-" Plugin 'waylan/vim-markdown-extra-preview'
 
 " Plugin 'Vim-JDE'
 " Plugin 'javacomplete'
@@ -836,3 +854,6 @@ call SetCursorLineColors()
 " both at compile time and runtime 
 " Plugin 'Valloric/YouCompleteMe'
 " let g:ycm_auto_trigger = 0
+" }}}
+
+" vim: set foldmethod=marker:
