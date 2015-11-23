@@ -209,7 +209,7 @@ nnoremap <leader>zha Vatzf
 " 16 diff mode
 set diffopt=filler,vertical
 " 17. mapping
-
+set timeoutlen=750
 " abbreviations
 cnoreabbrev W w
 cnoreabbrev Q q
@@ -377,13 +377,14 @@ Plugin 'zeis/vim-kolor'
 Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-line'
 " CamelCase 
-Plugin 'bkad/CamelCaseMotion' 
-nmap <leader>cw <Plug>CamelCaseMotion_w
-vmap <leader>cw <Plug>CamelCaseMotion_w
-nmap <leader>ce <Plug>CamelCaseMotion_e
-vmap <leader>ce <Plug>CamelCaseMotion_e
-nmap <leader>cb <Plug>CamelCaseMotion_b
-vmap <leader>cb <Plug>CamelCaseMotion_b
+"Plugin 'camelcasemotion'
+"Plugin 'bkad/CamelCaseMotion' 
+"nmap <leader>cw <Plug>CamelCaseMotion_w
+"vmap <leader>cw <Plug>CamelCaseMotion_w
+"nmap <leader>ce <Plug>CamelCaseMotion_e
+"vmap <leader>ce <Plug>CamelCaseMotion_e
+"nmap <leader>cb <Plug>CamelCaseMotion_b
+"vmap <leader>cb <Plug>CamelCaseMotion_b
 "Function arguments: a
 Plugin 'argtextobj.vim' 
 " Indent: i 
@@ -685,7 +686,7 @@ nmap <leader>qqn <Plug>(pad-new)
 nmap <leader>qqs <Plug>(pad-search)
 
 " :Note
-Plugin 'xolox/vim-notes'
+"Plugin 'xolox/vim-notes'
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
 let g:title_sync='no'
