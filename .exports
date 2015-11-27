@@ -100,7 +100,7 @@ if [ -z "$GRADLE_HOME" ]; then
     GRADLE_HOME=$(_findfirst "/usr/local/share/java" "*gradle*")
     if [ -n "$GRADLE_HOME" ]; then
         export GRADLE_HOME
-        export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+CMSClassUnloadingEnabled"
+        export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
     else
         unset GRADLE_HOME
     fi
