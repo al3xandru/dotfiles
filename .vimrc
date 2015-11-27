@@ -230,7 +230,8 @@ vnoremap <tab> %
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
+cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
+"cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
 
 " Insert a newline in normal mode
 nnoremap <S-Enter> O<Esc>
@@ -701,9 +702,6 @@ Plugin 'vimoutliner/vimoutliner'
 " Enhancements {{{1
 "
 "{{{2
-Plugin 'HTML-AutoCloseTag'
-" Disable: let b:mapped_auto_closetag = 1
-
 " Improved %
 Plugin 'edsono/vim-matchit'
 
@@ -716,8 +714,12 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 
-Plugin 'Townk/vim-autoclose'
-" Disable: let g:loaded_AutoClose = 1
+Plugin 'jiangmiao/auto-pairs'
+"Plugin 'Raimondi/delimitMate'
+"Plugin 'Townk/vim-autoclose'
+
+Plugin 'HTML-AutoCloseTag'
+" Disable: let b:mapped_auto_closetag = 1
 "}}}
 
 
