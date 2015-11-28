@@ -64,17 +64,24 @@ bind j:alt;cmd;ctrl  nudge +0  +25
 bind 0:cmd;ctrl     throw 0
 bind 9:cmd;ctrl     throw 1
 
+# Snapshots
+bind f3:cmd snapshot aworkspace save-to-disk;stack
+bind f3:alt activate-snapshot aworkspace
+bind f3:cmd;alt activate-snapshot aworkspace delete
+bind f4:cmd snapshot bworkspace save-to-disk;stack
+bind f4:alt activate-snapshot bworkspace
+bind f4:cmd;alt activate-snapshot bworkspace delete
 # Work messenger layout
-alias 2-top-l move screenOriginX;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
-alias 2-bot-l move screenOriginX;screenOriginY+screenSizeY/2  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
-alias 2-top-c move screenOriginX+screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
-alias 2-top-r move screenOriginX+2*screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+#alias 2-top-l move screenOriginX;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+#alias 2-bot-l move screenOriginX;screenOriginY+screenSizeY/2  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+#alias 2-top-c move screenOriginX+screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
+#alias 2-top-r move screenOriginX+2*screenSizeX/3;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
 
-layout workMsg 'Slack' ${2-top-l}
-layout workMsg 'Textual 5':REPEAT ${2-top-l}
-layout workMsg 'Salesforce Chatter' ${2-top-l}
-layout workMsg 'HipChat' ${2-bot-l}
-layout workMsg 'The Hit List' ${2-top-c}
-layout workMsg 'TaskPaper' ${2-top-r}
+#layout workMsg 'Slack' ${2-top-l}
+#layout workMsg 'Textual 5':REPEAT ${2-top-l}
+#layout workMsg 'Salesforce Chatter' ${2-top-l}
+#layout workMsg 'HipChat' ${2-bot-l}
+#layout workMsg 'The Hit List' ${2-top-c}
+#layout workMsg 'TaskPaper' ${2-top-r}
 
-bind w:alt;cmd;ctrl layout workMsg
+#bind w:alt;cmd;ctrl layout workMsg
