@@ -149,16 +149,16 @@ if has("gui_running")
     set columns=120
     set lines=80
 endif
-function! FullScrHoriz()
-    set fuopt+=maxhorz
-    set fullscreen
-endfunction
-function! BackFullScrHoriz()
-    set fuopt-=maxhorz
-    set nofu
-endfunction
-command! Fullscr call FullScrHoriz()
-command! Nofullscr call BackFullScrHoriz()
+"function! FullScrHoriz()
+    "set fuopt+=maxhorz
+    "set fullscreen
+"endfunction
+"function! BackFullScrHoriz()
+    "set fuopt-=maxhorz
+    "set nofu
+"endfunction
+"command! Fullscr call FullScrHoriz()
+"command! Nofullscr call BackFullScrHoriz()
 
 " splits
 set splitbelow
@@ -227,6 +227,19 @@ nnoremap ; :
 nnoremap <tab> %
 vnoremap <tab> %
 
+" http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
+nnoremap <silent> n n:call HLNext(0.4)<CR>
+nnoremap <silent> N N:call HLNext(0.4)<cr>
+
+function! HLNext (blinktime)
+    let target_pat = '\c\%#'.@/
+    let ring = matchadd('ErrorMsg', target_pat, 101)
+    redraw
+    exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
+    call matchdelete(ring)
+    redraw
+endfunction
+
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
@@ -276,14 +289,15 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap <leader>g :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
-nnoremap <leader>sg :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+nnoremap /g :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
+nnoremap /fi :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap /fc :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap <leader>a :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
-nnoremap <leader>sa :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap /a :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
+nnoremap /fd :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -800,7 +814,7 @@ Plugin 'Shougo/neoyank.vim'
 Plugin 'Shougo/unite-help'
 Plugin 'tsukkee/unite-tag'
 nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
-nnoremap <leader>ft :<C-u>Unite tab<CR>
+nnoremap <leader>gt :<C-u>Unite tab<CR>
 nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
 nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
 nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
