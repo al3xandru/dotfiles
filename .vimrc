@@ -133,12 +133,13 @@ if has("gui_running")
     set go-=r
     set go-=R
     if has("gui_macvim")
-        "set gfn=Anonymous\ Pro:h12
+        "set gfn=Anonymous_Pro:h12
         "set gfn=Consolas:h12
         "set gfn=Cousine:h11
-        set gfn=Hack:h11
+        set gfn=Hack:h12
         "set gfn=Inconsolata:h13
-        "set gfn=Input\ Mono:h11
+        "set gfn=Input_Mono:h11
+        "set gfn=Liberation_Mono:h11
         "set gfn=monofur:h15
         "set gfn=ProFontX:h12
         "set gfn=Source\ Code\ Pro:h11
@@ -224,6 +225,7 @@ nnoremap j gj
 nnoremap k gk
 " make ; behave like : (save the Shift)
 nnoremap ; :
+nnoremap : ;
 nnoremap <tab> %
 vnoremap <tab> %
 
@@ -775,10 +777,10 @@ nmap <leader><leader>n <Plug>(easymotion-next)
 vmap <leader><leader>n <Plug>(easymotion-next)
 nmap <leader><leader>p <Plug>(easymotion-next)
 vmap <leader><leader>p <Plug>(easymotion-next)
-"nmap "t <Plug>(easymotion-bd-t)
-"vmap "t <Plug>(easymotion-bd-t)
-"nmap "f <Plug>(easymotion-bd-f)
-"vmap "f <Plug>(easymotion-bd-f)
+nmap <leader><leader>t <Plug>(easymotion-bd-t)
+vmap <leader><leader>t <Plug>(easymotion-bd-t)
+nmap <leader><leader>f <Plug>(easymotion-bd-f)
+vmap <leader><leader>f <Plug>(easymotion-bd-f)
 
 
 Plugin 'tpope/vim-surround'
