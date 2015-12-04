@@ -186,6 +186,7 @@ augroup lineno
     autocmd FocusLost * set norelativenumber | set number
     autocmd InsertEnter * set norelativenumber | set number
     autocmd InsertLeave * set relativenumber | set nonumber
+    autocmd Filetype qf setlocal norelativenumber number nowrap
 augroup END
 set relativenumber
 
@@ -219,13 +220,19 @@ cnoreabbrev Q q
 let mapleader=","
 let maplocalleader="\\"
 
-inoremap jk <esc>
+inoremap zz <esc>
+inoremap <silent> <Up> <esc><Up>
+inoremap <silent> <Down> <esc><Down>
+inoremap <silent> <Left> <esc><Left>
+inoremap <silent> <Right> <esc><Right>
+
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
 " make ; behave like : (save the Shift)
 nnoremap ; :
-nnoremap : ;
+nnoremap , ;
+nnoremap … ;
 nnoremap <tab> %
 vnoremap <tab> %
 
@@ -275,6 +282,8 @@ nmap <silent><C-w>+ :resize +10<CR>
 " open tag in tab
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
+nnoremap ‘ <C-w><C-]><C-w>T
+inoremap ‘ <C-w><C-]><C-w>T
 
 " Show special characters
 nmap <silent> <leader>ch :set nolist!<CR>
@@ -450,12 +459,17 @@ nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 
 
 Plugin 'scrooloose/syntastic'
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+"let g:syntastic_error_symbol = "✗"
+"let g:syntastic_warning_symbol = "⚠"
 "}}}
 
 "
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{1
 "
-set tags=./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
+set tags=./.git/tags;,./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
 "Plugin 'AutoTag'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
@@ -730,8 +744,10 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 
-Plugin 'jiangmiao/auto-pairs'
-"Plugin 'Raimondi/delimitMate'
+"Plugin 'jiangmiao/auto-pairs'
+Plugin 'Raimondi/delimitMate'
+let delimitMate_expand_cr=1
+
 "Plugin 'Townk/vim-autoclose'
 
 Plugin 'HTML-AutoCloseTag'
