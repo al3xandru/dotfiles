@@ -20,6 +20,9 @@ bind z:cmd;ctrl    undo
 bind g:cmd;ctrl    grid padding:5
 bind esc:ctrl      grid padding:5
 
+# App hints
+bind h:cmd;ctrl     hint QWERTYUIOP
+
 # Resize Bindings
 # Enlarge: top-right-bottom-left
 bind 1:alt;cmd;ctrl     resize +0 +10% bottom-left
