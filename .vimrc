@@ -164,6 +164,14 @@ endif
 " splits
 set splitbelow
 set splitright
+"
+" automatically open the location/quickfix window after :make, :grep,
+" :lvimgrep and friends if there are valid locations/errors
+"augroup qf
+    "autocmd!
+    "autocmd QuickFixCmdPost [^l]* cwindow
+    "autocmd QuickFixCmdPost l* lwindow
+"augroup END
 
 " 11.messages and info
 set number
@@ -744,9 +752,12 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 
-"Plugin 'jiangmiao/auto-pairs'
-Plugin 'Raimondi/delimitMate'
-let delimitMate_expand_cr=1
+Plugin 'jiangmiao/auto-pairs'
+" Alt+0 and Alt+9
+let g:AutoPairsShortcutJump='º'
+let g:AutoPairsShortcutFastWrap='ª'
+"Plugin 'Raimondi/delimitMate'
+"let delimitMate_expand_cr=1
 
 "Plugin 'Townk/vim-autoclose'
 
