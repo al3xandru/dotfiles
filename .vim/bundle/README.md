@@ -1,3 +1,6 @@
+[swift](https://github.com/apple/swift/tree/master/utils/vim)
+
+
 # AutoCloseTag #
 
 [HTML AutoCloseTag - Automatically closes HTML tags once you finish typing them](http://www.vim.org/scripts/script.php?script_id=2591)
