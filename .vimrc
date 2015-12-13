@@ -228,7 +228,7 @@ cnoreabbrev Q q
 let mapleader=","
 let maplocalleader="\\"
 
-inoremap zz <esc>
+inoremap jk <esc>
 inoremap <silent> <Up> <esc><Up>
 inoremap <silent> <Down> <esc><Down>
 inoremap <silent> <Left> <esc><Left>
@@ -447,9 +447,10 @@ nnoremap <silent> <leader>o :TagbarToggle<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
 
-Plugin 'al3xandru/nerdcommenter'
+"Plugin 'al3xandru/nerdcommenter'
 " Plugin 'scrooloose/nerdcommenter'
-" Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-commentary'
+" Plugin 'tomtom/tcomment_vim'
 
 
 Plugin 'scrooloose/nerdtree'
@@ -541,7 +542,8 @@ Plugin 'OmniCppComplete'
 
 " Go {{{2
 Plugin 'fatih/vim-go'
-let g:go_fmt_autosave = 0
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = 'goimports'
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
@@ -695,6 +697,7 @@ let g:jedi#rename_command = "<localleader>gr"
 
 Plugin 'derekwyatt/vim-scala'
 
+Plugin 'swift'
 
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
