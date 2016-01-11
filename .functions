@@ -253,9 +253,9 @@ function gopath {
         local dirn
         if [ -d "$1" ]; then
             if [ "$1" = "." ]; then
-                dirn=$(pwd)
+                dirn=$(pwd -P)
             else
-                dirn=$(cd $1; pwd)
+                dirn=$(cd $1; pwd -P)
             fi
             export GO15VENDOREXPERIMENT=1
             export GOPATH=${dirn}:$GOPATH
