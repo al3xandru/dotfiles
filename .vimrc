@@ -1,3 +1,4 @@
+scriptencoding utf-8
 " http://blog.danielfischer.com/2010/11/19/a-starting-guide-to-vim-from-textmate/
 " http://items.sjbach.com/319/configuring-vim-right
 " https://github.com/tpope/vim-pathogen
@@ -31,8 +32,6 @@
 " 25. various
 
 " 1. important 
-"call pathogen#infect()
-
 set lazyredraw
 set nocompatible
 set backspace=2
@@ -85,7 +84,8 @@ filetype plugin indent on
 
 set synmaxcol=500
 set listchars=tab:▸\ ,trail:·,eol:¬
-set showbreak=↪
+" set showbreak=↪
+set showbreak=⤿
 
 " 5. syntax, highlighting and spelling"
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
@@ -386,8 +386,9 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Color schemes {{{1
 Plugin 'Colour-Sampler-Pack'
-Plugin '256-grayvim'
-Plugin 'blacklight'
+" Plugin 'rodnaph/vim-color-schemes'
+" Plugin '256-grayvim'
+" Plugin 'blacklight'
 Plugin 'MochaLatte'
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
@@ -403,6 +404,7 @@ Plugin 'jonathanfilip/vim-lucius'
 Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
+Plugin 'adampasz/vim-stonewashed'
 " }}}
 
 
@@ -412,15 +414,14 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'kana/vim-textobj-line'
 " CamelCase 
 "Plugin 'camelcasemotion'
-"Plugin 'bkad/CamelCaseMotion' 
-"nmap <leader>cw <Plug>CamelCaseMotion_w
-"vmap <leader>cw <Plug>CamelCaseMotion_w
-"nmap <leader>ce <Plug>CamelCaseMotion_e
-"vmap <leader>ce <Plug>CamelCaseMotion_e
-"nmap <leader>cb <Plug>CamelCaseMotion_b
-"vmap <leader>cb <Plug>CamelCaseMotion_b
+Plugin 'bkad/CamelCaseMotion' 
+map ∑ <Plug>CamelCaseMotion_w
+map ∫ <Plug>CamelCaseMotion_b
+map £ <Plug>CamelCaseMotion_e
+map ´ <Plug>CamelCaseMotion_ge
 "Function arguments: a
-Plugin 'argtextobj.vim' 
+" Plugin 'argtextobj.vim' 
+Plugin 'PeterRincker/vim-argumentative'
 " Indent: i 
 Plugin 'michaeljsmith/vim-indent-object' 
 " }}}
@@ -469,8 +470,9 @@ nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 
 Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_auto_jump = 0
 "let g:syntastic_error_symbol = "✗"
 "let g:syntastic_warning_symbol = "⚠"
 "}}}
@@ -600,19 +602,20 @@ Plugin 'VictorDenisov/javacomplete'
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
-if has("unix")
-    let s:uname = system("uname -s")
-    if s:uname =~ "Darwin"
-        function! s:setupMarkdownPreview()
+function! MarkdownPreview(file)
+    if has("unix")
+        let l:uname = system("uname -s")
+        if l:uname =~ "Darwin"
             if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
-                nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+                execute ":silent !open -a 'Marked 2.app' '" . a:file . "'"
+                " nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
             else
-                nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
+                execute ":silent !open -a Google Chrome.app' '" . a:file . "'"
+                " nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
             endif
-        endfunction
-
+        endif
     endif
-endif
+endfunction
 "}}}
 " Markdown editing {{{3
 Plugin 'junegunn/goyo.vim'
@@ -633,6 +636,7 @@ function! IAWriter()
         if exists( "&background" )
             let g:iawriter_save_bgr = &background
         endif
+        set linespace=3
         set background=light
         colorscheme pencil
         call goyo#execute(0, '')
@@ -656,6 +660,7 @@ function! IAWriter()
         if g:iawriter_save_bgr
             execute printf("set background=%s", g:iawriter_save_bgr)
         endif
+        set linespace=1
         let g:iawriter_active = 0
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
     endif
@@ -664,7 +669,8 @@ augroup markdown
     autocmd!
     autocmd FileType markdown setlocal textwidth=80
     autocmd FileType markdown nnoremap <silent><localleader>me :call IAWriter()<CR>
-    autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
+    autocmd FileType markdown nnoremap <silent><localleader>mp :call MarkdownPreview('%:p')<CR>
+    " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
 augroup END
 
 "}}}
@@ -827,6 +833,7 @@ Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
+" https://github.com/mhinz/vim-signify
 
 
 Plugin 'tpope/vim-fugitive'
