@@ -84,8 +84,8 @@ filetype plugin indent on
 
 set synmaxcol=500
 set listchars=tab:▸\ ,trail:·,eol:¬
-" set showbreak=↪
-set showbreak=⤿
+set showbreak=↪
+" set showbreak=⤿
 
 " 5. syntax, highlighting and spelling"
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
