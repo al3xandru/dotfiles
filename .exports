@@ -18,6 +18,7 @@ if [ -h "/usr/local/bin/vim" ]; then
         VIMLINK=`ls -l /usr/local/bin/vim | awk '{print $11}'`
         VIMDIR=`dirname $VIMLINK`
         export VIMRUNTIME="/usr/local/bin/$VIMDIR/../share/vim/vim74"
+        unset -v VIMDIR VIMLINK
     fi
 fi
 #
@@ -61,6 +62,7 @@ if [ -z "$JAVA_HOME" ]; then
             esac
         fi
     fi
+    unset -v PJAVA_HOME vmdir
 fi
 
 function _findfirst {

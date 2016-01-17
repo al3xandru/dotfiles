@@ -58,6 +58,7 @@ alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
     alias "$method"="/usr/bin/curl -i -X '$method'"
 done
+unset -v method
 
 # Mac OS: Quick way to rebuild the Launch Services database and get rid
 # of duplicates in the Open With submenu.
@@ -65,3 +66,4 @@ alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/
 alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed -r'
 # human logger in audo
 alias todo="python $HOME/workspace/miscellaneous/audo/humlog.py"
+

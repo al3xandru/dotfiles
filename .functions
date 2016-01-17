@@ -207,7 +207,7 @@ function nodejs_activate_npm {
 }
 function nodejs_deactivate_npm {
     IFS=':' read -a path_segments <<< "${PATH}"
-    NEW_PATH=""
+    local NEW_PATH=""
     for ps in "${path_segments[@]}"; do
         if [ "/usr/local/share/npm/bin" != "$ps" ]; then
             if [ -z "$NEW_PATH" ]; then
@@ -265,6 +265,7 @@ function goprj {
 }
 
 function loopback {
+    local max i
     if [ -z "$1" ]; then
         echo "Usage loopback nr"
     else
