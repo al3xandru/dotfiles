@@ -3,17 +3,6 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
-# cd & tabtitle
-function cf() {
-    local t=$1
-    if [ -z "$t" ]; then
-        cd ~
-    else
-        cd "$t"
-    fi
-    echo -e "\033];$(basename $PWD)\007"
-}
-
 # iTerm2 tab title
 function tabtitle() {
     local t=$1
@@ -272,5 +261,17 @@ function goprj {
         mkdir -p "$1/"{bin,pkg,src}    
         cd "$1"
         gopath .
+    fi
+}
+
+function loopback {
+    if [ -z "$1" ]; then
+        echo "Usage loopback nr"
+    else
+        let max=$1+2
+        for((i=2;i<max; i++)); do
+            sudo ifconfig lo0 alias 127.0.0.$i up
+            echo "Loopback enabled on 127.0.0.$i"
+        done
     fi
 }
