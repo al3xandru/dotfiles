@@ -22,7 +22,7 @@ if [ "$MVN_HOME" != "" ]; then
     PATH="$MVN_HOME/bin:$PATH"
 fi
 if [ -d "$HOME/perl5" ]; then
-    PATH="$HOME/perl5/bin:$HOME"
+    PATH="$HOME/perl5/bin:$PATH"
 fi
 if [ "$SBT_HOME" != "" ]; then
     PATH="$SBT_HOME/bin:$PATH"
