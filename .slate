@@ -12,6 +12,7 @@ config undoOps grid,layout,move,resize,push,nudge
 # monitor aliases
 alias mon-laptop 1920x1200
 alias mon-monoprice 2560x1440
+alias mon-ipad 768x1024
 
 # Undo
 bind z:cmd;ctrl    undo
@@ -66,6 +67,7 @@ bind j:alt;cmd;ctrl  nudge +0  +25
 # Throw Bindings
 bind 0:cmd;ctrl     throw 0
 bind 9:cmd;ctrl     throw 1
+bind 8:cmd;ctrl     throw 2
 
 # Snapshots
 bind f3:cmd snapshot aworkspace save-to-disk;stack
