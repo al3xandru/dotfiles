@@ -70,7 +70,7 @@ function doStatus() {
 }
 
 function doInstall() {
-    rsync --exclude-from=.rsyncexclude -aq . $HOME
+    rsync --exclude-from=rsyncexclude.config -aq . $HOME
 
     for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs}; do
         proc $f
