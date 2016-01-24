@@ -142,7 +142,7 @@ if has("gui_running")
         "set gfn=Liberation_Mono:h11
         "set gfn=monofur:h15
         "set gfn=ProFontX:h12
-        "set gfn=Source\ Code\ Pro:h11
+        "set gfn=Source_Code_Pro:h11
     elseif has("gui_gtk2")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
@@ -150,16 +150,6 @@ if has("gui_running")
     set columns=120
     set lines=80
 endif
-"function! FullScrHoriz()
-    "set fuopt+=maxhorz
-    "set fullscreen
-"endfunction
-"function! BackFullScrHoriz()
-    "set fuopt-=maxhorz
-    "set nofu
-"endfunction
-"command! Fullscr call FullScrHoriz()
-"command! Nofullscr call BackFullScrHoriz()
 
 " splits
 set splitbelow
@@ -179,7 +169,7 @@ set ruler
 set visualbell t_vb=
 
 " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
-function! ToggleLineNo()
+function! <SID>ToggleLineNo()
     if(&relativenumber == 1)
         set norelativenumber
         set number
@@ -188,7 +178,7 @@ function! ToggleLineNo()
         set relativenumber
     endif
 endfunction
-nnoremap <silent><C-n> :call ToggleLineNo()<cr>
+nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
 augroup lineno
     autocmd!
     autocmd FocusLost * set norelativenumber | set number
@@ -245,10 +235,10 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-nnoremap <silent> n n:call HLNext(0.4)<CR>
-nnoremap <silent> N N:call HLNext(0.4)<cr>
+nnoremap <silent> n n:call <SID>HLNext(0.4)<CR>
+nnoremap <silent> N N:call <SID>HLNext(0.4)<cr>
 
-function! HLNext (blinktime)
+function! <SID>HLNext (blinktime)
     let target_pat = '\c\%#'.@/
     let ring = matchadd('ErrorMsg', target_pat, 101)
     redraw
@@ -260,7 +250,18 @@ endfunction
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
+function! <SID>SaveSession () 
+    let parentDir = getcwd()
+    if isdirectory(parentDir . "/.git")
+        exec "mksession! " . parentDir . "/.git/.session.vim"
+        echo "session saved " . parentDir . "/.git/.session.vim"
+    else
+        exec "mksession! " . parentDir . "/.session.vim"
+        echo "session saved " . parentDir . "/.session.vim"
+    endif
+endfunction
+cnoremap <C-S> <C-R> call <SID>SaveSession()<CR><CR>
+"cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
 "cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
 
 " Insert a newline in normal mode
@@ -308,15 +309,15 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap /g :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
-nnoremap /fi :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
+nnoremap /fG :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
 nnoremap /fc :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap /a :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
-nnoremap /fd :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap /fa :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
+nnoremap /fA :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -602,7 +603,7 @@ Plugin 'VictorDenisov/javacomplete'
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
-function! MarkdownPreview(file)
+function! <SID>MarkdownPreview(file)
     if has("unix")
         let l:uname = system("uname -s")
         if l:uname =~ "Darwin"
@@ -630,7 +631,7 @@ let g:pencil_terminal_italics = 1
 let g:iawriter_active = 0
 let g:iawriter_save_colorscheme = ""
 let g:iawriter_save_bgr = ""
-function! IAWriter()
+function! <SID>IAWriter()
     if g:iawriter_active == 0
         let g:iawriter_save_colorscheme = g:colors_name
         if exists( "&background" )
@@ -668,8 +669,8 @@ endfunction
 augroup markdown
     autocmd!
     autocmd FileType markdown setlocal textwidth=80
-    autocmd FileType markdown nnoremap <silent><localleader>me :call IAWriter()<CR>
-    autocmd FileType markdown nnoremap <silent><localleader>mp :call MarkdownPreview('%:p')<CR>
+    autocmd FileType markdown nnoremap <silent><localleader>me :call <SID>IAWriter()<CR>
+    autocmd FileType markdown nnoremap <silent><localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
 augroup END
 
