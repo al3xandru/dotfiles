@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".git" ".gitignore" ".gitmodules" ".rsyncexclude" "README.md" "bootstrap.sh" "install.sh" ".DS_Store")
+    arr=("." ".git" ".gitignore" ".gitmodules" "rsyncexclude.config" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" ".vim/bundle/Vunde.vim/.gitignore")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -37,18 +37,26 @@ function doStatus() {
 
     echo "3) Checking symlinks are in place"
     t=0
-    for f in .{aliases,exports,functions,path,prompt_bash,slate}; do
+    for f in .{aliases,exports,functions,path,prompt_bash}; do
         if [ ! -h $HOME/"${f}" ]; then
             echo "~/${f} is NOT a symlink"
             t=1
         fi
     done
     if [ ! -h "$HOME/.vimrc" ]; then
-        echo "Vim ~/.vimrc is NOT a symblink"
+        echo "Vim ~/.vimrc is NOT a symlink"
         t=1
     fi
-    if [ ! -h "$HOME/.emacs.d/init.el" ]; then
-        echo "Emacs ~/.emacs.d/init.el is NOT a symlink"
+    # if [ ! -h "$HOME/.emacs.d/init.el" ]; then
+    #     echo "Emacs ~/.emacs.d/init.el is NOT a symlink"
+    #     t=1
+    # fi
+    if [ ! -h "$HOME/.spacemacs" ]; then
+        echo "Spacemacs ~/.spacemacs is NOT a symlink"
+        t=1
+    fi
+    if [ ! -h "$HOME/.slate" ]; then
+        echo "Slate ~/.slate is NOT a symlink"
         t=1
     fi
     if [ 0 -eq $t ]; then
@@ -64,12 +72,11 @@ function doStatus() {
 function doInstall() {
     rsync --exclude-from=.rsyncexclude -aq . $HOME
 
-    for f in .{aliases,exports,functions,path,prompt_bash,slate}; do
+    for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs}; do
         proc $f
     done
 
-    proc ".vimrc"
-    proc ".emacs.d/init.el"
+    # proc ".emacs.d/init.el"
 
     #for d in {.vim,.emacs.d,.virtualenv}; do
         #if [ "$d" = ".emacs.d" ]; then
