@@ -12,8 +12,27 @@
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     auto-completion
+     dash
+     themes-megapack
      markdown
      org
+     ;; git
+     git
+     ;; languages
+     c-c++
+     csharp
+     go
+     html
+     php
+     python
+     ruby
+     scala
+     swift
+     yaml
+     ;; vim
+     evil-commentary
+     evil-snipe
      ;; --------------------------------------------------------
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
@@ -49,16 +68,23 @@ before layers configuration."
    ;; directory. A string value must be a path to a .PNG file.
    ;; If the value is nil then no banner is displayed.
    ;; dotspacemacs-startup-banner 'official
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil 
    ;; t if you always want to see the changelog at startup
    dotspacemacs-always-show-changelog t
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'."
-   dotspacemacs-startup-lists '(recents projects)
+   dotspacemacs-startup-lists '(recents projects bookmarks)
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
+   dotspacemacs-themes '(alect-light
+                         misterioso
+                         alect-dark
+                         alect-dark-alt
+                         flatui
+                         material
+                         heroku
+                         solarized-light
                          solarized-dark
                          leuven
                          monokai
@@ -67,8 +93,8 @@ before layers configuration."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+   dotspacemacs-default-font '("Hack"
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -126,7 +152,7 @@ before layers configuration."
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "grep" "pt" "ack")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
@@ -135,10 +161,40 @@ before layers configuration."
   ;; User initialization goes here
   )
 
+(defun dotspacemacs/user-init ())
+
 (defun dotspacemacs/config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  ;;; Backups
+  ;; uncomment next line for disabling backup files
+  ;; (setq make-backup-files nil)
+  (setq backup-directory-alist `(("." . "~/tmp")))
+  ;; Sessions
+  (desktop-save-mode 1)
+  ;;; Editing defaults
+  (prefer-coding-system 'utf-8)
+  (setq buffer-file-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  ;;; indentation
+  (setq-default indent-tabs-mode nil
+                tab-width 4)
+  (setq indent-tabs-mode nil
+        tab-width 4)
+  (electric-indent-mode 1)
+  ;;; Electric pairs
+  (electric-pair-mode 1)
+)
+
+(defun dotspacemacs/user-config ()
+  ;;dotspace-auto-resume-layouts t
+  (setq powerline-default-separator nil)
+  (setq-default dotspacemacs-line-number t)
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+  (add-hook 'text-mode-hook 'auto-fill-mode)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
