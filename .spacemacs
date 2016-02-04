@@ -14,9 +14,9 @@
    '(
      auto-completion
      dash
+     semantic
      themes-megapack
-     markdown
-     org
+     theming
      ;; git
      git
      ;; languages
@@ -24,6 +24,8 @@
      csharp
      go
      html
+     markdown
+     org
      php
      python
      ruby
@@ -78,17 +80,19 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(alect-light
+                         ample
                          misterioso
                          alect-dark
                          alect-dark-alt
-                         flatui
-                         material
                          heroku
+                         material
                          solarized-light
                          solarized-dark
                          leuven
+                         gruvbox
                          monokai
-                         zenburn)
+                         zenburn
+                         flatui)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -167,12 +171,29 @@ before layers configuration."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  (setq-default dotspacemacs-line-number t
+                dotspacemacs-auto-resume-layouts t)
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
+)
+
+(defun dotspacemacs/user-config ()
+  ;;dotspace-auto-resume-layouts t
+  (setq
+   powerline-default-separator nil
   ;;; Backups
-  ;; uncomment next line for disabling backup files
-  ;; (setq make-backup-files nil)
-  (setq backup-directory-alist `(("." . "~/tmp")))
+   ;; uncomment next line for disabling backup files
+   ;; make-backup-files nil
+   backup-directory-alist `(("." . "~/tmp"))
+   default-frame-alist '((width . 105)
+                         (height . 70))
+   ;; disable automatic popups from auto-complete & company
+   ac-auto-show-menu nil
+   company-idle-delay 0.5 ;; nil to disable it completely
+   )
+  (add-hook 'text-mode-hook 'auto-fill-mode)
   ;; Sessions
-  (desktop-save-mode 1)
+  ;; (desktop-save-mode 1)
   ;;; Editing defaults
   (prefer-coding-system 'utf-8)
   (setq buffer-file-coding-system 'utf-8)
@@ -183,19 +204,20 @@ layers configuration."
                 tab-width 4)
   (setq indent-tabs-mode nil
         tab-width 4)
-  (electric-indent-mode 1)
   ;;; Electric pairs
+  (electric-indent-mode 1)
   (electric-pair-mode 1)
-)
-
-(defun dotspacemacs/user-config ()
-  ;;dotspace-auto-resume-layouts t
-  (setq powerline-default-separator nil)
-  (setq-default dotspacemacs-line-number t)
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-)
+  (add-to-list 'projectile-globally-ignored-directories '(".git"
+                                                          ".svn"
+                                                          ".hg"))
+  ;;; Keys
+  ;; (global-set-key (kbd "M-RET") 'company-complete)
+  (define-key evil-normal-state-map (kbd "s-RET") 'company-complete)
+  ;; (setq theming-modifications
+  ;;       '((alect-light (powerline-active2 :background "#75D7D8"))))
+                       ;; (powerline-active2 :background "#4f3598") ;;   "#e2e2e2"
+                       ;; (mode-line :foreground "#242322"))))
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
