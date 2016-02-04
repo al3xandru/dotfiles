@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".git" ".gitignore" ".gitmodules" "rsyncexclude.config" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" ".vim/bundle/Vunde.vim/.gitignore")
+    arr=("." ".git" ".gitignore" ".gitmodules" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -70,7 +70,7 @@ function doStatus() {
 }
 
 function doInstall() {
-    rsync --exclude-from=rsyncexclude.config -aq . $HOME
+    rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
     for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs}; do
         proc $f
