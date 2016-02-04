@@ -89,16 +89,22 @@ set showbreak=↪
 
 " 5. syntax, highlighting and spelling"
 " Pastel: desert256 jellybeans wombat256 ir_black molokai
-" Dark: dante, koehler, vividchalk, vibrantink, molokai, tango, fnaqeran,
+" Dark: alduino, dante, koehler, vividchalk, vibrantink, molokai, tango, fnaqeran,
 " marollocio, macvim, motus, railcast, tir_black
 " Light: buttercream, papayawhip, navajo, inkpot, sweater
 " Grey: inkpot, camo, earendel, lucius
-" Pastel: desert256 jellybeans wombat256 ir_black molokai
+" Pastel: alduin desert256 jellybeans wombat256 ir_black molokai
 
 syntax on
 colorscheme koehler
 
-set colorcolumn=81,121
+" color column
+function! <SID>SetColorColumn()
+    highlight ColorColumn ctermbg=235 guibg=#2c2d27
+    " set colorcolumn=81,121
+    let &colorcolumn="81,".join(range(121,999),",")
+endfunction
+
 " http://vim.wikia.com/wiki/Highlight_current_line
 set cursorline
 augroup CursorLine
@@ -106,11 +112,10 @@ augroup CursorLine
   autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
   autocmd WinLeave * setlocal nocursorline
 augroup END
-function! SetCursorLineColors()
+function! <SID>SetCursorLineColors()
     hi CursorLine    ctermbg=52 guibg=#424242
     hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
 endfunction
-call SetCursorLineColors()
 
 set matchtime=3
 set dictionary=/usr/share/dict/words
@@ -136,9 +141,9 @@ if has("gui_running")
         "set gfn=Anonymous_Pro:h12
         "set gfn=Consolas:h12
         "set gfn=Cousine:h11
-        set gfn=Hack:h12
+        " set gfn=Hack:h12
         "set gfn=Inconsolata:h13
-        "set gfn=Input_Mono:h11
+        set gfn=Input_Mono:h11
         "set gfn=Liberation_Mono:h11
         "set gfn=monofur:h15
         "set gfn=ProFontX:h12
@@ -406,6 +411,7 @@ Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 Plugin 'adampasz/vim-stonewashed'
+Plugin 'AlessandroYorba/Alduin'
 " }}}
 
 
@@ -433,7 +439,7 @@ Plugin 'michaeljsmith/vim-indent-object'
 "
 Plugin 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp
-let g:loaded_ctrlp = 0
+let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 nnoremap <unique> <leader>p :CtrlP<CR>
@@ -776,7 +782,7 @@ Plugin 'HTML-AutoCloseTag'
 "}}}
 
 
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -792,6 +798,11 @@ let g:airline_mode_map={
        \ 'S'  : 'S',
        \ '' : 'S',
        \ }
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+Plugin 'vim-airline/vim-airline-themes'
 
 
 Plugin 'easymotion/vim-easymotion'
@@ -821,6 +832,7 @@ vmap <leader><leader>f <Plug>(easymotion-bd-f)
 
 
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
 
 
 " Dash.app
@@ -854,11 +866,14 @@ Plugin 'Shougo/neoyank.vim'
 Plugin 'Shougo/unite-help'
 Plugin 'tsukkee/unite-tag'
 nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
 nnoremap <leader>gt :<C-u>Unite tab<CR>
 nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
 nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
+nnoremap <leader>b :<C-u>Unite buffer bookmark<CR>
 nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
 nnoremap <leader>fh :<C-u>Unite history/yank<CR>
+nnoremap <silent> <F5> <Plug>(unite-redraw)
 "}}}
 
 call vundle#end()
@@ -869,12 +884,15 @@ if has("unix")
     let s:uname = system("uname -s")
     " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
     if s:uname =~ "Darwin"
-        colorscheme flattown
+        " colorscheme flattown
+        colorscheme alduin 
     else
         colorscheme navajo 
     endif
 endif
-call SetCursorLineColors()
+call <SID>SetCursorLineColors()
+call <SID>SetColorColumn()
+
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
