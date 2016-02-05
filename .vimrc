@@ -385,59 +385,58 @@ end
 " Only Plugin settings are allowed until vundle#end()
 filetype off " required!
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
+set rtp+=~/.vim/bundle/neobundle.vim
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
 
 " Color schemes {{{1
-Plugin 'Colour-Sampler-Pack'
-" Plugin 'rodnaph/vim-color-schemes'
-" Plugin '256-grayvim'
-" Plugin 'blacklight'
-Plugin 'MochaLatte'
-Plugin 'altercation/vim-colors-solarized'
+NeoBundle 'Colour-Sampler-Pack'
+" NeoBundle 'rodnaph/vim-color-schemes'
+" NeoBundle '256-grayvim'
+" NeoBundle 'blacklight'
+NeoBundle 'MochaLatte'
+NeoBundle 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
-Plugin 'blerins/flattown'
-Plugin 'gregsexton/Atom'
-Plugin 'jonathanfilip/vim-lucius'
+NeoBundle 'blerins/flattown'
+NeoBundle 'gregsexton/Atom'
+NeoBundle 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
-Plugin 'nice/sweater'
-Plugin 'zefei/cake16'
-Plugin 'zeis/vim-kolor'
-Plugin 'adampasz/vim-stonewashed'
-Plugin 'AlessandroYorba/Alduin'
+NeoBundle 'nice/sweater'
+NeoBundle 'zefei/cake16'
+NeoBundle 'zeis/vim-kolor'
+NeoBundle 'adampasz/vim-stonewashed'
+NeoBundle 'AlessandroYorba/Alduin'
 " }}}
 
 
 " Extra text objects {{{1
 " Line: l
-Plugin 'kana/vim-textobj-user'
-Plugin 'kana/vim-textobj-line'
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-line'
 " CamelCase 
-"Plugin 'camelcasemotion'
-Plugin 'bkad/CamelCaseMotion' 
+" NeoBundle 'camelcasemotion'
+NeoBundle 'bkad/CamelCaseMotion' 
 map ∑ <Plug>CamelCaseMotion_w
 map ∫ <Plug>CamelCaseMotion_b
 map £ <Plug>CamelCaseMotion_e
 map ´ <Plug>CamelCaseMotion_ge
 "Function arguments: a
-" Plugin 'argtextobj.vim' 
-Plugin 'PeterRincker/vim-argumentative'
+" NeoBundle 'argtextobj.vim' 
+NeoBundle 'PeterRincker/vim-argumentative'
 " Indent: i 
-Plugin 'michaeljsmith/vim-indent-object' 
+NeoBundle 'michaeljsmith/vim-indent-object' 
 " }}}
 
 
 "
 " Important {{{1
 "
-Plugin 'kien/ctrlp.vim'
+NeoBundle 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp
 let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
@@ -445,23 +444,23 @@ let g:ctrlp_cmd = 'CtrlP'
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
 nnoremap <unique> <leader>b :CtrlPBuffer<CR>
-" Replaced by CtrlPBuffer Plugin 'jlanzarotta/bufexplorer'
+" Replaced by CtrlPBuffer NeoBundle 'jlanzarotta/bufexplorer'
 
 
-Plugin 'majutsushi/tagbar'
+NeoBundle 'majutsushi/tagbar'
 let g:tagbar_autoclose = 1
 let g:tagbar_showlinenumbers = 1
 nnoremap <silent> <leader>o :TagbarToggle<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
 
-"Plugin 'al3xandru/nerdcommenter'
-" Plugin 'scrooloose/nerdcommenter'
-Plugin 'tpope/vim-commentary'
-" Plugin 'tomtom/tcomment_vim'
+"NeoBundle 'al3xandru/nerdcommenter'
+" NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'tpope/vim-commentary'
+" NeoBundle 'tomtom/tcomment_vim'
 
 
-Plugin 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdtree'
 "let NERDTreeWinPos='right'
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
     \ '\.egg$', '\.idea$',
@@ -475,7 +474,7 @@ nnoremap <silent> <F8> :NERDTreeToggle<CR>
 nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 
 
-Plugin 'scrooloose/syntastic'
+NeoBundle 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
@@ -488,9 +487,9 @@ let g:syntastic_auto_jump = 0
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{1
 "
 set tags=./.git/tags;,./.tags;,./tags;,./TAGS;,~/.vim/.vimtags
-"Plugin 'AutoTag'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+" NeoBundle 'AutoTag'
+NeoBundle 'xolox/vim-misc'
+NeoBundle 'xolox/vim-easytags'
 let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:easytags_async = 1
 let g:easytags_dynamic_files = 1
@@ -508,7 +507,7 @@ let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
             "\ }
 "\}
 
-Plugin 'Shougo/neocomplete.vim'
+NeoBundle 'Shougo/neocomplete.vim'
 augroup neocomplete
     autocmd!
     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -519,38 +518,38 @@ augroup END
 "}}}
 
 " Search: Ack and Ag {{{1
-Plugin 'mileszs/ack.vim'
-Plugin 'rking/ag.vim'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'rking/ag.vim'
 "}}}
 
 "
 " Snippets {{{1
 "
 if has("python")
-    Plugin 'SirVer/ultisnips'
+    NeoBundle 'SirVer/ultisnips'
 else
-    Plugin 'MarcWeber/vim-addon-mw-utils'
-    Plugin 'tomtom/tlib_vim'
-    Plugin 'garbas/vim-snipmate'
+    NeoBundle 'MarcWeber/vim-addon-mw-utils'
+    NeoBundle 'tomtom/tlib_vim'
+    NeoBundle 'garbas/vim-snipmate'
 endif
-Plugin 'honza/vim-snippets'
+NeoBundle 'honza/vim-snippets'
 "}}}
 
 "
 " Language support {{{1
 "
-Plugin 'applescript.vim'
+NeoBundle 'applescript.vim'
 
 
-Plugin 'VimClojure'
+NeoBundle 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
 
 " C/C++ 
-Plugin 'OmniCppComplete'
+NeoBundle 'OmniCppComplete'
 
 " Go {{{2
-Plugin 'fatih/vim-go'
+NeoBundle 'fatih/vim-go'
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = 'goimports'
 let g:go_highlight_functions = 1
@@ -598,17 +597,17 @@ augroup END
 "}}}
 
 " HTML Zen Coding
-Plugin 'mattn/emmet-vim'
+NeoBundle 'mattn/emmet-vim'
 
 
 " Java completion
-Plugin 'VictorDenisov/javacomplete'
+NeoBundle 'VictorDenisov/javacomplete'
 
 
 " Markdown {{{2
-Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+NeoBundle 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
 " Markdown preview {{{3
-"Plugin 'greyblake/vim-preview' could not get it to work
+"NeoBundle 'greyblake/vim-preview' could not get it to work
 function! <SID>MarkdownPreview(file)
     if has("unix")
         let l:uname = system("uname -s")
@@ -625,10 +624,10 @@ function! <SID>MarkdownPreview(file)
 endfunction
 "}}}
 " Markdown editing {{{3
-Plugin 'junegunn/goyo.vim'
+NeoBundle 'junegunn/goyo.vim'
 
 
-Plugin 'reedes/vim-colors-pencil'
+NeoBundle 'reedes/vim-colors-pencil'
 let g:pencil_higher_contrast_ui = 1
 let g:pencil_neutral_code_bg = 1
 let g:pencil_terminal_italics = 1
@@ -687,14 +686,14 @@ augroup END
 
 
 " Python {{{2
-Plugin 'hdima/python-syntax'
-Plugin 'klen/python-mode'
+NeoBundle 'hdima/python-syntax'
+NeoBundle 'klen/python-mode'
 let g:pymode_options_max_line_length=99
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
 let g:pymode_lint_ignore = "E501"
 let g:pymode_syntax_slow_sync = 0
 
-Plugin 'davidhalter/jedi-vim'
+NeoBundle 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
 let g:jedi#popup_on_dot = 0
 "let g:jedi#show_call_signatures = 1
@@ -708,22 +707,22 @@ let g:jedi#rename_command = "<localleader>gr"
 "}}}
 
 
-Plugin 'derekwyatt/vim-scala'
+NeoBundle 'derekwyatt/vim-scala'
 
-Plugin 'swift'
+NeoBundle 'swift', {'type': 'none', 'base': '~/.vim/bundle'}
 
 " Taskpaper
-Plugin 'davidoc/taskpaper.vim'
+NeoBundle 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
 "
 " Scratch files, notes, outliner etc. {{{1
 " :scratch :Sscratch
-Plugin 'duff/vim-scratch'
+NeoBundle 'duff/vim-scratch'
 
 " :Pad
-Plugin 'fmoralesc/vim-pad'
+NeoBundle 'fmoralesc/vim-pad'
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
@@ -741,7 +740,7 @@ nmap <leader>qqn <Plug>(pad-new)
 nmap <leader>qqs <Plug>(pad-search)
 
 " :Note
-"Plugin 'xolox/vim-notes'
+"NeoBundle 'xolox/vim-notes'
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
 let g:title_sync='no'
@@ -749,7 +748,7 @@ let g:notes_smart_quotes=0
 let g:notes_list_bullets=['*', '-', '+']
 
 " outliner .otl
-Plugin 'vimoutliner/vimoutliner'
+NeoBundle 'vimoutliner/vimoutliner'
 "}}}
 
 "
@@ -757,9 +756,9 @@ Plugin 'vimoutliner/vimoutliner'
 "
 "{{{2
 " Improved %
-Plugin 'edsono/vim-matchit'
+NeoBundle 'edsono/vim-matchit'
 
-Plugin 'kien/rainbow_parentheses.vim'
+NeoBundle 'kien/rainbow_parentheses.vim'
 augroup rainbowpar
     autocmd!
     autocmd VimEnter * RainbowParenthesesToggle
@@ -768,21 +767,21 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 
-Plugin 'jiangmiao/auto-pairs'
+NeoBundle 'jiangmiao/auto-pairs'
 " Alt+0 and Alt+9
 let g:AutoPairsShortcutJump='º'
 let g:AutoPairsShortcutFastWrap='ª'
-"Plugin 'Raimondi/delimitMate'
+"NeoBundle 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
 
-"Plugin 'Townk/vim-autoclose'
+"NeoBundle 'Townk/vim-autoclose'
 
-Plugin 'HTML-AutoCloseTag'
+NeoBundle 'HTML-AutoCloseTag'
 " Disable: let b:mapped_auto_closetag = 1
 "}}}
 
 
-Plugin 'vim-airline/vim-airline'
+NeoBundle 'vim-airline/vim-airline'
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -802,10 +801,10 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-Plugin 'vim-airline/vim-airline-themes'
+NeoBundle 'vim-airline/vim-airline-themes'
 
 
-Plugin 'easymotion/vim-easymotion'
+NeoBundle 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
 let g:EasyMotion_use_upper=1
@@ -831,25 +830,25 @@ nmap <leader><leader>f <Plug>(easymotion-bd-f)
 vmap <leader><leader>f <Plug>(easymotion-bd-f)
 
 
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-unimpaired'
 
 
 " Dash.app
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'rizzatti/dash.vim'
+NeoBundle 'rizzatti/funcoo.vim'
+NeoBundle 'rizzatti/dash.vim'
 " noremap do *not* work with <Plug>
 nmap <leader>h <Plug>DashSearch
 
 " Git {{{2
-Plugin 'airblade/vim-gitgutter'
+NeoBundle 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 " https://github.com/mhinz/vim-signify
 
 
-Plugin 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-fugitive'
 "}}}
 "}}}
 
@@ -858,13 +857,21 @@ Plugin 'tpope/vim-fugitive'
 "
 " Unite: can replace CtrlP, Tagbar
 " Note: vimproc requires compiling a c file
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/unite-outline'
-Plugin 'Shougo/vimfiler.vim'
-Plugin 'Shougo/neoyank.vim'
-Plugin 'Shougo/unite-help'
-Plugin 'tsukkee/unite-tag'
+NeoBundle 'Shougo/vimproc.vim', {
+        \ 'build' : {
+        \     'windows' : 'tools\\update-dll-mingw',
+        \     'cygwin' : 'make -f make_cygwin.mak',
+        \     'mac' : 'make',
+        \     'linux' : 'make',
+        \     'unix' : 'gmake',
+        \    },
+        \ }
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'Shougo/neoyank.vim'
+NeoBundle 'Shougo/unite-help'
+NeoBundle 'tsukkee/unite-tag'
 nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
 nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
 nnoremap <leader>gt :<C-u>Unite tab<CR>
@@ -876,8 +883,9 @@ nnoremap <leader>fh :<C-u>Unite history/yank<CR>
 nnoremap <silent> <F5> <Plug>(unite-redraw)
 "}}}
 
-call vundle#end()
+call neobundle#end()
 filetype plugin indent on " required!
+NeoBundleCheck
 
 " set color scheme
 if has("unix")
@@ -896,13 +904,13 @@ call <SID>SetColorColumn()
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
-" Plugin 'AutoClose'
+" NeoBundle 'AutoClose'
 " Disable:
 " let g:autoclose_loaded = 1
 " let g:autoclose_on = 1
 
-" Plugin 'project.tar.gz'
-" Plugin 'thisivan/vim-taglist'
+" NeoBundle 'project.tar.gz'
+" NeoBundle 'thisivan/vim-taglist'
 "let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 "let Tlist_Show_One_File=1
 "let Tlist_Auto_Highlight_Tag=1
@@ -913,7 +921,7 @@ call <SID>SetColorColumn()
 "nnoremap <silent> <F9> :TlistToggle<CR>
 "map <silent> <Leader>t :TlistToggle<CR>
 
-" Plugin 'git://git.wincent.com/command-t.git'
+" NeoBundle 'git://git.wincent.com/command-t.git'
 " CommandT settings
 " disabled; using CtrlP
 " let g:command_t_loaded = 1
@@ -921,13 +929,13 @@ call <SID>SetColorColumn()
 " let g:CommandTCancelMap='<C-x>'
 
 
-" Plugin 'Vim-JDE'
-" Plugin 'javacomplete'
+" NeoBundle 'Vim-JDE'
+" NeoBundle 'javacomplete'
 "
 " YouCompleteMe requires the same version of
 " Python to be used for vim, MacVim, and itself
 " both at compile time and runtime 
-" Plugin 'Valloric/YouCompleteMe'
+" NeoBundle 'Valloric/YouCompleteMe'
 " let g:ycm_auto_trigger = 0
 " }}}
 
