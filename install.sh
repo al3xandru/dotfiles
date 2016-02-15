@@ -77,10 +77,11 @@ function doInstall() {
     done
 
     # special treatment for .vim/bundle/neobundle.vim
-    cp -R .vim/bundle/neobundle.vim/.git ~/.vim/bundle/neobundle.vim/
-    cp -vf .vim/bundle/neobundle.vim/.gitignore ~/.vim/bundle/neobundle.vim/
-    cp -vf .vim/bundle/neobundle.vim/README.md ~/.vim/bundle/neobundle.vim/
-    cp -vf .vim/bundle/neobundle.vim/bin/install.sh ~/.vim/bundle/neobundle.vim/bin/
+    rsync -aqru .vim/bundle/ ~/.vim/bundle/
+    # cp -R .vim/bundle/neobundle.vim/.git ~/.vim/bundle/neobundle.vim/
+    # cp -vf .vim/bundle/neobundle.vim/.gitignore ~/.vim/bundle/neobundle.vim/
+    # cp -vf .vim/bundle/neobundle.vim/README.md ~/.vim/bundle/neobundle.vim/
+    # cp -vf .vim/bundle/neobundle.vim/bin/install.sh ~/.vim/bundle/neobundle.vim/bin/
 
     # proc ".emacs.d/init.el"
 
