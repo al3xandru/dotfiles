@@ -76,6 +76,9 @@ function doInstall() {
         proc $f
     done
 
+    # special treatment for .vim/bundle/
+    rsync -aqru .vim/bundle/ ~/.vim/bundle/
+
     # proc ".emacs.d/init.el"
 
     #for d in {.vim,.emacs.d,.virtualenv}; do

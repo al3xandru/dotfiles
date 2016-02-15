@@ -228,10 +228,14 @@ inoremap <silent> <Up> <esc><Up>
 inoremap <silent> <Down> <esc><Down>
 inoremap <silent> <Left> <esc><Left>
 inoremap <silent> <Right> <esc><Right>
+" inoremap <Down> <C-o>gj
+" inoremap <Up> <C-o>gk
 
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
+nnoremap <Up> gk
+nnoremap <Down> gj
 " make ; behave like : (save the Shift)
 nnoremap ; :
 nnoremap , ;
@@ -240,8 +244,8 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-nnoremap <silent> n n:call <SID>HLNext(0.4)<CR>
-nnoremap <silent> N N:call <SID>HLNext(0.4)<cr>
+nnoremap <silent> n n:call <SID>HLNext(0.6)<CR>
+nnoremap <silent> N N:call <SID>HLNext(0.6)<cr>
 
 function! <SID>HLNext (blinktime)
     let target_pat = '\c\%#'.@/
@@ -303,11 +307,19 @@ inoremap ‘ <C-w><C-]><C-w>T
 nmap <silent> <leader>ch :set nolist!<CR>
 " disable highlighted search 
 nnoremap <silent><leader><space> :nohlsearch<CR>
-"reselect pasted text
+" selections
+" reselect pasted text
 nnoremap <leader>v V`] 
+" https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim#L22
+" select the text that was last edited/pasted
+" http://vimcasts.org/episodes/bubbling-text/
+nmap gV `[v`]
+" keep selection when indenting
+vnoremap > >gv
+vnoremap < <gv
 
 " Opens an edit command with the path of the currently edited file filled in
-nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
@@ -422,15 +434,27 @@ Plugin 'kana/vim-textobj-line'
 " CamelCase 
 "Plugin 'camelcasemotion'
 Plugin 'bkad/CamelCaseMotion' 
+" Alt - w/b/3/E
 map ∑ <Plug>CamelCaseMotion_w
 map ∫ <Plug>CamelCaseMotion_b
 map £ <Plug>CamelCaseMotion_e
 map ´ <Plug>CamelCaseMotion_ge
+omap <silent> i∑ <Plug>CamelCaseMotion_iw
+xmap <silent> i∑ <Plug>CamelCaseMotion_iw
+omap <silent> i∫ <Plug>CamelCaseMotion_ib
+xmap <silent> i∫ <Plug>CamelCaseMotion_ib
+omap <silent> i£ <Plug>CamelCaseMotion_ie
+xmap <silent> i£ <Plug>CamelCaseMotion_ie
 "Function arguments: a
 " Plugin 'argtextobj.vim' 
 Plugin 'PeterRincker/vim-argumentative'
 " Indent: i 
 Plugin 'michaeljsmith/vim-indent-object' 
+" Function: f
+Plugin 'kana/vim-textobj-function'
+Plugin 'kamichidu/vim-textobj-function-go'
+Plugin 'thinca/vim-textobj-function-javascript'
+Plugin 'thinca/vim-textobj-function-perl'
 " }}}
 
 
@@ -439,13 +463,18 @@ Plugin 'michaeljsmith/vim-indent-object'
 "
 Plugin 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp
-let g:loaded_ctrlp = 1
+" let g:loaded_ctrlp = 1
+" only cache if we're over this number of files
+let g:ctrlp_use_caching = 2000
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
 nnoremap <unique> <leader>b :CtrlPBuffer<CR>
-" Replaced by CtrlPBuffer Plugin 'jlanzarotta/bufexplorer'
+
+Plugin 'jeetsukumaran/vim-buffergator'
+" Replaced by CtrlPBuffer 
+" Plugin 'jlanzarotta/bufexplorer'
 
 
 Plugin 'majutsushi/tagbar'
@@ -455,14 +484,14 @@ nnoremap <silent> <leader>o :TagbarToggle<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
 
-"Plugin 'al3xandru/nerdcommenter'
-" Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-commentary'
+" Plugin 'al3xandru/nerdcommenter'
+" Plugin 'scrooloose/nerdcommenter'
 " Plugin 'tomtom/tcomment_vim'
 
 
 Plugin 'scrooloose/nerdtree'
-"let NERDTreeWinPos='right'
+" let NERDTreeWinPos='right'
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
     \ '\.egg$', '\.idea$',
     \ '\.bzr', '\.git', '\.hg', '\.svn']
@@ -710,7 +739,7 @@ let g:jedi#rename_command = "<localleader>gr"
 
 Plugin 'derekwyatt/vim-scala'
 
-Plugin 'swift'
+Plugin 'keith/swift.vim'
 
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
@@ -718,12 +747,12 @@ let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
 "
-" Scratch files, notes, outliner etc. {{{1
+" Disabled! Scratch files, notes, outliner etc. {{{1
 " :scratch :Sscratch
-Plugin 'duff/vim-scratch'
+" Plugin 'duff/vim-scratch'
 
 " :Pad
-Plugin 'fmoralesc/vim-pad'
+" Plugin 'fmoralesc/vim-pad'
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
@@ -741,7 +770,7 @@ nmap <leader>qqn <Plug>(pad-new)
 nmap <leader>qqs <Plug>(pad-search)
 
 " :Note
-"Plugin 'xolox/vim-notes'
+" Plugin 'xolox/vim-notes'
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
 let g:title_sync='no'
@@ -749,7 +778,7 @@ let g:notes_smart_quotes=0
 let g:notes_list_bullets=['*', '-', '+']
 
 " outliner .otl
-Plugin 'vimoutliner/vimoutliner'
+" Plugin 'vimoutliner/vimoutliner'
 "}}}
 
 "
@@ -783,6 +812,7 @@ Plugin 'HTML-AutoCloseTag'
 
 
 Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -802,7 +832,6 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-Plugin 'vim-airline/vim-airline-themes'
 
 
 Plugin 'easymotion/vim-easymotion'
@@ -829,11 +858,24 @@ nmap <leader><leader>t <Plug>(easymotion-bd-t)
 vmap <leader><leader>t <Plug>(easymotion-bd-t)
 nmap <leader><leader>f <Plug>(easymotion-bd-f)
 vmap <leader><leader>f <Plug>(easymotion-bd-f)
+nmap gms <Plug>(easymotion-sn)
+nmap gmw <Plug>(easymotion-bd-w)
+nmap gme <Plug>(easymotion-bd-e)
+nmap gmf <Plug>(easymotion-bd-f)
+nmap gmt <Plug>(easymotion-bd-t)
+nmap gmn <Plug>(easymotion-next)
+vmap gms <Plug>(easymotion-sn)
+vmap gmw <Plug>(easymotion-bd-w)
+vmap gme <Plug>(easymotion-bd-e)
+vmap gmf <Plug>(easymotion-bd-f)
+vmap gmt <Plug>(easymotion-bd-t)
+vmap gmn <Plug>(easymotion-next)
 
 
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 
+Plugin 'chrisbra/NrrwRgn'
 
 " Dash.app
 Plugin 'rizzatti/funcoo.vim'
@@ -858,22 +900,22 @@ Plugin 'tpope/vim-fugitive'
 "
 " Unite: can replace CtrlP, Tagbar
 " Note: vimproc requires compiling a c file
-Plugin 'Shougo/vimproc.vim'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/unite-outline'
-Plugin 'Shougo/vimfiler.vim'
-Plugin 'Shougo/neoyank.vim'
-Plugin 'Shougo/unite-help'
-Plugin 'tsukkee/unite-tag'
-nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
-nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
-nnoremap <leader>gt :<C-u>Unite tab<CR>
-nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
-nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
-nnoremap <leader>b :<C-u>Unite buffer bookmark<CR>
-nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
-nnoremap <leader>fh :<C-u>Unite history/yank<CR>
-nnoremap <silent> <F5> <Plug>(unite-redraw)
+" Plugin 'Shougo/vimproc.vim'
+" Plugin 'Shougo/unite.vim'
+" Plugin 'Shougo/unite-outline'
+" Plugin 'Shougo/vimfiler.vim'
+" Plugin 'Shougo/neoyank.vim'
+" Plugin 'Shougo/unite-help'
+" Plugin 'tsukkee/unite-tag'
+" nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+" nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
+" nnoremap <leader>gt :<C-u>Unite tab<CR>
+" nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
+" nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
+" nnoremap <leader>b :<C-u>Unite buffer bookmark<CR>
+" nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
+" nnoremap <leader>fh :<C-u>Unite history/yank<CR>
+" nnoremap <silent> <F5> <Plug>(unite-redraw)
 "}}}
 
 call vundle#end()
