@@ -226,12 +226,16 @@ let maplocalleader="\\"
 inoremap jk <esc>
 inoremap <silent> <Up> <esc><Up>
 inoremap <silent> <Down> <esc><Down>
+" inoremap <Down> <C-o>gj
+" inoremap <Up> <C-o>gk
 inoremap <silent> <Left> <esc><Left>
 inoremap <silent> <Right> <esc><Right>
 
 " make vertical line nav better
 nnoremap j gj
 nnoremap k gk
+nnoremap <Up> gk
+nnoremap <Down> gj
 " make ; behave like : (save the Shift)
 nnoremap ; :
 nnoremap , ;
@@ -240,8 +244,8 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-nnoremap <silent> n n:call <SID>HLNext(0.4)<CR>
-nnoremap <silent> N N:call <SID>HLNext(0.4)<cr>
+nnoremap <silent> n n:call <SID>HLNext(0.6)<CR>
+nnoremap <silent> N N:call <SID>HLNext(0.6)<cr>
 
 function! <SID>HLNext (blinktime)
     let target_pat = '\c\%#'.@/
@@ -303,8 +307,16 @@ inoremap ‘ <C-w><C-]><C-w>T
 nmap <silent> <leader>ch :set nolist!<CR>
 " disable highlighted search 
 nnoremap <silent><leader><space> :nohlsearch<CR>
-"reselect pasted text
+" selections
+" reselect pasted text
 nnoremap <leader>v V`] 
+" https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim#L22
+" select the text that was last edited/pasted
+" http://vimcasts.org/episodes/bubbling-text/
+nmap gV `[v`]
+" keep selection when indenting
+vnoremap > >gv
+vnoremap < <gv
 
 " Opens an edit command with the path of the currently edited file filled in
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -421,15 +433,27 @@ NeoBundle 'kana/vim-textobj-line'
 " CamelCase 
 " NeoBundle 'camelcasemotion'
 NeoBundle 'bkad/CamelCaseMotion' 
+" Alt - w/b/3/E
 map ∑ <Plug>CamelCaseMotion_w
 map ∫ <Plug>CamelCaseMotion_b
 map £ <Plug>CamelCaseMotion_e
 map ´ <Plug>CamelCaseMotion_ge
+omap <silent> i∑ <Plug>CamelCaseMotion_iw
+xmap <silent> i∑ <Plug>CamelCaseMotion_iw
+omap <silent> i∫ <Plug>CamelCaseMotion_ib
+xmap <silent> i∫ <Plug>CamelCaseMotion_ib
+omap <silent> i£ <Plug>CamelCaseMotion_ie
+xmap <silent> i£ <Plug>CamelCaseMotion_ie
 "Function arguments: a
 " NeoBundle 'argtextobj.vim' 
 NeoBundle 'PeterRincker/vim-argumentative'
 " Indent: i 
 NeoBundle 'michaeljsmith/vim-indent-object' 
+" Function: f
+NeoBundle 'kana/vim-textobj-function'
+NeoBundle 'kamichidu/vim-textobj-function-go'
+NeoBundle 'thinca/vim-textobj-function-javascript'
+NeoBundle 'thinca/vim-textobj-function-perl'
 " }}}
 
 
@@ -438,13 +462,18 @@ NeoBundle 'michaeljsmith/vim-indent-object'
 "
 NeoBundle 'kien/ctrlp.vim'
 set runtimepath^=~/.vim/bundle/ctrlp
-let g:loaded_ctrlp = 1
+" let g:loaded_ctrlp = 1
+" only cache if we're over this number of files
+let g:ctrlp_use_caching = 2000
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
 nnoremap <unique> <leader>b :CtrlPBuffer<CR>
-" Replaced by CtrlPBuffer NeoBundle 'jlanzarotta/bufexplorer'
+
+NeoBundle 'jeetsukumaran/vim-buffergator'
+" Replaced by CtrlPBuffer 
+" NeoBundle 'jlanzarotta/bufexplorer'
 
 
 NeoBundle 'majutsushi/tagbar'
@@ -709,20 +738,20 @@ let g:jedi#rename_command = "<localleader>gr"
 
 NeoBundle 'derekwyatt/vim-scala'
 
-NeoBundle 'swift', {'type': 'none', 'base': '~/.vim/bundle'}
+" NeoBundle 'swift', {'type': 'none', 'base': '~/.vim/bundle'}
+NeoBundle 'keith/swift.vim'
 
 " Taskpaper
 NeoBundle 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
-"
-" Scratch files, notes, outliner etc. {{{1
+" Scratch files, notes, outliner etc. DISABLED {{{1
+" NeoBundle 'duff/vim-scratch'
 " :scratch :Sscratch
-NeoBundle 'duff/vim-scratch'
 
+" NeoBundle 'fmoralesc/vim-pad'
 " :Pad
-NeoBundle 'fmoralesc/vim-pad'
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
@@ -739,8 +768,8 @@ nmap <leader>qql <Plug>(pad-list)
 nmap <leader>qqn <Plug>(pad-new)
 nmap <leader>qqs <Plug>(pad-search)
 
-" :Note
 "NeoBundle 'xolox/vim-notes'
+" :Note
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
 let g:title_sync='no'
@@ -748,7 +777,7 @@ let g:notes_smart_quotes=0
 let g:notes_list_bullets=['*', '-', '+']
 
 " outliner .otl
-NeoBundle 'vimoutliner/vimoutliner'
+" NeoBundle 'vimoutliner/vimoutliner'
 "}}}
 
 "
@@ -828,11 +857,24 @@ nmap <leader><leader>t <Plug>(easymotion-bd-t)
 vmap <leader><leader>t <Plug>(easymotion-bd-t)
 nmap <leader><leader>f <Plug>(easymotion-bd-f)
 vmap <leader><leader>f <Plug>(easymotion-bd-f)
+nmap gms <Plug>(easymotion-sn)
+nmap gmw <Plug>(easymotion-bd-w)
+nmap gme <Plug>(easymotion-bd-e)
+nmap gmf <Plug>(easymotion-bd-f)
+nmap gmt <Plug>(easymotion-bd-t)
+nmap gmn <Plug>(easymotion-next)
+vmap gms <Plug>(easymotion-sn)
+vmap gmw <Plug>(easymotion-bd-w)
+vmap gme <Plug>(easymotion-bd-e)
+vmap gmf <Plug>(easymotion-bd-f)
+vmap gmt <Plug>(easymotion-bd-t)
+vmap gmn <Plug>(easymotion-next)
 
 
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-unimpaired'
 
+NeoBundle 'chrisbra/NrrwRgn'
 
 " Dash.app
 NeoBundle 'rizzatti/funcoo.vim'
@@ -885,7 +927,8 @@ nnoremap <silent> <F5> <Plug>(unite-redraw)
 
 call neobundle#end()
 filetype plugin indent on " required!
-NeoBundleCheck
+" For automatic autoupdates:
+" NeoBundleCheck
 
 " set color scheme
 if has("unix")
