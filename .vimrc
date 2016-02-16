@@ -461,18 +461,25 @@ Plugin 'thinca/vim-textobj-function-perl'
 "
 " Important {{{1
 "
-Plugin 'kien/ctrlp.vim'
-set runtimepath^=~/.vim/bundle/ctrlp
+Plugin 'ctrlpvim/ctrlp.vim'
+" set runtimepath^=~/.vim/bundle/ctrlp
 " let g:loaded_ctrlp = 1
-" only cache if we're over this number of files
-let g:ctrlp_use_caching = 2000
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
+" let g:ctrlp_by_filename = 0
+let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
+" only cache if we're over this number of files
+let g:ctrlp_use_caching = 2000
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
-nnoremap <unique> <leader>b :CtrlPBuffer<CR>
+nnoremap <unique> <leader>B :CtrlPBuffer<CR>
 
 Plugin 'jeetsukumaran/vim-buffergator'
+let g:buffergator_viewport_split_policy = "T"
+let g:buffergator_autodismiss_on_select = 1
+let g:buffergator_suppress_keymaps = 1
+nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
+nnoremap <leader>b :<C-u>BuffergatorToggle<CR>
 " Replaced by CtrlPBuffer 
 " Plugin 'jlanzarotta/bufexplorer'
 
