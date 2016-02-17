@@ -402,7 +402,7 @@ def print_to(stream, data):
     if data['imdb_url']:
       stream.write("*   <%s>\n" % data['imdb_url'])
     if data['rotten_url']:
-      stream.write("*   <%s>\n" % data['rotten_url'])
+      stream.write("*   <http:%s>\n" % data['rotten_url'])
   stream.write("\n")
 
   # Critics
