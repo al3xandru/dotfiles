@@ -1,9 +1,9 @@
 scriptencoding utf-8
-" http://blog.danielfischer.com/2010/11/19/a-starting-guide-to-vim-from-textmate/
-" http://items.sjbach.com/319/configuring-vim-right
-" https://github.com/tpope/vim-pathogen
-" http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
-" 
+" Favorite colorschemes:
+" Dark: desert256 molokai dante koehler, vividchalk, vibrantink, molokai, tango, fnaqeran, motus, railcast, tir_black inkpot
+" Light: buttercream, cake16, lucius, papayawhip, navajo, sweater morning
+" Pastel: alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel lucius nefertiti
+
 " Organization
 " 1. important
 " 2. moving around, searching and patterns
@@ -88,13 +88,6 @@ set showbreak=↪
 " set showbreak=⤿
 
 " 5. syntax, highlighting and spelling"
-" Pastel: desert256 jellybeans wombat256 ir_black molokai
-" Dark: alduino, dante, koehler, vividchalk, vibrantink, molokai, tango, fnaqeran,
-" marollocio, macvim, motus, railcast, tir_black
-" Light: buttercream, papayawhip, navajo, inkpot, sweater
-" Grey: inkpot, camo, earendel, lucius
-" Pastel: alduin desert256 jellybeans wombat256 ir_black molokai
-
 syntax on
 colorscheme koehler
 
@@ -404,17 +397,14 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Color schemes {{{1
 Plugin 'Colour-Sampler-Pack'
-" Plugin 'rodnaph/vim-color-schemes'
-" Plugin '256-grayvim'
-" Plugin 'blacklight'
-Plugin 'MochaLatte'
+Plugin 'AlessandroYorba/Alduin'
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
 Plugin 'blerins/flattown'
-Plugin 'gregsexton/Atom'
+Plugin 'jeetsukumaran/vim-nefertiti'
 Plugin 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
@@ -422,8 +412,11 @@ Plugin 'jonathanfilip/vim-lucius'
 Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
-Plugin 'adampasz/vim-stonewashed'
-Plugin 'AlessandroYorba/Alduin'
+" Plugin 'rodnaph/vim-color-schemes'
+" Plugin '256-grayvim'
+" Plugin 'blacklight'
+" Plugin 'gregsexton/Atom'
+" Plugin 'adampasz/vim-stonewashed'
 " }}}
 
 
@@ -905,24 +898,6 @@ Plugin 'tpope/vim-fugitive'
 "
 " Experimental {{{1
 "
-" Unite: can replace CtrlP, Tagbar
-" Note: vimproc requires compiling a c file
-" Plugin 'Shougo/vimproc.vim'
-" Plugin 'Shougo/unite.vim'
-" Plugin 'Shougo/unite-outline'
-" Plugin 'Shougo/vimfiler.vim'
-" Plugin 'Shougo/neoyank.vim'
-" Plugin 'Shougo/unite-help'
-" Plugin 'tsukkee/unite-tag'
-" nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
-" nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
-" nnoremap <leader>gt :<C-u>Unite tab<CR>
-" nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
-" nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
-" nnoremap <leader>b :<C-u>Unite buffer bookmark<CR>
-" nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
-" nnoremap <leader>fh :<C-u>Unite history/yank<CR>
-" nnoremap <silent> <F5> <Plug>(unite-redraw)
 "}}}
 
 call vundle#end()
@@ -945,6 +920,25 @@ call <SID>SetColorColumn()
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
+" Unite: can replace CtrlP, Tagbar
+" Note: vimproc requires compiling a c file
+" Plugin 'Shougo/vimproc.vim'
+" Plugin 'Shougo/unite.vim'
+" Plugin 'Shougo/unite-outline'
+" Plugin 'Shougo/vimfiler.vim'
+" Plugin 'Shougo/neoyank.vim'
+" Plugin 'Shougo/unite-help'
+" Plugin 'tsukkee/unite-tag'
+" nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
+" nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
+" nnoremap <leader>gt :<C-u>Unite tab<CR>
+" nnoremap <leader>ff :<C-u>Unite -start-insert file/async<CR>
+" nnoremap <leader>fb :<C-u>Unite buffer bookmark<CR>
+" nnoremap <leader>b :<C-u>Unite buffer bookmark<CR>
+" nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
+" nnoremap <leader>fh :<C-u>Unite history/yank<CR>
+" nnoremap <silent> <F5> <Plug>(unite-redraw)
+"
 " Plugin 'AutoClose'
 " Disable:
 " let g:autoclose_loaded = 1
@@ -952,15 +946,15 @@ call <SID>SetColorColumn()
 
 " Plugin 'project.tar.gz'
 " Plugin 'thisivan/vim-taglist'
-"let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
-"let Tlist_Show_One_File=1
-"let Tlist_Auto_Highlight_Tag=1
-"let Tlist_Use_Right_Window=0
-"let Tlist_Close_On_Select=1
-"let Tlist_GainFocus_On_ToggleOpen=1
-"let Tlist_Sort_Type="name"
-"nnoremap <silent> <F9> :TlistToggle<CR>
-"map <silent> <Leader>t :TlistToggle<CR>
+" let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
+" let Tlist_Show_One_File=1
+" let Tlist_Auto_Highlight_Tag=1
+" let Tlist_Use_Right_Window=0
+" let Tlist_Close_On_Select=1
+" let Tlist_GainFocus_On_ToggleOpen=1
+" let Tlist_Sort_Type="name"
+" nnoremap <silent> <F9> :TlistToggle<CR>
+" map <silent> <Leader>t :TlistToggle<CR>
 
 " Plugin 'git://git.wincent.com/command-t.git'
 " CommandT settings
@@ -968,8 +962,7 @@ call <SID>SetColorColumn()
 " let g:command_t_loaded = 1
 " map <unique> <Leader>t :CommandT<CR>
 " let g:CommandTCancelMap='<C-x>'
-
-
+"
 " Plugin 'Vim-JDE'
 " Plugin 'javacomplete'
 "
@@ -979,5 +972,14 @@ call <SID>SetColorColumn()
 " Plugin 'Valloric/YouCompleteMe'
 " let g:ycm_auto_trigger = 0
 " }}}
-
+"
+" * * * * * * * * * * * * * * * * * * * * * * * * * *
+"
+" Credits:
+"
+" http://blog.danielfischer.com/2010/11/19/a-starting-guide-to-vim-from-textmate/
+" http://items.sjbach.com/319/configuring-vim-right
+" https://github.com/tpope/vim-pathogen
+" http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
+" 
 " vim: set foldmethod=marker:
