@@ -1,8 +1,4 @@
 scriptencoding utf-8
-" Favorite colorschemes:
-" Dark: desert256 molokai dante koehler, vividchalk, vibrantink, molokai, tango, fnaqeran, motus, railcast, tir_black inkpot
-" Light: buttercream, cake16, lucius, papayawhip, navajo, sweater morning
-" Pastel: alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel lucius nefertiti
 
 " Organization
 " 1. important
@@ -32,8 +28,8 @@ scriptencoding utf-8
 " 25. various
 
 " 1. important 
-set lazyredraw
 set nocompatible
+set lazyredraw
 set backspace=2
 " Allow backspace in insert mode
 set backspace=indent,eol,start
@@ -56,6 +52,7 @@ set esckeys
 
 " autosave on focus lost
 autocmd FocusLost, BufLeave * silent! :wall
+
 
 " 2. moving around, searching and patterns "
 set incsearch
@@ -89,7 +86,36 @@ set showbreak=↪
 
 " 5. syntax, highlighting and spelling"
 syntax on
+
+" colorscheme
 colorscheme koehler
+
+let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
+let s:cs_light = "buttercream calmbreeze navajo morning papayawhip gruvbox cake16 lucius sweater"
+let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius nefertiti kolor gruvbox"
+
+function! <SID>ChooseColorscheme(args)
+    let cslist = []
+    if len(a:args) == 0
+        echo 'Usage: :ChooseColorscheme [all|dark|light|paster]'
+        return
+    elseif a:args == 'all'
+        let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
+        let cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
+        echo 'List of all installed colorschemes:'
+    elseif a:args == 'light'
+        let cslist = split(s:cs_light)
+        echo 'Light colorschemes:'
+    elseif a:args == 'pastel'
+        let cslist = split(s:cs_pastel)
+        echo 'Pastel colorschemes:'
+    elseif a:args == 'dark'
+        let cslist = split(s:cs_dark)
+        echo 'Dark colorschemes:'
+    endif
+    echo join(cslist, "\n")
+endfunction
+command! -nargs=* COLORS call <SID>ChooseColorscheme('<args>')
 
 " color column
 function! <SID>SetColorColumn()
@@ -409,6 +435,7 @@ Plugin 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
+Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
@@ -448,6 +475,9 @@ Plugin 'kana/vim-textobj-function'
 Plugin 'kamichidu/vim-textobj-function-go'
 Plugin 'thinca/vim-textobj-function-javascript'
 Plugin 'thinca/vim-textobj-function-perl'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+" Comments: c
+Plugin 'glts/vim-textobj-comment'
 " }}}
 
 
@@ -897,7 +927,10 @@ Plugin 'tpope/vim-fugitive'
 
 "
 " Experimental {{{1
-"
+Plugin 'maxbrunsfeld/vim-yankstack'
+let g:yankstack_map_keys = 0
+nmap π <Plug>yankstack_substitute_older_paste " Alt+p
+nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
 "}}}
 
 call vundle#end()
