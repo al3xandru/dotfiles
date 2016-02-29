@@ -50,7 +50,11 @@ function _parse_git_branch {
 
 function _prompt_func() {
     local prompt="${__CLR_LIGHT_PURPLE}\W ${__CLR_GREEN}$(_parse_git_branch)${__CLR_LIGHT_BLACK}"
-    PS1="${prompt}\$${__CLR_NONE} "
+    if [ $ITERM_SESSION_ID ]; then
+        PS1="${prompt}\$${__CLR_NONE} \033];${PWD##*/}\007"
+    else
+        PS1="${prompt}\$${__CLR_NONE} "
+    fi
 #    previous_return_value=$?;
 #    echo "prev: ${previous_return_value}"
 #    if [[ $previous_return_value -eq 0 ]]
