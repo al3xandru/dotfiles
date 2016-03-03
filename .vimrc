@@ -97,7 +97,7 @@ let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railca
 function! <SID>ChooseColorscheme(args)
     let cslist = []
     if len(a:args) == 0
-        echo 'Usage: :ChooseColorscheme [all|dark|light|paster]'
+        echo 'Usage: :THEME [all|dark|light|paster]'
         return
     elseif a:args == 'all'
         let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
@@ -115,7 +115,7 @@ function! <SID>ChooseColorscheme(args)
     endif
     echo join(cslist, "\n")
 endfunction
-command! -nargs=* COLORS call <SID>ChooseColorscheme('<args>')
+command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
 
 " color column
 function! <SID>SetColorColumn()
@@ -154,7 +154,7 @@ if has("gui_running")
     set go-=T
     set go-=l
     set go-=L
-    set go-=r
+    set go-=r " no scrollbar
     set go-=R
     if has("gui_macvim")
         "set gfn=Anonymous_Pro:h12
@@ -239,7 +239,8 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
-let mapleader=","
+" let mapleader=","
+let mapleader="\<space>"
 let maplocalleader="\\"
 
 inoremap jk <esc>
@@ -263,8 +264,9 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-nnoremap <silent> n n:call <SID>HLNext(0.6)<CR>
-nnoremap <silent> N N:call <SID>HLNext(0.6)<cr>
+" also center the line
+nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
+nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
 
 function! <SID>HLNext (blinktime)
     let target_pat = '\c\%#'.@/
@@ -274,6 +276,13 @@ function! <SID>HLNext (blinktime)
     call matchdelete(ring)
     redraw
 endfunction
+
+" http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
+" case sensitive, partial match inclusive
+nnoremap <leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
+" case sensitive, no partial match
+nnoremap <leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
+
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
