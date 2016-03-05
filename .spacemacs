@@ -207,9 +207,9 @@ layers configuration."
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
-  (add-to-list 'projectile-globally-ignored-directories '(".git"
-                                                          ".svn"
-                                                          ".hg"))
+  ;; (add-to-list 'projectile-globally-ignored-directories `(".git"
+  ;;                                                         ".svn"
+  ;;                                                         ".hg"))
   ;;; Keys
   ;; (global-set-key (kbd "M-RET") 'company-complete)
   (define-key evil-normal-state-map (kbd "s-RET") 'company-complete)
