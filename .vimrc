@@ -157,17 +157,17 @@ if has("gui_running")
     set go-=r " no scrollbar
     set go-=R
     if has("gui_macvim")
-        "set gfn=Anonymous_Pro:h12
-        "set gfn=Consolas:h12
-        "set gfn=Cousine:h11
+        " set gfn=Anonymous_Pro:h12
+        " set gfn=Consolas:h12
+        " set gfn=Cousine:h11
         " set gfn=Hack:h12
-        "set gfn=Inconsolata:h13
+        " set gfn=Inconsolata:h13
         " set gfn=Input_Mono:h11
-        "set gfn=Liberation_Mono:h11
-        "set gfn=monofur:h15
+        " set gfn=Liberation_Mono:h11
+        " set gfn=monofur:h15
         set gfn=Operator_Mono:h12
-        "set gfn=ProFontX:h12
-        "set gfn=Source_Code_Pro:h11
+        " set gfn=ProFontX:h12
+        " set gfn=Source_Code_Pro:h11
     elseif has("gui_gtk2")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
@@ -259,7 +259,7 @@ nnoremap <Up> gk
 nnoremap <Down> gj
 " make ; behave like : (save the Shift)
 nnoremap ; :
-nnoremap , ;
+" nnoremap , ;
 nnoremap … ;
 nnoremap <tab> %
 vnoremap <tab> %
