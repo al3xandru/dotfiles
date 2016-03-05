@@ -47,6 +47,10 @@ function doStatus() {
         echo "Vim ~/.vimrc is NOT a symlink"
         t=1
     fi
+    if [ ! -h "$HOME/.ideavimrc" ]; then
+        echo "VimIdea ~/.ideavimrc is NOT a symlink"
+        t=1
+    fi
     # if [ ! -h "$HOME/.emacs.d/init.el" ]; then
     #     echo "Emacs ~/.emacs.d/init.el is NOT a symlink"
     #     t=1
@@ -72,7 +76,7 @@ function doStatus() {
 function doInstall() {
     rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
-    for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs}; do
+    for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs,ideavimrc}; do
         proc $f
     done
 
