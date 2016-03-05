@@ -162,9 +162,10 @@ if has("gui_running")
         "set gfn=Cousine:h11
         " set gfn=Hack:h12
         "set gfn=Inconsolata:h13
-        set gfn=Input_Mono:h11
+        " set gfn=Input_Mono:h11
         "set gfn=Liberation_Mono:h11
         "set gfn=monofur:h15
+        set gfn=Operator_Mono:h12
         "set gfn=ProFontX:h12
         "set gfn=Source_Code_Pro:h11
     elseif has("gui_gtk2")
