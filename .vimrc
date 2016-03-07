@@ -283,7 +283,10 @@ endfunction
 nnoremap <leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
 " case sensitive, no partial match
 nnoremap <leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
-
+" disable highlighted search 
+nnoremap <silent><leader>hh :nohlsearch<CR>
+" Show special characters
+nmap <silent><leader>hc :set nolist!<CR>
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
@@ -329,13 +332,10 @@ nmap <silent><C-w>+ :resize +10<CR>
 " open tag in tab
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
+" Alt+] on OS X
 nnoremap ‘ <C-w><C-]><C-w>T
 inoremap ‘ <C-w><C-]><C-w>T
 
-" Show special characters
-nmap <silent> <leader>ch :set nolist!<CR>
-" disable highlighted search 
-nnoremap <silent><leader><space> :nohlsearch<CR>
 " selections
 " reselect pasted text
 nnoremap <leader>v V`] 
