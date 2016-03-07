@@ -15,6 +15,7 @@
      auto-completion
      dash
      semantic
+     syntax-checking
      themes-megapack
      theming
      ;; git
@@ -24,6 +25,8 @@
      csharp
      go
      html
+     java
+     javascript
      markdown
      org
      php
@@ -59,6 +62,8 @@ before layers configuration."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   dotspacemacs-elpa-https t
+   dotspacemacs-elpa-timeout 10
    ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
    ;; is `emacs' then the `holy-mode' is enabled at startup.
    dotspacemacs-editing-style 'vim
@@ -76,6 +81,7 @@ before layers configuration."
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'."
    dotspacemacs-startup-lists '(recents projects bookmarks)
+   dotspacemacs-startup-recent-list-size 10
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
@@ -97,7 +103,7 @@ before layers configuration."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Hack"
+   dotspacemacs-default-font '("Operator Mono"
                                :size 12
                                :weight normal
                                :width normal
@@ -135,6 +141,7 @@ before layers configuration."
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (Emacs 24.4+ only)
+   dotspacemacs-line-numbers t
    dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -143,7 +150,7 @@ before layers configuration."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 40
    ;; If non nil unicode symbols are displayed in the mode line.
    dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
@@ -165,7 +172,15 @@ before layers configuration."
   ;; User initialization goes here
   )
 
-(defun dotspacemacs/user-init ())
+
+(defun dotspacemacs/user-init ()
+  (setq theming-modifications
+        '((alect-light (powerline-active1 :background "#ffaf00" :foreground "#272727")
+                       (powerline-inactive1 :background "#b2b2b2" :foreground "#151515")
+                       (powerline-active2 :background "#005fff" :foreground "#eeeeee")
+                       (powerline-inactive2 :background "#8a8a8a" :foreground "#efefef")
+                       (mode-line :foreground "#00875F"))))
+  )
 
 (defun dotspacemacs/config ()
   "Configuration function.
@@ -185,7 +200,7 @@ layers configuration."
    ;; uncomment next line for disabling backup files
    ;; make-backup-files nil
    backup-directory-alist `(("." . "~/tmp"))
-   default-frame-alist '((width . 105)
+   default-frame-alist '((width . 180)
                          (height . 70))
    ;; disable automatic popups from auto-complete & company
    ac-auto-show-menu nil
@@ -212,12 +227,8 @@ layers configuration."
   ;;                                                         ".hg"))
   ;;; Keys
   ;; (global-set-key (kbd "M-RET") 'company-complete)
-  (define-key evil-normal-state-map (kbd "s-RET") 'company-complete)
-  ;; (setq theming-modifications
-  ;;       '((alect-light (powerline-active2 :background "#75D7D8"))))
-                       ;; (powerline-active2 :background "#4f3598") ;;   "#e2e2e2"
-                       ;; (mode-line :foreground "#242322"))))
-  )
+  ;; (define-key evil-normal-state-map (kbd "s-RET") 'company-complete)
+)
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
