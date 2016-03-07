@@ -4,5 +4,6 @@ if [ -z "$(pgrep Emacs)" ]; then
     echo "Starting Emacs..."
     sleep 3
 fi
-/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n -c "$@" 
+# /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n -c "$@" 
+/usr/local/bin/emacsclient -n -c "$@"
 
