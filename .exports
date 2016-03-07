@@ -80,8 +80,15 @@ function _findfirst {
     fi
 }
 
+# JAVA_TOOLS_DIR
+JAVA_TOOLS_DIR="/usr/local/share/java"
+
 if [ -z "$ANT_HOME" ]; then
-    ANT_HOME=$(_findfirst "/usr/local/share/java" "*ant*")
+    if [ -h "$JAVA_TOOLS_DIR/ant" -o -d "$JAVA_TOOLS_DIR/ant" ]; then
+        ANT_HOME="$JAVA_TOOLS_DIR/ant"
+    else
+        ANT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*ant*")
+    fi
     if [ -n "$ANT_HOME" ]; then
         export ANT_HOME
     else
@@ -90,7 +97,11 @@ if [ -z "$ANT_HOME" ]; then
 fi
 
 if [ -z "$MVN_HOME" ]; then
-    MVN_HOME=$(_findfirst "/usr/local/share/java" "*maven*")
+    if [ -h "$JAVA_TOOLS_DIR/maven" -o -d "$JAVA_TOOLS_DIR/maven" ]; then
+        MVN_HOME="$JAVA_TOOLS_DIR/maven"
+    else
+        MVN_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*maven*")
+    fi
     if [ -n "$MVN_HOME" ]; then
         export MVN_HOME
     else
@@ -99,7 +110,11 @@ if [ -z "$MVN_HOME" ]; then
 fi
 
 if [ -z "$GRADLE_HOME" ]; then
-    GRADLE_HOME=$(_findfirst "/usr/local/share/java" "*gradle*")
+    if [ -h "$JAVA_TOOLS_DIR/gradle" -o -d "$JAVA_TOOLS_DIR/gradle" ]; then
+        GRADLE_HOME="$JAVA_TOOLS_DIR/gradle"
+    else
+        GRADLE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*gradle*")
+    fi
     if [ -n "$GRADLE_HOME" ]; then
         export GRADLE_HOME
         export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
@@ -109,7 +124,11 @@ if [ -z "$GRADLE_HOME" ]; then
 fi
 
 if [ -z "$SBT_HOME" ]; then
-    SBT_HOME=$(_findfirst "/usr/local/share/java" "*sbt*")
+    if [ -h "$JAVA_TOOLS_DIR/sbt" -o -d "$JAVA_TOOLS_DIR/sbt" ]; then
+        SBT_HOME="$JAVA_TOOLS_DIR/sbt"
+    else
+        SBT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*sbt*")
+    fi
     if [ -n "$SBT_HOME" ]; then
         export SBT_HOME
     else
@@ -118,14 +137,18 @@ if [ -z "$SBT_HOME" ]; then
 fi
 
 if [ -z "$CLOJURE_HOME" ]; then
-    CLOJURE_HOME=$(_findfirst "/usr/local/share/java" "*clojure*")
+    if [ -h "$JAVA_TOOLS_DIR/clojure" -o -d "$JAVA_TOOLS_DIR/clojure" ]; then
+        CLOJURE_HOME="$JAVA_TOOLS_DIR/clojure"
+    else
+        CLOJURE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*clojure*")
+    fi
     if [ -n "$CLOJURE_HOME" ]; then
         export CLOJURE_HOME
     else
         unset CLOJURE_HOME
     fi
 fi
-
+unset JAVA_TOOLS_DIR
 # Perl
 PERL5LIB="/Users/alex/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
 PERL_LOCAL_LIB_ROOT="/Users/alex/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
