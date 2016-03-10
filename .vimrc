@@ -293,13 +293,15 @@ nmap <silent><leader>hc :set nolist!<CR>
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
 function! <SID>SaveSession () 
     let parentDir = getcwd()
-    if isdirectory(parentDir . "/.git")
-        exec "mksession! " . parentDir . "/.git/.session.vim"
-        echo "session saved " . parentDir . "/.git/.session.vim"
-    else
-        exec "mksession! " . parentDir . "/.session.vim"
-        echo "session saved " . parentDir . "/.session.vim"
-    endif
+    exec "mksession! " . parentDir . "/.session.vim"
+    echo "session saved " . parentDir . "/.session.vim"
+    " if isdirectory(parentDir . "/.git")
+    "     exec "mksession! " . parentDir . "/.git/.session.vim"
+    "     echo "session saved " . parentDir . "/.git/.session.vim"
+    " else
+    "     exec "mksession! " . parentDir . "/.session.vim"
+    "     echo "session saved " . parentDir . "/.session.vim"
+    " endif
 endfunction
 cnoremap <C-S> <C-R> call <SID>SaveSession()<CR><CR>
 "cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
