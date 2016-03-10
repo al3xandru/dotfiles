@@ -3,7 +3,9 @@
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
-  "Configuration Layers declaration."
+  "Configuration Layers declaration.
+You should not put any user code in this function besides modifying the variable
+values."
   (setq-default
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
@@ -12,17 +14,28 @@
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-     auto-completion
-     dash
-     semantic
-     syntax-checking
+     ;; UI
+     eyebrowse
      themes-megapack
      theming
+     ;; docs
+     dash
+     search-engine
      ;; git
      git
+     ;; completion
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t)
+     ;; cscope
+     semantic
+     (syntax-checking :variables
+                      syntax-checking-enable-by-default nil
+                      syntax-checking-enable-tooltips nil)
      ;; languages
+     asciidoc
      c-c++
      csharp
+     emacs-lisp
      go
      html
      java
@@ -33,37 +46,39 @@
      python
      ruby
      scala
+     shell-scripts
      swift
      yaml
      ;; vim
      evil-commentary
      evil-snipe
-     ;; --------------------------------------------------------
-     ;; Example of useful layers you may want to use right away
-     ;; Uncomment a layer name and press C-c C-c to install it
-     ;; --------------------------------------------------------
-     ;; auto-completion
-     ;; better-defaults
-     ;; (git :variables
-     ;;      git-gutter-use-fringe t)
-     ;; syntax-checking
+     ;; misc
+     imenu-list
      )
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
+   ;; packages, then consider creating a layer. You can also put the
+   ;; configuration in `dotspacemacs/user-config'.
+   dotspacemacs-additional-packages '(
+                                      evil-vimish-fold)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
-   ;; the list `dotspacemacs-configuration-layers'
+   ;; the list `dotspacemacs-configuration-layers'. (default t)
    dotspacemacs-delete-orphan-packages t))
 
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
-before layers configuration."
+before layers configuration.
+You should not put any user code in there besides modifying the variable
+values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
    dotspacemacs-elpa-https t
-   dotspacemacs-elpa-timeout 10
+   dotspacemacs-elpa-timeout 5
    ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
    ;; is `emacs' then the `holy-mode' is enabled at startup.
    dotspacemacs-editing-style 'vim
@@ -75,7 +90,7 @@ before layers configuration."
    ;; directory. A string value must be a path to a .PNG file.
    ;; If the value is nil then no banner is displayed.
    ;; dotspacemacs-startup-banner 'official
-   dotspacemacs-startup-banner nil 
+   dotspacemacs-startup-banner nil
    ;; t if you always want to see the changelog at startup
    dotspacemacs-always-show-changelog t
    ;; List of items to show in the startup buffer. If nil it is disabled.
@@ -86,8 +101,8 @@ before layers configuration."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(alect-light
-                         ample
                          misterioso
+                         ample
                          alect-dark
                          alect-dark-alt
                          heroku
@@ -130,7 +145,7 @@ before layers configuration."
    dotspacemacs-guide-key-delay 0.4
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
-   ;; nil ;; to boost the loading time.
+   ;; nil to boost the loading time. (default t)
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up.
    ;; (Emacs 24.4+ only)
@@ -152,7 +167,7 @@ before layers configuration."
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency 40
    ;; If non nil unicode symbols are displayed in the mode line.
-   dotspacemacs-mode-line-unicode-symbols t
+   dotspacemacs-mode-line-unicode-symbols nil
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters the
    ;; point when it reaches the top or bottom of the screen.
@@ -163,7 +178,7 @@ before layers configuration."
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   dotspacemacs-search-tools '("ag" "grep" "pt" "ack")
+   dotspacemacs-search-tools '("ag" "grep" "ack")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now.
@@ -174,6 +189,10 @@ before layers configuration."
 
 
 (defun dotspacemacs/user-init ()
+  "Initialization function for user code.
+It is called immediately after `dotspacemacs/init'.  You are free to put almost
+any user code here.  The exception is org related code, which should be placed
+in `dotspacemacs/user-config'."
   (setq theming-modifications
         '((alect-light (powerline-active1 :background "#ffaf00" :foreground "#272727")
                        (powerline-inactive1 :background "#b2b2b2" :foreground "#151515")
@@ -182,52 +201,81 @@ before layers configuration."
                        (mode-line :foreground "#00875F"))))
   )
 
-(defun dotspacemacs/config ()
+
+(defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  (setq srecode-map-save-file "~/.emacs.d/.cache/srecode-map.el")
+  ;; line numbers
   (setq-default dotspacemacs-line-number t
                 dotspacemacs-auto-resume-layouts t)
+  ;; evil settings
+  (setq-default evil-escape-key-sequence "jk"
+                evil-escape-delay 0.2)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-visual-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-)
-
-(defun dotspacemacs/user-config ()
-  ;;dotspace-auto-resume-layouts t
-  (setq
-   powerline-default-separator nil
-  ;;; Backups
-   ;; uncomment next line for disabling backup files
-   ;; make-backup-files nil
-   backup-directory-alist `(("." . "~/tmp"))
-   default-frame-alist '((width . 180)
-                         (height . 70))
-   ;; disable automatic popups from auto-complete & company
-   ac-auto-show-menu nil
-   company-idle-delay 0.5 ;; nil to disable it completely
-   )
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-  ;; Sessions
-  ;; (desktop-save-mode 1)
+  (define-key evil-visual-state-map (kbd "k") 'evil-previous-visual-line)
+  (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+  ;; (define-key evil-normal-state-map (kbd "S-SPC") 'company-complete)
+  ;;; evil-vimish-fold
+  ;; (evil-vimish-fold-mode 1)
+  (global-set-key (kbd "S-SPC") 'company-complete)
+  ;; powerline
+  (setq powerline-default-separator 'alternate)
+  ;; Backups
+  (setq backup-directory-alist `(("." . "~/tmp"))
+        ;; uncomment next line for disabling backup files
+        ;; make-backup-files nil
+        )
+  ;; disable automatic popups from auto-complete & company
+  (setq ac-auto-show-menu nil
+        company-idle-delay 0.5 ;; nil to disable it completely
+        )
   ;;; Editing defaults
   (prefer-coding-system 'utf-8)
   (setq buffer-file-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
-  ;;; indentation
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+  ;;; indentation - which one of these?
+  ;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
   (setq-default indent-tabs-mode nil
                 tab-width 4)
-  (setq indent-tabs-mode nil
-        tab-width 4)
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
-  ;; (add-to-list 'projectile-globally-ignored-directories `(".git"
-  ;;                                                         ".svn"
-  ;;                                                         ".hg"))
-  ;;; Keys
-  ;; (global-set-key (kbd "M-RET") 'company-complete)
-  ;; (define-key evil-normal-state-map (kbd "s-RET") 'company-complete)
+  ;; neotree
+  (setq neo-theme 'ascii
+        neo-show-hidden-files t)
+  ;; Projectile
+  ;; projectile-globally-ignored-files
+  ;; projectile-globally-ignored-directories ".git" ".hg" ".idea" ".svn" "node_modules"
+  ;; projectile-globally-ignored-file-suffixes
+  ;; projectile-globally-ignored-modes
+  (with-eval-after-load 'projectile
+    (setq projectile-globally-ignored-directories
+          (append projectile-globally-ignored-directories '(".git"
+                                                            ".hg"
+                                                            ".idea"
+                                                            ".svn"
+                                                            "node_modules"))
+          projectile-globally-ignored-files
+          (append projectile-globally-ignored-files '(".DS_Store")))
+    (setq-default projectile-tags-file-name "tags"))
+  ;; Markdown
+  (with-eval-after-load 'markdown-mode
+    (setq markdown-command "~/bin/emarkdown"
+          markdown-open-command "~/bin/marked"
+          markdown-italic-underscore t))
+
+  ;; avy
+  (setq-default avy-all-windows 'all-frames)
+
+  ;; frame size
+  (setq default-frame-alist '((width . 105)
+                              (height . 65)))
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
