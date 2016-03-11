@@ -60,7 +60,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-                                      evil-vimish-fold)
+                                      evil-vimish-fold
+                                      key-chord)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -213,14 +214,18 @@ layers configuration."
   ;; evil settings
   (setq-default evil-escape-key-sequence "jk"
                 evil-escape-delay 0.2)
-  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-visual-state-map (kbd "j") 'evil-next-visual-line)
-  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-visual-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+  (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+  (define-key evil-visual-state-map "j" 'evil-next-visual-line)
+  (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+  (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
+  (define-key evil-normal-state-map ";" 'evil-ex)
   ;; (define-key evil-normal-state-map (kbd "S-SPC") 'company-complete)
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
+  ;;; key-chord
+  (setq key-chord-two-keys-delay 0.2)
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map "fd" 'evil-escape)
   (global-set-key (kbd "S-SPC") 'company-complete)
   ;; powerline
   (setq powerline-default-separator 'alternate)
