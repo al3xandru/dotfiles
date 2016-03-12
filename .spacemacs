@@ -14,6 +14,8 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     ;; Generic
+     (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
      eyebrowse
      themes-megapack
@@ -23,6 +25,7 @@ values."
      search-engine
      ;; git
      git
+     github
      ;; completion
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t)
@@ -59,9 +62,12 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(
-                                      evil-vimish-fold
-                                      key-chord)
+   dotspacemacs-additional-packages
+   '(
+     evil-vimish-fold
+     focus
+     key-chord
+     )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -197,7 +203,7 @@ in `dotspacemacs/user-config'."
   (setq theming-modifications
         '((alect-light (powerline-active1 :background "#ffaf00" :foreground "#272727")
                        (powerline-inactive1 :background "#b2b2b2" :foreground "#151515")
-                       (powerline-active2 :background "#005fff" :foreground "#eeeeee")
+                       (powerline-active2 :background "#5fafd7" :foreground "#eeeeee") ;; afffff 00[5d]fff afd700
                        (powerline-inactive2 :background "#8a8a8a" :foreground "#efefef")
                        (mode-line :foreground "#00875F"))))
   )
@@ -211,22 +217,42 @@ layers configuration."
   ;; line numbers
   (setq-default dotspacemacs-line-number t
                 dotspacemacs-auto-resume-layouts t)
+  (global-set-key (kbd "S-SPC") 'company-complete)
   ;; evil settings
-  (setq-default evil-escape-key-sequence "jk"
+  (setq-default evil-escape-key-sequence "fd"
                 evil-escape-delay 0.2)
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
   (define-key evil-visual-state-map "j" 'evil-next-visual-line)
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
   (define-key evil-normal-state-map ";" 'evil-ex)
+  ;; frames
+  (spacemacs/set-leader-keys "F b" 'display-buffer-other-frame)
+  (spacemacs/set-leader-keys "F c" 'delete-frame)
+  (spacemacs/set-leader-keys "F C" 'delete-other-frames)
+  (spacemacs/set-leader-keys "F f" 'find-file-other-frame)
+  (spacemacs/set-leader-keys "F RET" 'make-frame)
+  (spacemacs/set-leader-keys "F n" 'make-frame)
+  (spacemacs/set-leader-keys "F o" 'other-frame)
+  (defun alpo/new-frame-with-layout-for-project ()
+    "Creates a new frame, offer to open a project, and create a new layout
+for it."
+    (interactive)
+    (make-frame)
+    (spacemacs//layouts-spacemacs/helm-perspectives-l)
+    ;; (spacemacs/layout-switch-by-pos 2)
+    ;; (ido-find-file)
+    (helm-find-files nil)
+    ;; (dired-other-frame (helm-current-directory))
+    )
+  (spacemacs/set-leader-keys "F p" 'alpo/new-frame-with-layout-for-project)
   ;; (define-key evil-normal-state-map (kbd "S-SPC") 'company-complete)
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
   ;;; key-chord
   (setq key-chord-two-keys-delay 0.2)
   (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "fd" 'evil-escape)
-  (global-set-key (kbd "S-SPC") 'company-complete)
+  (key-chord-define evil-insert-state-map "jk" 'evil-escape)
   ;; powerline
   (setq powerline-default-separator 'alternate)
   ;; Backups
@@ -243,14 +269,18 @@ layers configuration."
   (setq buffer-file-coding-system 'utf-8)
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
+  (set-language-environment 'utf-8)
   (add-hook 'text-mode-hook 'auto-fill-mode)
-  ;;; indentation - which one of these?
+  (add-hook 'text-mode-hook 'turn-on-flyspell)
+  ;;; indentation - which one of (exec-path-from-shell-initialize)these?
   ;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
   (setq-default indent-tabs-mode nil
                 tab-width 4)
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
+  ;; ispell
+  (setq-default ispell-program-name "aspell")
   ;; neotree
   (setq neo-theme 'ascii
         neo-show-hidden-files t)
@@ -270,13 +300,48 @@ layers configuration."
           (append projectile-globally-ignored-files '(".DS_Store")))
     (setq-default projectile-tags-file-name "tags"))
   ;; Markdown
+  (defun alpo/markdown-edit-mode ()
+    (interactive)
+    (unless (local-variable-p 'alpo/markdown-in-edit-mode (current-buffer))
+      (make-local-variable 'alpo/markdown-in-edit-mode)
+      (setq alpo/markdown-in-edit-mode 0)
+      (make-local-variable 'alpo/markdown-prev-theme)
+      (setq alpo/markdown-prev-theme spacemacs--cur-theme))
+    (message "alpo/markdown-in-edit-mode(1): %d" alpo/markdown-in-edit-mode)
+    (if (eq alpo/markdown-in-edit-mode 0)
+        (progn
+          (switch-to-buffer-other-frame (current-buffer))
+          (load-theme 'leuven t)
+          (spacemacs/toggle-line-numbers-off)
+          (set-window-margins (selected-window) 20 20)
+          (set-face-attribute 'default (selected-frame) :height 140)
+          ;; (redraw-frame (selected-frame))
+          ;; (redraw-display)
+          ;; (setq line-spacing 1.1)
+          (setq alpo/markdown-in-edit-mode 1)
+          (message "alpo/markdown-in-edit-mode(2): %d (enabled) %s" alpo/markdown-in-edit-mode alpo/markdown-prev-theme)
+          )
+      (progn
+        (setq line-spacing 1)
+        (set-window-margins (selected-window) 0 0)
+        (spacemacs/toggle-line-numbers-on)
+        (load-theme alpo/markdown-prev-theme t)
+        (setq alpo/markdown-in-edit-mode 0)
+        (message "alpo/markdown-in-edit-mode(2): %d (disabled)" alpo/markdown-in-edit-mode)
+        (kill-local-variable 'alpo/markdown-in-edit-mode)
+        (kill-local-variable 'alpo/markdown-prev-theme)
+        (delete-frame))
+      )
+    )
   (with-eval-after-load 'markdown-mode
     (setq markdown-command "~/bin/emarkdown"
           markdown-open-command "~/bin/marked"
-          markdown-italic-underscore t))
+          markdown-italic-underscore t)
+    (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
+    (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode))
 
   ;; avy
-  (setq-default avy-all-windows 'all-frames)
+  (setq-default avy-all-windows nil) ;; nil, t, 'all-frames
 
   ;; frame size
   (setq default-frame-alist '((width . 105)
