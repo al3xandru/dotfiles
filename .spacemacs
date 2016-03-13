@@ -226,6 +226,14 @@ layers configuration."
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
   (define-key evil-normal-state-map ";" 'evil-ex)
+  ;; avy
+  (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
+  (spacemacs/set-leader-keys "s /" 'evil-avy-goto-word-or-subword-1)
+  (spacemacs/set-leader-keys "s ?C" 'evil-avy-goto-char-2)
+  (spacemacs/set-leader-keys "s ?w" 'evil-avy-goto-word-0)
+  (spacemacs/set-leader-keys "s ?W" 'evil-avy-goto-word-1)
+  (spacemacs/set-leader-keys "s ?s" 'evil-avy-goto-subword-0)
+  (spacemacs/set-leader-keys "s ?s" 'evil-avy-goto-subword-1)
   ;; frames
   (spacemacs/set-leader-keys "F b" 'display-buffer-other-frame)
   (spacemacs/set-leader-keys "F c" 'delete-frame)
@@ -301,6 +309,7 @@ for it."
     (setq-default projectile-tags-file-name "tags"))
   ;; Markdown
   (defun alpo/markdown-edit-mode ()
+    "Markdown writing optimized environment"
     (interactive)
     (unless (local-variable-p 'alpo/markdown-in-edit-mode (current-buffer))
       (make-local-variable 'alpo/markdown-in-edit-mode)
@@ -311,26 +320,35 @@ for it."
     (if (eq alpo/markdown-in-edit-mode 0)
         (progn
           (switch-to-buffer-other-frame (current-buffer))
+          (setq color-theme-is-global nil)
           (load-theme 'leuven t)
           (spacemacs/toggle-line-numbers-off)
           (set-window-margins (selected-window) 20 20)
           (set-face-attribute 'default (selected-frame) :height 140)
+          (set-frame-size (selected-frame)
+                          (+ 20 20 (window-body-width (selected-window)))
+                          (window-total-height (selected-window)))
+          ;; (setq line-spacing 1.1) breaks the way text is displayed
+          ;; this was an attempt to fix the frame not showing all text
+          ;; when scrolling
           ;; (redraw-frame (selected-frame))
           ;; (redraw-display)
-          ;; (setq line-spacing 1.1)
           (setq alpo/markdown-in-edit-mode 1)
           (message "alpo/markdown-in-edit-mode(2): %d (enabled) %s" alpo/markdown-in-edit-mode alpo/markdown-prev-theme)
           )
       (progn
-        (setq line-spacing 1)
-        (set-window-margins (selected-window) 0 0)
-        (spacemacs/toggle-line-numbers-on)
+        ;; not really necessary as they apply to the frame that will be deleted
+        ;; (setq line-spacing 1)
+        ;; (set-window-margins (selected-window) 0 0)
+        ;; (spacemacs/toggle-line-numbers-on)
+        (delete-frame)
+        ;; (helm-themes--load-theme markdown-prev-theme)
+        (mapc 'disable-theme custom-enabled-themes)
         (load-theme alpo/markdown-prev-theme t)
         (setq alpo/markdown-in-edit-mode 0)
         (message "alpo/markdown-in-edit-mode(2): %d (disabled)" alpo/markdown-in-edit-mode)
         (kill-local-variable 'alpo/markdown-in-edit-mode)
-        (kill-local-variable 'alpo/markdown-prev-theme)
-        (delete-frame))
+        (kill-local-variable 'alpo/markdown-prev-theme))
       )
     )
   (with-eval-after-load 'markdown-mode
@@ -341,8 +359,8 @@ for it."
     (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode))
 
   ;; avy
-  (setq-default avy-all-windows nil) ;; nil, t, 'all-frames
-
+  (setq-default avy-all-windows nil ;; nil, t, 'all-frames
+                avy-background nil)
   ;; frame size
   (setq default-frame-alist '((width . 105)
                               (height . 65)))
