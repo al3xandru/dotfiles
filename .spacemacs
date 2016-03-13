@@ -323,6 +323,7 @@ for it."
           (setq color-theme-is-global nil)
           (load-theme 'leuven t)
           (spacemacs/toggle-line-numbers-off)
+          (spacemacs/toggle-fringe-off)
           (set-window-margins (selected-window) 20 20)
           (set-face-attribute 'default (selected-frame) :height 140)
           (set-frame-size (selected-frame)
