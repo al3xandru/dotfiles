@@ -273,11 +273,15 @@ for it."
         company-idle-delay 0.5 ;; nil to disable it completely
         )
   ;;; Editing defaults
+  (setq buffer-file-coding-system 'utf-8
+        file-name-coding-system 'utf-8
+        locale-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
-  (setq buffer-file-coding-system 'utf-8)
-  (set-terminal-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-language-environment 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  ;;; text-mode hooks
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'text-mode-hook 'turn-on-flyspell)
   ;;; indentation - which one of (exec-path-from-shell-initialize)these?
