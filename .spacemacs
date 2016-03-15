@@ -18,6 +18,7 @@ values."
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
      eyebrowse
+     (ranger :variables ranger-show-preview t)
      themes-megapack
      theming
      ;; docs
@@ -108,25 +109,28 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(alect-light
+                         alect-dark ;; alect-dark-alt
+                         flatui
                          misterioso
-                         ample
-                         alect-dark
-                         alect-dark-alt
-                         heroku
+                         material-light
                          material
-                         solarized-light
-                         solarized-dark
+                         spacemacs-light
+                         spacemacs-dark
                          leuven
                          gruvbox
-                         monokai
+                         anti-zenburn
                          zenburn
-                         flatui)
+                         ample
+                         heroku
+                         monokai
+                         solarized-light
+                         solarized-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Operator Mono"
-                               :size 12
+   dotspacemacs-default-font '("Operator Mono" ;; "PragmataPro Mono"h
+                               :size  12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -366,10 +370,12 @@ for it."
   ;; avy
   (setq-default avy-all-windows nil ;; nil, t, 'all-frames
                 avy-background nil)
+  ;; ranger
+  (setq-default ranger-override-dired t
+                ranger-show-dotfiles t)
   ;; frame size
   (setq default-frame-alist '((width . 105)
                               (height . 65)))
 )
-
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
