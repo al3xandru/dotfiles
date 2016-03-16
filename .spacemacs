@@ -213,6 +213,7 @@ in `dotspacemacs/user-config'."
   )
 
 
+;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
 (defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
@@ -221,24 +222,58 @@ layers configuration."
   ;; line numbers
   (setq-default dotspacemacs-line-number t
                 dotspacemacs-auto-resume-layouts t)
+  ;; Backups
+  (setq backup-directory-alist `(("." . "~/tmp"))
+        ;; uncomment next line for disabling backup files
+        ;; make-backup-files nil
+        )
+  ;;; Editing defaults
+  (setq buffer-file-coding-system 'utf-8
+        file-name-coding-system 'utf-8
+        locale-coding-system 'utf-8)
+  (prefer-coding-system 'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-language-environment 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  ;;; text-mode hooks
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+  (add-hook 'text-mode-hook 'turn-on-flyspell)
+  ;;; indentation
+  (setq-default indent-tabs-mode nil
+                tab-width 4)
+  ;;; Electric pairs
+  (electric-indent-mode 1)
+  (electric-pair-mode 1)
+  ;; auto-completion key
   (global-set-key (kbd "S-SPC") 'company-complete)
+  ;;
   ;; evil settings
+  ;;
   (setq-default evil-escape-key-sequence "fd"
                 evil-escape-delay 0.2)
+  ;;; key-chord
+  (setq key-chord-two-keys-delay 0.2)
+  (key-chord-mode 1)
+  (key-chord-define evil-insert-state-map "jk" 'evil-escape)
+  ;;; bindings
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
   (define-key evil-visual-state-map "j" 'evil-next-visual-line)
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
   (define-key evil-normal-state-map ";" 'evil-ex)
   ;; avy
+  (spacemacs/declare-prefix "s?" "avy-goto")
   (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
   (spacemacs/set-leader-keys "s /" 'evil-avy-goto-word-or-subword-1)
-  (spacemacs/set-leader-keys "s ?C" 'evil-avy-goto-char-2)
-  (spacemacs/set-leader-keys "s ?w" 'evil-avy-goto-word-0)
-  (spacemacs/set-leader-keys "s ?W" 'evil-avy-goto-word-1)
-  (spacemacs/set-leader-keys "s ?s" 'evil-avy-goto-subword-0)
+  (spacemacs/set-leader-keys "s ?C" 'evil-avy-goto-char)
+  (spacemacs/set-leader-keys "s ?c" 'evil-avy-goto-char-2)
+  (spacemacs/set-leader-keys "s ?W" 'evil-avy-goto-word-0)
+  (spacemacs/set-leader-keys "s ?w" 'evil-avy-goto-word-1)
+  (spacemacs/set-leader-keys "s ?S" 'evil-avy-goto-subword-0)
   (spacemacs/set-leader-keys "s ?s" 'evil-avy-goto-subword-1)
   ;; frames
+  (spacemacs/declare-prefix "F" "frames")
   (spacemacs/set-leader-keys "F b" 'display-buffer-other-frame)
   (spacemacs/set-leader-keys "F c" 'delete-frame)
   (spacemacs/set-leader-keys "F C" 'delete-other-frames)
@@ -258,43 +293,15 @@ for it."
     ;; (dired-other-frame (helm-current-directory))
     )
   (spacemacs/set-leader-keys "F p" 'alpo/new-frame-with-layout-for-project)
-  ;; (define-key evil-normal-state-map (kbd "S-SPC") 'company-complete)
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
-  ;;; key-chord
-  (setq key-chord-two-keys-delay 0.2)
-  (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "jk" 'evil-escape)
+
   ;; powerline
   (setq powerline-default-separator 'alternate)
-  ;; Backups
-  (setq backup-directory-alist `(("." . "~/tmp"))
-        ;; uncomment next line for disabling backup files
-        ;; make-backup-files nil
-        )
   ;; disable automatic popups from auto-complete & company
   (setq ac-auto-show-menu nil
         company-idle-delay 0.5 ;; nil to disable it completely
         )
-  ;;; Editing defaults
-  (setq buffer-file-coding-system 'utf-8
-        file-name-coding-system 'utf-8
-        locale-coding-system 'utf-8)
-  (prefer-coding-system 'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-keyboard-coding-system 'utf-8)
-  (set-language-environment 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  ;;; text-mode hooks
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-  (add-hook 'text-mode-hook 'turn-on-flyspell)
-  ;;; indentation - which one of (exec-path-from-shell-initialize)these?
-  ;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
-  (setq-default indent-tabs-mode nil
-                tab-width 4)
-  ;;; Electric pairs
-  (electric-indent-mode 1)
-  (electric-pair-mode 1)
   ;; ispell
   (setq-default ispell-program-name "aspell")
   ;; neotree
@@ -360,6 +367,7 @@ for it."
         (kill-local-variable 'alpo/markdown-prev-theme))
       )
     )
+  ;; markdown
   (with-eval-after-load 'markdown-mode
     (setq markdown-command "~/bin/emarkdown"
           markdown-open-command "~/bin/marked"
@@ -368,11 +376,15 @@ for it."
     (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode))
 
   ;; avy
-  (setq-default avy-all-windows nil ;; nil, t, 'all-frames
-                avy-background nil)
+  (setq-default avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?z ?x ?c ?v ?b ?n ?m)
+                avy-style 'at
+                avy-case-fold-search nil
+                avy-all-windows nil ;; nil, t, 'all-frames
+                avy-background t)
   ;; ranger
   (setq-default ranger-override-dired t
-                ranger-show-dotfiles t)
+                ranger-show-dotfiles t
+                ranger-cleanup-on-disable t)
   ;; frame size
   (setq default-frame-alist '((width . 105)
                               (height . 65)))
