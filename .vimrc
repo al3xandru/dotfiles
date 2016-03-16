@@ -89,9 +89,9 @@ syntax on
 
 " colorscheme
 colorscheme koehler
-
+" http://vimcolors.com/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "buttercream calmbreeze navajo morning papayawhip gruvbox cake16 lucius sweater"
+let s:cs_light = "sweater buttercream calmbreeze navajo morning papayawhip gruvbox cake16 lucius"
 let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius nefertiti kolor gruvbox"
 
 function! <SID>ChooseColorscheme(args)
