@@ -1,9 +1,8 @@
 #!/bin/sh
 if [ -z "$(pgrep Emacs)" ]; then
-    /Applications/Emacs.app/Contents/MacOS/Emacs --no-splash 1>&2 > /dev/null &
-    echo "Starting Emacs..."
-    sleep 3
+    /Applications/Emacs.app/Contents/MacOS/Emacs --no-splash "$@" 1>&2 > /dev/null &
+else
+    # /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n -c "$@" 
+    /usr/local/bin/emacsclient -n -c "$@"
 fi
-# /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -n -c "$@" 
-/usr/local/bin/emacsclient -n -c "$@"
 
