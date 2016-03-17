@@ -41,8 +41,8 @@ alias jump="cj"
 alias j='jump'
 
 # ctags
-alias ctagsr='ctags -R --exclude=.git --exclude=*.html --exclude=.hg --exclude=.svn --tag-relative=yes '
-alias ctagscp='ctagsr --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ '
+alias ctagsr='ctags -R --tag-relative=yes --exclude=.git --exclude=.hg --exclude=.svn --exclude=*.html --exclude=*.md --exclude=*.xml --exclude=*.yaml '
+alias ctagscpp='ctagsr --c++-kinds=+p --fields=+iaS --extra=+q --language-force=C++ '
 alias ctagsgo='gotags -R -tag-relative '
 alias ctagsjv='ctagsr --exclude=*.class --exclude=*.jar --extra=+f --extra=+q '
 alias ctagspy='ctagsr --extra=+f `python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()"`'
