@@ -388,6 +388,9 @@ for it."
   ;; frame size
   (setq default-frame-alist '((width . 105)
                               (height . 65)))
+  ;; Load local customizations (local to the computer)
+  ;; (when (file-exists-p "~/local.el")
+  ;;   (load "~/local.el")))
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
