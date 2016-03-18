@@ -29,6 +29,7 @@ values."
      github
      ;; completion
      (auto-completion :variables
+                      auto-completion-enable-help-tooltip t
                       auto-completion-enable-snippets-in-popup t)
      ;; cscope
      semantic
@@ -239,9 +240,11 @@ layers configuration."
   ;;; text-mode hooks
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'text-mode-hook 'turn-on-flyspell)
+
   ;;; indentation
   (setq-default indent-tabs-mode nil
-                tab-width 4)
+                tab-width 4
+                evil-shift-width 4)
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
@@ -295,6 +298,10 @@ for it."
   (spacemacs/set-leader-keys "F p" 'alpo/new-frame-with-layout-for-project)
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
+
+  ;; helm
+  ;; helm input at the bottom
+  ;; (setq-default helm-echo-input-in-header-line nil)
 
   ;; powerline
   (setq powerline-default-separator 'alternate)
@@ -368,12 +375,11 @@ for it."
       )
     )
   ;; markdown
-  (with-eval-after-load 'markdown-mode
-    (setq markdown-command "~/bin/emarkdown"
-          markdown-open-command "~/bin/marked"
-          markdown-italic-underscore t)
-    (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
-    (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode))
+  (setq-default markdown-command "~/bin/emarkdown"
+                markdown-open-command "/Applications/Marked 2.app/Contents/MacOS/Marked 2"
+                markdown-italic-underscore t)
+  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
+  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode)
 
   ;; avy
   (setq-default avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?z ?x ?c ?v ?b ?n ?m)
