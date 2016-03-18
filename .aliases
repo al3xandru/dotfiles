@@ -10,9 +10,9 @@ fi
 #
 alias back='cd -'
 alias b='back'
-alias ll='ls -AlFp ${colorflag}'
+alias ll='ls -AlFpT ${colorflag}'
 alias l='ls -1AFp ${colorflag}'
-alias lt='ls -AlFpt ${colorflag}'
+alias lt='ls -AlFptT ${colorflag}'
 alias grep='grep --color'
 alias tree='tree -C'
 alias a='atom'
@@ -23,8 +23,8 @@ alias t='tvim'
 alias n='nvim'
 alias mmc='mmdc'
 #alias e="$EDITOR"
-alias e='emax'
-alias x='emax'
+alias e='$HOME/bin/emacscltsrv'
+alias x='$HOME/bin/emacscltsrv'
 # IP addresses
 alias localip="ipconfig getifaddr en1"
 # alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
@@ -66,5 +66,5 @@ unset -v method
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder'
 alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -seed -r'
 # human logger in audo
-alias todo="python $HOME/workspace/miscellaneous/audo/humlog.py"
+# alias todo="python $HOME/workspace/miscellaneous/audo/humlog.py"
 
