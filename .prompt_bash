@@ -44,16 +44,16 @@ function _parse_git_branch {
         if [[ ${git_status} =~ ${diverge_pattern} ]]; then
             remote="${__CLR_YELLOW}↕"
         fi
-        echo "(${branch})${remote}${state}"
+        echo " ${__CLR_GREEN}(${branch}${remote}${state}${__CLR_GREEN})"
     fi
 }
 
 function _prompt_func() {
-    local prompt="${__CLR_LIGHT_PURPLE}\W ${__CLR_GREEN}$(_parse_git_branch)${__CLR_LIGHT_BLACK}"
+    local prompt="${__CLR_LIGHT_PURPLE}\W$(_parse_git_branch)"
     if [ $ITERM_SESSION_ID ]; then
-        PS1="${prompt}\$${__CLR_NONE} \033];${PWD##*/}\007"
+        PS1="${prompt}${__CLR_LIGHT_BLACK}:>${__CLR_NONE}\[\033];${PWD##*/}\007 "
     else
-        PS1="${prompt}\$${__CLR_NONE} "
+        PS1="${prompt}${__CLR_LIGHT_BLACK}:>${__CLR_NONE} "
     fi
 #    previous_return_value=$?;
 #    echo "prev: ${previous_return_value}"
