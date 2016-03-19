@@ -1,4 +1,4 @@
-;; -*- mode: dotspacemacs -*-
+;; -*- mode: emacs-lisp -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -15,6 +15,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      ;; Generic
+     spacemacs-ivy
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
      eyebrowse
@@ -27,6 +28,9 @@ values."
      ;; git
      git
      github
+     (version-control :variables
+                      version-control-diff-tool 'diff-hl
+                      version-control-global-margin t)
      ;; completion
      (auto-completion :variables
                       auto-completion-enable-help-tooltip t
@@ -68,6 +72,7 @@ values."
    '(
      evil-vimish-fold
      focus
+     keyfreq
      key-chord
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -86,22 +91,6 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
-   dotspacemacs-elpa-https t
-   dotspacemacs-elpa-timeout 5
-   ;; Either `vim' or `emacs'. Evil is always enabled but if the variable
-   ;; is `emacs' then the `holy-mode' is enabled at startup.
-   dotspacemacs-editing-style 'vim
-   ;; If non nil output loading progess in `*Messages*' buffer.
-   dotspacemacs-verbose-loading nil
-   ;; Specify the startup banner. Default value is `official', it displays
-   ;; the official spacemacs logo. An integer value is the index of text
-   ;; banner, `random' chooses a random text banner in `core/banners'
-   ;; directory. A string value must be a path to a .PNG file.
-   ;; If the value is nil then no banner is displayed.
-   ;; dotspacemacs-startup-banner 'official
-   dotspacemacs-startup-banner nil
-   ;; t if you always want to see the changelog at startup
-   dotspacemacs-always-show-changelog t
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'."
    dotspacemacs-startup-lists '(recents projects bookmarks)
@@ -126,8 +115,6 @@ values."
                          monokai
                          solarized-light
                          solarized-dark)
-   ;; If non nil the cursor color matches the state color.
-   dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Operator Mono" ;; "PragmataPro Mono"h
@@ -135,69 +122,63 @@ values."
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
-   ;; The leader key
-   dotspacemacs-leader-key "SPC"
-   ;; The leader key accessible in `emacs state' and `insert state'
-   dotspacemacs-emacs-leader-key "M-m"
-   ;; Major mode leader key is a shortcut key which is the equivalent of
-   ;; pressing `<leader> m`. Set it to `nil` to disable it.
-   dotspacemacs-major-mode-leader-key ","
-   ;; Major mode leader key accessible in `emacs state' and `insert state'
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-   ;; The command key used for Evil commands (ex-commands) and
-   ;; Emacs commands (M-x).
-   ;; By default the command key is `:' so ex-commands are executed like in Vim
-   ;; with `:' and Emacs commands are executed with `<leader> :'.
-   dotspacemacs-command-key ":"
+   ;; If non nil a progress bar is displayed when spacemacs is loading. This
+   ;; may increase the boot time on some systems and emacs builds, set it to
+   ;; nil to boost the loading time. (default t)
+   dotspacemacs-loading-progress-bar nil
+   dotspacemacs-line-numbers t
+   ;; If non nil unicode symbols are displayed in the mode line.
+   dotspacemacs-mode-line-unicode-symbols nil
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis t
+
+   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
+   ;; (default t)
+   dotspacemacs-elpa-https t
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   dotspacemacs-elpa-timeout 5
+   ;; One of `vim', `emacs' or `hybrid'.
+   ;; `hybrid' is like `vim' except that `insert state' is replaced by the
+   ;; `hybrid state' with `emacs' key bindings. The value can also be a list
+   ;; with `:variables' keyword (similar to layers). Check the editing styles
+   ;; section of the documentation for details on available variables.
+   ;; (default 'vim)
+   dotspacemacs-editing-style 'vim
+   ;; Specify the startup banner. Default value is `official', it displays
+   ;; the official spacemacs logo. An integer value is the index of text
+   ;; banner, `random' chooses a random text banner in `core/banners'
+   ;; directory. A string value must be a path to a .PNG file.
+   ;; If the value is nil then no banner is displayed.
+   ;; dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
+   ;; t if you always want to see the changelog at startup
+   dotspacemacs-always-show-changelog t
+   ;; If non nil the cursor color matches the state color.
+   dotspacemacs-colorize-cursor-according-to-state t
    ;; If non nil the paste micro-state is enabled. While enabled pressing `p`
    ;; several times cycle between the kill ring content.
    dotspacemacs-enable-paste-micro-state t
    ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
    ;; the commands bound to the current keystrokes.
    dotspacemacs-guide-key-delay 0.4
-   ;; If non nil a progress bar is displayed when spacemacs is loading. This
-   ;; may increase the boot time on some systems and emacs builds, set it to
-   ;; nil to boost the loading time. (default t)
-   dotspacemacs-loading-progress-bar t
-   ;; If non nil the frame is fullscreen when Emacs starts up.
-   ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
-   ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
-   ;; Use to disable fullscreen animations in OSX."
-   dotspacemacs-fullscreen-use-non-native nil
-   ;; If non nil the frame is maximized when Emacs starts up.
-   ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
-   ;; (Emacs 24.4+ only)
-   dotspacemacs-line-numbers t
-   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
-   ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-active-transparency 90
+   ;; Transparency can be toggled through `toggle-transparency'. (default 90)
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency 40
-   ;; If non nil unicode symbols are displayed in the mode line.
-   dotspacemacs-mode-line-unicode-symbols nil
-   ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
-   ;; scrolling overrides the default behavior of Emacs which recenters the
-   ;; point when it reaches the top or bottom of the screen.
-   dotspacemacs-smooth-scrolling t
-   ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
-   dotspacemacs-smartparens-strict-mode nil
-   ;; If non nil advises quit functions to keep server open when quitting.
-   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "grep" "ack")
-   ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
-   ;; Not used for now.
-   dotspacemacs-default-package-repository nil
-   )
-  ;; User initialization goes here
-  )
+   ))
 
 
 (defun dotspacemacs/user-init ()
@@ -267,7 +248,7 @@ layers configuration."
   (define-key evil-normal-state-map ";" 'evil-ex)
   ;; avy
   (spacemacs/declare-prefix "s?" "avy-goto")
-  (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
+  ;; (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
   (spacemacs/set-leader-keys "s /" 'evil-avy-goto-word-or-subword-1)
   (spacemacs/set-leader-keys "s ?C" 'evil-avy-goto-char)
   (spacemacs/set-leader-keys "s ?c" 'evil-avy-goto-char-2)
@@ -349,7 +330,7 @@ for it."
           (set-window-margins (selected-window) 20 20)
           (set-face-attribute 'default (selected-frame) :height 140)
           (set-frame-size (selected-frame)
-                          (+ 20 20 (window-body-width (selected-window)))
+                          (+ 10 20 20 (window-body-width (selected-window)))
                           (window-total-height (selected-window)))
           ;; (setq line-spacing 1.1) breaks the way text is displayed
           ;; this was an attempt to fix the frame not showing all text
@@ -373,8 +354,8 @@ for it."
         (kill-local-variable 'alpo/markdown-in-edit-mode)
         (kill-local-variable 'alpo/markdown-prev-theme))
       )
-    )
-  ;; markdown
+    ) 
+  ;; markdow
   (setq-default markdown-command "~/bin/emarkdown"
                 markdown-open-command "/Applications/Marked 2.app/Contents/MacOS/Marked 2"
                 markdown-italic-underscore t)
@@ -387,13 +368,101 @@ for it."
                 avy-case-fold-search nil
                 avy-all-windows nil ;; nil, t, 'all-frames
                 avy-background t)
+  ;; keyfreq
+  ;; http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  (setq keyfreq-excluded-commands
+        '(self-insert-command))
+
+  ;; org
+  (with-eval-after-load 'org
+    (setq org-directory "~/Dropbox/Dox/active/"
+          org-default-notes-file "04-notes.org"
+          org-agenda-files (list org-default-notes-file))
+
+    (setq org-log-done t
+          org-todo-keywords '((sequence "MUST(m)" "WANT(w)" "WISH(i)" "TODO(t)" "WIPR(p)" "WAIT(s)" "|" "DONE(d)" "FILED(f)" "SKIP(x)")))
+
+    (setq org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
+                                   ("TODO" . (:foreground "#fe2500" :weight bold))
+                                   ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
+                                   ("WISH" . (:foreground "#cd4f39" :slant italic))
+                                   ("WIPR" . (:foreground "#6495ed" :weight bold))
+                                   ("FILED" . (:foreground "#698b69" :slant italic))
+                                   ("DONE" . (:foreground "#698b69"))
+                                   ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))))
+
+    (setq org-capture-templates
+        '(("l" "Log" item (file+datetree org-default-notes-file)
+           "+ [%<%H:%M>] %?")
+          ("t" "Todo" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n  %U\n  %i" :empty-lines 1)
+          ("T" "Todo with clipboard" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n  %c\n  %U\n  %i" :empty-lines 1)
+          ("c" "Task" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %U\n  %i" :empty-lines 1)
+          ("C" "Task with clipboard" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %c\n  %U\n  %i" :empty-lines 1)
+          ("n" "Note" item (file+datetree org-default-notes-file)
+           "+ %? %U")
+          ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
+           "+ %? %U\n  %c")
+          ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+          ("R" "Task with ref" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+
+    (setq org-agenda-span 14
+          org-agenda-start-on-weekday 1)
+
+    ;; http://orgmode.org/manual/Adding-hyperlink-types.html#Adding-hyperlink-types
+    (org-add-link-type "twodo" 'alpo/org-2do-open-link)
+    (org-add-link-type "mailplane" 'alpo/org-mailplane-open-link)
+    (org-add-link-type "omnifocus" 'alpo/org-omnifocus-open-link))
+
+(defun alpo/org-omnifocus-open-link (path)
+  "Open an omnifocus url scheme"
+  (message "Open OmniFocus link: omnifocus:%s" path)
+  (shell-command (concat "open \"omnifocus:" path "\"")))
+
+(defun alpo/org-mailplane-open-link (path)
+  "Open a Mailplane url scheme"
+  (let ((escpath (replace-regexp-in-string " " "%20" path)))
+    (message "Open Mailplane link: mailplane:%s" escpath)
+    (shell-command (concat "open \"mailplane:" escpath "\""))))
+
+(defun alpo/org-2do-open-link (path)
+  "Open a 2Do url scheme"
+  (let ((escpath (replace-regexp-in-string " " "%20" path)))
+    (message "Open 2Do link: twodo:%s" escpath)
+    (shell-command (concat "open \"twodo:" escpath "\""))))
+
   ;; ranger
   (setq-default ranger-override-dired t
                 ranger-show-dotfiles t
                 ranger-cleanup-on-disable t)
+
   ;; frame size
   (setq default-frame-alist '((width . 105)
                               (height . 65)))
+
+  ;; learn emacs
+  ;; http://sachachua.com/blog/2016/02/building-today-learned-habit-displaying-documentation-random-emacs-commands/
+  (defun alpo/describe-random-interactive-function ()
+    (interactive)
+    "Show the documentation for a random interactive function.
+Consider only documented, non-obsolete functions."
+    (let (result)
+      (mapatoms
+       (lambda (s)
+         (when (and (commandp s)
+                    (documentation s t)
+                    (null (get s 'byte-obsolete-info)))
+           (setq result (cons s result)))))
+      (describe-function (elt result (random (length result))))))
+  (spacemacs/set-leader-keys "h r" 'alpo/describe-random-interactive-function)
+
   ;; Load local customizations (local to the computer)
   ;; (when (file-exists-p "~/local.el")
   ;;   (load "~/local.el")))
