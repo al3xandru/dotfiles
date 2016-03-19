@@ -175,6 +175,11 @@ if has("gui_running")
     set columns=120
     set lines=80
 endif
+augroup VimTransparency
+    autocmd!
+    autocmd FocusGained * set transparency=0
+    autocmd FocusLost * set transparency=25
+augroup END
 
 " splits
 set splitbelow
