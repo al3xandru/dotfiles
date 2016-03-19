@@ -311,6 +311,9 @@ for it."
           (append projectile-globally-ignored-files '(".DS_Store")))
     (setq-default projectile-tags-file-name "tags"))
   ;; Markdown
+  (setq-default markdown-edit-mode-theme 'leuven
+                markdown-edit-mode-margin 20
+                markdown-edit-mode-face-height 140)
   (defun alpo/markdown-edit-mode ()
     "Markdown writing optimized environment"
     (interactive)
@@ -324,13 +327,13 @@ for it."
         (progn
           (switch-to-buffer-other-frame (current-buffer))
           (setq color-theme-is-global nil)
-          (load-theme 'leuven t)
+          (load-theme markdown-edit-mode-theme t)
           (spacemacs/toggle-line-numbers-off)
           (spacemacs/toggle-fringe-off)
-          (set-window-margins (selected-window) 20 20)
-          (set-face-attribute 'default (selected-frame) :height 140)
+          (set-window-margins (selected-window) markdown-edit-mode-margin markdown-edit-mode-margin)
+          (set-face-attribute 'default (selected-frame) :height markdown-edit-mode-face-height)
           (set-frame-size (selected-frame)
-                          (+ 10 20 20 (window-body-width (selected-window)))
+                          (+ 20 (* 2 markdown-edit-mode-margin) (window-body-width (selected-window)))
                           (window-total-height (selected-window)))
           ;; (setq line-spacing 1.1) breaks the way text is displayed
           ;; this was an attempt to fix the frame not showing all text
@@ -463,6 +466,7 @@ Consider only documented, non-obsolete functions."
       (describe-function (elt result (random (length result))))))
   (spacemacs/set-leader-keys "h r" 'alpo/describe-random-interactive-function)
 
+  (spacemacs/toggle-transparency)
   ;; Load local customizations (local to the computer)
   ;; (when (file-exists-p "~/local.el")
   ;;   (load "~/local.el")))
