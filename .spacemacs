@@ -218,6 +218,7 @@ layers configuration."
   (set-keyboard-coding-system 'utf-8)
   (set-language-environment 'utf-8)
   (set-terminal-coding-system 'utf-8)
+
   ;;; text-mode hooks
   (add-hook 'text-mode-hook 'auto-fill-mode)
   (add-hook 'text-mode-hook 'turn-on-flyspell)
@@ -231,6 +232,8 @@ layers configuration."
   (electric-pair-mode 1)
   ;; auto-completion key
   (global-set-key (kbd "S-SPC") 'company-complete)
+
+  (setq-default scroll-margin 5)
   ;;
   ;; evil settings
   ;;
@@ -311,6 +314,16 @@ for it."
           (append projectile-globally-ignored-files '(".DS_Store")))
     (setq-default projectile-tags-file-name "tags"))
   ;; Markdown
+  ;; (defun alpo/markdown-hook ()
+  ;;   (define-key evil-insert-state-map (kbd "C-c C-d") 'ispell-complete-word))
+  ;; (add-hook 'markdown-mode-hook 'alpo/markdown-hook)
+  (defun alpo/ispell-complete-word ()
+    (interactive)
+    (save-excursion
+      (ispell-complete-word))
+    (forward-word))
+  (evil-define-key 'insert markdown-mode-map (kbd "C-c C-d") 'alpo/ispell-complete-word)
+
   (setq-default markdown-edit-mode-theme 'leuven
                 markdown-edit-mode-margin 20
                 markdown-edit-mode-face-height 140)
@@ -364,6 +377,7 @@ for it."
                 markdown-italic-underscore t)
   (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
   (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode)
+  ;; (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "SPC" 'ispell-complete-word)
 
   ;; avy
   (setq-default avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?z ?x ?c ?v ?b ?n ?m)
@@ -396,25 +410,25 @@ for it."
                                    ("DONE" . (:foreground "#698b69"))
                                    ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))))
 
-    (setq org-capture-templates
-        '(("l" "Log" item (file+datetree org-default-notes-file)
+     (setq org-capture-templates
+        '(("l" "Log (+ [H:M])" item (file+datetree org-default-notes-file)
            "+ [%<%H:%M>] %?")
           ("t" "Todo" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %U\n  %i" :empty-lines 1)
-          ("T" "Todo with clipboard" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %c\n  %U\n  %i" :empty-lines 1)
-          ("c" "Task" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %U\n  %i" :empty-lines 1)
-          ("C" "Task with clipboard" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %c\n  %U\n  %i" :empty-lines 1)
+           "* TODO %?\n  %U\n  %i")
+          ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n  %U\n  %a\n  %i")
+          ("v" "Todo with clipboard" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n  %c\n  %U\n  %i")
+          ("c" "Task (- [])" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %U\n  %i")
+          ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %U\n  %a\n  %i")
+          ("V" "Task with clipboard" checkitem (file+datetree org-default-notes-file)
+           "- [ ] %?\n  %c\n  %U\n  %i")
           ("n" "Note" item (file+datetree org-default-notes-file)
            "+ %? %U")
           ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
-           "+ %? %U\n  %c")
-          ("r" "Todo with ref" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-          ("R" "Task with ref" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %U\n  %a\n  %i" :empty-lines 1)))
+           "+ %? %U\n  %c")))
 
     (setq org-agenda-span 14
           org-agenda-start-on-weekday 1)
