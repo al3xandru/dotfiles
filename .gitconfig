@@ -37,11 +37,15 @@
     dtc = difftool --staged
     who = shortlog -s --
     # commit graph w. changes per file
-    l = log --oneline --graph --decorate --all --stat
+    l = log --oneline --graph --decorate
+    ls = log --oneline --graph --decorate --stat
+    ll = log --graph --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset'
+    lll = log -p --graph --decorate --stat
+    la = log --oneline --graph --decorate --all
+    las = log --oneline --graph --decorate --all --stat
     # patch format
-    lp = log -p
+    # lp = log -p
     # commit graph with changes per file and patch 
-    ll = log -p --graph --decorate --all --stat
     origin = remote show origin
     findalias = "!grepalias() { git config --global --get-regexp alias | grep -i \"$1\" | awk -v nr=2 '{sub(/^alias\\./,\"\")};{printf \"\\033[31m%_10s\\033[1;35m\", $1};{sep=FS};{for (x=nr; x<=NF; x++) {printf \"%s%s\", sep, $x; }; print \"\\033[0;39m\"}'; }; grepalias"
 #    dx = !git diff | mate
