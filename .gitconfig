@@ -37,12 +37,13 @@
     dtc = difftool --staged
     who = shortlog -s --
     # commit graph w. changes per file
-    l = log --oneline --graph --decorate
-    ls = log --oneline --graph --decorate --stat
-    ll = log --graph --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset'
+    l0 = log --graph --decorate --oneline
+    l = log --graph --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset'
+    ll = log --graph --stat --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset'
     lll = log -p --graph --decorate --stat
-    la = log --oneline --graph --decorate --all
-    las = log --oneline --graph --decorate --all --stat
+    la = log --graph --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset' --all
+    lal = log --graph --stat --pretty=format:'%C(yellow)%h%C(red)%d%Creset %s %C(white)[%an, %ar]%Creset' --all
+    la0 = log --oneline --graph --decorate --all --stat
     # patch format
     # lp = log -p
     # commit graph with changes per file and patch 
