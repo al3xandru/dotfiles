@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+;; -*- mode: emacs-lisp; tab-width: 2; evil-shift-width: 2; -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -7,6 +7,9 @@
 You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
+   ;; If non-nil layers with lazy install support are lazy installed.
+   ;; (default t)
+   dotspacemacs-enable-lazy-installation t
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
@@ -18,7 +21,7 @@ values."
      spacemacs-ivy
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
-     eyebrowse
+     ;; eyebrowse not needed in develop 0.106
      (ranger :variables ranger-show-preview t)
      themes-megapack
      theming
@@ -63,6 +66,7 @@ values."
      evil-snipe
      ;; misc
      imenu-list
+     ;; twitter
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -74,6 +78,11 @@ values."
      focus
      keyfreq
      key-chord
+     ;; (taskpaper-mode :location "~/Dropbox/workspace/emacs/taskpaper-mode/")
+     (taskpaper-mode :location (recipe
+                                :fetcher github
+                                :repo "al3xandru/taskpaper-mode"
+                                ))
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -174,7 +183,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
-   dotspacemacs-inactive-transparency 40
+   dotspacemacs-inactive-transparency 75
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "grep" "ack")
@@ -201,11 +210,19 @@ in `dotspacemacs/user-config'."
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
   (setq srecode-map-save-file "~/.emacs.d/.cache/srecode-map.el")
-  ;; line numbers
-  (setq-default dotspacemacs-line-number t
-                dotspacemacs-auto-resume-layouts t)
+  ;; (setq debug-on-error t)
+  ;; frame size
+  (setq default-frame-alist '((width . 105)
+                              (height . 65)))
+  ;; transparency
+  ;; (spacemacs/toggle-transparency)
+  ;; resume layouts?
+  (setq-default dotspacemacs-auto-resume-layouts t)
+
   ;; Backups
   (setq backup-directory-alist `(("." . "~/tmp"))
+        ;; disable lockfiles .#
+        create-lockfiles nil
         ;; uncomment next line for disabling backup files
         ;; make-backup-files nil
         )
@@ -219,21 +236,22 @@ layers configuration."
   (set-language-environment 'utf-8)
   (set-terminal-coding-system 'utf-8)
 
-  ;;; text-mode hooks
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-  (add-hook 'text-mode-hook 'turn-on-flyspell)
-
+  (setq-default scroll-margin 5)
   ;;; indentation
   (setq-default indent-tabs-mode nil
                 tab-width 4
-                evil-shift-width 4)
+                evil-shift-width 4
+                standard-indent 4)
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
   ;; auto-completion key
   (global-set-key (kbd "S-SPC") 'company-complete)
 
-  (setq-default scroll-margin 5)
+  ;;; text-mode hooks
+  (add-hook 'text-mode-hook 'auto-fill-mode)
+  (add-hook 'text-mode-hook 'turn-on-flyspell)
+
   ;;
   ;; evil settings
   ;;
@@ -249,6 +267,13 @@ layers configuration."
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
   (define-key evil-normal-state-map ";" 'evil-ex)
+  (defun alpo/autopairs-shortcut-jump ()
+    (interactive)
+    (backward-up-list 1)
+    (forward-sexp 1))
+  (define-key evil-insert-state-map (kbd "M-9") 'alpo/autopairs-shortcut-jump)
+  (define-key evil-insert-state-map (kbd "M-0") 'evil-lisp-state-sp-forward-slurp-sexp)
+
   ;; avy
   (spacemacs/declare-prefix "s?" "avy-goto")
   ;; (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
@@ -262,8 +287,8 @@ layers configuration."
   ;; frames
   (spacemacs/declare-prefix "F" "frames")
   (spacemacs/set-leader-keys "F b" 'display-buffer-other-frame)
-  (spacemacs/set-leader-keys "F c" 'delete-frame)
-  (spacemacs/set-leader-keys "F C" 'delete-other-frames)
+  (spacemacs/set-leader-keys "F d" 'delete-frame)
+  (spacemacs/set-leader-keys "F D" 'delete-other-frames)
   (spacemacs/set-leader-keys "F f" 'find-file-other-frame)
   (spacemacs/set-leader-keys "F RET" 'make-frame)
   (spacemacs/set-leader-keys "F n" 'make-frame)
@@ -276,43 +301,65 @@ for it."
     (spacemacs//layouts-spacemacs/helm-perspectives-l)
     ;; (spacemacs/layout-switch-by-pos 2)
     ;; (ido-find-file)
-    (helm-find-files nil)
+    ;; (helm-find-files nil)
+    (counsel-find-file nil)
     ;; (dired-other-frame (helm-current-directory))
     )
   (spacemacs/set-leader-keys "F p" 'alpo/new-frame-with-layout-for-project)
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
 
-  ;; helm
-  ;; helm input at the bottom
-  ;; (setq-default helm-echo-input-in-header-line nil)
-
-  ;; powerline
-  (setq powerline-default-separator 'alternate)
+  ;; auto-complete/company
   ;; disable automatic popups from auto-complete & company
   (setq ac-auto-show-menu nil
         company-idle-delay 0.5 ;; nil to disable it completely
         )
+
+  ;; avy
+  (setq-default avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?z ?x ?c ?v ?b ?n ?m)
+                avy-style 'at
+                avy-case-fold-search nil
+                avy-all-windows nil ;; nil, t, 'all-frames
+                avy-background t)
+
+  ;; diff
+  (setq diff-hl-side 'left)
+
+  ;; helm
+  ;; helm input at the bottom
+  ;; (setq-default helm-echo-input-in-header-line nil)
+
+  ;; help
+  ;; learn emacs
+  ;; http://sachachua.com/blog/2016/02/building-today-learned-habit-displaying-documentation-random-emacs-commands/
+  (defun alpo/describe-random-interactive-function ()
+    (interactive)
+    "Show the documentation for a random interactive function.
+Consider only documented, non-obsolete functions."
+    (let (result)
+      (mapatoms
+       (lambda (s)
+         (when (and (commandp s)
+                    (documentation s t)
+                    (null (get s 'byte-obsolete-info)))
+           (setq result (cons s result)))))
+      (describe-function (elt result (random (length result))))))
+  (spacemacs/set-leader-keys "h r" 'alpo/describe-random-interactive-function)
+
   ;; ispell
   (setq-default ispell-program-name "aspell")
-  ;; neotree
-  (setq neo-theme 'ascii
-        neo-show-hidden-files t)
-  ;; Projectile
-  ;; projectile-globally-ignored-files
-  ;; projectile-globally-ignored-directories ".git" ".hg" ".idea" ".svn" "node_modules"
-  ;; projectile-globally-ignored-file-suffixes
-  ;; projectile-globally-ignored-modes
-  (with-eval-after-load 'projectile
-    (setq projectile-globally-ignored-directories
-          (append projectile-globally-ignored-directories '(".git"
-                                                            ".hg"
-                                                            ".idea"
-                                                            ".svn"
-                                                            "node_modules"))
-          projectile-globally-ignored-files
-          (append projectile-globally-ignored-files '(".DS_Store")))
-    (setq-default projectile-tags-file-name "tags"))
+
+  ;; ivy
+  (setq ivy-wrap t
+        ivy-extra-directories '())
+
+  ;; keyfreq
+  ;; http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  (setq keyfreq-excluded-commands
+        '(self-insert-command))
+
   ;; Markdown
   ;; (defun alpo/markdown-hook ()
   ;;   (define-key evil-insert-state-map (kbd "C-c C-d") 'ispell-complete-word))
@@ -369,30 +416,66 @@ for it."
         (message "alpo/markdown-in-edit-mode(2): %d (disabled)" alpo/markdown-in-edit-mode)
         (kill-local-variable 'alpo/markdown-in-edit-mode)
         (kill-local-variable 'alpo/markdown-prev-theme))
-      )
-    ) 
-  ;; markdow
-  (setq-default markdown-command "~/bin/emarkdown"
+      ))
+
+  (setq-default markdown-asymmetric-header t
+                markdown-command "~/bin/emarkdown"
                 markdown-open-command "/Applications/Marked 2.app/Contents/MacOS/Marked 2"
-                markdown-italic-underscore t)
+                markdown-italic-underscore t
+                markdown-css-paths '("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"))
   (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
   (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode)
   ;; (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "SPC" 'ispell-complete-word)
 
-  ;; avy
-  (setq-default avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?z ?x ?c ?v ?b ?n ?m)
-                avy-style 'at
-                avy-case-fold-search nil
-                avy-all-windows nil ;; nil, t, 'all-frames
-                avy-background t)
-  ;; keyfreq
-  ;; http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html
-  (keyfreq-mode 1)
-  (keyfreq-autosave-mode 1)
-  (setq keyfreq-excluded-commands
-        '(self-insert-command))
+  ;; neotree
+  (setq neo-theme 'ascii
+        neo-show-hidden-files t)
 
-  ;; org
+  ;; powerline
+  (setq powerline-default-separator 'alternate)
+
+  ;; Projectile
+  ;; projectile-globally-ignored-files
+  ;; projectile-globally-ignored-directories ".git" ".hg" ".idea" ".svn" "node_modules"
+  ;; projectile-globally-ignored-file-suffixes
+  ;; projectile-globally-ignored-modes
+  (with-eval-after-load 'projectile
+    (setq projectile-globally-ignored-directories
+          (append projectile-globally-ignored-directories '(".git"
+                                                            ".hg"
+                                                            ".idea"
+                                                            ".svn"
+                                                            "node_modules"))
+          projectile-globally-ignored-files
+          (append projectile-globally-ignored-files '(".DS_Store")))
+    (setq-default projectile-tags-file-name "tags"))
+
+  ;; Python
+  ;;; Anaconda
+  (setq python-shell-interpreter "python")
+
+  ;; ranger
+  (setq-default ranger-override-dired t
+                ranger-show-dotfiles t
+                ranger-cleanup-on-disable t)
+
+  ;; taskpaper
+  (setq taskpaper-append-date-to-done t)
+  (with-eval-after-load 'taskpaper-mode
+    (yas-minor-mode-on)
+    (font-lock-add-keywords 'taskpaper-mode
+                            '(
+                              ("@i\(must\)" . font-lock-string-face)
+                              ("@i(want)" . font-lock-type-face)
+                              ("@goal" . font-lock-string-face)
+                              ("@important" . font-lock-keyword-face))))
+
+  ;; twitter
+  (setq-default twittering-icon-mode nil
+                twittering-reverse-mode t)
+  ;;
+  ;; ORG
+  ;;
   (with-eval-after-load 'org
     (setq org-directory "~/Dropbox/Dox/active/"
           org-default-notes-file "04-notes.org"
@@ -454,36 +537,15 @@ for it."
   (let ((escpath (replace-regexp-in-string " " "%20" path)))
     (message "Open 2Do link: twodo:%s" escpath)
     (shell-command (concat "open \"twodo:" escpath "\""))))
-
-  ;; ranger
-  (setq-default ranger-override-dired t
-                ranger-show-dotfiles t
-                ranger-cleanup-on-disable t)
-
-  ;; frame size
-  (setq default-frame-alist '((width . 105)
-                              (height . 65)))
-
-  ;; learn emacs
-  ;; http://sachachua.com/blog/2016/02/building-today-learned-habit-displaying-documentation-random-emacs-commands/
-  (defun alpo/describe-random-interactive-function ()
-    (interactive)
-    "Show the documentation for a random interactive function.
-Consider only documented, non-obsolete functions."
-    (let (result)
-      (mapatoms
-       (lambda (s)
-         (when (and (commandp s)
-                    (documentation s t)
-                    (null (get s 'byte-obsolete-info)))
-           (setq result (cons s result)))))
-      (describe-function (elt result (random (length result))))))
-  (spacemacs/set-leader-keys "h r" 'alpo/describe-random-interactive-function)
-
-  (spacemacs/toggle-transparency)
-  ;; Load local customizations (local to the computer)
-  ;; (when (file-exists-p "~/local.el")
-  ;;   (load "~/local.el")))
+;; Load local customizations (local to the computer)
+;; (when (file-exists-p "~/local.el")
+;;   (load "~/local.el")))
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values (quote ((evil-shift-width . 2)))))
