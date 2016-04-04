@@ -23,7 +23,7 @@ alias vs='mvim -S'
 alias n='nvim'
 alias mmc='mmdc'
 #alias e="$EDITOR"
-alias e='$HOME/bin/emacscltsrv'
+alias em='$HOME/bin/emacscltsrv'
 alias x='$HOME/bin/emacscltsrv'
 # IP addresses
 alias localip="ipconfig getifaddr en1"
