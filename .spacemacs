@@ -7,12 +7,6 @@
 You should not put any user code in this function besides modifying the variable
 values."
   (setq-default
-   ;; If non-nil layers with lazy install support are lazy installed.
-   ;; (default t)
-   dotspacemacs-enable-lazy-installation t
-   ;; List of additional paths where to look for configuration layers.
-   ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
@@ -78,11 +72,11 @@ values."
      focus
      keyfreq
      key-chord
-     ;; (taskpaper-mode :location "~/Dropbox/workspace/emacs/taskpaper-mode/")
-     (taskpaper-mode :location (recipe
-                                :fetcher github
-                                :repo "al3xandru/taskpaper-mode"
-                                ))
+     (taskpaper-mode :location "~/Dropbox/workspace/emacs/taskpaper-mode/")
+     ;; (taskpaper-mode :location (recipe
+     ;;                            :fetcher github
+     ;;                            :repo "al3xandru/taskpaper-mode"
+     ;;                            ))
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -100,9 +94,35 @@ values."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
+   ;; possible. Set it to nil if you have no way to use HTTPS in your
+   ;; environment, otherwise it is strongly recommended to let it set to t.
+   ;; This variable has no effect if Emacs is launched with the parameter
+   ;; `--insecure' which forces the value of this variable to nil.
+   ;; (default t)
+   dotspacemacs-elpa-https t
+   ;; Maximum allowed time in seconds to contact an ELPA repository.
+   dotspacemacs-elpa-timeout 5
+   ;; One of `vim', `emacs' or `hybrid'.
+   ;; `hybrid' is like `vim' except that `insert state' is replaced by the
+   ;; `hybrid state' with `emacs' key bindings. The value can also be a list
+   ;; with `:variables' keyword (similar to layers). Check the editing styles
+   ;; section of the documentation for details on available variables.
+   ;; (default 'vim)
+   dotspacemacs-editing-style 'vim
+   ;; Specify the startup banner. Default value is `official', it displays
+   ;; the official spacemacs logo. An integer value is the index of text
+   ;; banner, `random' chooses a random text banner in `core/banners'
+   ;; directory. A string value must be a path to an image format supported
+   ;; by your Emacs build.
+   ;; If the value is nil then no banner is displayed. (default 'official)
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
-   ;; Possible values are: `recents' `bookmarks' `projects'."
+   ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
+   ;; (default '(recents projects))
    dotspacemacs-startup-lists '(recents projects bookmarks)
+   ;; Number of recent files to show in the startup buffer. Ignored if
+   ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 10
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
@@ -124,6 +144,8 @@ values."
                          monokai
                          solarized-light
                          solarized-dark)
+   ;; If non nil the cursor color matches the state color in GUI Emacs.
+   dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Operator Mono" ;; "PragmataPro Mono"h
@@ -135,47 +157,6 @@ values."
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
    dotspacemacs-loading-progress-bar nil
-   dotspacemacs-line-numbers t
-   ;; If non nil unicode symbols are displayed in the mode line.
-   dotspacemacs-mode-line-unicode-symbols nil
-   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
-   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
-   dotspacemacs-smart-closing-parenthesis t
-
-   ;; If non nil ELPA repositories are contacted via HTTPS whenever it's
-   ;; possible. Set it to nil if you have no way to use HTTPS in your
-   ;; environment, otherwise it is strongly recommended to let it set to t.
-   ;; This variable has no effect if Emacs is launched with the parameter
-   ;; `--insecure' which forces the value of this variable to nil.
-   ;; (default t)
-   dotspacemacs-elpa-https t
-   ;; Maximum allowed time in seconds to contact an ELPA repository.
-   dotspacemacs-elpa-timeout 5
-   ;; One of `vim', `emacs' or `hybrid'.
-   ;; `hybrid' is like `vim' except that `insert state' is replaced by the
-   ;; `hybrid state' with `emacs' key bindings. The value can also be a list
-   ;; with `:variables' keyword (similar to layers). Check the editing styles
-   ;; section of the documentation for details on available variables.
-   ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
-   ;; Specify the startup banner. Default value is `official', it displays
-   ;; the official spacemacs logo. An integer value is the index of text
-   ;; banner, `random' chooses a random text banner in `core/banners'
-   ;; directory. A string value must be a path to a .PNG file.
-   ;; If the value is nil then no banner is displayed.
-   ;; dotspacemacs-startup-banner 'official
-   dotspacemacs-startup-banner nil
-   ;; t if you always want to see the changelog at startup
-   dotspacemacs-always-show-changelog t
-   ;; If non nil the cursor color matches the state color.
-   dotspacemacs-colorize-cursor-according-to-state t
-   ;; If non nil the paste micro-state is enabled. While enabled pressing `p`
-   ;; several times cycle between the kill ring content.
-   dotspacemacs-enable-paste-micro-state t
-   ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
-   ;; the commands bound to the current keystrokes.
-   dotspacemacs-guide-key-delay 0.4
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -184,9 +165,25 @@ values."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency 75
+   ;; If non nil unicode symbols are displayed in the mode line.
+   dotspacemacs-mode-line-unicode-symbols nil
+   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
+   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; (default nil)
+   dotspacemacs-line-numbers t
+   ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
+   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
+   dotspacemacs-smart-closing-parenthesis t
+   ;; If non nil the paste micro-state is enabled. While enabled pressing `p`
+   ;; several times cycle between the kill ring content.
+   dotspacemacs-enable-paste-micro-state t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "grep" "ack")
+   ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
+   ;; the commands bound to the current keystrokes.
+   dotspacemacs-which-key-delay 0.4
    ))
 
 
@@ -460,9 +457,10 @@ Consider only documented, non-obsolete functions."
                 ranger-cleanup-on-disable t)
 
   ;; taskpaper
+  (require 'taskpaper-mode)
   (setq taskpaper-append-date-to-done t)
   (with-eval-after-load 'taskpaper-mode
-    (yas-minor-mode-on)
+    ;; (yas-minor-mode-on)
     (font-lock-add-keywords 'taskpaper-mode
                             '(
                               ("@i\(must\)" . font-lock-string-face)
@@ -482,10 +480,11 @@ Consider only documented, non-obsolete functions."
           org-agenda-files (list org-default-notes-file))
 
     (setq org-log-done t
-          org-todo-keywords '((sequence "MUST(m)" "WANT(w)" "WISH(i)" "TODO(t)" "WIPR(p)" "WAIT(s)" "|" "DONE(d)" "FILED(f)" "SKIP(x)")))
+          org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")
+                              (sequence "WIPR(p)" "WAIT(s@/!)")))
 
     (setq org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
-                                   ("TODO" . (:foreground "#fe2500" :weight bold))
+                                   ("TODO" . (:foreground "#cd4f39"))
                                    ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
                                    ("WISH" . (:foreground "#cd4f39" :slant italic))
                                    ("WIPR" . (:foreground "#6495ed" :weight bold))
@@ -496,6 +495,8 @@ Consider only documented, non-obsolete functions."
      (setq org-capture-templates
         '(("l" "Log (+ [H:M])" item (file+datetree org-default-notes-file)
            "+ [%<%H:%M>] %?")
+          ("h" "Heading [H:M]" entry (file+datetree org-default-notes-file)
+           "* %? [%<%H:%M>]")
           ("t" "Todo" entry (file+datetree org-default-notes-file)
            "* TODO %?\n  %U\n  %i")
           ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
