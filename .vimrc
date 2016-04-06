@@ -564,6 +564,10 @@ let g:syntastic_auto_jump = 0
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{1
 "
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
+Plugin 'ludovicchabant/vim-gutentags'
+let g:gutentags_tagfile = '.tags'
+let g:gutentags_generate_on_missing = 1
+
 "Plugin 'AutoTag'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
