@@ -568,9 +568,11 @@ Plugin 'ludovicchabant/vim-gutentags'
 let g:gutentags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 1
 
-"Plugin 'AutoTag'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-easytags'
+Plugin 'AndrewRadev/tagfinder.vim'
+
+" Plugin 'AutoTag'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-easytags'
 let g:easytags_cmd = '/usr/local/bin/ctags'
 let g:easytags_async = 1
 let g:easytags_dynamic_files = 1
