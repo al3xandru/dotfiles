@@ -1,4 +1,5 @@
-;; -*- mode: emacs-lisp; tab-width: 2; evil-shift-width: 2; -*-
+;; -*- mode: emacs-lisp; tab-width: 2; -*-
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -16,8 +17,8 @@ values."
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
      ;; eyebrowse not needed in develop 0.106
-     (ranger :variables ranger-show-preview t)
-     themes-megapack
+     ;; (ranger :variables ranger-show-preview t)
+     ;; themes-megapack
      theming
      ;; docs
      dash
@@ -165,8 +166,12 @@ values."
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'.
    dotspacemacs-inactive-transparency 75
-   ;; If non nil unicode symbols are displayed in the mode line.
+   ;; If non nil unicode symbols are displayed in the mode line. (default t)
    dotspacemacs-mode-line-unicode-symbols nil
+   ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
+   ;; scrolling overrides the default behavior of Emacs which recenters point
+   ;; when it reaches the top or bottom of the screen. (default t)
+   dotspacemacs-smooth-scrolling t
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
