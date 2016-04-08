@@ -436,7 +436,9 @@ filetype off " required!
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-
+" Alternative plugin manager:
+" - junegunn/vim-plug 
+" - Shougo/neobundle.vim
 
 " Color schemes {{{1
 Plugin 'Colour-Sampler-Pack'
@@ -497,7 +499,6 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'glts/vim-textobj-comment'
 " }}}
 
-
 "
 " Important {{{1
 "
@@ -542,9 +543,10 @@ Plugin 'scrooloose/nerdtree'
 let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
     \ '\.egg$', '\.idea$',
     \ '\.bzr', '\.git', '\.hg', '\.svn']
-let NERDTreeQuitOnOpen=1
 let NERDChristmasTree=1
 let NERDTreeHighlightCursorline=1
+let NERDTreeQuitOnOpen=1
+let NERDTreeShowHidden=1
 nnoremap <unique> <leader>t :NERDTreeToggle<CR>
 nnoremap <leader>T :NERDTreeFind<CR>
 nnoremap <silent> <F8> :NERDTreeToggle<CR>
@@ -569,6 +571,11 @@ let g:gutentags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 1
 
 Plugin 'AndrewRadev/tagfinder.vim'
+augroup TagFinder
+  autocmd!
+  autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
+  autocmd FileType * DefineTagFinder Method f,m,method,F,singleton\ method
+augroup END
 
 " Plugin 'AutoTag'
 " Plugin 'xolox/vim-misc'
@@ -579,7 +586,9 @@ let g:easytags_dynamic_files = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_include_members = 1
 let g:easytags_updatetime_min = 60000
-let g:easytags_syntax_keyword = 'auto'  " 'always'  'auto'
+let g:easytags_syntax_keyword = 'always'  " 'always'  'auto'
+" if using Universal ctags
+let g:easytags_suppress_ctags_warning = 1
 "let g:easytags_languages = {
             "\ 'language': {
             "\   'cmd': g:easytags_cmd,
@@ -799,6 +808,11 @@ Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
+Plugin 'jceb/vim-orgmode'
+let g:org_todo_keywords = [
+    \ [ 'TODO(t)', 'WANT(w)', 'MUST(m)', '|', 'DONE(d)' ],
+    \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
+\ ]
 "
 " Disabled! Scratch files, notes, outliner etc. {{{1
 " :scratch :Sscratch
@@ -941,10 +955,12 @@ Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
-" https://github.com/mhinz/vim-signify
+" Plugin 'mhinz/vim-signify'
 
 
 Plugin 'tpope/vim-fugitive'
+" Magit for Vim
+" Plugin 'jreybert/vimagit'
 "}}}
 "}}}
 
@@ -954,6 +970,32 @@ Plugin 'maxbrunsfeld/vim-yankstack'
 let g:yankstack_map_keys = 0
 nmap π <Plug>yankstack_substitute_older_paste " Alt+p
 nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
+
+Plugin 'mhinz/vim-startify'
+let g:startify_bookmarks = [
+    \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
+    \ '~/Dropbox/Dox/active/02-thoughts.md',
+    \ '~/Dropbox/Dox/active/03-email_drafs.md',
+    \ '~/Dropbox/Dox/active/04-notes.org',
+    \ '~/Dropbox/Dox/active/10-weekend.taskpaper'
+    \]
+
+Plugin 'terryma/vim-expand-region'
+let g:expand_region_text_objects = {
+    \ 'iw' :0,
+    \ 'i"' :0,
+    \ 'i''' :0,
+    \ 'ia' :0,
+    \ 'i]' :1,
+    \ 'ib' :1,
+    \ 'iB' :1,
+    \ 'is' :0,
+    \ 'il' :0,
+    \ 'ii' :0,
+    \ 'if' :0,
+    \ 'ip' :0,
+    \ 'ie' :0,
+    \}
 "}}}
 
 call vundle#end()
