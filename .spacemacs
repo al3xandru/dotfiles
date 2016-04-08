@@ -485,8 +485,8 @@ Consider only documented, non-obsolete functions."
           org-agenda-files (list org-default-notes-file))
 
     (setq org-log-done t
-          org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")
-                              (sequence "WIPR(p)" "WAIT(s@/!)")))
+          org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
+                              (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
 
     (setq org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
                                    ("TODO" . (:foreground "#cd4f39"))
