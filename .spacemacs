@@ -454,7 +454,12 @@ Consider only documented, non-obsolete functions."
 
   ;; Python
   ;;; Anaconda
-  (setq python-shell-interpreter "python")
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq python-shell-interpreter "python")
+              ;; (setq anaconda-mode-server-script "../anaconda_mode.py")
+              ))
+  (setq-default python-shell-interpreter "python")
 
   ;; ranger
   (setq-default ranger-override-dired t
@@ -549,9 +554,3 @@ Consider only documented, non-obsolete functions."
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(safe-local-variable-values (quote ((evil-shift-width . 2)))))
