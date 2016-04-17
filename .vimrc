@@ -808,11 +808,13 @@ Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
+" Org mode 
 Plugin 'jceb/vim-orgmode'
 let g:org_todo_keywords = [
     \ [ 'TODO(t)', 'WANT(w)', 'MUST(m)', '|', 'DONE(d)' ],
     \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
 \ ]
+Plugin 'tpope/vim-speeddating'
 "
 " Disabled! Scratch files, notes, outliner etc. {{{1
 " :scratch :Sscratch
@@ -966,10 +968,10 @@ Plugin 'tpope/vim-fugitive'
 
 "
 " Experimental {{{1
-Plugin 'maxbrunsfeld/vim-yankstack'
-let g:yankstack_map_keys = 0
-nmap π <Plug>yankstack_substitute_older_paste " Alt+p
-nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
+" Plugin 'maxbrunsfeld/vim-yankstack'
+" let g:yankstack_map_keys = 0
+" nmap π <Plug>yankstack_substitute_older_paste " Alt+p
+" nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
 
 Plugin 'mhinz/vim-startify'
 let g:startify_bookmarks = [
