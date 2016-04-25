@@ -1,5 +1,4 @@
 ;; -*- mode: emacs-lisp; tab-width: 2; -*-
-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -80,7 +79,19 @@ values."
      ;;                            ))
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages
+   '(
+     srefactor
+     space-doc ;; #5837
+     ;; java
+     emacs-eclim
+     ;; javascript
+     coffee-mode
+     company-tern
+     tern
+     ;; php
+     drupal-mode
+     )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -154,6 +165,19 @@ values."
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
+   ;; These variables control whether separate commands are bound in the GUI to
+   ;; the key pairs C-i, TAB and C-m, RET.
+   ;; Setting it to a non-nil value, allows for separate commands under <C-i>
+   ;; and TAB or <C-m> and RET.
+   ;; In the terminal, these pairs are generally indistinguishable, so this only
+   ;; works in the GUI. (default nil)
+   dotspacemacs-distinguish-gui-tab t
+   ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
+   ;; several times cycle between the kill ring content. (default nil)
+   dotspacemacs-enable-paste-transient-state t
+   ;; Which-key delay in seconds. The which-key buffer is the popup listing
+   ;; the commands bound to the current keystroke sequence. (default 0.4)
+   dotspacemacs-which-key-delay 0.4
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
@@ -180,15 +204,9 @@ values."
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis t
-   ;; If non nil the paste micro-state is enabled. While enabled pressing `p`
-   ;; several times cycle between the kill ring content.
-   dotspacemacs-enable-paste-micro-state t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "grep" "ack")
-   ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
-   ;; the commands bound to the current keystrokes.
-   dotspacemacs-which-key-delay 0.4
    ))
 
 
@@ -211,7 +229,10 @@ in `dotspacemacs/user-config'."
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+  ;; #5556
   (setq srecode-map-save-file "~/.emacs.d/.cache/srecode-map.el")
+  ;; #2974/#5817
+  (evil-define-key 'insert company-quickhelp-mode-map (kbd "C-k") 'company-select-previous)
   ;; (setq debug-on-error t)
   ;; frame size
   (setq default-frame-alist '((width . 105)
@@ -411,6 +432,8 @@ Consider only documented, non-obsolete functions."
         ;; (set-window-margins (selected-window) 0 0)
         ;; (spacemacs/toggle-line-numbers-on)
         (delete-frame)
+        (spacemacs/toggle-line-numbers-on)
+        (setq linum-format "%4d")
         ;; (helm-themes--load-theme markdown-prev-theme)
         (mapc 'disable-theme custom-enabled-themes)
         (load-theme alpo/markdown-prev-theme t)
