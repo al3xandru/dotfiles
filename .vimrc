@@ -567,8 +567,10 @@ let g:syntastic_auto_jump = 0
 "
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
 Plugin 'ludovicchabant/vim-gutentags'
+let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
 let g:gutentags_tagfile = '.tags'
-let g:gutentags_generate_on_missing = 1
+let g:gutentags_generate_on_missing = 0
+let g:gutentags_generate_on_new = 0
 
 Plugin 'AndrewRadev/tagfinder.vim'
 augroup TagFinder
@@ -693,7 +695,8 @@ Plugin 'mattn/emmet-vim'
 
 
 " Java completion
-Plugin 'VictorDenisov/javacomplete'
+" Plugin 'VictorDenisov/javacomplete'
+Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Markdown {{{2
@@ -717,7 +720,6 @@ endfunction
 "}}}
 " Markdown editing {{{3
 Plugin 'junegunn/goyo.vim'
-
 
 Plugin 'reedes/vim-colors-pencil'
 let g:pencil_higher_contrast_ui = 1
