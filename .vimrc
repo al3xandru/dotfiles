@@ -326,6 +326,13 @@ nnoremap <C-S-tab> :tabprevious<CR>
 nnoremap <C-tab> :tabnext<CR>
 inoremap <C-S-tab> <ESC>:tabprevious<CR>
 inoremap <C-tab> <ESC>:tabnext
+nnoremap <leader>gt :<C-u>tabs<CR>
+" open tag in tab
+nnoremap <C-\> <C-w><C-]><C-w>T
+inoremap <C-\> <C-w><C-]><C-w>T
+" Alt+] on OS X
+nnoremap ‘ <C-w><C-]><C-w>T
+inoremap ‘ <C-w><C-]><C-w>T
 " Window switch
 map <C-h> <C-w>h
 map <C-j> <C-w>j
@@ -336,12 +343,6 @@ nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
 nmap <silent><C-w>+ :resize +10<CR>
-" open tag in tab
-nnoremap <C-\> <C-w><C-]><C-w>T
-inoremap <C-\> <C-w><C-]><C-w>T
-" Alt+] on OS X
-nnoremap ‘ <C-w><C-]><C-w>T
-inoremap ‘ <C-w><C-]><C-w>T
 
 " selections
 " reselect pasted text
@@ -362,9 +363,8 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
 " bind f and F to perform searches for the word under cursor
 " grep results go into quicklist: copen/cclose
-nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR><CR><Bar>:copen<CR>
-nnoremap /fG :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
-nnoremap /fc :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
@@ -467,35 +467,23 @@ Plugin 'zeis/vim-kolor'
 
 
 " Extra text objects {{{1
-" Line: l
 Plugin 'kana/vim-textobj-user'
+" Line object: il al
 Plugin 'kana/vim-textobj-line'
-" CamelCase 
-"Plugin 'camelcasemotion'
-Plugin 'bkad/CamelCaseMotion' 
-" Alt - w/b/3/E
-map ∑ <Plug>CamelCaseMotion_w
-map ∫ <Plug>CamelCaseMotion_b
-map £ <Plug>CamelCaseMotion_e
-map ´ <Plug>CamelCaseMotion_ge
-omap <silent> i∑ <Plug>CamelCaseMotion_iw
-xmap <silent> i∑ <Plug>CamelCaseMotion_iw
-omap <silent> i∫ <Plug>CamelCaseMotion_ib
-xmap <silent> i∫ <Plug>CamelCaseMotion_ib
-omap <silent> i£ <Plug>CamelCaseMotion_ie
-xmap <silent> i£ <Plug>CamelCaseMotion_ie
-"Function arguments: a
-" Plugin 'argtextobj.vim' 
+" Function argument object: i, a,
+" Shift: <, >,
+" Jump: [, ],
 Plugin 'PeterRincker/vim-argumentative'
-" Indent: i 
+" Plugin 'argtextobj.vim' 
+" Indent object: ii ai aI iI 
 Plugin 'michaeljsmith/vim-indent-object' 
-" Function: f
+" Function object: if af iF aF
 Plugin 'kana/vim-textobj-function'
 Plugin 'kamichidu/vim-textobj-function-go'
 Plugin 'thinca/vim-textobj-function-javascript'
 Plugin 'thinca/vim-textobj-function-perl'
 Plugin 'nelstrom/vim-textobj-rubyblock'
-" Comments: c
+" Comment object: ic ac aC
 Plugin 'glts/vim-textobj-comment'
 " }}}
 
@@ -513,21 +501,23 @@ let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 let g:ctrlp_use_caching = 2000
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
-nnoremap <unique> <leader>B :CtrlPBuffer<CR>
+nnoremap <unique> <leader>b :CtrlPBuffer<CR>
 
-Plugin 'jeetsukumaran/vim-buffergator'
-let g:buffergator_viewport_split_policy = "T"
-let g:buffergator_autodismiss_on_select = 1
-let g:buffergator_suppress_keymaps = 1
-nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
-nnoremap <leader>b :<C-u>BuffergatorToggle<CR>
+" Plugin 'jeetsukumaran/vim-buffergator'
+" let g:buffergator_viewport_split_policy = "T"
+" let g:buffergator_autodismiss_on_select = 1
+" let g:buffergator_suppress_keymaps = 1
+" nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
+" nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
 " Replaced by CtrlPBuffer 
 " Plugin 'jlanzarotta/bufexplorer'
 
 
 Plugin 'majutsushi/tagbar'
+let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 let g:tagbar_autoclose = 1
-let g:tagbar_showlinenumbers = 1
+let g:tagbar_show_linenumbers = 0
+let g:tagbar_hide_nonpublic = 0
 nnoremap <silent> <leader>o :TagbarToggle<CR>
 nnoremap <silent> <F9> :TagbarToggle<CR>
 
@@ -544,14 +534,15 @@ let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$',
     \ '\.egg$', '\.idea$',
     \ '\.bzr', '\.git', '\.hg', '\.svn']
 let NERDChristmasTree=1
+let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
 let NERDTreeHighlightCursorline=1
 let NERDTreeQuitOnOpen=1
 let NERDTreeShowHidden=1
+let NERDTreeWinPos="left"
 nnoremap <unique> <leader>t :NERDTreeToggle<CR>
 nnoremap <leader>T :NERDTreeFind<CR>
-nnoremap <silent> <F8> :NERDTreeToggle<CR>
-nnoremap <silent> <S-F8> :NERDTreeFind<CR>
-
+" nnoremap <silent> <F8> :NERDTreeToggle<CR>
+" nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 
 Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
@@ -572,12 +563,12 @@ let g:gutentags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
 
-Plugin 'AndrewRadev/tagfinder.vim'
-augroup TagFinder
-  autocmd!
-  autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
-  autocmd FileType * DefineTagFinder Method f,m,method,F,singleton\ method
-augroup END
+" Plugin 'AndrewRadev/tagfinder.vim'
+" augroup TagFinder
+"   autocmd!
+"   autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
+"   autocmd FileType * DefineTagFinder Method f,m,method,F,singleton\ method
+" augroup END
 
 " Plugin 'AutoTag'
 " Plugin 'xolox/vim-misc'
@@ -884,6 +875,7 @@ Plugin 'HTML-AutoCloseTag'
 
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+let g:airline_theme='kolor' " papercolor light kalisi molokai bubblegum solarized durant luna
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -905,6 +897,20 @@ let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 
 
+" CamelCase 
+" Plugin 'camelcasemotion'
+Plugin 'bkad/CamelCaseMotion' 
+" Alt - w/b/3/E
+map ∑ <Plug>CamelCaseMotion_w
+map ∫ <Plug>CamelCaseMotion_b
+map £ <Plug>CamelCaseMotion_e
+map ´ <Plug>CamelCaseMotion_ge
+omap <silent> i∑ <Plug>CamelCaseMotion_iw
+xmap <silent> i∑ <Plug>CamelCaseMotion_iw
+omap <silent> i∫ <Plug>CamelCaseMotion_ib
+xmap <silent> i∫ <Plug>CamelCaseMotion_ib
+omap <silent> i£ <Plug>CamelCaseMotion_ie
+xmap <silent> i£ <Plug>CamelCaseMotion_ie
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
@@ -915,6 +921,7 @@ let g:EasyMotion_move_highlight=1
 let g:EasyMotion_landing_highlight=0
 let g:EasyMotion_add_search_history=0
 "map ' <Plug>(easymotion-prefix)
+nmap <leader>s <Plug>(easymotion-sn)
 nmap <leader><leader>s <Plug>(easymotion-sn)
 vmap <leader><leader>s <Plug>(easymotion-sn)
 nmap <leader><leader>w <Plug>(easymotion-bd-w)
@@ -976,13 +983,26 @@ Plugin 'tpope/vim-fugitive'
 " nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
 
 Plugin 'mhinz/vim-startify'
+let g:startify_list_order = [
+    \ ['Bookmarks:'],
+    \ 'bookmarks', 
+    \ ['Most recent in current directory:'],
+    \ 'dir', 
+    \ ['Recent files:'], 
+    \ 'files',
+    \ ['Sessions:'], 
+    \ 'sessions',
+    \ ]
 let g:startify_bookmarks = [
+    \ '~/Dropbox/Dox/active/',
     \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/active/02-thoughts.md',
     \ '~/Dropbox/Dox/active/03-email_drafs.md',
     \ '~/Dropbox/Dox/active/04-notes.org',
     \ '~/Dropbox/Dox/active/10-weekend.taskpaper'
     \]
+let g:startify_session_autoload = 1
+" let g:startify_change_to_dir = 1
 
 Plugin 'terryma/vim-expand-region'
 let g:expand_region_text_objects = {
