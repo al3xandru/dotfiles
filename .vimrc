@@ -172,6 +172,10 @@ if has("gui_running")
         set gfn=Operator_Mono:h12
         " set gfn=ProFontX:h12
         " set gfn=Source_Code_Pro:h11
+        " add "New Window" menu to MacVim (stupid but needed)
+        " aun File.New\ Window
+        an <silent> 10.290 File.New\ Window :silent !mvim<CR>
+        macm File.New\ Window key=<D-n>
     elseif has("gui_gtk2")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
@@ -248,10 +252,6 @@ set timeoutlen=750
 cnoreabbrev W w
 cnoreabbrev Q q
 
-" stupid but needed
-" aun File.New\ Window
-an <silent> 10.290 File.New\ Window :silent !mvim<CR>
-macm File.New\ Window key=<D-n>
 
 " Change mapleader from <Leader> = \
 " let mapleader=","
