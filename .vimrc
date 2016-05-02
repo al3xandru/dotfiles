@@ -103,6 +103,8 @@ function! <SID>ChooseColorscheme(args)
         let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
         let cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
         echo 'List of all installed colorschemes:'
+        echo join(cslist, "\n")
+        return
     elseif a:args == 'light'
         let cslist = split(s:cs_light)
         echo 'Light colorschemes:'
@@ -114,6 +116,8 @@ function! <SID>ChooseColorscheme(args)
         echo 'Dark colorschemes:'
     endif
     echo join(cslist, "\n")
+    echo "\n"
+    execute "colorscheme " . input("Choice:", "", "color")
 endfunction
 command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
 
@@ -244,6 +248,11 @@ set timeoutlen=750
 cnoreabbrev W w
 cnoreabbrev Q q
 
+" stupid but needed
+" aun File.New\ Window
+an <silent> 10.290 File.New\ Window :silent !mvim<CR>
+macm File.New\ Window key=<D-n>
+
 " Change mapleader from <Leader> = \
 " let mapleader=","
 let mapleader="\<space>"
@@ -322,11 +331,11 @@ nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 " Tab switch
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab> :tabnext<CR>
-inoremap <C-S-tab> <ESC>:tabprevious<CR>
-inoremap <C-tab> <ESC>:tabnext
-nnoremap <leader>gt :<C-u>tabs<CR>
+nnoremap <silent><C-S-tab> :silent tabprevious<CR>
+nnoremap <silent><C-tab> :silent tabnext<CR>
+inoremap <silent><C-S-tab> <ESC>:tabprevious<CR>
+inoremap <silent><C-tab> <ESC>:tabnext<CR>
+nnoremap <silent><leader>gt :<C-u>tabs<CR>:tabn<space>
 " open tag in tab
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
@@ -334,10 +343,10 @@ inoremap <C-\> <C-w><C-]><C-w>T
 nnoremap ‘ <C-w><C-]><C-w>T
 inoremap ‘ <C-w><C-]><C-w>T
 " Window switch
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+" map <C-h> <C-w>h
+" map <C-j> <C-w>j
+" map <C-k> <C-w>k
+" map <C-l> <C-w>l
 " window vertical resize
 nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
@@ -375,7 +384,11 @@ nnoremap /fA :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<C
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
 " bind r to replace word under cursor
-nnoremap <leader>r :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+nnoremap c* *Ncgn
+nnoremap c# #NcgN
+nnoremap cg* g*Ncgn
+nnoremap cg# g#NcgN
 " display :Errors
 "nnoremap <leader>l :Errors<CR>
 
@@ -502,6 +515,9 @@ let g:ctrlp_use_caching = 2000
 nnoremap <unique> <leader>p :CtrlP<CR>
 nnoremap <unique> <leader>P :CtrlPBufTag<CR>
 nnoremap <unique> <leader>b :CtrlPBuffer<CR>
+" https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
+" nnoremap gb :ls<CR>:buffer<Space>
+" nnoremap gB :ls<CR>:sbuffer<Space>
 
 " Plugin 'jeetsukumaran/vim-buffergator'
 " let g:buffergator_viewport_split_policy = "T"
@@ -1002,6 +1018,10 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/active/10-weekend.taskpaper'
     \]
 let g:startify_session_autoload = 1
+let g:startify_skiplist = [
+    \ '.git/.*',
+    \ '.hg/.*',
+    \ ]
 " let g:startify_change_to_dir = 1
 
 Plugin 'terryma/vim-expand-region'
