@@ -12,7 +12,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      ;; Generic
-     spacemacs-ivy
+     ivy
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
      ;; eyebrowse not needed in develop 0.106
@@ -177,7 +177,7 @@ values."
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
-   dotspacemacs-which-key-delay 0.4
+   dotspacemacs-which-key-delay 0.6
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
