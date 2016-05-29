@@ -117,7 +117,7 @@ function! <SID>ChooseColorscheme(args)
     endif
     echo join(cslist, "\n")
     echo "\n"
-    execute "colorscheme " . input("Choice:", "", "color")
+    execute "colorscheme " . input("Choice: ", "", "color")
 endfunction
 command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
 
@@ -543,20 +543,31 @@ Plugin 'tpope/vim-commentary'
 " Plugin 'scrooloose/nerdcommenter'
 " Plugin 'tomtom/tcomment_vim'
 
-
-Plugin 'scrooloose/nerdtree'
-" let NERDTreeWinPos='right'
-let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
-    \ '\.egg$', '\.idea$',
-    \ '\.bzr', '\.git', '\.hg', '\.svn']
-let NERDChristmasTree=1
-let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
-let NERDTreeHighlightCursorline=1
-let NERDTreeQuitOnOpen=1
-let NERDTreeShowHidden=1
-let NERDTreeWinPos="left"
-nnoremap <unique> <leader>t :NERDTreeToggle<CR>
-nnoremap <leader>T :NERDTreeFind<CR>
+" Netrw
+nnoremap <unique><leader>t :Lex<CR>
+let g:netrw_hide=0
+" let g:netrw_home='~'
+let g:netrw_preview=0 "horizontal
+let g:netrw_alto=0    "aboveleft
+let g:netrw_liststyle=3 " thin long wide tree
+let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
+let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
+let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
+let g:netrw_list_hide =
+      \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
+      \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
+" Plugin 'scrooloose/nerdtree'
+" let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
+"     \ '\.egg$', '\.idea$',
+"     \ '\.bzr', '\.git', '\.hg', '\.svn']
+" let NERDChristmasTree=1
+" let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
+" let NERDTreeHighlightCursorline=1
+" let NERDTreeQuitOnOpen=1
+" let NERDTreeShowHidden=1
+" let NERDTreeWinPos="left"
+" nnoremap <unique> <leader>t :NERDTreeToggle<CR>
+" nnoremap <leader>T :NERDTreeFind<CR>
 " nnoremap <silent> <F8> :NERDTreeToggle<CR>
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 
@@ -793,6 +804,8 @@ let g:pymode_options_max_line_length=99
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
 let g:pymode_lint_ignore = "E501"
 let g:pymode_syntax_slow_sync = 0
+let g:pymode_run_bind = '<localleader>r'
+let g:pymode_breakpoint_bind = '<localleader>b'
 
 Plugin 'davidhalter/jedi-vim'
 let g:jedi#use_splits_not_buffers = "top"
@@ -824,6 +837,7 @@ let g:org_todo_keywords = [
     \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
 \ ]
 Plugin 'tpope/vim-speeddating'
+Plugin 'vim-scripts/utl.vim'
 "
 " Disabled! Scratch files, notes, outliner etc. {{{1
 " :scratch :Sscratch
@@ -857,6 +871,9 @@ let g:notes_list_bullets=['*', '-', '+']
 
 " outliner .otl
 " Plugin 'vimoutliner/vimoutliner'
+
+" wiki
+" Plugin 'vimwiki/vimwiki'
 "}}}
 
 "
