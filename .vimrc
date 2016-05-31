@@ -550,6 +550,7 @@ let g:netrw_hide=0
 let g:netrw_preview=0 "horizontal
 let g:netrw_alto=0    "aboveleft
 let g:netrw_liststyle=3 " thin long wide tree
+let g:netrw_winsize=25
 let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
 let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
 let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
