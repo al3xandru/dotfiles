@@ -300,7 +300,7 @@ def main(title, opts):
     'critics_score': rottend.get('ratings', {}).get('critics_score', 'n/a'),
     'audience_rating': rottend.get('ratings', {}).get('audience_rating', 'n/a'),
     'audience_score': rottend.get('ratings', {}).get('audience_score', 'n/a'),
-    'critics_consensus': rottend.get('critics_consensus', 'n/a'),
+    'critics_consensus': rottend.get('critics_consensus', ''),
     'directors': imdbapid.get('directors', []) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, omdbapid, rottend),
     'plot': imdbapid.get('plot', '') or omdbapid.get('Plot', ''),
@@ -379,33 +379,24 @@ def generate_output(data, to_dayone=False):
 
 def print_to(stream, data):
   """ Write data to the stream. """
-  stream.write(u"# Movie: %s (%s) " % (data['title'], data['year']))
+  if data['imdb_url']:
+    stream.write(u"# Movie: [%s (%s)](%s) " % (data['title'], data['year'], data['imdb_url']))
+  else:
+    stream.write(u"# Movie: %s (%s) " % (data['title'], data['year']))
   stream.write("\n\n")
-  stream.write("Year : %s   \n" % data['year'])
-  stream.write("Genre: %s   \n" % ', '.join(data['genre']))
-  stream.write("Tagline: \n")
+  stream.write("My rating: %s\n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
+  stream.write("IMDB     : %s/10\n" %  data['imdb_rating'])
+  stream.write("Genre    : %s\n" % ', '.join(data['genre']))
+  stream.write("Year     : %s\n" % data['year'])
+  stream.write("Tagline  : \n")
   stream.write("\n")
 
   # Ratings
-  stream.write("## Ratings \n\n")
-  stream.write("My rating        : %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
-  stream.write("IMDB rating      : %s/10   \n" %  data['imdb_rating'])
-  stream.write("Tomato rating    : %s   \n" % data['audience_rating'])
-  stream.write("Tomato score     : %s   \n" % data['audience_score'])
-  stream.write("Critics rating   : %s   \n" % data['critics_rating'])
-  stream.write("Critics score    : %s   \n" % data['critics_score'])
-  stream.write("\n")
-
-  # Links
-  if data['imdb_url'] or data['rotten_url']:
-    stream.write("Links:\n\n")
-    if data['imdb_url']:
-      stream.write("*   <%s>\n" % data['imdb_url'])
-    if data['rotten_url']:
-      if data['rotten_url'].startswith('http'):
-        stream.write("*   <%s>\n" % data['rotten_url'])
-      else:
-        stream.write("*   <http:%s>\n" % data['rotten_url'])
+  stream.write("### Ratings \n\n")
+  stream.write("Tomato rating    : %s\n" % data['audience_rating'])
+  stream.write("Tomato score     : %s\n" % data['audience_score'])
+  stream.write("Critics rating   : %s\n" % data['critics_rating'])
+  stream.write("Critics score    : %s\n" % data['critics_score'])
   stream.write("\n")
 
   # Critics
@@ -415,30 +406,44 @@ def print_to(stream, data):
   stream.write("* * * * * * * * * * *")
   stream.write("\n\n")
 
-  # Director(s) & Actors
-  stream.write("Directors: %s\n\n" % ', '.join(data['directors']).encode('utf8'))
-  stream.write("\n")
-  stream.write("Actors :")
-  stream.write("\n\n")
-  for d in data['actors']:
-    stream.write("*   " + d.encode('utf8') + "\n")
-  stream.write("\n")
-  stream.write("* * * * * * * * * *")
-  stream.write("\n\n")
-
   # Plot
-  stream.write("### Plot")
+  stream.write("## Plot")
   stream.write("\n\n")
   stream.write(data['plot'].encode('utf8'))
   stream.write("\n\n")
   stream.write(data['synopsis'].encode('utf8'))
   stream.write("\n\n")
 
+  # Director(s) & Actors
+  stream.write("## Cast\n\n")
+  stream.write("Directors: %s\n\n" % ', '.join(data['directors']).encode('utf8'))
+  stream.write("\n")
+  # stream.write("Actors :")
+  # stream.write("\n\n")
+  for d in data['actors']:
+    stream.write("*   " + d.encode('utf8') + "\n")
+  stream.write("\n")
+  stream.write("* * * * * * * * * *")
+  stream.write("\n\n")
+
+
   # Posters
-  if data['poster_imdb']:
-    stream.write("![Poster imdb %s](%s)\n" % (data['title'], data['poster_imdb']))
-  if data['poster_rotten']:
-    stream.write("![Poster %s](%s)\n" % (data['title'], data['poster_rotten']))
+  # if data['poster_imdb']:
+  #   stream.write("![Poster imdb %s](%s)\n" % (data['title'], data['poster_imdb']))
+  # if data['poster_rotten']:
+  #   stream.write("![Poster %s](%s)\n" % (data['title'], data['poster_rotten']))
+  # stream.write("\n")
+
+  # Links
+  if data['imdb_url'] or data['rotten_url']:
+    stream.write("#### Links:\n\n")
+    if data['imdb_url']:
+      stream.write("*   <%s>\n" % data['imdb_url'])
+    if data['rotten_url']:
+      if data['rotten_url'].startswith('http'):
+        stream.write("*   <%s>\n" % data['rotten_url'])
+      else:
+        stream.write("*   <http:%s>\n" % data['rotten_url'])
   stream.write("\n")
 
   # Tags
