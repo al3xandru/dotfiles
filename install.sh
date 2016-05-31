@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".git" ".gitignore" ".gitmodules" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -68,6 +68,11 @@ function doStatus() {
     else
         echo "[FAIL]"
     fi
+    echo ""
+    echo "4) Checking optional files"
+    for f in {.ctags,.gitconfig}; do
+        diff -q $f $HOME/$f
+    done
     echo ""
 
 
