@@ -15,52 +15,51 @@ values."
      ivy
      (spell-checking :variables spell-checking-enable-by-default nil)
      ;; UI
-     ;; eyebrowse not needed in develop 0.106
-     ;; (ranger :variables ranger-show-preview t)
-     ;; themes-megapack
      theming
-     ;; docs
-     dash
-     search-engine
      ;; git
-     git
-     github
      (version-control :variables
                       version-control-diff-tool 'diff-hl
                       version-control-global-margin t)
-     ;; completion
-     (auto-completion :variables
-                      auto-completion-enable-help-tooltip t
-                      auto-completion-enable-snippets-in-popup t)
-     ;; cscope
-     semantic
-     (syntax-checking :variables
-                      syntax-checking-enable-by-default nil
-                      syntax-checking-enable-tooltips nil)
      ;; languages
-     asciidoc
-     c-c++
-     csharp
      emacs-lisp
-     go
-     html
-     java
-     javascript
      markdown
      org
-     php
-     python
-     ruby
-     scala
-     shell-scripts
-     swift
-     yaml
      ;; vim
      evil-commentary
      evil-snipe
-     ;; misc
-     imenu-list
-     ;; twitter
+     ;;; previous setup
+     ;; dash
+     ;; ;; git
+     ;; git
+     ;; github
+     ;; ;; cscope
+     ;; semantic
+     ;; (syntax-checking :variables
+     ;;                  syntax-checking-enable-by-default nil
+     ;;                  syntax-checking-enable-tooltips nil)
+     ;; ;; completion
+     ;; (auto-completion :variables
+     ;;                  auto-completion-enable-help-tooltip t
+     ;;                  auto-completion-enable-snippets-in-popup t)
+     ;; ;; languages
+     ;; asciidoc
+     ;; c-c++
+     ;; csharp
+     ;; go
+     ;; html
+     ;; java
+     ;; javascript
+     ;; php
+     ;; python
+     ;; ruby
+     ;; scala
+     ;; shell-scripts
+     ;; swift
+     ;; yaml
+     ;;; misc unused
+     ;; imenu-list
+     ;; (ranger :variables ranger-show-preview t)
+     ;; ;; twitter
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -81,16 +80,17 @@ values."
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages
    '(
-     srefactor
-     space-doc ;; #5837
-     ;; java
-     emacs-eclim
-     ;; javascript
-     coffee-mode
-     company-tern
-     tern
-     ;; php
-     drupal-mode
+     vi-tilde-fringe
+     ;; srefactor
+     ;; space-doc ;; #5837
+     ;; ;; java
+     ;; emacs-eclim
+     ;; ;; javascript
+     ;; coffee-mode
+     ;; company-tern
+     ;; tern
+     ;; ;; php
+     ;; drupal-mode
      )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -132,7 +132,7 @@ values."
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(recents projects bookmarks)
+   dotspacemacs-startup-lists '(bookmarks recents projects)
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
    dotspacemacs-startup-recent-list-size 10
@@ -209,12 +209,13 @@ values."
    dotspacemacs-search-tools '("ag" "grep" "ack")
    ))
 
-
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
-It is called immediately after `dotspacemacs/init'.  You are free to put almost
-any user code here.  The exception is org related code, which should be placed
-in `dotspacemacs/user-config'."
+It is called immediately after `dotspacemacs/init', before layer configuration
+executes.
+ This function is mostly useful for variables that need to be set
+before packages are loaded. If you are unsure, you should try in setting them in
+`dotspacemacs/user-config' first."
   (setq theming-modifications
         '((alect-light (powerline-active1 :background "#ffaf00" :foreground "#272727")
                        (powerline-inactive1 :background "#b2b2b2" :foreground "#151515")
@@ -226,9 +227,12 @@ in `dotspacemacs/user-config'."
 
 ;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
 (defun dotspacemacs/user-config ()
-  "Configuration function.
- This function is called at the very end of Spacemacs initialization after
-layers configuration."
+  "Configuration function for user code.
+This function is called at the very end of Spacemacs initialization after
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place your code here."
   ;; #5556
   (setq srecode-map-save-file "~/.emacs.d/.cache/srecode-map.el")
   ;; #2974/#5817
@@ -545,7 +549,9 @@ Consider only documented, non-obsolete functions."
           ("n" "Note" item (file+datetree org-default-notes-file)
            "+ %? %U")
           ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
-           "+ %? %U\n  %c")))
+           "+ %? %U\n  %c")
+          ("m" "Meeting" entry (file+datetree org-default-notes-file)
+           "* MEETING with %^{prompt} %U\n  %?" :clock-in t :clock-resume t)))
 
     (setq org-agenda-span 14
           org-agenda-start-on-weekday 1)
