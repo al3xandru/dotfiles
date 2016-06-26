@@ -315,6 +315,8 @@ def main(title, opts):
 
   # generate search links if needed
   print("")
+  if data['imdb_url']:
+    print(data['imdb_url'])
   print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
   print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
   print("http://trakt.tv/search?query=%s" % urllib.quote_plus(title))
