@@ -202,7 +202,6 @@ set splitright
 "augroup END
 
 " 11.messages and info
-set number
 set ruler
 set visualbell t_vb=
 
@@ -216,7 +215,11 @@ function! <SID>ToggleLineNo()
         set relativenumber
     endif
 endfunction
-nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
+" mappings inspired by vim-unimpaired
+nmap [o0 :set nonumber relativenumber<CR>
+nmap ]o0 :set norelativenumber number<CR>
+nmap <silent>co0 :call <SID>ToggleLineNo()<CR>
+" nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
 augroup lineno
     autocmd!
     autocmd FocusLost * set norelativenumber | set number
@@ -224,6 +227,7 @@ augroup lineno
     autocmd InsertLeave * set relativenumber | set nonumber
     autocmd Filetype qf setlocal norelativenumber number nowrap
 augroup END
+" set number
 set relativenumber
 
 " 14. tabs and indenting
@@ -280,6 +284,7 @@ vnoremap <tab> %
 
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
 " also center the line
+" Plugin 'timakro/vim-searchant'
 nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
 nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
 
@@ -294,9 +299,9 @@ endfunction
 
 " http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
 " case sensitive, partial match inclusive
-nnoremap <leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
+nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
 " case sensitive, no partial match
-nnoremap <leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
+nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
 " disable highlighted search 
 nnoremap <silent><leader>hh :nohlsearch<CR>
 " Show special characters
@@ -383,7 +388,7 @@ nnoremap /fA :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<C
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
-" bind r to replace word under cursor
+" bind c[hange] to replace word under cursor
 nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
 nnoremap c* *Ncgn
 nnoremap c# #NcgN
@@ -490,6 +495,8 @@ Plugin 'PeterRincker/vim-argumentative'
 " Plugin 'argtextobj.vim' 
 " Indent object: ii ai aI iI 
 Plugin 'michaeljsmith/vim-indent-object' 
+" Function call object: am im aM iM
+Plugin 'thalesmello/vim-textobj-methodcall'
 " Function object: if af iF aF
 Plugin 'kana/vim-textobj-function'
 Plugin 'kamichidu/vim-textobj-function-go'
@@ -501,8 +508,9 @@ Plugin 'glts/vim-textobj-comment'
 " }}}
 
 "
-" Important {{{1
+" Essentials {{{1
 "
+" Files {{{2
 Plugin 'ctrlpvim/ctrlp.vim'
 " set runtimepath^=~/.vim/bundle/ctrlp
 " let g:loaded_ctrlp = 1
@@ -512,39 +520,15 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
 let g:ctrlp_use_caching = 2000
-nnoremap <unique> <leader>p :CtrlP<CR>
-nnoremap <unique> <leader>P :CtrlPBufTag<CR>
+nnoremap <unique> <leader>f :CtrlP<CR>
+nnoremap <unique> <leader>j :CtrlPBufTag<CR>
 nnoremap <unique> <leader>b :CtrlPBuffer<CR>
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
 " nnoremap gb :ls<CR>:buffer<Space>
 " nnoremap gB :ls<CR>:sbuffer<Space>
 
-" Plugin 'jeetsukumaran/vim-buffergator'
-" let g:buffergator_viewport_split_policy = "T"
-" let g:buffergator_autodismiss_on_select = 1
-" let g:buffergator_suppress_keymaps = 1
-" nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
-" nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
-" Replaced by CtrlPBuffer 
-" Plugin 'jlanzarotta/bufexplorer'
-
-
-Plugin 'majutsushi/tagbar'
-let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
-let g:tagbar_autoclose = 1
-let g:tagbar_show_linenumbers = 0
-let g:tagbar_hide_nonpublic = 0
-nnoremap <silent> <leader>o :TagbarToggle<CR>
-nnoremap <silent> <F9> :TagbarToggle<CR>
-
-
-Plugin 'tpope/vim-commentary'
-" Plugin 'al3xandru/nerdcommenter'
-" Plugin 'scrooloose/nerdcommenter'
-" Plugin 'tomtom/tcomment_vim'
-
-" Netrw
-nnoremap <unique><leader>t :Lex<CR>
+" Netrw/NERDTree {{{3
+nnoremap <unique><leader>p :Lex<CR>
 let g:netrw_hide=0
 " let g:netrw_home='~'
 let g:netrw_preview=0 "horizontal
@@ -557,6 +541,7 @@ let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'esc
 let g:netrw_list_hide =
       \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
       \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
+
 " Plugin 'scrooloose/nerdtree'
 " let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
 "     \ '\.egg$', '\.idea$',
@@ -571,19 +556,31 @@ let g:netrw_list_hide =
 " nnoremap <leader>T :NERDTreeFind<CR>
 " nnoremap <silent> <F8> :NERDTreeToggle<CR>
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+" }}}
+" 2}}}
 
-Plugin 'scrooloose/syntastic'
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_auto_jump = 0
-"let g:syntastic_error_symbol = "✗"
-"let g:syntastic_warning_symbol = "⚠"
-"}}}
 
-"
-" Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{1
-"
+" Buffers {{{2
+" Plugin 'jeetsukumaran/vim-buffergator'
+" let g:buffergator_viewport_split_policy = "T"
+" let g:buffergator_autodismiss_on_select = 1
+" let g:buffergator_suppress_keymaps = 1
+" nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
+" nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
+" Replaced by CtrlPBuffer 
+" Plugin 'jlanzarotta/bufexplorer'
+" }}}
+
+
+" Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
+Plugin 'majutsushi/tagbar'
+let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+let g:tagbar_autoclose = 1
+let g:tagbar_show_linenumbers = 0
+let g:tagbar_hide_nonpublic = 0
+nnoremap <silent><leader>t :TagbarToggle<CR>
+" nnoremap <silent> <F9> :TagbarToggle<CR>
+
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
 Plugin 'ludovicchabant/vim-gutentags'
 let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
@@ -628,16 +625,31 @@ augroup neocomplete
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 augroup END
-"}}}
+" }}}
 
-" Search: Ack and Ag {{{1
+
+Plugin 'tpope/vim-commentary'
+" Plugin 'al3xandru/nerdcommenter'
+" Plugin 'scrooloose/nerdcommenter'
+" Plugin 'tomtom/tcomment_vim'
+
+
+Plugin 'scrooloose/syntastic'
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_auto_jump = 0
+"let g:syntastic_error_symbol = "✗"
+"let g:syntastic_warning_symbol = "⚠"
+
+
+" Search: Ack and Ag {{{2
 Plugin 'mileszs/ack.vim'
 Plugin 'rking/ag.vim'
 "}}}
 
-"
-" Snippets {{{1
-"
+
+" Snippets {{{2
 if has("python")
     Plugin 'SirVer/ultisnips'
 else
@@ -646,6 +658,7 @@ else
     Plugin 'garbas/vim-snipmate'
 endif
 Plugin 'honza/vim-snippets'
+"}}}
 "}}}
 
 "
@@ -755,6 +768,7 @@ function! <SID>IAWriter()
         if exists( "&background" )
             let g:iawriter_save_bgr = &background
         endif
+        setlocal spell
         set linespace=3
         set background=light
         colorscheme pencil
@@ -780,6 +794,7 @@ function! <SID>IAWriter()
             execute printf("set background=%s", g:iawriter_save_bgr)
         endif
         set linespace=1
+        setlocal nospell
         let g:iawriter_active = 0
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
     endif
@@ -831,22 +846,36 @@ Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
-" Org mode 
+"
+" Org mode {{{1
 Plugin 'jceb/vim-orgmode'
+let g:org_heading_shade_leading_stars=1
+let g:org_indent=1
 let g:org_todo_keywords = [
     \ [ 'TODO(t)', 'WANT(w)', 'MUST(m)', '|', 'DONE(d)' ],
     \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
 \ ]
+let g:org_agenda_files = ['~/Dropbox/Dox/active/*.org']
 Plugin 'tpope/vim-speeddating'
 Plugin 'vim-scripts/utl.vim'
-"
-" Disabled! Scratch files, notes, outliner etc. {{{1
-" :scratch :Sscratch
-" Plugin 'duff/vim-scratch'
+" autocmd BufNewFile,BufRead *.org setfiletype org
+augroup org
+    autocmd!
+    autocmd FileType org inoremap <M-C-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
+    autocmd FileType org nnoremap <silent><M-C-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
+    autocmd FileType org inoremap <M-S-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
+    autocmd FileType org nnoremap <silent><M-S-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
+    autocmd FileType org inoremap <M-C-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
+    autocmd FileType org nnoremap <silent><M-C-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
+    autocmd FileType org inoremap <M-S-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
+    autocmd FileType org nnoremap <silent><M-S-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
+augroup END
+" }}}
 
+" Scratch files, notes, outliner etc. {{{1
 " :Pad
-" Plugin 'fmoralesc/vim-pad'
-let g:pad#dir='~/Dropbox/Dox/nvall'
+Plugin 'fmoralesc/vim-pad'
+let g:pad#dir='/Users/apopescu/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
 let g:pad#query_dirnames=0
@@ -858,17 +887,24 @@ let g:pad#window_height=12
 let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
 "let g:pad#open_in_split=0
 let g:pad#set_mappings=0
-nmap <leader>qql <Plug>(pad-list)
-nmap <leader>qqn <Plug>(pad-new)
-nmap <leader>qqs <Plug>(pad-search)
+nmap <leader>ql <Plug>(pad-list)
+nmap <leader>qn <Plug>(pad-new)
+nmap <leader>qs <Plug>(pad-search)
 
 " :Note
+" Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-notes'
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
 let g:title_sync='no'
 let g:notes_smart_quotes=0
 let g:notes_list_bullets=['*', '-', '+']
+let g:notes_word_boundaries=1
+let g:notes_unicode_enabled=1
+let g:notes_conceal_code=0
+
+" :scratch :Sscratch
+" Plugin 'duff/vim-scratch'
 
 " outliner .otl
 " Plugin 'vimoutliner/vimoutliner'
@@ -945,6 +981,7 @@ omap <silent> i∫ <Plug>CamelCaseMotion_ib
 xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 omap <silent> i£ <Plug>CamelCaseMotion_ie
 xmap <silent> i£ <Plug>CamelCaseMotion_ie
+
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
@@ -999,7 +1036,10 @@ nmap <leader>h <Plug>DashSearch
 Plugin 'airblade/vim-gitgutter'
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
-nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
+" nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
+nmap <silent> [og :GitGutterSignsEnable<CR>
+nmap <silent> ]og :GitGutterSignsDisable<CR>
+nmap <silent> cog :GitGutterSignsToggle<CR>
 " Plugin 'mhinz/vim-signify'
 
 
@@ -1031,16 +1071,15 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/active/',
     \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/active/02-thoughts.md',
-    \ '~/Dropbox/Dox/active/03-email_drafs.md',
+    \ '~/Dropbox/Dox/active/03-email_drafts.md',
     \ '~/Dropbox/Dox/active/04-notes.org',
-    \ '~/Dropbox/Dox/active/10-weekend.taskpaper'
     \]
 let g:startify_session_autoload = 1
 let g:startify_skiplist = [
     \ '.git/.*',
     \ '.hg/.*',
     \ ]
-" let g:startify_change_to_dir = 1
+let g:startify_change_to_dir = 1
 
 Plugin 'terryma/vim-expand-region'
 let g:expand_region_text_objects = {
