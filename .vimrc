@@ -1,5 +1,6 @@
 scriptencoding utf-8
 
+
 " Organization
 " 1. important
 " 2. moving around, searching and patterns
@@ -172,6 +173,7 @@ if has("gui_running")
         set gfn=Operator_Mono:h12
         " set gfn=ProFontX:h12
         " set gfn=Source_Code_Pro:h11
+        " set gfn=SF_Mono_Regular:h12 linespace=2
         " add "New Window" menu to MacVim (stupid but needed)
         " aun File.New\ Window
         an <silent> 10.290 File.New\ Window :silent !mvim<CR>
@@ -211,23 +213,23 @@ function! <SID>ToggleLineNo()
         set norelativenumber
         set number
     else
-        set nonumber
+        set number
         set relativenumber
     endif
 endfunction
 " mappings inspired by vim-unimpaired
-nmap [o0 :set nonumber relativenumber<CR>
+nmap [o0 :set number relativenumber<CR>
 nmap ]o0 :set norelativenumber number<CR>
 nmap <silent>co0 :call <SID>ToggleLineNo()<CR>
 " nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
 augroup lineno
     autocmd!
-    autocmd FocusLost * set norelativenumber | set number
-    autocmd InsertEnter * set norelativenumber | set number
-    autocmd InsertLeave * set relativenumber | set nonumber
+    autocmd FocusLost * set norelativenumber number
+    autocmd InsertEnter * set norelativenumber number
+    autocmd InsertLeave * set relativenumber number
     autocmd Filetype qf setlocal norelativenumber number nowrap
 augroup END
-" set number
+set number
 set relativenumber
 
 " 14. tabs and indenting
@@ -270,9 +272,9 @@ inoremap <silent> <Right> <esc><Right>
 " inoremap <Down> <C-o>gj
 " inoremap <Up> <C-o>gk
 
-" make vertical line nav better
-nnoremap j gj
-nnoremap k gk
+" make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
+nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
+nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <Up> gk
 nnoremap <Down> gj
 " make ; behave like : (save the Shift)
@@ -769,31 +771,33 @@ function! <SID>IAWriter()
             let g:iawriter_save_bgr = &background
         endif
         setlocal spell
-        set linespace=3
-        set background=light
+        setlocal linespace=3
+        setlocal background=light
+        setlocal gfn=Operator_Mono:h14
         colorscheme pencil
         call goyo#execute(0, '')
         augroup lineno
             autocmd!
-            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   set norelativenumber | set nonumber
-            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
-            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} set norelativenumber | set nonumber
+            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   setlocal norelativenumber nonumber
+            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
+            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
         augroup END
         let g:iawriter_active = 1
         echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . ", background:" . g:iawriter_save_bgr . "]"
     else
         augroup lineno
             autocmd!
-            autocmd FocusLost * set norelativenumber | set number
-            autocmd InsertEnter * set norelativenumber | set number
-            autocmd InsertLeave * set relativenumber | set nonumber
+            autocmd FocusLost * setlocal norelativenumber number
+            autocmd InsertEnter * setlocal norelativenumber number
+            autocmd InsertLeave * setlocal relativenumber number
         augroup END
         call goyo#execute(0, '') 
         execute printf("colorscheme %s", g:iawriter_save_colorscheme)
         if g:iawriter_save_bgr
             execute printf("set background=%s", g:iawriter_save_bgr)
         endif
-        set linespace=1
+        setlocal gfn=Operator_Mono:h12
+        setlocal linespace=1
         setlocal nospell
         let g:iawriter_active = 0
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
@@ -801,7 +805,7 @@ function! <SID>IAWriter()
 endfunction
 augroup markdown
     autocmd!
-    autocmd FileType markdown setlocal textwidth=80
+    autocmd FileType markdown setlocal textwidth=80 wrap linebreak
     autocmd FileType markdown nnoremap <silent><localleader>me :call <SID>IAWriter()<CR>
     autocmd FileType markdown nnoremap <silent><localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
@@ -856,9 +860,8 @@ let g:org_todo_keywords = [
     \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
 \ ]
 let g:org_agenda_files = ['~/Dropbox/Dox/active/*.org']
-Plugin 'tpope/vim-speeddating'
-Plugin 'vim-scripts/utl.vim'
 " autocmd BufNewFile,BufRead *.org setfiletype org
+autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
 augroup org
     autocmd!
     autocmd FileType org inoremap <M-C-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
@@ -870,6 +873,16 @@ augroup org
     autocmd FileType org inoremap <M-S-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
     autocmd FileType org nnoremap <silent><M-S-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
 augroup END
+
+" Orgmode helping plugins
+Plugin 'tpope/vim-speeddating'
+Plugin 'vim-scripts/utl.vim'
+nmap <silent>glo :Utl openLink underCursor edit<CR>
+nmap <silent>glt :Utl openLink underCursor tabe<CR>
+nmap <silent>glv :Utl openLink underCursor vsplit<CR>
+nmap <silent>gls :Utl openLink underCursor split<CR>
+nmap <silent>gly :Utl copyLink underCursor<CR>
+Plugin 'mattn/calendar-vim'
 " }}}
 
 " Scratch files, notes, outliner etc. {{{1
@@ -1073,6 +1086,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/active/02-thoughts.md',
     \ '~/Dropbox/Dox/active/03-email_drafts.md',
     \ '~/Dropbox/Dox/active/04-notes.org',
+    \ '~/.vimrc',
     \]
 let g:startify_session_autoload = 1
 let g:startify_skiplist = [
