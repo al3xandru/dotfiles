@@ -64,7 +64,7 @@ set showmatch
 set scrolloff=5
 
 " 3. tags
-" omnicomplete
+" omnicomplete 
 set omnifunc=syntaxcomplete#Complete
 " https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
 " kspell: dictionary completion only when spell enabled set spell 
@@ -463,6 +463,8 @@ Plugin 'VundleVim/Vundle.vim'
 " Color schemes {{{1
 Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
+let g:alduin_Shout_Aura_Whisper = 1
+let g:alduin_Shout_Fire_Breath = 1
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
@@ -630,6 +632,17 @@ augroup END
 " }}}
 
 
+Plugin 'beloglazov/vim-online-thesaurus'
+
+
+Plugin 'mbbill/undotree'
+nnoremap <leader>u :UndotreeToggle<CR>
+
+
+Plugin 'junegunn/vim-peekaboo'
+let g:peekaboo_delay=500
+
+
 Plugin 'tpope/vim-commentary'
 " Plugin 'al3xandru/nerdcommenter'
 " Plugin 'scrooloose/nerdcommenter'
@@ -676,10 +689,12 @@ let vimclojure#SetupKeyMap = 0
 " C/C++ 
 Plugin 'OmniCppComplete'
 
+
 " Go {{{2
 Plugin 'fatih/vim-go'
+let g:go_bin_path = expand("~/.golang")
 let g:go_fmt_autosave = 1
-let g:go_fmt_command = 'goimports'
+let g:go_fmt_command = 'gofmt'
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
@@ -724,6 +739,7 @@ augroup go
 augroup END
 "}}}
 
+
 " HTML Zen Coding
 Plugin 'mattn/emmet-vim'
 
@@ -754,6 +770,13 @@ endfunction
 "}}}
 " Markdown editing {{{3
 Plugin 'junegunn/goyo.vim'
+Plugin 'junegunn/limelight.vim'
+let g:limelight_default_coefficient = 0.7
+let g:limelight_paragraph_span = 1
+nmap [of :Limelight<CR>
+nmap ]of :Limelight!<CR>
+nmap cof :Limelight!!<CR>
+
 
 Plugin 'reedes/vim-colors-pencil'
 let g:pencil_higher_contrast_ui = 1
@@ -775,7 +798,9 @@ function! <SID>IAWriter()
         setlocal background=light
         setlocal gfn=Operator_Mono:h14
         colorscheme pencil
-        call goyo#execute(0, '')
+        Goyo
+        Limelight0.7
+        " call goyo#execute(0, '')
         augroup lineno
             autocmd!
             autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   setlocal norelativenumber nonumber
@@ -791,7 +816,9 @@ function! <SID>IAWriter()
             autocmd InsertEnter * setlocal norelativenumber number
             autocmd InsertLeave * setlocal relativenumber number
         augroup END
-        call goyo#execute(0, '') 
+        " call goyo#execute(0, '') 
+        Limelight!
+        Goyo
         execute printf("colorscheme %s", g:iawriter_save_colorscheme)
         if g:iawriter_save_bgr
             execute printf("set background=%s", g:iawriter_save_bgr)
