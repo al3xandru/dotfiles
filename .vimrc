@@ -145,6 +145,16 @@ set matchtime=3
 set dictionary=/usr/share/dict/words
 set thesaurus+=~/.vim/mthesaur.txt
 
+if has('mac')  " unix, win32, win64
+    set keywordprg=:!open\ dict://\
+else
+    set keywordprg=:!open\ https://www.google.com/search?q=\
+endif
+augroup keywordprog
+    autocmd!
+    autocmd FileType vim setlocal keywordprg=:help
+augroup END
+
 " 6. multiple windows "
 set title
 set laststatus=2
@@ -533,6 +543,7 @@ nnoremap <unique> <leader>b :CtrlPBuffer<CR>
 
 " Netrw/NERDTree {{{3
 nnoremap <unique><leader>p :Lex<CR>
+nnoremap <unique><leader>P :Vexplore<CR>
 let g:netrw_hide=0
 " let g:netrw_home='~'
 let g:netrw_preview=0 "horizontal
