@@ -92,7 +92,7 @@ syntax on
 colorscheme koehler
 " http://vimcolors.com/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "sweater buttercream calmbreeze navajo morning papayawhip gruvbox cake16 lucius"
+let s:cs_light = "simpleandfriendly sweater summerfruit256 autumnleaf buttercream calmbreeze navajo morning papayawhip pyte gruvbox cake16 lucius ironman nuvola" "eclipse
 let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius nefertiti kolor gruvbox"
 
 function! <SID>ChooseColorscheme(args)
@@ -124,9 +124,10 @@ command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
 
 " color column
 function! <SID>SetColorColumn()
-    highlight ColorColumn ctermbg=235 guibg=#2c2d27
-    " set colorcolumn=81,121
-    let &colorcolumn="81,".join(range(121,999),",")
+    " highlight ColorColumn ctermbg=235 guibg=#2c2d27
+    set colorcolumn=81,121
+    " Following setting colors all columns after 121
+    " let &colorcolumn="81,".join(range(121,999),",")
 endfunction
 
 " http://vim.wikia.com/wiki/Highlight_current_line
@@ -488,6 +489,7 @@ Plugin 'jonathanfilip/vim-lucius'
 "   White|WhiteLowContrast]
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
+Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 " Plugin 'rodnaph/vim-color-schemes'
@@ -543,7 +545,8 @@ nnoremap <unique> <leader>b :CtrlPBuffer<CR>
 
 " Netrw/NERDTree {{{3
 nnoremap <unique><leader>p :Lex<CR>
-nnoremap <unique><leader>P :Vexplore<CR>
+nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
+let g:netrw_browse_split=4 " (open in previous window)
 let g:netrw_hide=0
 " let g:netrw_home='~'
 let g:netrw_preview=0 "horizontal
@@ -567,8 +570,8 @@ let g:netrw_list_hide =
 " let NERDTreeQuitOnOpen=1
 " let NERDTreeShowHidden=1
 " let NERDTreeWinPos="left"
-" nnoremap <unique> <leader>t :NERDTreeToggle<CR>
-" nnoremap <leader>T :NERDTreeFind<CR>
+" nnoremap <unique><leader>p :NERDTreeToggle<CR>
+" nnoremap <unique><leader>P :NERDTreeFind<CR>
 " nnoremap <silent> <F8> :NERDTreeToggle<CR>
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 " }}}
@@ -651,7 +654,7 @@ nnoremap <leader>u :UndotreeToggle<CR>
 
 
 Plugin 'junegunn/vim-peekaboo'
-let g:peekaboo_delay=500
+let g:peekaboo_delay=800
 
 
 Plugin 'tpope/vim-commentary'
@@ -1160,12 +1163,12 @@ if has("unix")
     " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
     if s:uname =~ "Darwin"
         " colorscheme flattown
-        colorscheme alduin 
+        colorscheme summerfruit256 " alduin simpleandfriendly
     else
         colorscheme navajo 
     endif
 endif
-call <SID>SetCursorLineColors()
+" call <SID>SetCursorLineColors()
 call <SID>SetColorColumn()
 
 
