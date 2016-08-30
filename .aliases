@@ -27,6 +27,8 @@ alias em='$HOME/bin/emacscltsrv'
 alias x='$HOME/bin/emacscltsrv'
 # alias em='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
 # alias x='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
+# alias em='emacsclient -n $* -a emacs'
+# alias x='emacsclient -n $* -a emacs'
 # IP addresses
 alias localip="ipconfig getifaddr en1"
 # alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
