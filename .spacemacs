@@ -17,6 +17,8 @@ values."
      ;; UI
      theming
      ;; git
+     git
+     github
      (version-control :variables
                       version-control-diff-tool 'diff-hl
                       version-control-global-margin t)
@@ -24,14 +26,29 @@ values."
      emacs-lisp
      markdown
      org
+     ;; languages
+     asciidoc
+     c-c++
+     csharp
+     go
+     html
+     java
+     javascript
+     php
+     python
+     ruby
+     scala
+     shell-scripts
+     swift
+     yaml
      ;; vim
      evil-commentary
      evil-snipe
+     ;; misc
+     xkcd
      ;;; previous setup
      ;; dash
      ;; ;; git
-     ;; git
-     ;; github
      ;; ;; cscope
      ;; semantic
      ;; (syntax-checking :variables
@@ -41,21 +58,6 @@ values."
      ;; (auto-completion :variables
      ;;                  auto-completion-enable-help-tooltip t
      ;;                  auto-completion-enable-snippets-in-popup t)
-     ;; ;; languages
-     ;; asciidoc
-     ;; c-c++
-     ;; csharp
-     ;; go
-     ;; html
-     ;; java
-     ;; javascript
-     ;; php
-     ;; python
-     ;; ruby
-     ;; scala
-     ;; shell-scripts
-     ;; swift
-     ;; yaml
      ;;; misc unused
      ;; imenu-list
      ;; (ranger :variables ranger-show-preview t)
@@ -67,7 +69,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(
-     evil-vimish-fold
+     ;; evil-vimish-fold
      focus
      keyfreq
      key-chord
@@ -84,13 +86,13 @@ values."
      ;; srefactor
      ;; space-doc ;; #5837
      ;; ;; java
-     ;; emacs-eclim
+     emacs-eclim
      ;; ;; javascript
-     ;; coffee-mode
-     ;; company-tern
-     ;; tern
+     coffee-mode
+     company-tern
+     tern
      ;; ;; php
-     ;; drupal-mode
+     drupal-mode
      )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -129,38 +131,42 @@ values."
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
    dotspacemacs-startup-banner nil
-   ;; List of items to show in the startup buffer. If nil it is disabled.
-   ;; Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.
-   ;; (default '(recents projects))
-   dotspacemacs-startup-lists '(bookmarks recents projects)
+   ;; List of items to show in startup buffer or an association list of
+   ;; the form `(list-type . list-size)`. If nil then it is disabled.
+   ;; Possible values for list-type are:
+   ;; `recents' `bookmarks' `projects' `agenda' `todos'."
+   dotspacemacs-startup-lists '((bookmarks . 10)
+                                (recents . 10)
+                                (projects . 5))
    ;; Number of recent files to show in the startup buffer. Ignored if
    ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   dotspacemacs-startup-recent-list-size 10
+   ;; dotspacemacs-startup-recent-list-size 10
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(alect-light
-                         alect-dark ;; alect-dark-alt
-                         flatui
-                         misterioso
-                         material-light
-                         material
+   dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light
-                         spacemacs-dark
-                         leuven
+                         alect-dark
+                         alect-light ;; alect-dark-alt
+                         misterioso
+                         flatui
                          gruvbox
-                         anti-zenburn
-                         zenburn
+                         leuven
+                         material
+                         material-light
+                         ;; zenburn
                          ample
                          heroku
                          monokai
-                         solarized-light
-                         solarized-dark)
+                         anti-zenburn)
+                         ;; solarized-light
+                         ;; solarized-dark
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("SF Mono Regular" ;; "PragmataPro Mono" "Operator Mono" "Input Mono"
+   ;; "Hack" "Liberation Mono" "SF Mono Regular" "PragmataPro Mono" "Operator Mono" "Input Mono"
+   dotspacemacs-default-font '("SF Mono Regular" 
                                :size  12
                                :weight normal
                                :width normal
@@ -204,6 +210,9 @@ values."
    ;; over any automatically added closing parenthesis, bracket, quote, etc…
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis t
+   ;; If non nil, advise quit functions to keep server open when quitting.
+   ;; (default nil)
+   dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    dotspacemacs-search-tools '("ag" "grep" "ack")
@@ -282,12 +291,12 @@ you should place your code here."
   ;;
   ;; evil settings
   ;;
-  (setq-default evil-escape-key-sequence "fd"
+  (setq-default evil-escape-key-sequence "jk"
                 evil-escape-delay 0.2)
   ;;; key-chord
   (setq key-chord-two-keys-delay 0.2)
   (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "jk" 'evil-escape)
+  (key-chord-define evil-insert-state-map "fd" 'evil-escape)
   ;;; bindings
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
   (define-key evil-visual-state-map "j" 'evil-next-visual-line)
@@ -516,18 +525,23 @@ Consider only documented, non-obsolete functions."
           org-default-notes-file "04-notes.org"
           org-agenda-files (list org-default-notes-file))
 
+    ;; (setq org-log-done t
+    ;;       org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
+    ;;                           (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
     (setq org-log-done t
-          org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
-                              (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
-
-    (setq org-todo-keyword-faces '(("MUST" . (:foreground "#fe2500" :weight bold))
-                                   ("TODO" . (:foreground "#cd4f39"))
-                                   ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
-                                   ("WISH" . (:foreground "#cd4f39" :slant italic))
-                                   ("WIPR" . (:foreground "#6495ed" :weight bold))
-                                   ("FILED" . (:foreground "#698b69" :slant italic))
+          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                              (sequence "WIPR(p)" "WAIT(w@/!)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")))
+    ;; colors: 6495ed
+    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#cd4f39"))
+                                   ("NEXT" . (:foreground "#6c71c4" :weight bold))
                                    ("DONE" . (:foreground "#698b69"))
-                                   ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))))
+                                   ("FILED" . (:foreground "#698b69" :slant italic))
+                                   ("WIPR" . (:foreground "#268bd2" :weight bold))
+                                   ("WAIT" . (:foreground "#b58900" :slant italic))
+                                   ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))
+                                   ("MUST" . (:foreground "#fe2500" :weight bold))
+                                   ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
+                                   ("WISH" . (:foreground "#cd4f39" :slant italic))))
 
      (setq org-capture-templates
         '(("l" "Log (+ [H:M])" item (file+datetree org-default-notes-file)
@@ -551,7 +565,7 @@ Consider only documented, non-obsolete functions."
           ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
            "+ %? %U\n  %c")
           ("m" "Meeting" entry (file+datetree org-default-notes-file)
-           "* MEETING with %^{prompt} %U\n  %?" :clock-in t :clock-resume t)))
+           "* MEETING with %? %U" :clock-in t)))
 
     (setq org-agenda-span 14
           org-agenda-start-on-weekday 1)
