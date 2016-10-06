@@ -9,8 +9,6 @@ export LANG="en_US"
 export LC_ALL="en_US.UTF-8"
 export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
 
-# Always enable colored `grep` output
-export GREP_OPTIONS="--color=auto"
 
 # Homebrew vim
 if [ -h "/usr/local/bin/vim" ]; then
