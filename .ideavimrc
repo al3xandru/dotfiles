@@ -5,10 +5,10 @@ nnoremap k gk
 vnoremap k gk
 nnoremap ; :
 nnoremap <space>hh :nohlsearch<CR>
-nnoremap <space>nr :set nonumber<CR>:set relativenumber<CR>
-vnoremap <space>nr :set nonumber<CR>:set relativenumber<CR>
-nnoremap <space>na :set norelativenumber<CR>:set number<CR>
-vnoremap <space>na :set norelativenumber<CR>:set number<CR>
+nnoremap <space>nr :set nonumber relativenumber<CR>
+vnoremap <space>nr :set nonumber relativenumber<CR>
+nnoremap <space>na :set norelativenumber number<CR>
+vnoremap <space>na :set norelativenumber number<CR>
 set history=10000
 set hlsearch
 set ignorecase

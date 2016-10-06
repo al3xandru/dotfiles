@@ -13,10 +13,12 @@ values."
    '(
      ;; Generic
      ivy
-     (spell-checking :variables spell-checking-enable-by-default nil)
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil
+                     spell-checking-enable-auto-dictionary t)
      ;; UI
      theming
-     ;; git
+     ;; source countrol
      git
      github
      (version-control :variables
@@ -44,11 +46,12 @@ values."
      ;; vim
      evil-commentary
      evil-snipe
+     unimpaired
      ;; misc
+     deft
      xkcd
      ;;; previous setup
      ;; dash
-     ;; ;; git
      ;; ;; cscope
      ;; semantic
      ;; (syntax-checking :variables
@@ -144,10 +147,10 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         alect-dark
+   dotspacemacs-themes '(alect-dark
                          alect-light ;; alect-dark-alt
+                         spacemacs-dark
+                         spacemacs-light
                          misterioso
                          flatui
                          gruvbox
@@ -165,8 +168,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   ;; "Hack" "Liberation Mono" "SF Mono Regular" "PragmataPro Mono" "Operator Mono" "Input Mono"
-   dotspacemacs-default-font '("SF Mono Regular" 
+   ;; "Hack"  "Input Mono" "Liberation Mono" "Operator Mono" "PragmataPro Mono" "SF Mono Regular"
+   dotspacemacs-default-font '("PragmataPro Mono"
                                :size  12
                                :weight normal
                                :width normal
@@ -278,6 +281,8 @@ you should place your code here."
                 tab-width 4
                 evil-shift-width 4
                 standard-indent 4)
+  (setq dired-use-ls-dired nil)
+
   ;;; Electric pairs
   (electric-indent-mode 1)
   (electric-pair-mode 1)
@@ -285,8 +290,8 @@ you should place your code here."
   (global-set-key (kbd "S-SPC") 'company-complete)
 
   ;;; text-mode hooks
-  (add-hook 'text-mode-hook 'auto-fill-mode)
-  (add-hook 'text-mode-hook 'turn-on-flyspell)
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+  (add-hook 'text-mode-hook #'turn-on-flyspell)
 
   ;;
   ;; evil settings
@@ -296,39 +301,40 @@ you should place your code here."
   ;;; key-chord
   (setq key-chord-two-keys-delay 0.2)
   (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "fd" 'evil-escape)
+  (key-chord-define evil-insert-state-map "fd" #'evil-escape)
   ;;; bindings
-  (define-key evil-normal-state-map "j" 'evil-next-visual-line)
-  (define-key evil-visual-state-map "j" 'evil-next-visual-line)
-  (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
-  (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
-  (define-key evil-normal-state-map ";" 'evil-ex)
+  (define-key evil-normal-state-map "j" #'evil-next-visual-line)
+  (define-key evil-visual-state-map "j" #'evil-next-visual-line)
+  (define-key evil-normal-state-map "k" #'evil-previous-visual-line)
+  (define-key evil-visual-state-map "k" #'evil-previous-visual-line)
+  (define-key evil-normal-state-map ";" #'evil-ex)
   (defun alpo/autopairs-shortcut-jump ()
     (interactive)
     (backward-up-list 1)
     (forward-sexp 1))
-  (define-key evil-insert-state-map (kbd "M-9") 'alpo/autopairs-shortcut-jump)
-  (define-key evil-insert-state-map (kbd "M-0") 'evil-lisp-state-sp-forward-slurp-sexp)
+  (define-key evil-insert-state-map (kbd "M-9") #'alpo/autopairs-shortcut-jump)
+  (define-key evil-insert-state-map (kbd "M-0") #'evil-lisp-state-sp-forward-slurp-sexp)
 
   ;; avy
-  (spacemacs/declare-prefix "s?" "avy-goto")
-  ;; (spacemacs/set-leader-keys "SPC" 'evil-avy-goto-char)
-  (spacemacs/set-leader-keys "s /" 'evil-avy-goto-word-or-subword-1)
-  (spacemacs/set-leader-keys "s ?C" 'evil-avy-goto-char)
-  (spacemacs/set-leader-keys "s ?c" 'evil-avy-goto-char-2)
-  (spacemacs/set-leader-keys "s ?W" 'evil-avy-goto-word-0)
-  (spacemacs/set-leader-keys "s ?w" 'evil-avy-goto-word-1)
-  (spacemacs/set-leader-keys "s ?S" 'evil-avy-goto-subword-0)
-  (spacemacs/set-leader-keys "s ?s" 'evil-avy-goto-subword-1)
+  ;; in 0.200 jumps are exposed in SPC j 
+  ;; (spacemacs/set-leader-keys "," 'evil-avy-goto-char)
+  ;; (spacemacs/set-leader-keys "s SPC" 'evil-avy-goto-word-or-subword-1)
+  ;; (spacemacs/declare-prefix "sx" "avy-goto")
+  ;; (spacemacs/set-leader-keys "s xc" 'evil-avy-goto-char-2)
+  ;; (spacemacs/set-leader-keys "s xC" 'evil-avy-goto-char)
+  ;; (spacemacs/set-leader-keys "s xw" 'evil-avy-goto-word-1)
+  ;; (spacemacs/set-leader-keys "s xW" 'evil-avy-goto-word-0)
+  ;; (spacemacs/set-leader-keys "s xs" 'evil-avy-goto-subword-1)
+  ;; (spacemacs/set-leader-keys "s xS" 'evil-avy-goto-subword-0)
   ;; frames
   (spacemacs/declare-prefix "F" "frames")
-  (spacemacs/set-leader-keys "F b" 'display-buffer-other-frame)
-  (spacemacs/set-leader-keys "F d" 'delete-frame)
-  (spacemacs/set-leader-keys "F D" 'delete-other-frames)
-  (spacemacs/set-leader-keys "F f" 'find-file-other-frame)
-  (spacemacs/set-leader-keys "F RET" 'make-frame)
-  (spacemacs/set-leader-keys "F n" 'make-frame)
-  (spacemacs/set-leader-keys "F o" 'other-frame)
+  (spacemacs/set-leader-keys "Fb" #'display-buffer-other-frame)
+  (spacemacs/set-leader-keys "Fd" #'delete-frame)
+  (spacemacs/set-leader-keys "FD" #'delete-other-frames)
+  (spacemacs/set-leader-keys "Ff" #'find-file-other-frame)
+  (spacemacs/set-leader-keys "F RET" #'make-frame)
+  (spacemacs/set-leader-keys "Fn" #'make-frame)
+  (spacemacs/set-leader-keys "Fo" #'other-frame)
   (defun alpo/new-frame-with-layout-for-project ()
     "Creates a new frame, offer to open a project, and create a new layout
 for it."
@@ -341,7 +347,8 @@ for it."
     (counsel-find-file nil)
     ;; (dired-other-frame (helm-current-directory))
     )
-  (spacemacs/set-leader-keys "F p" 'alpo/new-frame-with-layout-for-project)
+  (spacemacs/set-leader-keys "Fp" #'alpo/new-frame-with-layout-for-project)
+
   ;;; evil-vimish-fold
   ;; (evil-vimish-fold-mode 1)
 
@@ -357,7 +364,9 @@ for it."
                 avy-case-fold-search nil
                 avy-all-windows nil ;; nil, t, 'all-frames
                 avy-background t)
-
+  ;; deft
+  (setq deft-directory "~/Dropbox/Dox/nvall"
+        deft-extensions '("md" "txt" "org"))
   ;; diff
   (setq diff-hl-side 'left)
 
@@ -380,7 +389,7 @@ Consider only documented, non-obsolete functions."
                     (null (get s 'byte-obsolete-info)))
            (setq result (cons s result)))))
       (describe-function (elt result (random (length result))))))
-  (spacemacs/set-leader-keys "h r" 'alpo/describe-random-interactive-function)
+  (spacemacs/set-leader-keys "hr" #'alpo/describe-random-interactive-function)
 
   ;; ispell
   (setq-default ispell-program-name "aspell")
@@ -405,7 +414,7 @@ Consider only documented, non-obsolete functions."
     (save-excursion
       (ispell-complete-word))
     (forward-word))
-  (evil-define-key 'insert markdown-mode-map (kbd "C-c C-d") 'alpo/ispell-complete-word)
+  (evil-define-key 'insert markdown-mode-map (kbd "C-c C-d") #'alpo/ispell-complete-word)
 
   (setq-default markdown-edit-mode-theme 'leuven
                 markdown-edit-mode-margin 20
@@ -461,8 +470,8 @@ Consider only documented, non-obsolete functions."
                 markdown-open-command "/Applications/Marked 2.app/Contents/MacOS/Marked 2"
                 markdown-italic-underscore t
                 markdown-css-paths '("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"))
-  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" 'alpo/markdown-edit-mode)
-  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" 'focus-mode)
+  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "e" #'alpo/markdown-edit-mode)
+  (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "F" #'focus-mode)
   ;; (spacemacs/set-leader-keys-for-major-mode 'markdown-mode "SPC" 'ispell-complete-word)
 
   ;; neotree
@@ -571,9 +580,9 @@ Consider only documented, non-obsolete functions."
           org-agenda-start-on-weekday 1)
 
     ;; http://orgmode.org/manual/Adding-hyperlink-types.html#Adding-hyperlink-types
-    (org-add-link-type "twodo" 'alpo/org-2do-open-link)
-    (org-add-link-type "mailplane" 'alpo/org-mailplane-open-link)
-    (org-add-link-type "omnifocus" 'alpo/org-omnifocus-open-link))
+    (org-add-link-type "twodo" #'alpo/org-2do-open-link)
+    (org-add-link-type "mailplane" #'alpo/org-mailplane-open-link)
+    (org-add-link-type "omnifocus" #'alpo/org-omnifocus-open-link))
 
 (defun alpo/org-omnifocus-open-link (path)
   "Open an omnifocus url scheme"
@@ -597,3 +606,17 @@ Consider only documented, non-obsolete functions."
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (counsel smartparens flycheck magit with-editor f pug-mode yapfify yaml-mode xkcd ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit swift-mode spacemacs-theme spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file omnisharp noflet neotree move-text mmm-mode material-theme markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode keyfreq key-chord json-mode js2-refactor js-doc jade-mode ivy-hydra info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-make google-translate golden-ratio go-eldoc gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav eclim dumb-jump disaster diff-hl deft define-word cython-mode counsel-projectile column-enforce-mode cmake-mode clean-aindent-mode clang-format chruby bundler auto-highlight-symbol auto-dictionary auto-compile anaconda-mode alect-themes aggressive-indent adoc-mode adaptive-wrap ace-window ace-link))))

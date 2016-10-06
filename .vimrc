@@ -93,7 +93,7 @@ colorscheme koehler
 " http://vimcolors.com/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
 let s:cs_light = "simpleandfriendly sweater summerfruit256 autumnleaf buttercream calmbreeze navajo morning papayawhip pyte gruvbox cake16 lucius ironman nuvola" "eclipse
-let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius nefertiti kolor gruvbox"
+let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius  kolor gruvbox" "nefertiti
 
 function! <SID>ChooseColorscheme(args)
     let cslist = []
@@ -180,9 +180,8 @@ if has("gui_running")
         " set gfn=Inconsolata:h13
         " set gfn=Input_Mono:h11
         " set gfn=Liberation_Mono:h11
-        " set gfn=monofur:h15
         set gfn=Operator_Mono:h12
-        " set gfn=ProFontX:h12
+        " set gfn=PragmataPro_Mono:h13
         " set gfn=Source_Code_Pro:h11
         " set gfn=SF_Mono_Regular:h12 linespace=2
         " add "New Window" menu to MacVim (stupid but needed)
@@ -221,11 +220,9 @@ set visualbell t_vb=
 " http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
 function! <SID>ToggleLineNo()
     if(&relativenumber == 1)
-        set norelativenumber
-        set number
+        set norelativenumber number
     else
-        set number
-        set relativenumber
+        set number relativenumber
     endif
 endfunction
 " mappings inspired by vim-unimpaired
@@ -476,23 +473,35 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'altercation/vim-colors-solarized'
-let g:solarized_termtrans=0
-let g:solarized_termcolors=256
-let g:solarized_visibility="high"
-let g:solarized_contrast="normal"
 Plugin 'blerins/flattown'
-Plugin 'jeetsukumaran/vim-nefertiti'
 Plugin 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
-Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'rakr/vim-two-firewatch'
+let g:two_firewatch_italics=1
+let g:airline_theme='twofirewatch'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
+
+" Plugin 'AlessandroYorba/Sierra'
+" Plugin 'altercation/vim-colors-solarized'
+let g:solarized_termtrans=0
+let g:solarized_termcolors=256
+let g:solarized_visibility="high"
+let g:solarized_contrast="normal"
+" Plugin 'colepeters/spacemacs-theme.vim'
+" Plugin 'fcpg/vim-fahrenheit'
+" Plugin 'jdkanani/vim-material-theme'
+" Plugin 'jeetsukumaran/vim-nefertiti'
+" Plugin 'mhartington/oceanic-next'
+" Plugin 'nanotech/jellybeans.vim'
+" Plugin 'NLKNguyen/papercolor-theme'
+" Plugin 'rakr/vim-one'
 " Plugin 'rodnaph/vim-color-schemes'
+" Plugin 'whatyouhide/vim-gotham'
 " Plugin '256-grayvim'
 " Plugin 'blacklight'
 " Plugin 'gregsexton/Atom'
@@ -544,34 +553,37 @@ nnoremap <unique> <leader>b :CtrlPBuffer<CR>
 " nnoremap gB :ls<CR>:sbuffer<Space>
 
 " Netrw/NERDTree {{{3
-nnoremap <unique><leader>p :Lex<CR>
-nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
-let g:netrw_browse_split=4 " (open in previous window)
-let g:netrw_hide=0
-" let g:netrw_home='~'
-let g:netrw_preview=0 "horizontal
-let g:netrw_alto=0    "aboveleft
-let g:netrw_liststyle=3 " thin long wide tree
-let g:netrw_winsize=25
-let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
-let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
-let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
-let g:netrw_list_hide =
-      \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
-      \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
-
-" Plugin 'scrooloose/nerdtree'
-" let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
-"     \ '\.egg$', '\.idea$',
-"     \ '\.bzr', '\.git', '\.hg', '\.svn']
-" let NERDChristmasTree=1
-" let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
-" let NERDTreeHighlightCursorline=1
-" let NERDTreeQuitOnOpen=1
-" let NERDTreeShowHidden=1
-" let NERDTreeWinPos="left"
-" nnoremap <unique><leader>p :NERDTreeToggle<CR>
-" nnoremap <unique><leader>P :NERDTreeFind<CR>
+" if v:version < 800
+    autocmd FileType netrw setlocal bufhidden=delete "wipe
+    nnoremap <unique><leader>p :Lex<CR>
+    nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
+    let g:netrw_browse_split=4 " (open in previous window)
+    let g:netrw_hide=0
+    " let g:netrw_home='~'
+    let g:netrw_preview=0 "horizontal
+    let g:netrw_alto=0    "aboveleft
+    let g:netrw_liststyle=3 " 3: thin long wide tree; 0: thin list
+    let g:netrw_winsize=25
+    let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
+    let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
+    let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
+    let g:netrw_list_hide =
+          \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
+          \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
+" else
+    " Plugin 'scrooloose/nerdtree'
+    " let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
+    "     \ '\.egg$', '\.idea$',
+    "     \ '\.bzr', '\.git', '\.hg', '\.svn']
+    " let NERDChristmasTree=1
+    " let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
+    " let NERDTreeHighlightCursorline=1
+    " let NERDTreeQuitOnOpen=1
+    " let NERDTreeShowHidden=1
+    " let NERDTreeWinPos="left"
+    " nnoremap <unique><leader>p :NERDTreeToggle<CR>
+    " nnoremap <unique><leader>P :NERDTreeFind<CR>
+" endif
 " nnoremap <silent> <F8> :NERDTreeToggle<CR>
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 " }}}
@@ -778,6 +790,9 @@ Plugin 'artur-shaik/vim-javacomplete2'
 
 " Markdown {{{2
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+let g:vim_markdown_folding_disabled=0
+let g:vim_markdown_folding_level=1
+
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
 function! <SID>MarkdownPreview(file)
@@ -859,7 +874,9 @@ function! <SID>IAWriter()
 endfunction
 augroup markdown
     autocmd!
-    autocmd FileType markdown setlocal textwidth=80 wrap linebreak
+    autocmd BufRead,BufNewFile *.{mk,markdown,mdown,mkdn,mkd,rst} set filetype=markdown
+    autocmd FileType markdown setlocal textwidth=80 wrap linebreak foldenable
+    autocmd FileType markdown nmap <leader>t :Toc<CR>:q<CR>:lop<CR> 
     autocmd FileType markdown nnoremap <silent><localleader>me :call <SID>IAWriter()<CR>
     autocmd FileType markdown nnoremap <silent><localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
@@ -910,8 +927,8 @@ Plugin 'jceb/vim-orgmode'
 let g:org_heading_shade_leading_stars=1
 let g:org_indent=1
 let g:org_todo_keywords = [
-    \ [ 'TODO(t)', 'WANT(w)', 'MUST(m)', '|', 'DONE(d)' ],
-    \ [ 'WIPR(p)', 'WAIT(s)', '|', 'FILED(f)', 'SKIP(x)'],
+    \ [ 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)' ],
+    \ [ 'WIPR(p)', 'WAIT(w)', '|', 'DONE(d)', 'FILED(f)', 'SKIP(x)'],
 \ ]
 let g:org_agenda_files = ['~/Dropbox/Dox/active/*.org']
 " autocmd BufNewFile,BufRead *.org setfiletype org
@@ -1012,7 +1029,7 @@ Plugin 'HTML-AutoCloseTag'
 
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-let g:airline_theme='kolor' " papercolor light kalisi molokai bubblegum solarized durant luna
+let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
 let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
@@ -1091,7 +1108,6 @@ vmap gmn <Plug>(easymotion-next)
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 
-Plugin 'chrisbra/NrrwRgn'
 
 " Dash.app
 Plugin 'rizzatti/funcoo.vim'
@@ -1149,6 +1165,8 @@ let g:startify_skiplist = [
     \ ]
 let g:startify_change_to_dir = 1
 
+Plugin 'chrisbra/NrrwRgn'
+
 Plugin 'terryma/vim-expand-region'
 let g:expand_region_text_objects = {
     \ 'iw' :0,
@@ -1175,8 +1193,8 @@ if has("unix")
     let s:uname = system("uname -s")
     " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
     if s:uname =~ "Darwin"
-        " colorscheme flattown
-        colorscheme summerfruit256 " alduin simpleandfriendly
+        " alduin camo gruvbox simpleandfriendly summerfruit256 
+        colorscheme camo 
     else
         colorscheme camo 
     endif

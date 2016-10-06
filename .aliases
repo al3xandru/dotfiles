@@ -15,6 +15,8 @@ alias l='ls -1AFp ${lsflags}'
 alias lt='ls -AlFpt ${lsflags}'
 alias grep='grep --color'
 alias tree='tree -C'
+alias unrar='unrar x'
+# editors
 alias a='atom'
 alias v='mvim'
 alias vs='mvim -S'
@@ -29,6 +31,7 @@ alias x='$HOME/bin/emacscltsrv'
 # alias x='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
 # alias em='emacsclient -n $* -a emacs'
 # alias x='emacsclient -n $* -a emacs'
+
 # IP addresses
 alias localip="ipconfig getifaddr en1"
 # alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
