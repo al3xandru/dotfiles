@@ -592,7 +592,11 @@ let g:netrw_list_hide =
 
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
 Plugin 'majutsushi/tagbar'
-let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+if filereadable("/usr/local/bin/ctags")
+    let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
+else
+    let g:tagbar_ctags_bin = '/usr/bin/ctags'
+endif
 let g:tagbar_autoclose = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_hide_nonpublic = 0
@@ -601,7 +605,12 @@ nnoremap <silent><leader>t :TagbarToggle<CR>
 
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
 Plugin 'ludovicchabant/vim-gutentags'
-let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
+if filereadable("/usr/local/bin/ctags")
+    let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
+else
+    let g:gutentags_ctags_executable = '/usr/bin/ctags'
+endif
+
 let g:gutentags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
@@ -616,7 +625,11 @@ let g:gutentags_generate_on_new = 0
 " Plugin 'AutoTag'
 " Plugin 'xolox/vim-misc'
 " Plugin 'xolox/vim-easytags'
-let g:easytags_cmd = '/usr/local/bin/ctags'
+if filereadable("/usr/local/bin/ctags")
+    let g:easytags_cmd = '/usr/local/bin/ctags'
+else
+    let g:easytags_cmd = '/usr/bin/ctags'
+endif
 let g:easytags_async = 1
 let g:easytags_dynamic_files = 1
 let g:easytags_auto_highlight = 0
@@ -1165,7 +1178,7 @@ if has("unix")
         " colorscheme flattown
         colorscheme summerfruit256 " alduin simpleandfriendly
     else
-        colorscheme navajo 
+        colorscheme camo 
     endif
 endif
 " call <SID>SetCursorLineColors()
