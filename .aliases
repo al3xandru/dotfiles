@@ -1,8 +1,8 @@
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
-    colorflag="--color"
+    lsflags='--color --time-style=+%Y-%m-%dT%H:%M:%S'
 else # OS X `ls`
-    colorflag="-G"
+    lsflags="-GT"
 fi
 
 #
@@ -10,9 +10,9 @@ fi
 #
 alias back='cd -'
 # alias b='back'
-alias ll='ls -AlFpT ${colorflag}'
-alias l='ls -1AFp ${colorflag}'
-alias lt='ls -AlFptT ${colorflag}'
+alias ll='ls -AFlp ${lsflags}'
+alias l='ls -1AFp ${lsflags}'
+alias lt='ls -AlFpt ${lsflags}'
 alias grep='grep --color'
 alias tree='tree -C'
 alias a='atom'
