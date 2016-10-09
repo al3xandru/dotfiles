@@ -6,11 +6,6 @@ else
     VIM_CMD="/usr/bin/vim"
 fi
 
-# currently not used
-MVIM_CMD=$(which mvim)
-if [ -z "$MVIM_CMD" ]; then
-	MVIM_CMD="$VIM_CMD"
-fi
 
 if [ -x "/usr/local/bin/mmdc" ]; then
     MARKDOWN_CMD="/usr/local/bin/mmdc"
@@ -20,13 +15,20 @@ fi
 
 if [ -x "/usr/local/bin/bbedit" ]; then
     BBEDIT_CMD="/usr/local/bin/bbedit"
+else
+    BBEDIT_CMD="$VIM_CMD"
 fi
 
-if [ -x "/usr/local/bin/atom" ]; then
-    ATOM_CMD="/usr/local/bin/atom"
-else
-    ATOM_CMD="$VIM_CMD"
-fi
+# currently not used
+# MVIM_CMD=$(which mvim)
+# if [ -z "$MVIM_CMD" ]; then
+# 	MVIM_CMD="$VIM_CMD"
+# fi
+# if [ -x "/usr/local/bin/atom" ]; then
+#     ATOM_CMD="/usr/local/bin/atom"
+# else
+#     ATOM_CMD="$VIM_CMD"
+# fi
 
 # Getting the last argument
 # (works with bash/ksh only): ${@: -1}
@@ -46,7 +48,7 @@ case "$lastarg" in
         ${VIM_CMD} "$lastarg"
         ;;
     *.md|*.markdown|*.mdown|*.mkdown )
-        ${MARKDOWN_CMD} "$lastarg"
+        ${BBEDIT_CMD} "$lastarg"
         ;;
     *.txt|*.log )
         ${MVIM_CMD} "$lastarg"

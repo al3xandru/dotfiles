@@ -1,31 +1,39 @@
+#
+# ALIASES
+#
+
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
     lsflags='--color --time-style=+%Y-%m-%dT%H:%M:%S'
 else # OS X `ls`
     lsflags="-GT"
 fi
-
-#
-# ALIASES
-#
-alias back='cd -'
-# alias b='back'
-alias ll='ls -AFlp ${lsflags}'
 alias l='ls -1AFp ${lsflags}'
-alias lt='ls -AlFpt ${lsflags}'
-alias grep='grep --color'
+alias ll='ls -AFlp ${lsflags}'
+alias lt='ls -AFlpt ${lsflags}'
 alias tree='tree -C'
+
+# Directories:
+alias ~="cd ~"
+alias -- -="cd -"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+# Utilities
+alias grep='grep --color'
 alias unrar='unrar x'
+alias ziplist='unzip -l'
+
 # editors
-alias a='atom'
-alias v='mvim'
-alias vs='mvim -S'
+alias v="vim"
+alias vs="vim -S"
 # alias m='mvim'
 # alias t='tvim'
 alias n='nvim'
-alias mmc='mmdc'
-#alias e="$EDITOR"
-alias em='$HOME/bin/emacscltsrv'
+alias e="mvim"
+alias es="mvim -S"
+alias E='$HOME/bin/emacscltsrv'
 alias x='$HOME/bin/emacscltsrv'
 # alias em='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
 # alias x='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
@@ -38,10 +46,6 @@ alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 
-# Directories:
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
 
 # Jump
 alias jump="cj"
