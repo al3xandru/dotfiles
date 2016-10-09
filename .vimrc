@@ -545,11 +545,11 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
 let g:ctrlp_use_caching = 2000
-nnoremap <unique> <leader>f :CtrlP<CR>
-nnoremap <unique> <leader>j :CtrlPBufTag<CR>
-nnoremap <unique> <leader>b :CtrlPBuffer<CR>
+nnoremap <unique><leader>f :CtrlP<CR>
+nnoremap <unique><leader>] :CtrlPBufTag<CR>
+nnoremap <unique><leader>B :CtrlPBuffer<CR>
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
-" nnoremap gb :ls<CR>:buffer<Space>
+nnoremap <unique><leader>b :ls<CR>:buffer<space>
 " nnoremap gB :ls<CR>:sbuffer<Space>
 
 " Netrw/NERDTree {{{3
@@ -1189,14 +1189,17 @@ call vundle#end()
 filetype plugin indent on " required!
 
 " set color scheme
+" kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
+" alduin camo gruvbox simpleandfriendly summerfruit256 
 if has("unix")
+    " use if needed to determine the os
+    " or use has("mac")
     let s:uname = system("uname -s")
-    " kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
-    if s:uname =~ "Darwin"
-        " alduin camo gruvbox simpleandfriendly summerfruit256 
-        colorscheme camo 
+
+    if has("gui_running")
+        colorscheme camo
     else
-        colorscheme camo 
+        colorscheme summerfruit256
     endif
 endif
 " call <SID>SetCursorLineColors()
