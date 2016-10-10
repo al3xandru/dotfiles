@@ -201,6 +201,14 @@ function dnsswitch() {
 }
 alias switchdns=dnsswitch
 
+# PYTHONPATH
+function setpythonpath {
+    if [ $(which pyenv) != "" ]; then
+        export PYTHONPATH=.:$HOME/.pyenv/versions/$(pyenv version | cut -d " " -f1)/lib/python2.7/site-packages/
+        echo PYTHONPATH=$PYTHONPATH
+    fi
+}
+
 # Node.js NPM
 function nodejs_activate_npm {
     export PATH=/usr/local/share/npm/bin:${PATH}
