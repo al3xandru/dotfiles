@@ -11,7 +11,7 @@ function doStatus() {
         fi
         echo ""
         echo "Comparing $file with $HOME/$file"
-        diff -rq $file $HOME/$file | grep -v -e 'tags' -e 'netrwhist' -e 'README.md'
+        diff -rq $file $HOME/$file | grep -v -e 'tags' -e 'netrwhist' -e 'README.md' -e '.vim/bundle'
     done
     echo ""
 
