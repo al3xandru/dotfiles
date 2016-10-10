@@ -676,6 +676,8 @@ Plugin 'beloglazov/vim-online-thesaurus'
 
 Plugin 'mbbill/undotree'
 nnoremap <leader>u :UndotreeToggle<CR>
+let g:undotree_WindowLayout = 2
+let g:undotree_SetFocusWhenToggle = 1
 
 
 Plugin 'junegunn/vim-peekaboo'
@@ -891,30 +893,53 @@ augroup END
 " Python {{{2
 Plugin 'hdima/python-syntax'
 Plugin 'klen/python-mode'
+let g:pymode_doc = 1
+let g:pymode_doc_bind = 'K'
+let g:pymode_folding = 1
+let g:pymode_indent = 1
+let g:pymode_motion = 1
 let g:pymode_options_max_line_length=99
+let g:pymode_lint = 1
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
 let g:pymode_lint_ignore = "E501"
 let g:pymode_syntax_slow_sync = 0
-let g:pymode_run_bind = '<localleader>r'
-let g:pymode_breakpoint_bind = '<localleader>b'
+let g:pymode_virtualenv = 1
+let g:pymode_run = 0
+" let g:pymode_run_bind = '<localleader>ger'
+let g:pymode_breakpoint = 1
+let g:pymode_breakpoint_bind = '<localleader>gb'
+let g:pymode_rope = 0
+let g:pymode_rope_completion = 0
+let g:pymode_rope_complete_on_dot = 0
 
 Plugin 'davidhalter/jedi-vim'
-let g:jedi#use_splits_not_buffers = "top"
-let g:jedi#popup_on_dot = 0
-"let g:jedi#show_call_signatures = 1
+let g:jedi#auto_initialization = 1
+let g:jedi#completions_enabled = 1
 let g:jedi#completions_command = "<C-Space>"
+let g:jedi#use_splits_not_buffers = "bottom"
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 1 " 2: show in command line instead of popup
+" bindings
 let g:jedi#goto_assignments_command = "<localleader>ga"
 let g:jedi#goto_definitions_command = "<localleader>gd"
+let g:jedi#goto_command="<localleader>gd"
 let g:jedi#documentation_command = "<localleader>gh"
 let g:jedi#usages_command = "<localleader>gu"
 let g:jedi#rename_command = "<localleader>gr"
-"let g:jedi#completions_enabled = 0
 "}}}
 
 
 Plugin 'derekwyatt/vim-scala'
 
 Plugin 'keith/swift.vim'
+
+" Tasklist
+Plugin 'TaskList.vim'
+augroup tasklist
+    autocmd!
+    autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
+augroup END
+map <unique><localleader>t <Plug>TaskList
 
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
