@@ -30,16 +30,26 @@ scriptencoding utf-8
 
 " 1. important 
 set nocompatible
-set lazyredraw
 set backspace=2
-" Allow backspace in insert mode
-set backspace=indent,eol,start
+set backspace=indent,eol,start  " allow backspace in insert mode
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
-set clipboard=unnamed
+if has('clipboard')
+    if has('unnamedplus')
+        set clipboard=unnamed,unnamedplus
+    else
+        set clipboard=unnamed
+    endif
+endif
+set esckeys     " allow cursor keys in insert mode
+set hidden      " allow buffer switching without saving
+set lazyredraw
+set modeline
+set modelines=5
+set mouse=a
+set mousehide
 set sessionoptions-=options
-
-" Enhance command-line completion
-set wildmenu
+set showmode    " display the current mode
+set wildmenu    " enhance command-line completion
 set wildignore+=.hg,.git,.svn  " version control
 set wildignore+=*.o,*.obj,*.exe,*.dll,*.pyc,*.pyo,*.class,*.luac " compiled
 set wildignore+=*.DS_Store,*.sw?
@@ -48,8 +58,7 @@ set wildignore+=*.png,*.jpg,*.gif,*.bmp
 set wildignore+=*.egg,*.egg-info,*.gem
 set wildignore+=*.zip,*.tar.gz,*.gzip,*.rar
 set wildignore+=*.aux,*.toc " Latex intermediary files
-" Allow cursor keys in insert mode
-set esckeys
+
 
 " autosave on focus lost
 autocmd FocusLost, BufLeave * silent! :wall
@@ -61,10 +70,11 @@ set hlsearch
 set ignorecase
 set smartcase
 set showmatch
+set matchtime=3     " tenths of a second to show the matching paren
 set scrolloff=5
 
 " 3. tags
-" omnicomplete 
+" omnicomplete {{{
 set omnifunc=syntaxcomplete#Complete
 " https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
 " kspell: dictionary completion only when spell enabled set spell 
@@ -74,6 +84,7 @@ set completeopt=longest,menu,preview
 " http://stackoverflow.com/questions/7722177/how-do-i-map-ctrl-x-ctrl-o-to-ctrl-space-in-terminal-vim
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
+" }}}
 
 " 4. displaying text
 filetype on
@@ -85,10 +96,36 @@ set listchars=tab:▸\ ,trail:·,eol:¬
 set showbreak=↪
 " set showbreak=⤿
 
+" line numbers {{{
+" http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
+function! <SID>ToggleLineNo()
+    if(&relativenumber == 1)
+        set norelativenumber number
+    else
+        set number relativenumber
+    endif
+endfunction
+" mappings inspired by vim-unimpaired
+nmap [o0 :set number relativenumber<CR>
+nmap ]o0 :set norelativenumber number<CR>
+nmap <silent>co0 :call <SID>ToggleLineNo()<CR>
+" nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
+augroup lineno
+    autocmd!
+    autocmd FocusLost * set norelativenumber number
+    autocmd InsertEnter * set norelativenumber number
+    autocmd InsertLeave * set relativenumber number
+    autocmd Filetype qf setlocal norelativenumber number nowrap
+augroup END
+set number
+set relativenumber
+" }}}
+
+
 " 5. syntax, highlighting and spelling"
 syntax on
 
-" colorscheme
+" colorscheme {{{
 colorscheme koehler
 " http://vimcolors.com/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
@@ -121,8 +158,9 @@ function! <SID>ChooseColorscheme(args)
     execute "colorscheme " . input("Choice: ", "", "color")
 endfunction
 command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
+" }}}
 
-" color column
+" color column & cursor line {{{
 function! <SID>SetColorColumn()
     " highlight ColorColumn ctermbg=235 guibg=#2c2d27
     set colorcolumn=81,121
@@ -141,8 +179,8 @@ function! <SID>SetCursorLineColors()
     hi CursorLine    ctermbg=52 guibg=#424242
     hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
 endfunction
+" }}}
 
-set matchtime=3
 set dictionary=/usr/share/dict/words
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -160,9 +198,9 @@ augroup END
 set title
 set laststatus=2
 set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %y]%<\ [a\%03.3b:h\%02.2B]
-hi StatusLine ctermbg=59 ctermfg=69 
+" hi StatusLine ctermbg=59 ctermfg=69 
 
-" GUI "
+" GUI {{{
 set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
@@ -200,6 +238,7 @@ endif
 "     autocmd FocusGained * set transparency=0
 "     autocmd FocusLost * set transparency=25
 " augroup END
+" }}}
 
 " splits
 set splitbelow
@@ -217,58 +256,40 @@ set splitright
 set ruler
 set visualbell t_vb=
 
-" http://jeffkreeftmeijer.com/2012/relative-line-numbers-in-vim-for-super-fast-movement/
-function! <SID>ToggleLineNo()
-    if(&relativenumber == 1)
-        set norelativenumber number
-    else
-        set number relativenumber
-    endif
-endfunction
-" mappings inspired by vim-unimpaired
-nmap [o0 :set number relativenumber<CR>
-nmap ]o0 :set norelativenumber number<CR>
-nmap <silent>co0 :call <SID>ToggleLineNo()<CR>
-" nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
-augroup lineno
-    autocmd!
-    autocmd FocusLost * set norelativenumber number
-    autocmd InsertEnter * set norelativenumber number
-    autocmd InsertLeave * set relativenumber number
-    autocmd Filetype qf setlocal norelativenumber number nowrap
-augroup END
-set number
-set relativenumber
 
-" 14. tabs and indenting
+" 14. tabs and indenting {{{
 set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 set smartindent
 set autoindent
+" }}}
 
 
-" 15. folding
+" 15. folding {{{
 set foldenable
 set foldmethod=indent
 set foldnestmax=10
 set foldlevel=100
 "HTML folding tag
 nnoremap <leader>zha Vatzf
+" }}}
 
 
 " 16 diff mode
 set diffopt=filler,vertical
-" 17. mapping
+
+
+" 17. mappings {{{
 set timeoutlen=750
+
 " abbreviations
 cnoreabbrev W w
 cnoreabbrev Q q
 
 
 " Change mapleader from <Leader> = \
-" let mapleader=","
 let mapleader="\<space>"
 let maplocalleader="\\"
 
@@ -288,12 +309,12 @@ nnoremap <Down> gj
 " make ; behave like : (save the Shift)
 nnoremap ; :
 " nnoremap , ;
-nnoremap … ;
+nnoremap … ;    " Alt+;
 nnoremap <tab> %
 vnoremap <tab> %
 
+" blip for next highlight word and center the line {{{
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-" also center the line
 " Plugin 'timakro/vim-searchant'
 nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
 nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
@@ -306,20 +327,21 @@ function! <SID>HLNext (blinktime)
     call matchdelete(ring)
     redraw
 endfunction
+" }}}
 
-" http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
+" Show special characters
+nmap <silent><leader>hc :set nolist!<CR>
+" Disable highlighted search 
+nnoremap <silent><leader>hh :nohlsearch<CR>
+" Highlight matches http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
 " case sensitive, partial match inclusive
 nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
 " case sensitive, no partial match
 nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
-" disable highlighted search 
-nnoremap <silent><leader>hh :nohlsearch<CR>
-" Show special characters
-nmap <silent><leader>hc :set nolist!<CR>
 
 " Inserts the path of the currently edited file into a command
-" Command mode: Ctrl+P
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+" Save current session
 function! <SID>SaveSession () 
     let parentDir = getcwd()
     exec "mksession! " . parentDir . "/.session.vim"
@@ -357,12 +379,8 @@ inoremap <C-\> <C-w><C-]><C-w>T
 " Alt+] on OS X
 nnoremap ‘ <C-w><C-]><C-w>T
 inoremap ‘ <C-w><C-]><C-w>T
-" Window switch
-" map <C-h> <C-w>h
-" map <C-j> <C-w>j
-" map <C-k> <C-w>k
-" map <C-l> <C-w>l
-" window vertical resize
+
+" Window resizing
 nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
@@ -385,7 +403,7 @@ nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 
-" bind f and F to perform searches for the word under cursor
+" bind f and F to perform grep for the word under cursor
 " grep results go into quicklist: copen/cclose
 nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
 nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
@@ -404,9 +422,7 @@ nnoremap c* *Ncgn
 nnoremap c# #NcgN
 nnoremap cg* g*Ncgn
 nnoremap cg# g#NcgN
-" display :Errors
-"nnoremap <leader>l :Errors<CR>
-
+" }}}
 
 " 19. the swap file
 set backup
@@ -918,7 +934,7 @@ let g:jedi#completions_enabled = 1
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#use_splits_not_buffers = "bottom"
 let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 1 " 2: show in command line instead of popup
+let g:jedi#show_call_signatures = 2 " 2: show in command line instead of popup
 " bindings
 let g:jedi#goto_assignments_command = "<localleader>ga"
 let g:jedi#goto_definitions_command = "<localleader>gd"
@@ -1095,7 +1111,7 @@ Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
 let g:EasyMotion_use_upper=1
-let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
+let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 let g:EasyMotion_inc_highlight=1
 let g:EasyMotion_move_highlight=1
 let g:EasyMotion_landing_highlight=0
@@ -1116,18 +1132,18 @@ nmap <leader><leader>t <Plug>(easymotion-bd-t)
 vmap <leader><leader>t <Plug>(easymotion-bd-t)
 nmap <leader><leader>f <Plug>(easymotion-bd-f)
 vmap <leader><leader>f <Plug>(easymotion-bd-f)
-nmap gms <Plug>(easymotion-sn)
-nmap gmw <Plug>(easymotion-bd-w)
-nmap gme <Plug>(easymotion-bd-e)
-nmap gmf <Plug>(easymotion-bd-f)
-nmap gmt <Plug>(easymotion-bd-t)
-nmap gmn <Plug>(easymotion-next)
-vmap gms <Plug>(easymotion-sn)
-vmap gmw <Plug>(easymotion-bd-w)
-vmap gme <Plug>(easymotion-bd-e)
-vmap gmf <Plug>(easymotion-bd-f)
-vmap gmt <Plug>(easymotion-bd-t)
-vmap gmn <Plug>(easymotion-next)
+nmap ,s <Plug>(easymotion-sn)
+nmap ,w <Plug>(easymotion-bd-w)
+nmap ,e <Plug>(easymotion-bd-e)
+nmap ,f <Plug>(easymotion-bd-f)
+nmap ,t <Plug>(easymotion-bd-t)
+nmap ,n <Plug>(easymotion-next)
+vmap ,s <Plug>(easymotion-sn)
+vmap ,w <Plug>(easymotion-bd-w)
+vmap ,e <Plug>(easymotion-bd-e)
+vmap ,f <Plug>(easymotion-bd-f)
+vmap ,t <Plug>(easymotion-bd-t)
+vmap ,n <Plug>(easymotion-next)
 
 
 Plugin 'tpope/vim-surround'
@@ -1222,7 +1238,8 @@ if has("unix")
     let s:uname = system("uname -s")
 
     if has("gui_running")
-        colorscheme camo
+        colorscheme lucius
+        LuciusWhiteHighContrast
     else
         colorscheme summerfruit256
     endif
@@ -1295,4 +1312,4 @@ call <SID>SetColorColumn()
 " https://github.com/tpope/vim-pathogen
 " http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
 " 
-" vim: set foldmethod=marker:
+" vim: set foldlevel=0 foldmethod=marker:
