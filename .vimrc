@@ -106,9 +106,10 @@ function! <SID>ToggleLineNo()
     endif
 endfunction
 " mappings inspired by vim-unimpaired
-nmap [o0 :set number relativenumber<CR>
-nmap ]o0 :set norelativenumber number<CR>
-nmap <silent>co0 :call <SID>ToggleLineNo()<CR>
+nmap [o- :set number relativenumber<CR>
+nmap ]o- :set norelativenumber number<CR>
+nmap <silent>co- :call <SID>ToggleLineNo()<CR>
+map <silent><C-_> <esc>:call <SID>ToggleLineNo()<CR>
 " nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
 augroup lineno
     autocmd!
@@ -163,7 +164,7 @@ command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
 " color column & cursor line {{{
 function! <SID>SetColorColumn()
     " highlight ColorColumn ctermbg=235 guibg=#2c2d27
-    set colorcolumn=81,121
+    set colorcolumn=81,161
     " Following setting colors all columns after 121
     " let &colorcolumn="81,".join(range(121,999),",")
 endfunction
@@ -214,6 +215,7 @@ if has("gui_running")
         " set gfn=Anonymous_Pro:h12
         " set gfn=Consolas:h12
         " set gfn=Cousine:h11
+        " set gfn=Fira_Code_Regular:h12
         " set gfn=Hack:h12
         " set gfn=Inconsolata:h13
         " set gfn=Input_Mono:h11
@@ -230,7 +232,7 @@ if has("gui_running")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
-    set columns=120
+    set columns=165
     set lines=80
 endif
 " augroup VimTransparency
@@ -472,6 +474,24 @@ end
 
 
 
+" https://github.com/macvim-dev/macvim/issues/386
+if has('gui') && has('mac')
+    if executable("pyenv")
+        let cmd = 'pyenv version-name'
+        let pyenv=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        " let pyenv=strpart(pyenv, 0, strlen(pyenv)-1)
+        let cmd = 'python -c "import sys;vt=sys.version_info;print \"%s.%s.%s\" % (vt[0], vt[1], vt[2])"'
+        let pyver=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let $PYTHONHOME=$HOME . "/.pyenv/versions/" . pyver
+        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . pyenv . "/lib/python2.7/site-packages/"
+        set pythondll=$PYTHONHOME/lib/libpython2.7.dylib
+        " echom "PYENV     :" . pyenv
+        " echom "PYTHONVER :" . pyver
+        " echom "PYTHONHOME:" . $PYTHONHOME
+        " echom "PYTHONPATH:" . $PYTHONPATH
+        " echom "PYTHONDLL :" . &pythondll
+    endif
+endif
 
 " Load Vundle
 " Only Plugin settings are allowed until vundle#end()
@@ -799,6 +819,12 @@ augroup END
 
 " HTML Zen Coding
 Plugin 'mattn/emmet-vim'
+let g:user_emmer_install_global=0
+augroup emmet
+    autocmd!
+    autocmd FileType html,css EmmetInstall
+augroup END
+let g:user_emmet_leader_key='<C-X>'
 
 
 " Java completion
@@ -907,6 +933,7 @@ augroup END
 
 
 " Python {{{2
+Plugin 'lambdalisue/vim-pyenv'
 Plugin 'hdima/python-syntax'
 Plugin 'klen/python-mode'
 let g:pymode_doc = 1
