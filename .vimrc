@@ -969,6 +969,12 @@ let g:jedi#goto_command="<localleader>gd"
 let g:jedi#documentation_command = "<localleader>gh"
 let g:jedi#usages_command = "<localleader>gu"
 let g:jedi#rename_command = "<localleader>gr"
+
+" https://github.com/macvim-dev/macvim/issues/386
+" if !has('gui') ||  !has('mac')
+" endif
+" if !has('gui') || !has('mac')
+" endif
 "}}}
 
 
