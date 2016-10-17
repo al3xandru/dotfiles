@@ -43,7 +43,7 @@ bind ':cmd;ctrl     push bottom
 bind ]:cmd;ctrl     push right
 bind ]:alt;cmd;ctrl push top
 bind =:cmd;ctrl     push top
-bind f:cmd;ctrl     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
+bind f:alt;cmd;ctrl     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
 bind j:shift;cmd;ctrl push left  bar-resize:screenSizeX/3
 bind j:cmd;ctrl     push left  bar-resize:screenSizeX/2
 bind k:cmd;ctrl     push right bar-resize:screenSizeX/2
