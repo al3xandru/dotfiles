@@ -10,15 +10,13 @@
 	quotepath = false
 	editor = vim -f
 [alias]
-    a = add
-    br = branch -a
-    b = branch -a
-    nb = checkout -b
-    newb = checkout -b
-    newbr = checkout -b
     s = status
+    a = add
+    b = branch -a
+    bd = branch -d
+    bD = branch -D
+    bn = checkout -b
     cl = clone
-    cl-nohist = clone --depth 1
     cl0 = clone --depth 1
     c = commit
     ci = commit --interactive -v
