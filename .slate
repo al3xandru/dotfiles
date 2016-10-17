@@ -6,7 +6,7 @@ config defaultToCurrentScreen true
 config nudgePercentOf screenSize
 config orderScreensLeftToRight false
 config resizePercentOf screenSize
-config undoOps grid,layout,move,resize,push,nudge
+config undoOps grid,layout,move,resize,push,nudge,chain,sequence
 # config switchShowTitles true
 
 # monitor aliases
@@ -22,7 +22,7 @@ bind g:cmd;ctrl    grid padding:5
 bind esc:ctrl      grid padding:5
 
 # App hints
-bind h:cmd;ctrl     hint QWERTYUIOP
+bind w:alt;cmd;ctrl     hint QWERTYUIOP
 
 # Resize Bindings
 # Enlarge: top-right-bottom-left
@@ -37,22 +37,23 @@ bind 7:alt;cmd;ctrl     resize +0 -10% top-left
 bind 8:alt;cmd;ctrl     resize -10% +0 top-right
 
 # Push Bindings
-bind [:cmd;ctrl     push left
-bind [:alt;cmd;ctrl push bottom
-bind ':cmd;ctrl     push bottom
-bind ]:cmd;ctrl     push right
-bind ]:alt;cmd;ctrl push top
-bind =:cmd;ctrl     push top
+bind [:cmd;ctrl         push left
+bind [:alt;cmd;ctrl     push bottom
+bind ':cmd;ctrl         push bottom
+bind ]:cmd;ctrl         push right
+bind ]:alt;cmd;ctrl     push top
+bind =:cmd;ctrl         push top
 bind f:alt;cmd;ctrl     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
-bind j:shift;cmd;ctrl push left  bar-resize:screenSizeX/3
-bind j:cmd;ctrl     push left  bar-resize:screenSizeX/2
-bind k:cmd;ctrl     push right bar-resize:screenSizeX/2
-bind k:shift;cmd;ctrl push right bar-resize:screenSizeX/3
-# Maximize vertically
-bind v:alt;cmd;ctrl move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
+# bind h:cmd;ctrl         push left  bar-resize:screenSizeX/2-50
+bind h:cmd;ctrl         sequence push left bar-resize:screenSizeX/2 > resize -5 +0 top-left
+bind h:shift;cmd;ctrl   sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
+bind l:cmd;ctrl         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
+bind l:shift;cmd;ctrl   sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
 # Center window
 bind c:cmd;ctrl     move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
-bind c:alt;cmd;ctrl move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
+bind c:shift;cmd;ctrl move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
+# Maximize vertically
+bind c:alt;cmd;ctrl move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
 
 # Nudge Bindings
 bind l:alt;cmd;ctrl  nudge +25 +0
