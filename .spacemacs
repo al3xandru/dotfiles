@@ -46,7 +46,7 @@ values."
      ;; vim
      evil-commentary
      evil-snipe
-     unimpaired
+     ;; unimpaired
      ;; misc
      deft
      xkcd
