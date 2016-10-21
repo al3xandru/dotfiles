@@ -59,6 +59,8 @@ set wildignore+=*.egg,*.egg-info,*.gem
 set wildignore+=*.zip,*.tar.gz,*.gzip,*.rar
 set wildignore+=*.aux,*.toc " Latex intermediary files
 
+" test settings
+set path+=**
 
 " autosave on focus lost
 autocmd FocusLost, BufLeave * silent! :wall
@@ -596,8 +598,9 @@ nnoremap <unique><leader>b :ls<CR>:buffer<space>
     let g:netrw_browse_split=4 " (open in previous window)
     let g:netrw_hide=0
     " let g:netrw_home='~'
-    let g:netrw_preview=0 "horizontal
-    let g:netrw_alto=0    "aboveleft
+    let g:netrw_preview=0   "horizontal
+    let g:netrw_alto=0      "aboveleft
+    let g:netrw_altv=1      "open splits to the right
     let g:netrw_liststyle=3 " 3: thin long wide tree; 0: thin list
     let g:netrw_winsize=25
     let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
@@ -1271,8 +1274,7 @@ if has("unix")
     let s:uname = system("uname -s")
 
     if has("gui_running")
-        colorscheme lucius
-        LuciusWhiteHighContrast
+        colorscheme gruvbox
     else
         colorscheme summerfruit256
     endif
