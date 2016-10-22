@@ -753,6 +753,12 @@ else
     Plugin 'garbas/vim-snipmate'
 endif
 Plugin 'honza/vim-snippets'
+
+" Plugin 'Shougo/neosnippet.vim'
+" Plugin 'Shougo/neosnippet-snippets'
+" imap <C-k> <Plug>(neosnippet_expand_or_jump)
+" smap <C-k> <Plug>(neosnippet_expand_or_jump)
+" xmap <C-k> <Plug>(neosnippet_expand_or_jump)
 "}}}
 "}}}
 
@@ -833,6 +839,10 @@ let g:user_emmet_leader_key='<C-X>'
 " Java completion
 " Plugin 'VictorDenisov/javacomplete'
 Plugin 'artur-shaik/vim-javacomplete2'
+
+
+" Javascript
+Plugin 'pangloss/vim-javascript'
 
 
 " Markdown {{{2
