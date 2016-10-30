@@ -588,6 +588,7 @@ nnoremap <unique><leader>] :CtrlPBufTag<CR>
 nnoremap <unique><leader>B :CtrlPBuffer<CR>
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
 nnoremap <unique><leader>b :ls<CR>:buffer<space>
+nnoremap <silent><leader>bh :Startify<CR>
 " nnoremap gB :ls<CR>:sbuffer<Space>
 
 " Netrw/NERDTree {{{3
@@ -1089,7 +1090,9 @@ let g:notes_conceal_code=0
 "
 "{{{2
 " Improved %
-Plugin 'edsono/vim-matchit'
+" Plugin 'edsono/vim-matchit' " dead
+" Plugin 'isa/vim-matchit'
+Plugin 'jwhitley/vim-matchit'
 
 Plugin 'kien/rainbow_parentheses.vim'
 augroup rainbowpar
@@ -1117,7 +1120,8 @@ Plugin 'HTML-AutoCloseTag'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
-let g:airline_section_c='b%n %f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:airline_section_b='[%{airline#extensions#branch#get_head()}] b:%n w:%{winnr()}' "%{airline#section#create([\'b:%n w:%{winnr()} [\', \'branch\', \']\'])}'
+let g:airline_section_c='%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:airline_section_z='%4l:%-3c %3p%%'   
 let g:airline_mode_map={
        \ '__' : '-',
