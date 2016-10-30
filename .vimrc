@@ -200,7 +200,7 @@ augroup END
 " 6. multiple windows "
 set title
 set laststatus=2
-set statusline=%t\ %l,%v%=[b%n\ %L:%p%%\ %y]%<\ [a\%03.3b:h\%02.2B]
+set statusline=[b%n:%{mode()}]\ %f%r%m%=[%l:%v\ %p%%\ %L]%q%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
 " hi StatusLine ctermbg=59 ctermfg=69 
 
 " GUI {{{
@@ -1117,12 +1117,14 @@ Plugin 'HTML-AutoCloseTag'
 "}}}
 
 
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
+let g:airline_left_sep = '»'
+let g:airline_right_sep = '«'
 let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
-let g:airline_section_b='[%{airline#extensions#branch#get_head()}] b:%n w:%{winnr()}' "%{airline#section#create([\'b:%n w:%{winnr()} [\', \'branch\', \']\'])}'
+" let g:airline_section_b='[%{airline#extensions#branch#get_head()}] b:%n w:%{winnr()}' "%{airline#section#create([\'b:%n w:%{winnr()} [\', \'branch\', \']\'])}'
 let g:airline_section_c='%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-let g:airline_section_z='%4l:%-3c %3p%%'   
+let g:airline_section_z='%4l:%-3c %3p%% b%n:w%{winnr()}'   
 let g:airline_mode_map={
        \ '__' : '-',
        \ 'n'  : 'N',
