@@ -1,0 +1,23 @@
+snippet _
+abbr _emphasis_
+alias zfe
+options word
+    _${1}_ ${2}
+
+snippet **
+abbr **strong**
+alias zfs
+options word
+    **${1}** ${2}
+
+snippet zfn
+abbr footnote
+options word
+    [^${1:fn1}] ${3}
+
+    [^$1]: ${2:#:footnote text}
+
+snippet zdates 
+abbr "Date in format 2016-06-16"
+options word
+    `strftime("%Y-%m-%d")`

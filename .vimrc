@@ -456,17 +456,17 @@ if has("autocmd")
     augroup vimrc
         autocmd!
         " crontab -e
-        autocmd BufNewFile,BufRead crontab.* set nobackup | set nowritebackup
+        autocmd BufNewFile,BufRead crontab.* set nobackup nowritebackup
 
         " json is javascript
         autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 
-        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab autoindent
+        autocmd FileType html,htm setlocal ts=2 sts=2 sw=2 expandtab
         autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
-        autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-        autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
-        autocmd FileType htm setlocal ts=2 sts=2 sw=2 expandtab
         autocmd FileType java setlocal omnifunc=javacomplete#Complete
+        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab autoindent
+        autocmd FileType vim setlocal nowrap
+        autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
         if filereadable(expand("~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim"))
             autocmd FileType html,htm,xhtml,xml source ~/.vim/bundle/HTML-AutoCloseTag/ftplugin/html_autoclosetag.vim
@@ -700,18 +700,31 @@ let g:easytags_suppress_ctags_warning = 1
             "\ }
 "\}
 
-Plugin 'Shougo/neocomplete.vim'
-augroup neocomplete
-    autocmd!
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-augroup END
+" Plugin 'Shougo/neocomplete.vim'
+" " let g:neocomplete#enable_at_startup=1
+" let g:neocomplete#auto_complete_delay=400
+" let g:neocomplete#auto_completion_start_length=2
+" if !exists('g:neocomplete#sources')
+"     let g:neocomplete#sources = {}
+" endif
+" let g:neocomplete#sources.md = ['dictionary', 'buffer', 'neosnippet'] "['omni', 'tag', 'buffer', 'dictionary', 'neosnippet']
+" let g:neocomplete#fallback_mappings=["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
+" augroup neocomplete
+"     autocmd!
+"     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"     " autocmd BufNew,BufRead css,html,javascript,html,markdown,xml :NeoCompleteEnable<CR>
+" augroup END
+" nmap [op :NeoCompleteEnable<CR>
+" nmap ]op :NeoCompleteDisable<CR>
+" nmap cop :NeoCompleteToggle<CR>
 " }}}
 
 
 Plugin 'beloglazov/vim-online-thesaurus'
+" <localleader>K :OnlineThesaurusCurrentWord
 
 
 Plugin 'mbbill/undotree'
@@ -746,20 +759,21 @@ Plugin 'rking/ag.vim'
 
 
 " Snippets {{{2
-if has("python")
-    Plugin 'SirVer/ultisnips'
-else
-    Plugin 'MarcWeber/vim-addon-mw-utils'
-    Plugin 'tomtom/tlib_vim'
-    Plugin 'garbas/vim-snipmate'
-endif
-Plugin 'honza/vim-snippets'
-
-" Plugin 'Shougo/neosnippet.vim'
-" Plugin 'Shougo/neosnippet-snippets'
-" imap <C-k> <Plug>(neosnippet_expand_or_jump)
-" smap <C-k> <Plug>(neosnippet_expand_or_jump)
-" xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+" if has("python")
+"     Plugin 'SirVer/ultisnips'
+"     let g:UltiSnipsSnippetsDir=expand("~/.vim/xsnippets/ultisnips")
+" else
+"     Plugin 'MarcWeber/vim-addon-mw-utils'
+"     Plugin 'tomtom/tlib_vim'
+"     Plugin 'garbas/vim-snipmate'
+" endif
+" Plugin 'honza/vim-snippets'
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 "}}}
 "}}}
 
