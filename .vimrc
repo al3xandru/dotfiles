@@ -735,6 +735,7 @@ let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'junegunn/vim-peekaboo'
 let g:peekaboo_delay=800
+let g:peekaboo_window='topleft 15new'
 
 
 Plugin 'tpope/vim-commentary'
@@ -951,6 +952,14 @@ augroup markdown
     autocmd FileType markdown nmap <leader>t :Toc<CR>:q<CR>:lop<CR> 
     autocmd FileType markdown nnoremap <silent><localleader>me :call <SID>IAWriter()<CR>
     autocmd FileType markdown nnoremap <silent><localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
+    autocmd FileType markdown nnoremap <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
+    " Paste clipboard as blockquote
+    " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
+    " autocmd FileType markdown nnoremap <silent><localleader>bq pgw`]V`]:s/^/> /g<CR>:nohlsearch<CR>o
+    autocmd FileType markdown nnoremap <silent><localleader>bq p`]gw`[V`[:s/^/> /g<CR>:nohlsearch<CR>o
+    " visual selection to blockquote
+    " autocmd FileType markdown vmap bq mzgw`<mav`z:s/^/> /g<CR>:nohlsearch<CR>2xo
+    autocmd FileType markdown vmap bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
 augroup END
 
@@ -1263,6 +1272,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/active/02-thoughts.md',
     \ '~/Dropbox/Dox/active/03-email_drafts.md',
     \ '~/Dropbox/Dox/active/04-notes.org',
+    \ '~/Dropbox/Dox/active/05-blog.md',
     \ '~/.vimrc',
     \]
 let g:startify_session_autoload = 1
