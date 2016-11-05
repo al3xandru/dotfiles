@@ -20,10 +20,10 @@ else
 fi
 
 # currently not used
-# MVIM_CMD=$(which mvim)
-# if [ -z "$MVIM_CMD" ]; then
-# 	MVIM_CMD="$VIM_CMD"
-# fi
+MVIM_CMD=$(which mvim)
+if [ -z "$MVIM_CMD" ]; then
+	MVIM_CMD="$VIM_CMD"
+fi
 # if [ -x "/usr/local/bin/atom" ]; then
 #     ATOM_CMD="/usr/local/bin/atom"
 # else
