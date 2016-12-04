@@ -3,12 +3,18 @@ nnoremap j gj
 vnoremap j gj
 nnoremap k gk
 vnoremap k gk
+nnoremap gcc :action CommentByLineComment<CR>
+vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
+vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
 nnoremap ; :
+nnoremap … ;
+nnoremap ,s :action AceJumpAction<CR>
 nnoremap <space>hh :nohlsearch<CR>
-nnoremap <space>nr :set nonumber relativenumber<CR>
-vnoremap <space>nr :set nonumber relativenumber<CR>
-nnoremap <space>na :set norelativenumber number<CR>
-vnoremap <space>na :set norelativenumber number<CR>
+nnoremap <space><esc> :nohlsearch<CR>
+nmap [o- :set nonumber relativenumber<CR>
+vmap [o- :set nonumber relativenumber<CR>
+nmap ]o- :set norelativenumber number<CR>
+vmap ]o- :set norelativenumber number<CR>
 set history=10000
 set hlsearch
 set ignorecase
