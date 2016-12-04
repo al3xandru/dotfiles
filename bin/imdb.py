@@ -7,6 +7,7 @@ import argparse
 import httplib
 import json
 import os
+import re
 import sys
 import socket
 import subprocess
@@ -14,6 +15,7 @@ import tempfile
 import urllib
 import urllib2
 import urlparse
+import warnings
 
 
 RATINGS = {
@@ -45,14 +47,18 @@ def prepare_title(title):
   return ' '.join(swords)
 
 
+# The following SO entry seem to contain some IMDB direct links
 # http://stackoverflow.com/questions/1966503/does-imdb-provide-an-api
 # http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=lost
+
 def imdbapi_data(title, year=None):
   """ http://imdbapi.org
 
   This website has been down for a while.
   """
+  warnings.warn("imdbapi.org has been down for too long", FutureWarning)
   return {}, 0
+
   short_title = prepare_title(title)
   params = {
     'type': 'json',
@@ -100,107 +106,64 @@ def imdbapi_data(title, year=None):
 
 
 def themoviedb_data(title, year=None):
+  themoviedb_api_key = '99026a194a4dbafd98c3070108bc93db'
   short_title = prepare_title(title)
-  params = {
-    'api_key': '99026a194a4dbafd98c3070108bc93db',
-    'query': short_title
-  }
-  if year:
-    params['year'] = year
+  jdata = httpGet('api.themoviedb.org',
+                  httpQuery('/3/search/movie',
+                            api_key=themoviedb_api_key,
+                            query=short_title,
+                            year=year))
+  if not jdata:
+    return {}, 0
 
-  qs = urllib.urlencode(params)
   imdb_data = {}
 
-  conn = None
-  try:
-    conn = httplib.HTTPConnection('api.themoviedb.org')
-    conn.request('GET', '/3/search/movie?' + qs)
-    response = conn.getresponse()
-    if response.status != 200:
-      return {}, 0
+  if ('results' in jdata) and len(jdata['results']) == 1:
+    movie_id = jdata['results'][0]['id']
+    imdb_data['title'] = jdata['results'][0]['title']
+  else:
+    movie_id = None
+    max_match = 0
+    for r in jdata['results']:
+      match = match_len(title, r['title'])
+      if year and r['release_date'][:4] == str(year):
+        match += 1
+      if match > max_match:
+        movie_id = r['id']
+        max_match = match
 
-    data = response.read()
-    jdata = json.loads(data)
-    if ('results' in jdata) and len(jdata['results']) == 1:
-      movie_id = jdata['results'][0]['id']
-      imdb_data['title'] = jdata['results'][0]['title']
-    else:
-      movie_id = None
-      max_match = 0
-      for r in jdata['results']:
-        match = match_len(title, r['title'])
-        if year and r['release_date'][:4] == str(year):
-          match += 1
-        if match > max_match:
-          movie_id = r['id']
-          max_match = match
+  if not movie_id:
+    return {}, 0
 
-    if not movie_id:
-      return {}, 0
+  jdata = httpGet('api.themoviedb.org', "/3/movie/%s?api_key=%s" % (movie_id, themoviedb_api_key))
+  if not jdata:
+    return {}, 0
 
-    conn = httplib.HTTPConnection('api.themoviedb.org')
-    conn.request('GET', "/3/movie/%s?api_key=%s" % (movie_id, params['api_key']))
-    response = conn.getresponse()
-    if response.status != 200:
-      return {}, 0
-    data = json.loads(response.read())
-    imdb_data['year'] = data['release_date'][:4]
-    imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % data['imdb_id']
-    imdb_data['genres'] = [t['name'] for t in data['genres']]
-    imdb_data['plot'] = data['overview']
+  imdb_data['year'] = jdata['release_date'][:4]
+  imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % jdata['imdb_id']
+  imdb_data['genres'] = [t['name'] for t in jdata['genres']]
+  imdb_data['plot'] = jdata['overview']
 
-    conn = httplib.HTTPConnection('api.themoviedb.org')
-    conn.request('GET', "/3/movie/%s/credits?api_key=%s" % (movie_id, params['api_key']))
-    response = conn.getresponse()
-    if response.status != 200:
-      return imdb_data, 1
+  jdata = httpGet('api.themoviedb.org', "/3/movie/%s/credits?api_key=%s" % (movie_id, themoviedb_api_key))
+  if jdata:
+    imdb_data['actors'] = [t['name'] for t in jdata['cast']]
+    imdb_data['directors'] = [t['name'] for t in jdata['crew'] if t['job'].lower() == 'director']
 
-    data = json.loads(response.read())
-    imdb_data['actors'] = [t['name'] for t in data['cast']]
-    imdb_data['directors'] = [t['name'] for t in data['crew'] if t['job'].lower() == 'director']
-
-    return imdb_data, 1
-
-  except ValueError:
-    pass
-  except socket.error:
-    pass
-  finally:
-    if conn:
-      conn.close()
-
-  return {}, 0
-
+  return imdb_data, 1
 
 def omdbapi_data(title, year=None):
   """ Another service to try is www.omdbapi.com """
   short_title = prepare_title(title)
-  imdb_data = {}
-  params = {
-    't': short_title,
-    'plot': 'full',
-    'r': 'json'
-  }
-  if year:
-    params['y'] = year
-  qs = urllib.urlencode(params)
 
-  conn = None
-  try:
-    conn = httplib.HTTPConnection("www.omdbapi.com")
-    conn.request("GET", "/?" + qs)
-    response = conn.getresponse()
-    if response.status == 200:
-      data = response.read()
-      imdb_data = json.loads(data)
-      if imdb_data and 'imdbID' in imdb_data:
-        imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % imdb_data['imdbID']
-  finally:
-    if conn:
-      conn.close()
+  imdb_data = httpGet('www.omdbapi.com',
+                      httpQuery('/', t=short_title, plot='full', r='json', y=year)) or {}
 
+  if imdb_data is None:
+    return {}, 0
   if match_len(title, imdb_data.get('Title', '')) == 0:
     return {}, 0
+  if imdb_data and 'imdbID' in imdb_data:
+    imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % imdb_data['imdbID']
 
   return imdb_data, 1
 
@@ -208,29 +171,15 @@ def omdbapi_data(title, year=None):
 def rotten_data(title, year=None):
   """ Try RottenTomatoes service """
   short_title = prepare_title(title)
-  params = {
-    'q': short_title,
-    'page_limit': 25,
-    'page': 1,
-    'apikey': '3r2avcbv2fhn6gk2nhtxeke9'
-  }
-  qs = urllib.urlencode(params)
-  rotten_dt = {}
 
-  conn = None
-  try:
-    conn = httplib.HTTPConnection("api.rottentomatoes.com")
-    conn.request("GET", "/api/public/v1.0/movies.json?" + qs)
-    response = conn.getresponse()
-    if response.status == 200:
-      data = response.read()
-      rotten_dt = json.loads(data)
-  finally:
-    if conn:
-      conn.close()
+  rotten_dt = httpGet('api.rottentomatoes.com',
+                      httpQuery("/api/public/v1.0/movies.json",
+                                q=short_title,
+                                page_limit=25,
+                                page=1,
+                                apikey='3r2avcbv2fhn6gk2nhtxeke9'))
 
   if rotten_dt:
-    # print("rotten_data: %s" % rotten_dt['movies'][0])
     movie = None
     max_match = 0
     for mov in rotten_dt['movies']:
@@ -246,6 +195,49 @@ def rotten_data(title, year=None):
 
   return {}, 0
 
+
+def httpGet(server, uri):
+  """
+  GET a remote URL
+  """
+  print("GET %s%s" % (server, uri))
+  c = None
+  try:
+    c = httplib.HTTPConnection(server)
+    c.request('GET', uri)
+    response = c.getresponse()
+    print("    response: ", response.status)
+    if response.status != 200:
+      return None
+    else:
+      return json.loads(response.read())
+  except socket.error:
+    return None
+  finally:
+    if c:
+      c.close()
+
+def httpQuery(uri, **kwargs):
+  params = kwargs or {}
+  return uri + '?' + urllib.urlencode(params)
+
+
+
+def get(attr, default=None, *args):
+  # first try perfect match
+  for d in args:
+    if d and attr in d:
+      return d[attr]
+  # next try case insensitive match
+  attr = attr.lower()
+  for d in args:
+    if not d:
+      continue
+    for k in d.keys():
+      if k.lower() == attr:
+        return d[k]
+
+  return default
 
 def find_actors(d1, d2, d3):
   actors = []
@@ -279,35 +271,47 @@ def match_len(in_title, movie_title):
 
 
 def main(title, opts):
-  #print("Trying: imdbapi.org")
-  #imdbapid, r1 = imdbapi_data(title, opts.year)
-  print("Trying: themoviedb.org")
+  # print("Trying: themoviedb.org")
   imdbapid, r1 = themoviedb_data(title, opts.year)
-  print("Trying: www.omdbapi.com")
+  # print("Trying: www.omdbapi.com")
   omdbapid, r2 = omdbapi_data(title, opts.year)
-  print("Trying: rottentomatoes.com")
-  rottend, r3 = rotten_data(title, opts.year)
+  # Rotten Tomatoes killed the free API
+  # print("Trying: rottentomatoes.com")
+  # rottend, r3 = rotten_data(title, opts.year)
+  rottend = {}
 
   data = {
-    'title': imdbapid.get('title', '') or rottend.get('title', '') or omdbapid.get('Title', '') ,
-    'year': opts.year or imdbapid.get('year', '') or rottend.get('year', '') or omdbapid.get('Year'),
+    'title': get('title', '', imdbapid, rottend, omdbapid),
+    'year': opts.year or get('year', '', imdbapi, omdbapid),
     'genre': imdbapid.get('genres', []) or omdbapid.get('Genre', '').split(', '),
-    'imdb_url': imdbapid.get('imdb_url', '') or rottend.get('imdb_url', '') or omdbapid.get('imdb_url', ''),
-    'rotten_url': rottend.get('links', {}).get('alternate', ''),
+    'imdb_url': get('imdb_url', imdbapid, omdbapid),
     'my_rating': opts.rating,
     'imdb_rating': imdbapid.get('rating', 'n/a'),
-    'critics_rating': rottend.get('ratings', {}).get('critics_rating', 'n/a'),
-    'critics_score': rottend.get('ratings', {}).get('critics_score', 'n/a'),
-    'audience_rating': rottend.get('ratings', {}).get('audience_rating', 'n/a'),
-    'audience_score': rottend.get('ratings', {}).get('audience_score', 'n/a'),
-    'critics_consensus': rottend.get('critics_consensus', ''),
     'directors': imdbapid.get('directors', []) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, omdbapid, rottend),
-    'plot': imdbapid.get('plot', '') or omdbapid.get('Plot', ''),
-    'synopsis': rottend.get('synopsis', ''),
+    'plot': get('plot', '', imdbapid, omdbapid),
     'poster_imdb': imdbapid.get('poster'),
-    'poster_rotten': rottend.get('posters', {}).get('original')
+    'audience_rating': 'Upright/Spilled',
+    'audience_score' : '',
+    'critics_rating' : 'Fresh/Rotten',
+    'critics_score'  : '',
+    'critics_consensus': '',
+    'synopsis': '',
   }
+  if rottend:
+    data['rotten_url'] = rottend.get('links', {}).get('alternate', '')
+    data['critics_rating'] = rottend.get('ratings', {}).get('critics_rating', 'n/a')
+    data['critics_score'] = rottend.get('ratings', {}).get('critics_score', 'n/a')
+    data['audience_rating'] = rottend.get('ratings', {}).get('audience_rating', 'n/a')
+    data['audience_score'] = rottend.get('ratings', {}).get('audience_score', 'n/a')
+    data['critics_consensus'] = rottend.get('critics_consensus', '')
+    data['poster_rotten'] = rottend.get('posters', {}).get('original')
+    data['synopsis'] = rottend.get('synopsis', '')
+  else:
+    rotten_slug = data['title'].lower()
+    rotten_slug = re.sub('\s+', '_', rotten_slug)
+    rotten_slug = re.sub('\W+', '', rotten_slug)
+    data['rotten_url'] = "http://www.rottentomatoes.com/m/%s" % rotten_slug
 
   generate_output(data, opts.dayone)
 
@@ -315,8 +319,8 @@ def main(title, opts):
 
   # generate search links if needed
   print("")
-  if data['imdb_url']:
-    print(data['imdb_url'])
+  print(data['imdb_url'])
+  print(data['rotten_url'])
   print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
   print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
   print("http://trakt.tv/search?query=%s" % urllib.quote_plus(title))
@@ -388,6 +392,7 @@ def print_to(stream, data):
   stream.write("\n\n")
   stream.write("My rating: %s\n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
   stream.write("IMDB     : %s/10\n" %  data['imdb_rating'])
+  stream.write("Metascore: \n")
   stream.write("Genre    : %s\n" % ', '.join(data['genre']))
   stream.write("Year     : %s\n" % data['year'])
   stream.write("Tagline  : \n")
