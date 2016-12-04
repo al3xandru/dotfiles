@@ -298,10 +298,10 @@ let mapleader="\<space>"
 let maplocalleader="\\"
 
 inoremap jk <esc>
-inoremap <silent> <Up> <esc><Up>
-inoremap <silent> <Down> <esc><Down>
-inoremap <silent> <Left> <esc><Left>
-inoremap <silent> <Right> <esc><Right>
+inoremap <silent><Up> <esc><Up>
+inoremap <silent><Down> <esc><Down>
+inoremap <silent><Left> <esc><Left>
+inoremap <silent><Right> <esc><Right>
 " inoremap <Down> <C-o>gj
 " inoremap <Up> <C-o>gk
 
@@ -312,10 +312,11 @@ nnoremap <Up> gk
 nnoremap <Down> gj
 " make ; behave like : (save the Shift)
 nnoremap ; :
-" nnoremap , ;
-nnoremap … ;    " Alt+;
-nnoremap <tab> %
-vnoremap <tab> %
+" remap Alt+; to ;
+nnoremap … ;    
+nnoremap <M-;> ;
+" nnoremap <tab> %
+" vnoremap <tab> %
 
 " blip for next highlight word and center the line {{{
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
@@ -337,6 +338,7 @@ endfunction
 nmap <silent><leader>hc :set nolist!<CR>
 " Disable highlighted search 
 nnoremap <silent><leader>hh :nohlsearch<CR>
+nnoremap <silent><leader><esc> :nohlsearch<CR>
 " Highlight matches http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
 " case sensitive, partial match inclusive
 nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
@@ -372,11 +374,11 @@ nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 nmap <C-a> :bNext<CR>
 nmap <C-e> :e#<CR>
 " Tab switch
+nnoremap <silent><leader>gt :<C-u>tabs<CR>:tabn<space>
 nnoremap <silent><C-S-tab> :silent tabprevious<CR>
 nnoremap <silent><C-tab> :silent tabnext<CR>
 inoremap <silent><C-S-tab> <ESC>:tabprevious<CR>
 inoremap <silent><C-tab> <ESC>:tabnext<CR>
-nnoremap <silent><leader>gt :<C-u>tabs<CR>:tabn<space>
 " open tag in tab
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
@@ -415,8 +417,8 @@ nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap /fa :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
-nnoremap /fA :Ag! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+nnoremap /fa :Ack! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
+nnoremap /fA :Ack! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -630,6 +632,7 @@ nnoremap <silent><leader>bh :Startify<CR>
 " 2}}}
 
 
+
 " Buffers {{{2
 " Plugin 'jeetsukumaran/vim-buffergator'
 " let g:buffergator_viewport_split_policy = "T"
@@ -755,7 +758,16 @@ let g:syntastic_auto_jump = 0
 
 " Search: Ack and Ag {{{2
 Plugin 'mileszs/ack.vim'
-Plugin 'rking/ag.vim'
+" if executable('rg')
+"     let g:ackprg = 'rg --vimgrep -n --smart-case -t'
+" elseif executable('ag')
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+" Plugin 'rking/ag.vim'
+" Possible replacements:
+" Plugin 'dyng/ctrlsf.vim'
+" Plugin 'mhinz/vim-grepper'
 "}}}
 
 
@@ -860,6 +872,17 @@ Plugin 'artur-shaik/vim-javacomplete2'
 " Javascript
 Plugin 'pangloss/vim-javascript'
 
+" Asciidoc {{{2
+Plugin 'dahu/vim-asciidoc'
+Plugin 'dahu/vimple'
+Plugin 'dahu/Asif'
+Plugin 'Raimondi/VimRegStyle'
+let g:asciidoc_title_style = 'setext'
+augroup asciidoc
+    autocmd!
+    autocmd BufNewFile,BufRead *.adoc.txt setfiletype asciidoc syntax=asciidoc
+augroup END
+"}}}
 
 " Markdown {{{2
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
