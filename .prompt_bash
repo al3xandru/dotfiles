@@ -54,7 +54,7 @@ function _prompt_func() {
     if [ $ITERM_SESSION_ID ]; then
         PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
     else
-        PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE} "
+        PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
     fi
 #    previous_return_value=$?;
 #    echo "prev: ${previous_return_value}"
