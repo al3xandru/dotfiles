@@ -38,17 +38,18 @@ bind 8:alt;cmd;ctrl     resize -10% +0 top-right
 
 # Push Bindings
 bind [:cmd;ctrl         push left
-bind [:alt;cmd;ctrl     push bottom
 bind ':cmd;ctrl         push bottom
 bind ]:cmd;ctrl         push right
-bind ]:alt;cmd;ctrl     push top
 bind =:cmd;ctrl         push top
+# Full screen
 bind f:alt;cmd;ctrl     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
-# bind h:cmd;ctrl         push left  bar-resize:screenSizeX/2-50
+# Left/Right
 bind h:cmd;ctrl         sequence push left bar-resize:screenSizeX/2 > resize -5 +0 top-left
-bind h:shift;cmd;ctrl   sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
+bind h:shift;ctrl;cmd   sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
+bind h:shift;ctrl;alt   sequence push left bar-resize:screenSizeX/1.5 > resize -5 +0 top-left
 bind l:cmd;ctrl         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
-bind l:shift;cmd;ctrl   sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
+bind l:shift;ctrl;cmd   sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
+bind l:shift;ctrl;alt   sequence push right bar-resize:screenSizeX/1.5 > resize -5 +0 top-right
 # Center window
 bind c:cmd;ctrl     move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
 bind c:shift;cmd;ctrl move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
