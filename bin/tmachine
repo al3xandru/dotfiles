@@ -19,8 +19,11 @@ if [[ "$HOSTNAME" = mandelbrot.* ]]; then
 elif [[ "$HOSTNAME" = macky.* ]]; then 
     BACKUP_TARGET="/Volumes/AirLionTimeMachine/Backups.backupdb"
 elif [[ "$HOSTNAME" = leibniz.* ]]; then
-    BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
-    DEST_ID="AD0278CA-5A21-487D-A3ED-F4CDDC1F3196"
+    # previous version
+    # BACKUP_TARGET="/Volumes/DatastaxTM/Backups.backupdb"
+    # DEST_ID="AD0278CA-5A21-487D-A3ED-F4CDDC1F3196"
+    BACKUP_TARGET="/Volumes/WMBPTM/Backups.backupdb"
+    DEST_ID="D0831307-B528-48F7-B9B7-6CEE464E8B77"
 elif [[ "$HOSTNAME" = lorenz.* ]]; then
     BACKUP_TARGET="/Volumes/TB2016TM/Backups.backupdb"
     DEST_ID="0AE79734-CA65-4729-B134-C46B49FE024E"
