@@ -311,7 +311,8 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <Up> gk
 nnoremap <Down> gj
 " make ; behave like : (save the Shift)
-nnoremap ; :
+" nnoremap ; :
+" nnoremap : ;
 " remap Alt+; to ;
 nnoremap … ;    
 nnoremap <M-;> ;
