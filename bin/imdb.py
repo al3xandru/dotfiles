@@ -375,9 +375,12 @@ def generate_output(data, to_dayone=False):
     try:
       print_to(tmpf, data)
       # required for v2 and -j flag doesn't really work
-      journal_path_flag = "--journal-file=%s" % os.path.expanduser(DAYONE_JOURNAL)
       cat_cmd = subprocess.Popen(['cat', tmpf.name], stdout=subprocess.PIPE)
-      subprocess.check_call(['/usr/local/bin/dayone', journal_path_flag  , 'new', '-'], stdin=cat_cmd.stdout)
+      if os.path.isfile('/usr/local/bin/dayone2'):
+        subprocess.check_call(['/usr/local/bin/dayone2', '-j', 'Movies'  , 'new'], stdin=cat_cmd.stdout)
+      else:
+        journal_path_flag = "--journal-file=%s" % os.path.expanduser(DAYONE_JOURNAL)
+        subprocess.check_call(['/usr/local/bin/dayone', journal_path_flag  , 'new', '-'], stdin=cat_cmd.stdout)
       cat_cmd.wait()
     finally:
       tmpf.close()
