@@ -48,6 +48,7 @@ values."
      ;; unimpaired
      ;; misc
      deft
+     selectric
      xkcd
      ;;; previous setup
      ;; dash
@@ -165,7 +166,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    ;; "Hack"  "Input Mono" "Liberation Mono" "Operator Mono" "PragmataPro Mono" "SF Mono Regular"
-   dotspacemacs-default-font '("PragmataPro Mono"
+   dotspacemacs-default-font '("PragmataPro"
                                :size  12
                                :weight normal
                                :width normal
@@ -619,17 +620,3 @@ Consider only documented, non-obsolete functions."
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (scala-mode swiper magit-popup powerline skewer-mode pcre2el spinner hydra company with-editor org projectile highlight gh csharp-mode async iedit git-gutter auto-complete sbt-mode yasnippet go-guru multiple-cursors go-mode counsel anzu smartparens undo-tree flyspell-correct ht helm helm-core flycheck magit git-commit inf-ruby js2-mode ivy dash ivy-purpose window-purpose imenu-list insert-shebang hide-comnt yapfify yaml-mode xkcd ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit swift-mode spacemacs-theme spaceline smex smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file omnisharp noflet neotree move-text monokai-theme mmm-mode minitest material-theme markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode keyfreq key-chord json-mode js2-refactor js-doc ivy-hydra info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme help-fns+ helm-make gruvbox-theme google-translate golden-ratio go-eldoc gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav eclim dumb-jump disaster diff-hl deft define-word cython-mode counsel-projectile column-enforce-mode cmake-mode clean-aindent-mode clang-format chruby bundler auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme anaconda-mode ample-theme alect-themes aggressive-indent adoc-mode adaptive-wrap ace-window ace-link))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
