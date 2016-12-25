@@ -200,11 +200,11 @@ augroup END
 " 6. multiple windows "
 set title
 set laststatus=2
-set statusline=[b%n:%{mode()}]\ %f%r%m%=[%l:%v\ %p%%\ %L]%q%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
+set statusline=[%{toupper(mode())}:b%n]\ %f%r%m%=[%l:%v\ %p%%\ %L]%q%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
 " hi StatusLine ctermbg=59 ctermfg=69 
 
 " GUI {{{
-set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
+" set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
 if has("gui_running")
@@ -756,6 +756,8 @@ let g:syntastic_auto_jump = 0
 "let g:syntastic_error_symbol = "✗"
 "let g:syntastic_warning_symbol = "⚠"
 
+" check syntax on the fly asynchronously
+"Plugin 'maralla/validator.vim'
 
 " Search: Ack and Ag {{{2
 Plugin 'mileszs/ack.vim'
@@ -1157,6 +1159,8 @@ let g:AutoPairsShortcutFastWrap='ª'
 "Plugin 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
 
+"auto close parentheses and repeat by dot dot dot
+"Plugin 'cohama/lexima.vim'
 "Plugin 'Townk/vim-autoclose'
 
 Plugin 'HTML-AutoCloseTag'
