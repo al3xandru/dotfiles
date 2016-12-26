@@ -1,6 +1,5 @@
 scriptencoding utf-8
 
-
 " Organization
 " 1. important
 " 2. moving around, searching and patterns
@@ -28,7 +27,7 @@ scriptencoding utf-8
 " 24. multi-byte characters
 " 25. various
 
-" 1. important 
+" 1. important {{{
 set nocompatible
 set backspace=2
 set backspace=indent,eol,start  " allow backspace in insert mode
@@ -48,6 +47,7 @@ set modelines=5
 set mouse=a
 set mousehide
 set sessionoptions-=options
+set showcmd     " show command in bottom bar
 set showmode    " display the current mode
 set wildmenu    " enhance command-line completion
 set wildignore+=.hg,.git,.svn  " version control
@@ -59,14 +59,11 @@ set wildignore+=*.egg,*.egg-info,*.gem
 set wildignore+=*.zip,*.tar.gz,*.gzip,*.rar
 set wildignore+=*.aux,*.toc " Latex intermediary files
 
-" test settings
-set path+=**
-
 " autosave on focus lost
 autocmd FocusLost, BufLeave * silent! :wall
+" }}}
 
-
-" 2. moving around, searching and patterns "
+" 2. moving around, searching and patterns {{{
 set incsearch
 set hlsearch
 set ignorecase
@@ -74,9 +71,9 @@ set smartcase
 set showmatch
 set matchtime=3     " tenths of a second to show the matching paren
 set scrolloff=5
+" }}}
 
-" 3. tags
-" omnicomplete {{{
+" 3. omnicomplete {{{
 set omnifunc=syntaxcomplete#Complete
 " https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
 " kspell: dictionary completion only when spell enabled set spell 
@@ -88,7 +85,7 @@ inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
 " }}}
 
-" 4. displaying text
+" 4. displaying text {{{
 filetype on
 filetype plugin on
 filetype plugin indent on
@@ -122,6 +119,7 @@ augroup lineno
 augroup END
 set number
 set relativenumber
+" }}}
 " }}}
 
 
@@ -201,7 +199,6 @@ augroup END
 set title
 set laststatus=2
 set statusline=[%{toupper(mode())}:b%n]\ %f%r%m%=[%l:%v\ %p%%\ %L]%q%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
-" hi StatusLine ctermbg=59 ctermfg=69 
 
 " GUI {{{
 " set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
@@ -262,10 +259,10 @@ set visualbell t_vb=
 
 
 " 14. tabs and indenting {{{
-set expandtab
-set tabstop=4
+set expandtab       " TABs are spaces
+set tabstop=4       " number of visual spaces per TAB
 set shiftwidth=4
-set softtabstop=4
+set softtabstop=4   " number of spaces in TAB when editing
 set smartindent
 set autoindent
 " }}}
@@ -393,7 +390,7 @@ nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
 nmap <silent><C-w>+ :resize +10<CR>
 
-" selections
+" Selections {{{
 " reselect pasted text
 nnoremap <leader>v V`] 
 " https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim#L22
@@ -403,6 +400,7 @@ nmap gV `[v`]
 " keep selection when indenting
 vnoremap > >gv
 vnoremap < <gv
+"}}}
 
 " Opens an edit command with the path of the currently edited file filled in
 nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -439,6 +437,7 @@ set history=10000
 set backupdir=~/.vim/tmp/backup// "~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim/tmp/swap// "~/.vim/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set undodir=~/.vim/tmp/undo//
+set writebackup
 
 if !isdirectory(expand(&backupdir))
     call mkdir(expand(&backupdir), "p")
@@ -1167,32 +1166,32 @@ Plugin 'HTML-AutoCloseTag'
 " Disable: let b:mapped_auto_closetag = 1
 "}}}
 
-
-" Plugin 'vim-airline/vim-airline'
-" Plugin 'vim-airline/vim-airline-themes'
-let g:airline_left_sep = '»'
-let g:airline_right_sep = '«'
-let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
-" let g:airline_section_b='[%{airline#extensions#branch#get_head()}] b:%n w:%{winnr()}' "%{airline#section#create([\'b:%n w:%{winnr()} [\', \'branch\', \']\'])}'
-let g:airline_section_c='%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
-let g:airline_section_z='%4l:%-3c %3p%% b%n:w%{winnr()}'   
-let g:airline_mode_map={
-       \ '__' : '-',
-       \ 'n'  : 'N',
-       \ 'i'  : 'I',
-       \ 'R'  : 'R',
-       \ 'c'  : 'C',
-       \ 'v'  : 'V',
-       \ 'V'  : 'V',
-       \ '' : 'V',
-       \ 's'  : 'S',
-       \ 'S'  : 'S',
-       \ '' : 'S',
-       \ }
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
+Plugin 'mhinz/vim-startify'
+let g:startify_list_order = [
+    \ ['Bookmarks:'],
+    \ 'bookmarks', 
+    \ ['Most recent in current directory:'],
+    \ 'dir', 
+    \ ['Recent files:'], 
+    \ 'files',
+    \ ['Sessions:'], 
+    \ 'sessions',
+    \ ]
+let g:startify_bookmarks = [
+    \ '~/Dropbox/Dox/active/',
+    \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
+    \ '~/Dropbox/Dox/active/02-thoughts.md',
+    \ '~/Dropbox/Dox/active/03-email_drafts.md',
+    \ '~/Dropbox/Dox/active/04-notes.org',
+    \ '~/Dropbox/Dox/active/05-blog.md',
+    \ '~/.vimrc',
+    \]
+let g:startify_session_autoload = 1
+let g:startify_skiplist = [
+    \ '.git/.*',
+    \ '.hg/.*',
+    \ ]
+let g:startify_change_to_dir = 1
 
 
 " CamelCase 
@@ -1220,22 +1219,22 @@ let g:EasyMotion_move_highlight=1
 let g:EasyMotion_landing_highlight=0
 let g:EasyMotion_add_search_history=0
 "map ' <Plug>(easymotion-prefix)
-nmap <leader>s <Plug>(easymotion-sn)
-nmap <leader><leader>s <Plug>(easymotion-sn)
-vmap <leader><leader>s <Plug>(easymotion-sn)
-nmap <leader><leader>w <Plug>(easymotion-bd-w)
-vmap <leader><leader>w <Plug>(easymotion-bd-w)
-nmap <leader><leader>e <Plug>(easymotion-bd-e)
-vmap <leader><leader>e <Plug>(easymotion-bd-e)
-nmap <leader><leader>n <Plug>(easymotion-next)
-vmap <leader><leader>n <Plug>(easymotion-next)
-nmap <leader><leader>p <Plug>(easymotion-next)
-vmap <leader><leader>p <Plug>(easymotion-next)
-nmap <leader><leader>t <Plug>(easymotion-bd-t)
-vmap <leader><leader>t <Plug>(easymotion-bd-t)
-nmap <leader><leader>f <Plug>(easymotion-bd-f)
-vmap <leader><leader>f <Plug>(easymotion-bd-f)
-nmap ,s <Plug>(easymotion-sn)
+" nmap <leader>s <Plug>(easymotion-sn)
+" nmap <leader><leader>s <Plug>(easymotion-sn)
+" vmap <leader><leader>s <Plug>(easymotion-sn)
+" nmap <leader><leader>w <Plug>(easymotion-bd-w)
+" vmap <leader><leader>w <Plug>(easymotion-bd-w)
+" nmap <leader><leader>e <Plug>(easymotion-bd-e)
+" vmap <leader><leader>e <Plug>(easymotion-bd-e)
+" nmap <leader><leader>n <Plug>(easymotion-next)
+" vmap <leader><leader>n <Plug>(easymotion-next)
+" nmap <leader><leader>p <Plug>(easymotion-next)
+" vmap <leader><leader>p <Plug>(easymotion-next)
+" nmap <leader><leader>t <Plug>(easymotion-bd-t)
+" vmap <leader><leader>t <Plug>(easymotion-bd-t)
+" nmap <leader><leader>f <Plug>(easymotion-bd-f)
+" vmap <leader><leader>f <Plug>(easymotion-bd-f)
+nmap ,s <plug>(easymotion-sn)
 nmap ,w <Plug>(easymotion-bd-w)
 nmap ,e <Plug>(easymotion-bd-e)
 nmap ,f <Plug>(easymotion-bd-f)
@@ -1278,56 +1277,7 @@ Plugin 'tpope/vim-fugitive'
 
 "
 " Experimental {{{1
-" Plugin 'maxbrunsfeld/vim-yankstack'
-" let g:yankstack_map_keys = 0
-" nmap π <Plug>yankstack_substitute_older_paste " Alt+p
-" nmap ∏ <Plug>yankstack_substitute_newer_paste " Alt+Shift+p
-
-Plugin 'mhinz/vim-startify'
-let g:startify_list_order = [
-    \ ['Bookmarks:'],
-    \ 'bookmarks', 
-    \ ['Most recent in current directory:'],
-    \ 'dir', 
-    \ ['Recent files:'], 
-    \ 'files',
-    \ ['Sessions:'], 
-    \ 'sessions',
-    \ ]
-let g:startify_bookmarks = [
-    \ '~/Dropbox/Dox/active/',
-    \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
-    \ '~/Dropbox/Dox/active/02-thoughts.md',
-    \ '~/Dropbox/Dox/active/03-email_drafts.md',
-    \ '~/Dropbox/Dox/active/04-notes.org',
-    \ '~/Dropbox/Dox/active/05-blog.md',
-    \ '~/.vimrc',
-    \]
-let g:startify_session_autoload = 1
-let g:startify_skiplist = [
-    \ '.git/.*',
-    \ '.hg/.*',
-    \ ]
-let g:startify_change_to_dir = 1
-
 Plugin 'chrisbra/NrrwRgn'
-
-Plugin 'terryma/vim-expand-region'
-let g:expand_region_text_objects = {
-    \ 'iw' :0,
-    \ 'i"' :0,
-    \ 'i''' :0,
-    \ 'ia' :0,
-    \ 'i]' :1,
-    \ 'ib' :1,
-    \ 'iB' :1,
-    \ 'is' :0,
-    \ 'il' :0,
-    \ 'ii' :0,
-    \ 'if' :0,
-    \ 'ip' :0,
-    \ 'ie' :0,
-    \}
 "}}}
 
 call vundle#end()
@@ -1353,6 +1303,49 @@ call <SID>SetColorColumn()
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
+" Plugin 'terryma/vim-expand-region'
+" let g:expand_region_text_objects = {
+"     \ 'iw' :0,
+"     \ 'i"' :0,
+"     \ 'i''' :0,
+"     \ 'ia' :0,
+"     \ 'i]' :1,
+"     \ 'ib' :1,
+"     \ 'iB' :1,
+"     \ 'is' :0,
+"     \ 'il' :0,
+"     \ 'ii' :0,
+"     \ 'if' :0,
+"     \ 'ip' :0,
+"     \ 'ie' :0,
+"     \}
+
+" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline-themes'
+" let g:airline_left_sep = '»'
+" let g:airline_right_sep = '«'
+" let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
+" " let g:airline_section_b='[%{airline#extensions#branch#get_head()}] b:%n w:%{winnr()}' "%{airline#section#create([\'b:%n w:%{winnr()} [\', \'branch\', \']\'])}'
+" let g:airline_section_c='%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+" let g:airline_section_z='%4l:%-3c %3p%% b%n:w%{winnr()}'   
+" let g:airline_mode_map={
+"        \ '__' : '-',
+"        \ 'n'  : 'N',
+"        \ 'i'  : 'I',
+"        \ 'R'  : 'R',
+"        \ 'c'  : 'C',
+"        \ 'v'  : 'V',
+"        \ 'V'  : 'V',
+"        \ '' : 'V',
+"        \ 's'  : 'S',
+"        \ 'S'  : 'S',
+"        \ '' : 'S',
+"        \ }
+" let g:airline_left_sep=''
+" let g:airline_right_sep=''
+" let g:airline#extensions#tabline#left_sep = ' '
+" let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " Unite: can replace CtrlP, Tagbar
 " Note: vimproc requires compiling a c file
 " Plugin 'Shougo/vimproc.vim'
