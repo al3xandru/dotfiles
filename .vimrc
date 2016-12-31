@@ -429,7 +429,7 @@ nnoremap cg* g*Ncgn
 nnoremap cg# g#NcgN
 " }}}
 
-" 19. the swap file
+" 19. backup & swap file {{{
 set backup
 set noswapfile
 set undofile
@@ -448,6 +448,7 @@ endif
 if !isdirectory(expand(&undodir))
     call mkdir(expand(&undodir), "p")
 endif
+"}}}
 
 " 24. multi-byte characters
 setglobal fileencoding=utf-8
@@ -1278,6 +1279,8 @@ Plugin 'tpope/vim-fugitive'
 "
 " Experimental {{{1
 Plugin 'chrisbra/NrrwRgn'
+
+Plugin 'yuttie/comfortable-motion.vim'
 "}}}
 
 call vundle#end()
