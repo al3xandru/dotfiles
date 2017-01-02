@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
