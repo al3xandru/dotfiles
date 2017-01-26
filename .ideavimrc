@@ -6,15 +6,17 @@ vnoremap k gk
 nnoremap gcc :action CommentByLineComment<CR>
 vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
 vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
-nnoremap ; :
-nnoremap … ;
+" nnoremap ; :
+" nnoremap … ;
 nnoremap ,s :action AceJumpAction<CR>
-nnoremap <space>hh :nohlsearch<CR>
+nnoremap ,s :action AceAction<CR>
+" nnoremap <space>hh :nohlsearch<CR>
 nnoremap <space><esc> :nohlsearch<CR>
 nmap [o- :set nonumber relativenumber<CR>
 vmap [o- :set nonumber relativenumber<CR>
 nmap ]o- :set norelativenumber number<CR>
 vmap ]o- :set norelativenumber number<CR>
+set clipboard=unnamed
 set history=10000
 set hlsearch
 set ignorecase
