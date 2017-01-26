@@ -3,6 +3,8 @@ export VISUAL="$HOME/bin/editor.sh"
 #
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
+export HISTCONTROL=ignoreboth:erasedups
+
 
 # Prefer US English and use UTF-8
 export LANG="en_US"
