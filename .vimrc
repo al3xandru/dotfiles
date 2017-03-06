@@ -295,6 +295,7 @@ let mapleader="\<space>"
 let maplocalleader="\\"
 
 inoremap jk <esc>
+inoremap fd <esc>
 inoremap <silent><Up> <esc><Up>
 inoremap <silent><Down> <esc><Down>
 inoremap <silent><Left> <esc><Left>
@@ -407,6 +408,13 @@ nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>eV :tabe <C-R>=expand("~") . "/.vimrc"<CR><CR>
+"Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
+" nnoremap <leader>sV :source $MYVIMRC<CR>
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
 
 " bind f and F to perform grep for the word under cursor
 " grep results go into quicklist: copen/cclose
@@ -480,21 +488,33 @@ end
 
 
 " https://github.com/macvim-dev/macvim/issues/386
-if has('gui') && has('mac')
+"if has('gui') && has('mac')
+if has('mac')
     if executable("pyenv")
         let cmd = 'pyenv version-name'
         let pyenv=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
-        " let pyenv=strpart(pyenv, 0, strlen(pyenv)-1)
-        let cmd = 'python -c "import sys;vt=sys.version_info;print \"%s.%s.%s\" % (vt[0], vt[1], vt[2])"'
+        let cmd = 'python -c "import sys;vt=sys.version_info;print(vt[0], \".\", vt[1], \".\", vt[2], sep=\"\")"'
         let pyver=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let pyvermaj=strpart(pyver, 0, 3)
         let $PYTHONHOME=$HOME . "/.pyenv/versions/" . pyver
-        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . pyenv . "/lib/python2.7/site-packages/"
-        set pythondll=$PYTHONHOME/lib/libpython2.7.dylib
+        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . pyenv . "/lib/python" . pyvermaj . "/site-packages/"
+        let $PYTHONDLL=$PYTHONHOME . "/lib/libpython" . pyvermaj . ".dylib"
+        " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
+        if has('python3')
+            let g:jedi#force_py_version = 3
+            let g:pymode_python = 'python3'
+            let g:syntastic_python_python_exec = 'python3'
+        elseif has('python')
+            let g:jedi#force_py_version = 2
+            let g:syntastic_python_python_exec = 'python2'
+            let g:pymode_python = 'python2'
+        endif
         " echom "PYENV     :" . pyenv
         " echom "PYTHONVER :" . pyver
+        " echom "PYTHONMAJ :" . pyvermaj
         " echom "PYTHONHOME:" . $PYTHONHOME
         " echom "PYTHONPATH:" . $PYTHONPATH
-        " echom "PYTHONDLL :" . &pythondll
+        " echom "PYTHONDLL :" . $PYTHONDLL
     endif
 endif
 
@@ -514,25 +534,24 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'blerins/flattown'
 Plugin 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
-Plugin 'rakr/vim-two-firewatch'
-let g:two_firewatch_italics=1
-let g:airline_theme='twofirewatch'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 
+" Plugin 'adampasz/vim-stonewashed'
 " Plugin 'AlessandroYorba/Sierra'
 " Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
+" Plugin 'blerins/flattown'
+" Plugin 'cocopon/iceberg.vim'
 " Plugin 'colepeters/spacemacs-theme.vim'
 " Plugin 'fcpg/vim-fahrenheit'
 " Plugin 'jdkanani/vim-material-theme'
@@ -541,12 +560,14 @@ let g:solarized_contrast="normal"
 " Plugin 'nanotech/jellybeans.vim'
 " Plugin 'NLKNguyen/papercolor-theme'
 " Plugin 'rakr/vim-one'
+" Plugin 'rakr/vim-two-firewatch'
+let g:two_firewatch_italics=1
+let g:airline_theme='twofirewatch'
 " Plugin 'rodnaph/vim-color-schemes'
 " Plugin 'whatyouhide/vim-gotham'
 " Plugin '256-grayvim'
 " Plugin 'blacklight'
 " Plugin 'gregsexton/Atom'
-" Plugin 'adampasz/vim-stonewashed'
 " }}}
 
 
@@ -739,7 +760,8 @@ let g:undotree_SetFocusWhenToggle = 1
 
 Plugin 'junegunn/vim-peekaboo'
 let g:peekaboo_delay=800
-let g:peekaboo_window='topleft 15new'
+let g:peekaboo_window='vertical botright 45new'
+" let g:peekaboo_window='topleft 15new'
 
 
 Plugin 'tpope/vim-commentary'
@@ -767,6 +789,7 @@ Plugin 'mileszs/ack.vim'
 if executable('ag')
     let g:ackprg = 'ag --vimgrep --smart-case'
 endif
+" Plugin 'wincent/ferret' " asycn!!!
 " Plugin 'rking/ag.vim'
 " Possible replacements:
 " Plugin 'dyng/ctrlsf.vim'
@@ -786,9 +809,9 @@ endif
 " Plugin 'honza/vim-snippets'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_or_jump)
+imap <C-e> <Plug>(neosnippet_expand_or_jump)
+smap <C-e> <Plug>(neosnippet_expand_or_jump)
+xmap <C-e> <Plug>(neosnippet_expand_or_jump)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 "}}}
 "}}}
@@ -996,7 +1019,7 @@ augroup END
 
 
 " Python {{{2
-Plugin 'lambdalisue/vim-pyenv'
+" Plugin 'lambdalisue/vim-pyenv'
 Plugin 'hdima/python-syntax'
 Plugin 'klen/python-mode'
 let g:pymode_doc = 1
@@ -1096,7 +1119,7 @@ Plugin 'mattn/calendar-vim'
 " Scratch files, notes, outliner etc. {{{1
 " :Pad
 Plugin 'fmoralesc/vim-pad'
-let g:pad#dir='/Users/apopescu/Dropbox/Dox/nvall'
+let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#default_file_extension='.md'
 let g:pad#search_backend='ag'
 let g:pad#query_dirnames=0
@@ -1108,9 +1131,9 @@ let g:pad#window_height=12
 let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
 "let g:pad#open_in_split=0
 let g:pad#set_mappings=0
-nmap <leader>ql <Plug>(pad-list)
-nmap <leader>qn <Plug>(pad-new)
-nmap <leader>qs <Plug>(pad-search)
+nmap <localleader>ql <Plug>(pad-list)
+nmap <localleader>qn <Plug>(pad-new)
+nmap <localleader>qs <Plug>(pad-search)
 
 " :Note
 " Plugin 'xolox/vim-misc'
@@ -1209,6 +1232,7 @@ omap <silent> i∫ <Plug>CamelCaseMotion_ib
 xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 omap <silent> i£ <Plug>CamelCaseMotion_ie
 xmap <silent> i£ <Plug>CamelCaseMotion_ie
+" Plugin 'kana/vim-smartword'
 
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
