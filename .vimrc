@@ -491,30 +491,30 @@ end
 "if has('gui') && has('mac')
 if has('mac')
     if executable("pyenv")
-        let cmd = 'pyenv version-name'
-        let pyenv=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
-        let cmd = 'python -c "import sys;vt=sys.version_info;print(vt[0], \".\", vt[1], \".\", vt[2], sep=\"\")"'
-        let pyver=substitute(system(cmd), '[\]\|[[:cntrl:]]', '', 'g')
-        let pyvermaj=strpart(pyver, 0, 3)
-        let $PYTHONHOME=$HOME . "/.pyenv/versions/" . pyver
-        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . pyenv . "/lib/python" . pyvermaj . "/site-packages/"
-        let $PYTHONDLL=$PYTHONHOME . "/lib/libpython" . pyvermaj . ".dylib"
-        " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
-        if has('python3')
-            let g:jedi#force_py_version = 3
-            let g:pymode_python = 'python3'
-            let g:syntastic_python_python_exec = 'python3'
-        elseif has('python')
-            let g:jedi#force_py_version = 2
-            let g:syntastic_python_python_exec = 'python2'
-            let g:pymode_python = 'python2'
-        endif
-        " echom "PYENV     :" . pyenv
-        " echom "PYTHONVER :" . pyver
-        " echom "PYTHONMAJ :" . pyvermaj
+        let _cmd = 'pyenv version-name'
+        let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
+        let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let _pyvermaj=strpart(_pyver, 0, 3)
+        let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
+        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyenv . "/lib/python" .  _pyvermaj . "/site-packages/"
+        let $PYTHONDLL=$PYTHONHOME . "/lib/libpython" . _pyvermaj . ".dylib"
+        " echom "PYENV     :" . _pyenv
+        " echom "PYTHONVER :" . _pyver
+        " echom "PYTHONMAJ :" . _pyvermaj
         " echom "PYTHONHOME:" . $PYTHONHOME
         " echom "PYTHONPATH:" . $PYTHONPATH
         " echom "PYTHONDLL :" . $PYTHONDLL
+        " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
+        if _pyvermaj > '3.0' && has('python3')
+            echom "PYTHON3k  :YES"
+            " let g:jedi#force_py_version = 3
+            let g:pymode_python = 'python3'
+        else
+            " echom "PYTHON3k  :NO"
+            let g:jedi#force_py_version = 2
+            let g:pymode_python = 'python'
+        endif
     endif
 endif
 
@@ -777,6 +777,17 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_auto_jump = 0
 "let g:syntastic_error_symbol = "✗"
 "let g:syntastic_warning_symbol = "⚠"
+" if _pyvermaj > '3.0'
+"     echom "PYTHON3k  :YES"
+"     let g:syntastic_python_python_exec = g:syntastic_python3_python_exe
+"     let g:syntastic_python_checkers = g:syntastic_python3_checkers
+" else
+"     echom "PYTHON3k  :NO"
+"     let g:syntastic_python_python_exec = g:syntastic_python2_python_exe
+"     let g:syntastic_python_checkers = g:syntastic_python2_checkers
+" endif
+" echom "syntastic:" . g:syntastic_python_python_exec
+" echom "syntastic:" . g:syntastic_python_checkers
 
 " check syntax on the fly asynchronously
 "Plugin 'maralla/validator.vim'
@@ -1220,8 +1231,19 @@ let g:startify_change_to_dir = 1
 
 " CamelCase 
 " Plugin 'camelcasemotion'
+" Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
 " Alt - w/b/3/E
+" map ∑ W
+" map ∫ B
+" map £ E
+" map W w
+" map B b
+" map E e
+" map w <Plug>CamelCaseMotion_w
+" map b <Plug>CamelCaseMotion_b
+" map e <Plug>CamelCaseMotion_e
+" map ge <Plug>CamelCaseMotion_ge
 map ∑ <Plug>CamelCaseMotion_w
 map ∫ <Plug>CamelCaseMotion_b
 map £ <Plug>CamelCaseMotion_e
@@ -1232,7 +1254,6 @@ omap <silent> i∫ <Plug>CamelCaseMotion_ib
 xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 omap <silent> i£ <Plug>CamelCaseMotion_ie
 xmap <silent> i£ <Plug>CamelCaseMotion_ie
-" Plugin 'kana/vim-smartword'
 
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
