@@ -290,7 +290,7 @@ function loopback {
 charging_icon="⚡"     #  U+26A1 - Thunderbolt
 discharging_icon="🔋" # U+1F50B - Battery
 
-battery_print_help() {
+_battery_print_help() {
     echo "usage: battstat [options] format"
     echo ""
     echo "options:"
@@ -307,17 +307,17 @@ battery_print_help() {
     echo "    Note: There must be a space between each format token."
 }
 
-battery_exit_no_battery() {
+_battery_exit_no_battery() {
     echo "battstat: no battery found"
     exit 1
 }
 
-battery_get_darwin_details() {
+_battery_get_darwin_details() {
     battery_details=$(pmset -g batt)
 
     # Exit if no battery exists.
     if [ -z "$(echo \"$battery_details\" | grep InternalBattery)" ]; then
-	battery_exit_no_battery
+	_battery_exit_no_battery
     fi
     
     charged=$(echo "$battery_details" | grep -w 'charged')
@@ -328,12 +328,12 @@ battery_get_darwin_details() {
     percent=${percent%?} # Strips the last character (;)
 }
 
-battery_get_linux_details() {
+_battery_get_linux_details() {
     battery_details=$(upower -i $(upower -e | grep 'BAT'))
     
     # Exit if no batery exists.
     if [ -z "$battery_details" ]; then
-	battery_exit_no_battery
+	_battery_exit_no_battery
     fi
     
     charged=$(echo "$battery_details" | grep 'state' | grep -w 'fully-charged')
@@ -365,12 +365,12 @@ battery_get_linux_details() {
     time=$hours:$minutes
 }
 
-battery_get_openbsd_details() {
+_battery_get_openbsd_details() {
     battery_details=$(apm)
 
     # Exit if no battery exists.
     if [ -z "$battery_details" ]; then
-	battery_exit_no_battery
+	_battery_exit_no_battery
     fi
 
     charged=$(echo $battery_details | grep '100%')
@@ -389,13 +389,13 @@ battery_get_openbsd_details() {
     time=$hours:$minutes
 }
 
-battery_hide_percent_until_charged() {
+_battery_hide_percent_until_charged() {
     if [ -z "$charged" ]; then
 	percent=""
     fi
 }   
 
-battery_print_icon() {
+_battery_print_icon() {
     if [ ! -z "$charging" ] || [ ! -z "$charged" ]; then
 	icon=$charging_icon
     elif [ ! -z "$discharging" ]; then
@@ -405,7 +405,7 @@ battery_print_icon() {
     printf " %s " $icon
 }
 
-battery_print_time() {
+_battery_print_time() {
     # Display "calc..." when calculating time remaining.
     if [ -z "$time" ] || [ $time = "0:00" ]; then
 	time="calc..."
@@ -422,7 +422,7 @@ battery_print_time() {
 
 }
 
-battery_print_percent() {
+_battery_print_percent() {
     if [ ! -z "$percent" ]; then
 	printf " %s " $percent
     fi
@@ -430,19 +430,19 @@ battery_print_percent() {
 
 battery() {
     if [ $# -gt 0 ] && ( [ $1 = "-h" ] || [ $1 = "--help" ] ); then
-        battery_print_help
+        _battery_print_help
         return
     fi
 
     case $(uname) in
         "Darwin")
-        battery_get_darwin_details
+        _battery_get_darwin_details
         ;;
         "Linux")
-        battery_get_linux_details
+        _battery_get_linux_details
         ;;
         "OpenBSD")
-        battery_get_openbsd_details
+        _battery_get_openbsd_details
         ;;
         *)
         echo "battstat: operating system not supported"
@@ -451,9 +451,9 @@ battery() {
     esac
 
     if [ $# -eq 0 ]; then
-        battery_print_icon
-        battery_print_time
-        battery_print_percent
+        _battery_print_icon
+        _battery_print_time
+        _battery_print_percent
         printf "\n"
         return
     fi
@@ -475,23 +475,59 @@ battery() {
             shift
             ;;
         {i})
-            battery_print_icon
+            _battery_print_icon
             shift
             ;;
         {t})
-            battery_print_time
+            _battery_print_time
             shift
             ;;
         {p})
-            battery_print_percent
+            _battery_print_percent
             shift
             ;;
         *)
-            battery_print_help
+            _battery_print_help
             break
             ;;
         esac
     done
 
     printf "\n"
+}
+
+# https://gist.github.com/kaleksandrov/3cfee92845a403da995e7e44ba771183
+globalprotect() {
+    case $# in
+        0)
+            echo "Usage: globalprotect {start|stop}"
+            return 1
+            ;;
+        1)
+            case $1 in
+                start)
+                    echo "Starting GlobalProtect..."
+                    launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangpa.plist
+                    launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangps.plist
+                    echo "Done!"
+                    ;;
+                 stop)
+                    echo "Stopping GlobalProtect..."
+                    launchctl remove com.paloaltonetworks.gp.pangps
+                    launchctl remove com.paloaltonetworks.gp.pangpa
+                    echo "Done!"
+                    ;;
+                 *)
+                    echo "'$1' is not a valid verb."
+                    echo "Usage: $0 {start|stop}"
+                    return 2
+                    ;;
+              esac
+              ;;
+       *)
+          echo "Too many args provided ($#)."
+          echo "Usage: $0 {start|stop}"
+          return 3
+          ;;
+    esac
 }
