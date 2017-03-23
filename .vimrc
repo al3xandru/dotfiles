@@ -688,7 +688,8 @@ else
     let g:gutentags_ctags_executable = '/usr/bin/ctags'
 endif
 
-let g:gutentags_tagfile = '.tags'
+" let g:gutentags_tagfile = '.tags'
+let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
 
@@ -822,7 +823,7 @@ Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
 imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
-xmap <C-e> <Plug>(neosnippet_expand_or_jump)
+xmap <C-e> <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 "}}}
 "}}}
