@@ -50,6 +50,9 @@ bind j:shift;ctrl;cmd   sequence push left bar-resize:screenSizeX/1.5 > resize -
 bind l:cmd;ctrl         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
 bind l:shift;ctrl;cmd   sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
 bind k:shift;ctrl;cmd   sequence push right bar-resize:screenSizeX/1.5 > resize -5 +0 top-right
+# Quarter screen
+# bind q:alt;cmd;ctrl         resize screenSizeX/2-5 screenSizeY/2-5 
+bind /:cmd;ctrl     move screenOriginX;screenOriginY -5+screenSizeX/2-5;-5+screenSizeY/2
 # Center window
 bind c:cmd;ctrl     move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
 bind c:shift;cmd;ctrl move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
