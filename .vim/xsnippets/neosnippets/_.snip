@@ -1,6 +1,16 @@
 # Custom global snippets
 
-snippet     datehum
+snippet     datehuman
 alias       xdtd
 options     word
     `strftime("%a, %b.%d")`${0}
+
+snippet     dateshort
+alias       xdts
+options     word
+    `strftime("%Y-%M-%d")`
+
+snippet     dateread
+alias       xdtr
+options     word
+    `strftime("%a.%d/%M/%Y")`
