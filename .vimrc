@@ -498,13 +498,16 @@ if has('mac')
         let _pyvermaj=strpart(_pyver, 0, 3)
         let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
         let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyenv . "/lib/python" .  _pyvermaj . "/site-packages/"
-        let $PYTHONDLL=$PYTHONHOME . "/lib/libpython" . _pyvermaj . ".dylib"
+
+        " I don't know how to do set pythondll thus the let &pythondll
+        " set pythondll="$PYTHONHOME/lib/libpython" . _pyvermaj . ".dylib"
+        let &pythondll=$PYTHONHOME . "/lib/libpython" . _pyvermaj . ".dylib"
         " echom "PYENV     :" . _pyenv
         " echom "PYTHONVER :" . _pyver
         " echom "PYTHONMAJ :" . _pyvermaj
         " echom "PYTHONHOME:" . $PYTHONHOME
         " echom "PYTHONPATH:" . $PYTHONPATH
-        " echom "PYTHONDLL :" . $PYTHONDLL
+        " echom "PYTHONDLL :" . &pythondll
         " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
         if _pyvermaj > '3.0' && has('python3')
             echom "PYTHON3k  :YES"
@@ -894,12 +897,12 @@ augroup END
 
 " HTML Zen Coding
 Plugin 'mattn/emmet-vim'
-let g:user_emmer_install_global=0
+let g:user_emmet_install_global=0
 augroup emmet
     autocmd!
     autocmd FileType html,css EmmetInstall
 augroup END
-let g:user_emmet_leader_key='<C-X>'
+let g:user_emmet_leader_key='<C-E>'
 
 
 " Java completion
@@ -1341,7 +1344,7 @@ if has("unix")
     let s:uname = system("uname -s")
 
     if has("gui_running")
-        colorscheme gruvbox
+        colorscheme alduin "gruvbox
     else
         colorscheme summerfruit256
     endif
