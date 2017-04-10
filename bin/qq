@@ -39,6 +39,7 @@ elif [[ "$1" == "-e" ]]; then
   fi
 else
   INPUT=$@
+  MAX_LINES=5
   #echo "`mdfind -onlyin \"$NOTESDIR_1\" -onlyin \"$NOTESDIR_2\" -onlyin \"$NOTESDIR_3\" -interpret \"filename:.$NOTESEXT AND filename:\"$NOTESPRE\" AND ${INPUT%\?}\"`"|while read LINE; do
   mdfind -onlyin "$NOTESDIR_1" -onlyin "$NOTESDIR_3" -interpret "filename:.$NOTESEXT AND filename:$NOTESPRE AND ${INPUT%\?}"|while read LINE; do
       if [[ "$LINE" == "" ]]; then 
@@ -48,9 +49,13 @@ else
       QUESTION=${LINE##*/}
       echo -n "Q: "
       NOTESPREESC=`echo "$NOTESPRE"|sed -E 's/([\?\!\$\`\"]) ?/\\\\\1/g'`
-      echo ${QUESTION%%.$NOTESEXT}|sed -E "s/$NOTESPREESC[ -]?//g"|sed -E 's/(.)$/\1?/'
+      echo ${QUESTION%%.$NOTESEXT}|sed -E "s/$NOTESPREESC[ -]?//g"|sed -E 's/(.)$/\1?/'|sed -E "s/-/ /g"
+      # Q=`echo -n ${QUESTION%%.$NOTESEXT}|sed -E "s/$NOTESPREESC[ -]?//g"|sed -E 's/(.)$/\1?/'|sed -E "s/-/ /g"`
+      # printf "$Q\n  (answered in $QUESTION)\n"
+      echo
       echo -n "A: "
-      cat "$LINE"|sed -E 's/t:x.+x ?//g'|sed -E 's/@\([^\)]+\) ?//g'|sed -E 's/@copy\(([^)]*)\)/\1/'|tr -s "\n"
+      # cat "$LINE"|sed -E 's/t:x.+x ?//g'|sed -E 's/@\([^\)]+\) ?//g'|sed -E 's/@copy\(([^)]*)\)/\1/'|tr -s "\n"
+      head -n $MAX_LINES "$LINE"|sed -E 's/t:x.+x ?//g'|sed -E 's/@\([^\)]+\) ?//g'|sed -E 's/@copy\(([^)]*)\)/\1/'|tr -s "\n"
       if [[ `cat "$LINE"|grep -E '@copy\('` ]]; then
         cat "$LINE"|grep '@copy('|sed -E 's/.*@copy\(([^)]*)\).*/\1/'|tr -d '\n'|pbcopy
         echo ""
@@ -62,6 +67,11 @@ else
         open -g $url
         echo "Opened URL"
       fi      
+      if [[ `wc -l "$LINE"|sed -E 's/([0-9]+).*/\1/g'` -gt $MAX_LINES ]]; then
+        echo "(answer continues in $QUESTION)"
+      else
+        echo "(answered in $QUESTION)"
+      fi
       echo
   done
 fi
