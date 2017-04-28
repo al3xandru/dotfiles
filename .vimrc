@@ -129,6 +129,7 @@ syntax on
 " colorscheme {{{
 colorscheme koehler
 " http://vimcolors.com/
+" http://colorswat.ch/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
 let s:cs_light = "simpleandfriendly sweater summerfruit256 autumnleaf buttercream calmbreeze navajo morning papayawhip pyte gruvbox cake16 lucius ironman nuvola" "eclipse
 let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius  kolor gruvbox" "nefertiti
@@ -543,6 +544,7 @@ Plugin 'jonathanfilip/vim-lucius'
 "   White|WhiteLowContrast]
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
+Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 
@@ -1100,7 +1102,7 @@ let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " Org mode {{{1
 Plugin 'jceb/vim-orgmode'
 let g:org_heading_shade_leading_stars=1
-let g:org_indent=1
+" let g:org_indent=1
 let g:org_todo_keywords = [
     \ [ 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)' ],
     \ [ 'WIPR(p)', 'WAIT(w)', '|', 'DONE(d)', 'FILED(f)', 'SKIP(x)'],
@@ -1237,27 +1239,30 @@ let g:startify_change_to_dir = 1
 " Plugin 'camelcasemotion'
 " Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
-" Alt - w/b/3/E
-" map ∑ W
-" map ∫ B
-" map £ E
-" map W w
-" map B b
-" map E e
-" map w <Plug>CamelCaseMotion_w
-" map b <Plug>CamelCaseMotion_b
-" map e <Plug>CamelCaseMotion_e
-" map ge <Plug>CamelCaseMotion_ge
+" Alt - w/b/3/g => ∑/∫/£/©
 map ∑ <Plug>CamelCaseMotion_w
 map ∫ <Plug>CamelCaseMotion_b
 map £ <Plug>CamelCaseMotion_e
-map ´ <Plug>CamelCaseMotion_ge
+map © <Plug>CamelCaseMotion_ge
 omap <silent> i∑ <Plug>CamelCaseMotion_iw
 xmap <silent> i∑ <Plug>CamelCaseMotion_iw
 omap <silent> i∫ <Plug>CamelCaseMotion_ib
 xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 omap <silent> i£ <Plug>CamelCaseMotion_ie
 xmap <silent> i£ <Plug>CamelCaseMotion_ie
+" these remaps work if I want to
+" noremap ∑ W
+" noremap ∫ B
+" noremap £ E
+" noremap © gE
+" noremap W w
+" noremap B b
+" noremap E e
+" noremap gE ge
+" map w <Plug>CamelCaseMotion_w
+" map b <Plug>CamelCaseMotion_b
+" map e <Plug>CamelCaseMotion_e
+" map ge <Plug>CamelCaseMotion_ge
 
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
@@ -1344,7 +1349,7 @@ if has("unix")
     let s:uname = system("uname -s")
 
     if has("gui_running")
-        colorscheme alduin "gruvbox
+        colorscheme kolor "gruvbox
     else
         colorscheme summerfruit256
     endif
