@@ -1,4 +1,5 @@
 inoremap jk <esc>
+inoremap fd <esc>
 nnoremap j gj
 vnoremap j gj
 nnoremap k gk
