@@ -131,8 +131,8 @@ colorscheme koehler
 " http://vimcolors.com/
 " http://colorswat.ch/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "simpleandfriendly sweater summerfruit256 autumnleaf buttercream calmbreeze navajo morning papayawhip pyte gruvbox cake16 lucius ironman nuvola" "eclipse
-let s:cs_pastel = "alduin jellybeans tango2 wombat wombat256 wombat256mod railcast2 camo earendel flattown lucius  kolor gruvbox" "nefertiti
+let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 calmbreeze morning pyte lucius autumnleaf buttercream cake16 navajo papayawhip sweater"
+let s:cs_pastel = "earendel gruvbox alduin jellybeans nova railcast2 tango2 kolor lucius wombat wombat256 wombat256mod camo"
 
 function! <SID>ChooseColorscheme(args)
     let cslist = []
@@ -196,10 +196,15 @@ augroup keywordprog
     autocmd FileType vim setlocal keywordprg=:help
 augroup END
 
-" 6. multiple windows "
+" 6. multiple windows"
 set title
 set laststatus=2
-set statusline=[%{toupper(mode())}:b%n]\ %f%r%m%=[%l:%v\ %p%%\ %L]%q%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
+" http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
+set statusline=<%#error#%{toupper(mode())}%*>\ 
+set statusline+=%f\ [b%n]%h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
+set statusline+=%= "left/right separator
+set statusline+=[%l:%v\ %p%%\ %L]%q
+set statusline+=%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
 
 " GUI {{{
 " set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
@@ -412,10 +417,10 @@ nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>eV :tabe <C-R>=expand("~") . "/.vimrc"<CR><CR>
 "Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
 " nnoremap <leader>sV :source $MYVIMRC<CR>
-augroup myvimrc
-    au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-augroup END
+" augroup myvimrc
+"     au!
+"     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+" augroup END
 
 " bind f and F to perform grep for the word under cursor
 " grep results go into quicklist: copen/cclose
@@ -521,6 +526,7 @@ if has('mac')
         endif
     endif
 endif
+
 
 " Load Vundle
 " Only Plugin settings are allowed until vundle#end()
@@ -657,7 +663,6 @@ nnoremap <silent><leader>bh :Startify<CR>
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 " }}}
 " 2}}}
-
 
 
 " Buffers {{{2
@@ -1150,7 +1155,7 @@ let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
 let g:pad#set_mappings=0
 nmap <localleader>ql <Plug>(pad-list)
 nmap <localleader>qn <Plug>(pad-new)
-nmap <localleader>qs <Plug>(pad-search)
+nmap <localleader>qq <Plug>(pad-search)
 
 " :Note
 " Plugin 'xolox/vim-misc'
@@ -1194,8 +1199,13 @@ augroup END
 
 Plugin 'jiangmiao/auto-pairs'
 " Alt+0 and Alt+9
-let g:AutoPairsShortcutJump='º'
-let g:AutoPairsShortcutFastWrap='ª'
+if has('mac')
+    let g:AutoPairsShortcutJump='º'
+    let g:AutoPairsShortcutFastWrap='ª'
+else
+    let g:AutoPairsShortcutJump='<M-0>'
+    let g:AutoPairsShortcutFastWrap='<A-9>'
+endif
 "Plugin 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
 
@@ -1205,6 +1215,8 @@ let g:AutoPairsShortcutFastWrap='ª'
 
 Plugin 'HTML-AutoCloseTag'
 " Disable: let b:mapped_auto_closetag = 1
+let b:mapped_auto_closetag = 1
+Plugin 'alvan/vim-closetag'
 "}}}
 
 Plugin 'mhinz/vim-startify'
@@ -1329,7 +1341,6 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'jreybert/vimagit'
 "}}}
 "}}}
-
 "
 " Experimental {{{1
 Plugin 'chrisbra/NrrwRgn'
@@ -1349,9 +1360,9 @@ if has("unix")
     let s:uname = system("uname -s")
 
     if has("gui_running")
-        colorscheme kolor "gruvbox
+        colorscheme nova "earendel gruvbox
     else
-        colorscheme summerfruit256
+        colorscheme ironman "nuvola gruvbox
     endif
 endif
 " call <SID>SetCursorLineColors()
