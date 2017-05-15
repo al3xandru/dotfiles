@@ -15,10 +15,10 @@ alias mon-monoprice 2560x1440
 alias mon-ipad 768x1024
 
 # Undo
-bind z:cmd;alt    undo
+bind z:cmd;ctrl    undo
 
 # Grid
-bind g:cmd;alt    grid padding:5
+bind g:cmd;ctrl    grid padding:5
 # bind esc:ctrl      grid padding:5
 
 # App hints
@@ -26,53 +26,53 @@ bind g:cmd;alt    grid padding:5
 
 # Resize Bindings
 # Enlarge: top-right-bottom-left
-bind 1:alt;cmd;ctrl     resize +0 +10% bottom-left
-bind 2:alt;cmd;ctrl     resize +10% +0 top-left
-bind 3:alt;cmd;ctrl     resize +0 +10% top-left
-bind 4:alt;cmd;ctrl     resize +10% +0 top-right
+bind 1:shift;cmd;ctrl     resize +0 +10% bottom-left
+bind 2:shift;cmd;ctrl     resize +10% +0 top-left
+bind 3:shift;cmd;ctrl     resize +0 +10% top-left
+bind 4:shift;cmd;ctrl     resize +10% +0 top-right
 # Shrink: top-right-bottom-left
-bind 5:alt;cmd;ctrl     resize +0 -10% bottom-left
-bind 6:alt;cmd;ctrl     resize -10% +0 top-left
-bind 7:alt;cmd;ctrl     resize +0 -10% top-left 
-bind 8:alt;cmd;ctrl     resize -10% +0 top-right
+bind 5:shift;cmd;ctrl     resize +0 -10% bottom-left
+bind 6:shift;cmd;ctrl     resize -10% +0 top-left
+bind 7:shift;cmd;ctrl     resize +0 -10% top-left 
+bind 8:shift;cmd;ctrl     resize -10% +0 top-right
 
 # Push Bindings
-bind [:cmd;alt         push left
-bind [:cmd;alt;shift   push bottom
-bind ]:cmd;alt         push right
-bind ]:cmd;alt;shift   push top
+bind [:cmd;ctrl         push left
+bind [:cmd;ctrl;shift   push bottom
+bind ]:cmd;ctrl         push right
+bind ]:cmd;ctrl;shift   push top
 # Full screen
 bind f:cmd;ctrl;alt     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
 # Quarter screen
-bind /:cmd;alt     move screenOriginX;screenOriginY -5+screenSizeX/2-5;-5+screenSizeY/2
+bind /:cmd;ctrl         move screenOriginX;screenOriginY -5+screenSizeX/2-5;-5+screenSizeY/2
 # Left/Right
-bind h:cmd;alt         sequence push left bar-resize:screenSizeX/2 > resize -5 +0 top-left
-bind h:cmd;alt;shift   sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
-bind j:cmd;alt;shift   sequence push left bar-resize:screenSizeX/1.5 > resize -5 +0 top-left
-bind l:cmd;alt         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
-bind l:cmd;alt;shift   sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
-bind k:cmd;alt;shift   sequence push right bar-resize:screenSizeX/1.5 > resize -5 +0 top-right
+bind h:cmd;ctrl         sequence push left bar-resize:screenSizeX/2 > resize -5 +0 top-left
+bind h:cmd;ctrl;alt     sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
+bind j:cmd;ctrl;alt     sequence push left bar-resize:screenSizeX/1.5 > resize -5 +0 top-left
+bind l:cmd;ctrl         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
+bind l:cmd;ctrl;alt     sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
+bind k:cmd;ctrl;alt     sequence push right bar-resize:screenSizeX/1.5 > resize -5 +0 top-right
 # Center window
-bind .:cmd;alt          move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
-bind ':cmd;alt          move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
+bind .:cmd;ctrl          move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
+bind ':cmd;ctrl          move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
 # Maximize vertically
-bind ':cmd;alt;shift    move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
+bind ':cmd;ctrl;alt      move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
 
 
 # Nudge Bindings
-bind l:alt;cmd;ctrl  nudge +25 +0
-bind h:alt;cmd;ctrl  nudge -25 +0
-bind k:alt;cmd;ctrl  nudge +0  -25
-bind j:alt;cmd;ctrl  nudge +0  +25
+bind l:shift;cmd;ctrl  nudge +25 +0
+bind h:shift;cmd;ctrl  nudge -25 +0
+bind k:shift;cmd;ctrl  nudge +0  -25
+bind j:shift;cmd;ctrl  nudge +0  +25
 #bind tright:alt;cmd;ctrl nudge +25 +0
 #bind left:alt;cmd;ctrl  nudge -25 +0
 #bind up:alt;cmd;ctrl    nudge +0  -25
 #bind down:alt;cmd;ctrl  nudge +0  +25
 
 # Throw Bindings
-bind 0:cmd;alt     throw 0
-bind 9:cmd;alt     throw 1
-bind 8:cmd;alt     throw 2
+bind 0:cmd;ctrl     throw 0
+bind 9:cmd;ctrl     throw 1
+bind 8:cmd;ctrl     throw 2
 
 # Snapshots
 bind f3:cmd snapshot aworkspace save-to-disk;stack
