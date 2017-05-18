@@ -1,16 +1,23 @@
 # Custom global snippets
 
-snippet     datehuman
-alias       xdtd
+# Date snippets
+snippet     dateymd
+alias       xdta
+abbr        "Date 1975-08-23"
+options     word
+    `strftime("%Y-%m-%d")`
+
+snippet     datewmd
+alias       xdtb
+abbr        "Date Wed, Aug.23"
 options     word
     `strftime("%a, %b.%d")`${0}
 
-snippet     dateshort
-alias       xdts
-options     word
-    `strftime("%Y-%M-%d")`
 
-snippet     dateread
-alias       xdtr
+snippet     datewdmy
+alias       xdtc
+abbr        "Date Wed.23/08/75"
 options     word
-    `strftime("%a.%d/%M/%Y")`
+    `strftime("%a.%d/%m/%Y")`
+
+
