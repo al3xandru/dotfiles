@@ -124,7 +124,7 @@ set relativenumber
 
 
 " 5. syntax, highlighting and spelling"
-syntax on
+syntax on       " enable syntax processing
 
 " colorscheme {{{
 colorscheme koehler
@@ -200,8 +200,8 @@ augroup END
 set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
-set statusline=<%#error#%{toupper(mode())}%*>\ 
-set statusline+=%f\ [b%n]%h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
+set statusline=%#error#%{toupper(mode())}%*:%n\ >\ 
+set statusline+=%f\ %h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
 set statusline+=%= "left/right separator
 set statusline+=[%l:%v\ %p%%\ %L]%q
 set statusline+=%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
@@ -298,10 +298,11 @@ cnoreabbrev Q q
 
 " Change mapleader from <Leader> = \
 let mapleader="\<space>"
-let maplocalleader="\\"
+" let maplocalleader="\\"
+let maplocalleader=","
 
-inoremap jk <esc>
-inoremap fd <esc>
+" inoremap jk <esc>:echoerr "mapping disabled. forget about it :-)"<CR>i
+" inoremap fd <esc>:w<CR>
 inoremap <silent><Up> <esc><Up>
 inoremap <silent><Down> <esc><Down>
 inoremap <silent><Left> <esc><Left>
@@ -318,8 +319,8 @@ nnoremap <Down> gj
 " nnoremap ; :
 " nnoremap : ;
 " remap Alt+; to ;
-nnoremap … ;    
-nnoremap <M-;> ;
+" nnoremap … ;    
+" nnoremap <M-;> ;
 " nnoremap <tab> %
 " vnoremap <tab> %
 
@@ -339,7 +340,7 @@ function! <SID>HLNext (blinktime)
 endfunction
 " }}}
 
-" Show special characters
+" Show special characters (highlighting)
 nmap <silent><leader>hc :set nolist!<CR>
 " Disable highlighted search 
 nnoremap <silent><leader>hh :nohlsearch<CR>
@@ -370,8 +371,8 @@ cnoremap <C-S> <C-R> call <SID>SaveSession()<CR><CR>
 "cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
 
 " Insert a newline in normal mode
-nnoremap <S-Enter> O<Esc>
-nnoremap <CR> o<Esc>
+" nnoremap <S-Enter> O<Esc>
+" nnoremap <CR> o<Esc>
 nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 
 
@@ -412,15 +413,18 @@ vnoremap < <gv
 " Opens an edit command with the path of the currently edited file filled in
 nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
 nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>eT :tabnew<CR>:CtrlP<CR>
 nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>eS :split<CR>:CtrlP<CR>
 nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader>eV :tabe <C-R>=expand("~") . "/.vimrc"<CR><CR>
+nnoremap <leader>eV :vsplit<CR>:CtrlP<CR>
+nnoremap <leader>e. :tabe $MYVIMRC<CR>
 "Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
-" nnoremap <leader>sV :source $MYVIMRC<CR>
-" augroup myvimrc
-"     au!
-"     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-" augroup END
+nnoremap <leader>s. :source $MYVIMRC<CR>
+augroup myvimrc
+    au!
+    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+augroup END
 
 " bind f and F to perform grep for the word under cursor
 " grep results go into quicklist: copen/cclose
@@ -618,7 +622,7 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
 let g:ctrlp_use_caching = 2000
-nnoremap <unique><leader>f :CtrlP<CR>
+nnoremap <unique><leader>o :CtrlP<CR>
 nnoremap <unique><leader>] :CtrlPBufTag<CR>
 nnoremap <unique><leader>B :CtrlPBuffer<CR>
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
@@ -1276,6 +1280,14 @@ xmap <silent> i£ <Plug>CamelCaseMotion_ie
 " map e <Plug>CamelCaseMotion_e
 " map ge <Plug>CamelCaseMotion_ge
 
+Plugin 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+nmap \ <Plug>Sneak_,
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
@@ -1352,8 +1364,6 @@ call vundle#end()
 filetype plugin indent on " required!
 
 " set color scheme
-" kolor flatttown inkpot liquidcarbon kolor desert256 dante navajo papayawhip
-" alduin camo gruvbox simpleandfriendly summerfruit256 
 if has("unix")
     " use if needed to determine the os
     " or use has("mac")
