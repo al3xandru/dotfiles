@@ -11,7 +11,7 @@ function doStatus() {
         fi
         echo ""
         echo "Comparing $file with $HOME/$file"
-        diff -rq $file $HOME/$file | grep -v -e 'tags' -e 'netrwhist' -e 'README.md' -e '.vim/bundle'
+        diff -rq $file $HOME/$file | grep -v -e '.vim/bundle' -e 'netrwhist' -e 'README.md' -e 'spell' -e 'tmp' -e 'tags' 
     done
     echo ""
 
@@ -63,6 +63,10 @@ function doStatus() {
         echo "Slate ~/.slate is NOT a symlink"
         t=1
     fi
+    if [ ! -h "$HOME/.tmux.conf" ]; then
+        echo "tmux ~/.tmux.conf is NOT a symlink"
+        t=1
+    fi
     if [ 0 -eq $t ]; then
         echo "[OK]"
     else
@@ -81,7 +85,7 @@ function doStatus() {
 function doInstall() {
     rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
-    for f in .{aliases,exports,functions,path,prompt_bash,slate,vimrc,spacemacs,ideavimrc}; do
+    for f in .{aliases,exports,functions,ideavimrc,path,prompt_bash,slate,spacemacs,tmux.conf,vimrc}; do
         proc $f
     done
 
