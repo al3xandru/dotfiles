@@ -9,7 +9,7 @@ NOTESEXT="md"
 # the prefix you use to separate "Question" notes
 NOTESPRE="qq-"
 # editor command to use for modifying answers
-EDITOR="bbedit"
+# EDITOR="bbedit"
 
 if [[ "$1" == "-a" ]]
 then
