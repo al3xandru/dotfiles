@@ -15,7 +15,9 @@ else
     if [ -x /usr/local/bin/bbdiff ]; then
         bbdiff --wait --resume "$NEW" "$OLD"
     else
-        if [ -x /usr/local/bin/vimdiff ]; then
+        if [ -x $HOME/bin/mvim ]; then
+           $HOME/bin/mvim -d -f "$OLD" "$NEW"
+        elif [ -x /usr/local/bin/vimdiff ]; then 
             /usr/local/bin/vimdiff "$OLD" "$NEW"
         else
             if [ -x /usr/bin/vimdiff ]; then
