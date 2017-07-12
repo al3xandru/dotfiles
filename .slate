@@ -19,7 +19,6 @@ bind z:cmd;ctrl    undo
 
 # Grid
 bind g:cmd;ctrl    grid padding:5
-# bind esc:ctrl      grid padding:5
 
 # App hints
 # bind w:alt;cmd;ctrl     hint QWERTYUIOP
@@ -36,15 +35,22 @@ bind 6:shift;cmd;ctrl     resize -10% +0 top-left
 bind 7:shift;cmd;ctrl     resize +0 -10% top-left 
 bind 8:shift;cmd;ctrl     resize -10% +0 top-right
 
-# Push Bindings
-bind [:cmd;ctrl         push left
-bind [:cmd;ctrl;shift   push bottom
-bind ]:cmd;ctrl         push right
-bind ]:cmd;ctrl;shift   push top
+# Push Bindings: left, bottom, right, top
+bind [:cmd;alt         push left
+bind [:cmd;alt;shift   push bottom
+bind ]:cmd;alt         push right
+bind ]:cmd;alt;shift   push top
+# Quarter screen
+bind /:cmd;alt          move screenOriginX;screenOriginY -5+screenSizeX/2-5;-5+screenSizeY/2
+# Center window
+bind .:cmd;alt          move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
+bind ':cmd;alt          move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
+# Maximize vertically
+bind ':cmd;alt;shift    move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
+
 # Full screen
 bind f:cmd;ctrl;alt     move screenOriginX;screenOriginY screenSizeX;screenSizeY 
-# Quarter screen
-bind /:cmd;ctrl         move screenOriginX;screenOriginY -5+screenSizeX/2-5;-5+screenSizeY/2
+
 # Left/Right
 bind h:cmd;ctrl         sequence push left bar-resize:screenSizeX/2 > resize -5 +0 top-left
 bind h:cmd;ctrl;alt     sequence push left  bar-resize:screenSizeX/3 > resize -5 +0 top-left
@@ -52,11 +58,6 @@ bind j:cmd;ctrl;alt     sequence push left bar-resize:screenSizeX/1.5 > resize -
 bind l:cmd;ctrl         sequence push right bar-resize:screenSizeX/2 > resize -5 +0 top-right
 bind l:cmd;ctrl;alt     sequence push right bar-resize:screenSizeX/3 > resize -5 +0 top-right
 bind k:cmd;ctrl;alt     sequence push right bar-resize:screenSizeX/1.5 > resize -5 +0 top-right
-# Center window
-bind .:cmd;ctrl          move screenOriginX+(screenSizeX-windowSizeX)/2;screenOriginY+(screenSizeY-windowSizeY)/2 windowSizeX;windowSizeY
-bind ':cmd;ctrl          move windowTopLeftX;screenOriginY windowSizeX;screenSizeY
-# Maximize vertically
-bind ':cmd;ctrl;alt      move screenOriginX+screenSizeX/3;0 screenSizeX/3;screenSizeY
 
 
 # Nudge Bindings
@@ -70,17 +71,17 @@ bind j:shift;cmd;ctrl  nudge +0  +25
 #bind down:alt;cmd;ctrl  nudge +0  +25
 
 # Throw Bindings
-bind 0:cmd;ctrl     throw 0
-bind 9:cmd;ctrl     throw 1
-bind 8:cmd;ctrl     throw 2
+bind 0:cmd;alt     throw 0
+bind 9:cmd;alt     throw 1
+bind 8:cmd;alt     throw 2
 
 # Snapshots
-bind f3:cmd snapshot aworkspace save-to-disk;stack
-bind f3:alt activate-snapshot aworkspace
-bind f3:cmd;alt activate-snapshot aworkspace delete
-bind f4:cmd snapshot bworkspace save-to-disk;stack
-bind f4:alt activate-snapshot bworkspace
-bind f4:cmd;alt activate-snapshot bworkspace delete
+# bind f3:cmd snapshot aworkspace save-to-disk;stack
+# bind f3:alt activate-snapshot aworkspace
+# bind f3:cmd;alt activate-snapshot aworkspace delete
+# bind f4:cmd snapshot bworkspace save-to-disk;stack
+# bind f4:alt activate-snapshot bworkspace
+# bind f4:cmd;alt activate-snapshot bworkspace delete
 # Work messenger layout
 #alias 2-top-l move screenOriginX;screenOriginY  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
 #alias 2-bot-l move screenOriginX;screenOriginY+screenSizeY/2  screenSizeX/3;screenSizeY/2  ${mon-monoprice}
