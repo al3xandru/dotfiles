@@ -59,19 +59,19 @@ set wildignore+=*.egg,*.egg-info,*.gem
 set wildignore+=*.zip,*.tar.gz,*.gzip,*.rar
 set wildignore+=*.aux,*.toc " Latex intermediary files
 
-" autosave on focus lost
-autocmd FocusLost, BufLeave * silent! :wall
 " }}}
 
+
 " 2. moving around, searching and patterns {{{
-set incsearch
-set hlsearch
 set ignorecase
+set incsearch
+set nohlsearch
 set smartcase
 set showmatch
 set matchtime=3     " tenths of a second to show the matching paren
 set scrolloff=5
 " }}}
+
 
 " 3. omnicomplete {{{
 set omnifunc=syntaxcomplete#Complete
@@ -84,6 +84,7 @@ set completeopt=longest,menu,preview
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
 " }}}
+
 
 " 4. displaying text {{{
 filetype on
@@ -119,11 +120,12 @@ augroup lineno
 augroup END
 set number
 set relativenumber
+set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
 " }}}
 " }}}
 
 
-" 5. syntax, highlighting and spelling"
+" 5. syntax, highlighting and spelling" {{{
 syntax on       " enable syntax processing
 
 " colorscheme {{{
@@ -183,6 +185,7 @@ function! <SID>SetCursorLineColors()
 endfunction
 " }}}
 
+" keyworkdprg, dictionary, thesaurus {{{
 set dictionary=/usr/share/dict/words
 set thesaurus+=~/.vim/mthesaur.txt
 
@@ -194,9 +197,13 @@ endif
 augroup keywordprog
     autocmd!
     autocmd FileType vim setlocal keywordprg=:help
-augroup END
+augroup ENDhttps://docs.google.com/spreadsheets/d/1GP_Knb7mAYYWEO_C6ffkJH8iUjkfY9XN3y1BVLbv5dU/edit#gid=1176884423
 
-" 6. multiple windows"
+" }}}
+" }}}
+
+
+" 6. multiple windows {{{
 set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
@@ -250,7 +257,7 @@ endif
 " splits
 set splitbelow
 set splitright
-"
+
 " automatically open the location/quickfix window after :make, :grep,
 " :lvimgrep and friends if there are valid locations/errors
 "augroup qf
@@ -258,10 +265,13 @@ set splitright
     "autocmd QuickFixCmdPost [^l]* cwindow
     "autocmd QuickFixCmdPost l* lwindow
 "augroup END
+" }}}
 
-" 11.messages and info
+
+" 11. messages and info {{{
 set ruler
 set visualbell t_vb=
+" }}}
 
 
 " 14. tabs and indenting {{{
@@ -303,12 +313,19 @@ let maplocalleader=","
 
 " inoremap jk <esc>:echoerr "mapping disabled. forget about it :-)"<CR>i
 " inoremap fd <esc>:w<CR>
-inoremap <silent><Up> <esc><Up>
-inoremap <silent><Down> <esc><Down>
 inoremap <silent><Left> <esc><Left>
 inoremap <silent><Right> <esc><Right>
-" inoremap <Down> <C-o>gj
+inoremap <silent><Up> <esc><Up>
+inoremap <silent><Down> <esc><Down>
 " inoremap <Up> <C-o>gk
+" inoremap <Down> <C-o>gj
+
+" Insert a newline in normal mode
+" nnoremap <S-Enter> O<Esc>
+" nnoremap <CR> o<Esc>
+nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
+" insert at the end of line while in insert mode; i_CTRL-I is insert <tab>
+inoremap <C-S-i> <C-o>A 
 
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -340,6 +357,7 @@ function! <SID>HLNext (blinktime)
 endfunction
 " }}}
 
+" highlights {{{
 " Show special characters (highlighting)
 nmap <silent><leader>hc :set nolist!<CR>
 " Disable highlighted search 
@@ -350,6 +368,7 @@ nnoremap <silent><leader><esc> :nohlsearch<CR>
 nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
 " case sensitive, no partial match
 nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
+" }}}
 
 " Inserts the path of the currently edited file into a command
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
@@ -370,16 +389,13 @@ cnoremap <C-S> <C-R> call <SID>SaveSession()<CR><CR>
 "cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
 "cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
 
-" Insert a newline in normal mode
-" nnoremap <S-Enter> O<Esc>
-" nnoremap <CR> o<Esc>
-nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 
+" buffer switch (disabled) {{{
+" nmap <C-a> :bNext<CR>
+" nmap <C-e> :e#<CR>
+" }}}
 
-" Buffer switch
-nmap <C-a> :bNext<CR>
-nmap <C-e> :e#<CR>
-" Tab switch
+" tab switch {{{
 nnoremap <silent><leader>gt :<C-u>tabs<CR>:tabn<space>
 nnoremap <silent><C-S-tab> :silent tabprevious<CR>
 nnoremap <silent><C-tab> :silent tabnext<CR>
@@ -391,12 +407,14 @@ inoremap <C-\> <C-w><C-]><C-w>T
 " Alt+] on OS X
 nnoremap ‘ <C-w><C-]><C-w>T
 inoremap ‘ <C-w><C-]><C-w>T
+" }}}
 
-" Window resizing
+" Window resizing {{{
 nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
 nmap <silent><C-w>+ :resize +10<CR>
+" }}}
 
 " Selections {{{
 " reselect pasted text
@@ -476,6 +494,10 @@ set encoding=utf-8 nobomb
 if has("autocmd")
     augroup vimrc
         autocmd!
+        " autosave on focus lost
+        autocmd FocusLost, BufLeave * silent! :wall
+        " default to markdown
+        autocmd BufEnter * if &filetype == "" | setlocal ft=markdown | endif
         " crontab -e
         autocmd BufNewFile,BufRead crontab.* set nobackup nowritebackup
 
@@ -543,21 +565,18 @@ Plugin 'VundleVim/Vundle.vim'
 " - junegunn/vim-plug 
 " - Shougo/neobundle.vim
 
-" Color schemes {{{1
+" colorschemes {{{1
 Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'jonathanfilip/vim-lucius'
-" After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
-"   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
-"   White|WhiteLowContrast]
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
 
+" disabled colorschemes {{{2 
 " Plugin 'adampasz/vim-stonewashed'
 " Plugin 'AlessandroYorba/Sierra'
 " Plugin 'altercation/vim-colors-solarized'
@@ -566,11 +585,19 @@ let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
 " Plugin 'blerins/flattown'
+" Plugin 'chriskempson/base16-vim'
 " Plugin 'cocopon/iceberg.vim'
 " Plugin 'colepeters/spacemacs-theme.vim'
 " Plugin 'fcpg/vim-fahrenheit'
+" Plugin 'freeo/vim-kalisi'
 " Plugin 'jdkanani/vim-material-theme'
 " Plugin 'jeetsukumaran/vim-nefertiti'
+" Plugin 'jonathanfilip/vim-lucius'
+" After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
+"   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
+"   White|WhiteLowContrast]
+" Plugin 'junegunn/seoul256.vim'
+" Plugin 'mayansmoke'
 " Plugin 'mhartington/oceanic-next'
 " Plugin 'nanotech/jellybeans.vim'
 " Plugin 'NLKNguyen/papercolor-theme'
@@ -583,6 +610,7 @@ let g:airline_theme='twofirewatch'
 " Plugin '256-grayvim'
 " Plugin 'blacklight'
 " Plugin 'gregsexton/Atom'
+" }}}
 " }}}
 
 
@@ -607,6 +635,9 @@ Plugin 'thinca/vim-textobj-function-perl'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 " Comment object: ic ac aC
 Plugin 'glts/vim-textobj-comment'
+" URIs: iu au
+Plugin 'jceb/vim-textobj-uri'
+Plugin 'wellle/targets.vim'
 " }}}
 
 "
@@ -641,7 +672,7 @@ nnoremap <silent><leader>bh :Startify<CR>
     let g:netrw_preview=0   "horizontal
     let g:netrw_alto=0      "aboveleft
     let g:netrw_altv=1      "open splits to the right
-    let g:netrw_liststyle=3 " 3: thin long wide tree; 0: thin list
+    let g:netrw_liststyle=0 " 3: thin long wide tree; 0: thin list
     let g:netrw_winsize=25
     let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
     let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
@@ -773,9 +804,10 @@ let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 
 
-Plugin 'junegunn/vim-peekaboo'
-let g:peekaboo_delay=800
-let g:peekaboo_window='vertical botright 45new'
+" can be replaced by :registers
+" Plugin 'junegunn/vim-peekaboo'
+" let g:peekaboo_delay=800
+" let g:peekaboo_window='vertical botright 45new'
 " let g:peekaboo_window='topleft 15new'
 
 
@@ -925,15 +957,15 @@ Plugin 'artur-shaik/vim-javacomplete2'
 Plugin 'pangloss/vim-javascript'
 
 " Asciidoc {{{2
-Plugin 'dahu/vim-asciidoc'
-Plugin 'dahu/vimple'
-Plugin 'dahu/Asif'
-Plugin 'Raimondi/VimRegStyle'
-let g:asciidoc_title_style = 'setext'
-augroup asciidoc
-    autocmd!
-    autocmd BufNewFile,BufRead *.adoc.txt setfiletype asciidoc syntax=asciidoc
-augroup END
+" Plugin 'dahu/vim-asciidoc'
+" Plugin 'dahu/vimple'
+" Plugin 'dahu/Asif'
+" Plugin 'Raimondi/VimRegStyle'
+" let g:asciidoc_title_style = 'setext'
+" augroup asciidoc
+"     autocmd!
+"     autocmd BufNewFile,BufRead *.adoc.txt setfiletype asciidoc syntax=asciidoc
+" augroup END
 "}}}
 
 " Markdown {{{2
@@ -1036,6 +1068,8 @@ augroup markdown
     " autocmd FileType markdown vmap bq mzgw`<mav`z:s/^/> /g<CR>:nohlsearch<CR>2xo
     autocmd FileType markdown vmap bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
+    " https://sts10.github.io/post/2015-08-02-markdwon-hyperlink-remap-for-vim/
+    autocmd FileType markdown vnoremap il <esc>`<i[<esc>`>a](<esc>"*]pa) <esc>
 augroup END
 
 "}}}
