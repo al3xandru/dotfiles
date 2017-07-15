@@ -27,4 +27,5 @@ tmux select-pane -t 2
 tmux send-keys "cd $HOME/Dropbox/Dox/nvall" C-m
 
 tmux select-window -t "main"
+tmux select-pane -t 1
 tmux -2 attach-session -t "$sessname"
