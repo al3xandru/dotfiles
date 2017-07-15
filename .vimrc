@@ -197,7 +197,7 @@ endif
 augroup keywordprog
     autocmd!
     autocmd FileType vim setlocal keywordprg=:help
-augroup ENDhttps://docs.google.com/spreadsheets/d/1GP_Knb7mAYYWEO_C6ffkJH8iUjkfY9XN3y1BVLbv5dU/edit#gid=1176884423
+augroup END
 
 " }}}
 " }}}
@@ -325,7 +325,7 @@ inoremap <silent><Down> <esc><Down>
 " nnoremap <CR> o<Esc>
 nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 " insert at the end of line while in insert mode; i_CTRL-I is insert <tab>
-inoremap <C-S-i> <C-o>A 
+inoremap <C-a> <C-o>A 
 
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
