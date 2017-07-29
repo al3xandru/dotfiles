@@ -110,7 +110,15 @@ function doInstall() {
 function proc() {
     f="$1"
     hf=$HOME/"$1"
+    echo "Processing $1 -> $HOME/$1"
 
+    # if [ -a "${hf}" ]; then
+    #     echo "test -a: TRUE"
+    # elif [ -e "${hf}" ]; then
+    #     echo "test -e: TRUE" 
+    # else
+    #     echo "test ae: FALSE"
+    # fi
     if [ -a "${hf}" ]; then
         diff -sq "${f}" "${hf}" &> /dev/null
 
@@ -120,14 +128,21 @@ function proc() {
             if [ -h "${hf}" ]; then
                 echo "[OK] Target ${f} is a symlink to $(ls -l ${hf} | awk '{print $11}')"
             else
-                rm -f "${hf}"
+                rm -vf "${hf}"
                 ln -s "${PWD}/${f}" "${hf}"
                 echo "[OK] Replaced target identical file with symlink"
             fi
         fi
     else
-        ln -s "${PWD}/${f}" "${hf}"
-        echo "[OK] Target symlink for ${f} created"
+        if [ -h "${hf}" ]; then
+            echo "[OK] Target ${f} is a symlink to $(ls -l ${hf} | awk '{print $11}')"
+            rm -vf "${hf}"
+            ln -s "${PWD}/${f}" "${hf}"
+            echo "[OK] Replaced target identical file with symlink"
+        else
+            ln -s "${PWD}/${f}" "${hf}"
+            echo "[OK] Target symlink for ${f} created"
+        fi
     fi
 }
 
