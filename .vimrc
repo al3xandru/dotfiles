@@ -1276,6 +1276,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/active/04-notes.org',
     \ '~/Dropbox/Dox/active/05-blog.md',
     \ '~/.vimrc',
+    \ '~/Documents/MyDocs/50-projects/homepage/h.html',
     \]
 let g:startify_session_autoload = 1
 let g:startify_skiplist = [
