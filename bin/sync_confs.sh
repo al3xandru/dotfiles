@@ -1,19 +1,20 @@
 #!/bin/bash
 declare -a CONF_FILES
-CONF_FILES=("${HOME}"/.MacOSX-renamed/environment.donotuse
+CONF_FILES=("${HOME}/.MacOSX-renamed/environment.donotuse"
+    "${HOME}/Library/Application Support/Choosy/behaviours.plist"
     "${HOME}/Library/Application Support/Karabiner/private.xml"
     "${HOME}/Library/Application Support/KeyRemap4MacBook/private.xml"
-    "${HOME}"/"Library/Application Support/LaunchBar/Configuration.plist"
-    "${HOME}"/"Library/Application Support/LaunchBar/CustomShortcuts.plist"
-    "${HOME}"/"Library/Application Support/BetterTouchTool/bttdata2"
-    "${HOME}"/Library/KeyBindings/DefaultKeyBinding.dict
-    "${HOME}"/Library/Preferences/com.apple.Safari.plist
-    "${HOME}"/Library/Colors/SkimNotes.clr
-    "${HOME}"/Library/Colors/Solarized.clr
+    "${HOME}/Library/Application Support/LaunchBar/Configuration.plist"
+    "${HOME}/Library/Application Support/LaunchBar/CustomShortcuts.plist"
+    "${HOME}/Library/Application Support/BetterTouchTool/bttdata2"
+    "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
+    "${HOME}/Library/Preferences/com.apple.Safari.plist"
+    "${HOME}/Library/Colors/SkimNotes.clr"
+    "${HOME}/Library/Colors/Solarized.clr"
 )
 
 if [ -z "$TARGET_DIR" ]; then
-    TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/configfiles"
+    TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/confs/appsettings"
 fi
 MACHINE_NAME=`hostname -s`
 
