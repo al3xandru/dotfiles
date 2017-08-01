@@ -151,6 +151,49 @@ def themoviedb_data(title, year=None):
 
   return imdb_data, 1
 
+
+def theimdbapi_data(title, year=None):
+  """http://www.theimdbapi.org/api"""
+  short_title = prepare_title(title)
+
+  jdata = httpGet('www.theimdbapi.org',
+                  httpQuery('/api/find/movie', title=short_title, year=year))
+
+  if not jdata:
+    return {}, 0
+
+  imdb_data = {}
+
+  if len(jdata) == 1:
+    jdata = jdata[0]
+  else:
+    max_match = 0
+    result = None
+    for r in jdata:
+      match = match_len(title, r['title'])
+      if year and r['release_date'][:4] == str(year):
+        match += 1
+      if match > max_match:
+        max_match = match
+        result = r
+    jdata = result
+
+  if not jdata:
+    return {}, 0
+
+  # imdb_data['year'] = jdata['release_date'][:4]
+  imdb_data['title'] = jdata['title']
+  imdb_data['year'] = jdata['year']
+  imdb_data['imdb_url'] = jdata['url']['url']
+  imdb_data['genres'] = jdata['genre']
+  imdb_data['plot'] = jdata['description']
+  imdb_data['actors'] = [t['name'] for t in jdata['cast']]
+  imdb_data['directors'] = [jdata['director']]
+  imdb_data['rating'] = jdata['rating']
+
+  return imdb_data, 1
+
+
 def omdbapi_data(title, year=None):
   """ Another service to try is www.omdbapi.com """
   short_title = prepare_title(title)
@@ -217,10 +260,10 @@ def httpGet(server, uri):
     if c:
       c.close()
 
+
 def httpQuery(uri, **kwargs):
   params = kwargs or {}
   return uri + '?' + urllib.urlencode(params)
-
 
 
 def get(attr, default=None, *args):
@@ -239,24 +282,28 @@ def get(attr, default=None, *args):
 
   return default
 
-def find_actors(d1, d2, d3):
+
+def find_actors(*args):
   actors = []
   uniques = {}
-  if 'actors' in d1:
-    for a in d1['actors']:
-      if not a in uniques:
-        actors.append(a)
-        uniques[a] = True
-  if 'Actors' in d2:
-    for a in d2['Actors'].split(', '):
-      if not a in uniques:
-        actors.append(a)
-        uniques[a] = True
-  if 'abridged_cast' in d3:
-    for a in [a['name'] for a in d3['abridged_cast']]:
-      if not a in uniques:
-        actors.append(a)
-        uniques[a] = True
+  for d in args:
+    if 'actors' in d:
+      for a in d['actors']:
+        if not a in uniques:
+          actors.append(a)
+          uniques[a] = True
+      continue
+    if 'Actors' in d:
+      for a in d['Actors'].split(', '):
+        if not a in uniques:
+          actors.append(a)
+          uniques[a] = True
+      continue
+    if 'abridged_cast' in d:
+      for a in [a['name'] for a in d['abridged_cast']]:
+        if not a in uniques:
+          actors.append(a)
+          uniques[a] = True
   return actors
 
 
@@ -273,6 +320,7 @@ def match_len(in_title, movie_title):
 def main(title, opts):
   # print("Trying: themoviedb.org")
   imdbapid, r1 = themoviedb_data(title, opts.year)
+  tmdbapid, r3 = theimdbapi_data(title, opts.year)
   # print("Trying: www.omdbapi.com")
   omdbapid, r2 = omdbapi_data(title, opts.year)
   # Rotten Tomatoes killed the free API
@@ -281,15 +329,15 @@ def main(title, opts):
   rottend = {}
 
   data = {
-    'title': get('title', '', imdbapid, rottend, omdbapid),
-    'year': opts.year or get('year', '', imdbapi, omdbapid),
-    'genre': imdbapid.get('genres', []) or omdbapid.get('Genre', '').split(', '),
-    'imdb_url': get('imdb_url', imdbapid, omdbapid),
+    'title': get('title', '', imdbapid, tmdbapid, rottend, omdbapid),
+    'year': opts.year or get('year', '', imdbapi, tmdbapid, omdbapid),
+    'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
+    'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
-    'imdb_rating': imdbapid.get('rating', 'n/a'),
-    'directors': imdbapid.get('directors', []) or omdbapid.get('Director', '').split(', '),
-    'actors': find_actors(imdbapid, omdbapid, rottend),
-    'plot': get('plot', '', imdbapid, omdbapid),
+    'imdb_rating': get('rating', 'n/a', imdbapid, tmdbapid),
+    'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
+    'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
+    'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
     'poster_imdb': imdbapid.get('poster'),
     'audience_rating': 'Upright/Spilled',
     'audience_score' : '',
