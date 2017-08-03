@@ -1056,20 +1056,20 @@ augroup markdown
     autocmd!
     autocmd BufRead,BufNewFile *.{mk,markdown,mdown,mkdn,mkd,rst} set filetype=markdown
     autocmd FileType markdown setlocal textwidth=80 wrap linebreak foldenable
-    autocmd FileType markdown nmap <leader>t :Toc<CR>:q<CR>:lop<CR> 
-    autocmd FileType markdown nnoremap <silent><localleader>me :call <SID>IAWriter()<CR>
-    autocmd FileType markdown nnoremap <silent><localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
-    autocmd FileType markdown nnoremap <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
     " Paste clipboard as blockquote
     " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
     " autocmd FileType markdown nnoremap <silent><localleader>bq pgw`]V`]:s/^/> /g<CR>:nohlsearch<CR>o
-    autocmd FileType markdown nnoremap <silent><localleader>bq p`]gw`[V`[:s/^/> /g<CR>:nohlsearch<CR>o
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>bq p`]gw`[V`[:s/^/> /g<CR>:nohlsearch<CR>o
     " visual selection to blockquote
     " autocmd FileType markdown vmap bq mzgw`<mav`z:s/^/> /g<CR>:nohlsearch<CR>2xo
-    autocmd FileType markdown vmap bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
+    autocmd FileType markdown vmap <buffer> bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
     " https://sts10.github.io/post/2015-08-02-markdwon-hyperlink-remap-for-vim/
-    autocmd FileType markdown vnoremap il <esc>`<i[<esc>`>a](<esc>"*]pa) <esc>
+    autocmd FileType markdown vnoremap <buffer> il <esc>`<i[<esc>`>a](<esc>"*]pa) <esc>
 augroup END
 
 "}}}
