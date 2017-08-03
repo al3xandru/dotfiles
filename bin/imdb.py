@@ -131,6 +131,7 @@ def themoviedb_data(title, year=None):
       if match > max_match:
         movie_id = r['id']
         max_match = match
+        imdb_data['title'] = r['title']
 
   if not movie_id:
     return {}, 0
