@@ -447,11 +447,18 @@ def print_to(stream, data):
   stream.write("Metascore: \n")
   stream.write("Genre    : %s\n" % ', '.join(data['genre']))
   stream.write("Year     : %s\n" % data['year'])
+  if data['imdb_url']:
+    stream.write("IMDb link: <%s>\n" % data['imdb_url'])
   stream.write("Tagline  : \n")
   stream.write("\n")
 
   # Ratings
   stream.write("### Ratings \n\n")
+  if data['rotten_url']:
+    if data['rotten_url'].startswith('http'):
+      stream.write("Tomato link      : <%s>\n" % data['rotten_url'])
+    else:
+      stream.write("Tomato link      : <http:%s>\n" % data['rotten_url'])
   stream.write("Tomato rating    : %s\n" % data['audience_rating'])
   stream.write("Tomato score     : %s\n" % data['audience_score'])
   stream.write("Critics rating   : %s\n" % data['critics_rating'])
@@ -493,17 +500,6 @@ def print_to(stream, data):
   #   stream.write("![Poster %s](%s)\n" % (data['title'], data['poster_rotten']))
   # stream.write("\n")
 
-  # Links
-  if data['imdb_url'] or data['rotten_url']:
-    stream.write("#### Links:\n\n")
-    if data['imdb_url']:
-      stream.write("*   <%s>\n" % data['imdb_url'])
-    if data['rotten_url']:
-      if data['rotten_url'].startswith('http'):
-        stream.write("*   <%s>\n" % data['rotten_url'])
-      else:
-        stream.write("*   <http:%s>\n" % data['rotten_url'])
-  stream.write("\n")
 
   # Tags
   tags = "#movie:%s" % data['year']
