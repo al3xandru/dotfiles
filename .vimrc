@@ -1217,10 +1217,10 @@ let g:notes_conceal_code=0
 " Plugin 'vimwiki/vimwiki'
 "}}}
 
-"
 " Enhancements {{{1
 "
-"{{{2
+"
+" Improve matching chars, parentheses {{{2
 " Improved %
 " Plugin 'edsono/vim-matchit' " dead
 " Plugin 'isa/vim-matchit'
@@ -1257,6 +1257,7 @@ let b:mapped_auto_closetag = 1
 Plugin 'alvan/vim-closetag'
 "}}}
 
+" Startup buffer {{{2
 Plugin 'mhinz/vim-startify'
 let g:startify_list_order = [
     \ ['Bookmarks:'],
@@ -1284,9 +1285,9 @@ let g:startify_skiplist = [
     \ '.hg/.*',
     \ ]
 let g:startify_change_to_dir = 1
+"}}}
 
-
-" CamelCase 
+" CamelCase {{{2
 " Plugin 'camelcasemotion'
 " Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
@@ -1314,7 +1315,9 @@ xmap <silent> i£ <Plug>CamelCaseMotion_ie
 " map b <Plug>CamelCaseMotion_b
 " map e <Plug>CamelCaseMotion_e
 " map ge <Plug>CamelCaseMotion_ge
+" }}}
 
+" Quick navigation {{{2
 Plugin 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
@@ -1323,6 +1326,7 @@ nmap F <Plug>Sneak_F
 nmap t <Plug>Sneak_t
 nmap T <Plug>Sneak_T
 nmap \ <Plug>Sneak_,
+
 Plugin 'easymotion/vim-easymotion'
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
@@ -1360,7 +1364,7 @@ vmap ,e <Plug>(easymotion-bd-e)
 vmap ,f <Plug>(easymotion-bd-f)
 vmap ,t <Plug>(easymotion-bd-t)
 vmap ,n <Plug>(easymotion-next)
-
+" }}}
 
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
@@ -1390,9 +1394,11 @@ Plugin 'tpope/vim-fugitive'
 "}}}
 "
 " Experimental {{{1
-Plugin 'chrisbra/NrrwRgn'
+Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 
-Plugin 'yuttie/comfortable-motion.vim'
+Plugin 'kopischke/vim-fetch'            " open files at line and column
+Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
+
 "}}}
 
 call vundle#end()
