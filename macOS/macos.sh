@@ -6,7 +6,8 @@ fi
 echo "Enable Cask (https://caskroom.github.io)"
 brew tap caskroom/cask
 
-BREWS=("aspell" "git" "go" "lua" "openssl" "ranger" "readline" "the_silver_searcher" "tree")
+BREWS=("aspell" "git" "go" "lua" "openssl" \
+       "ranger" "readline" "the_silver_searcher" "tmux" "tree")
 function brewInstall() {
     for pkg in ${BREWS[@]}; do
         echo "brew install $pkg"
@@ -37,9 +38,11 @@ function installVim() {
     echo "brew install --build-from-source --with-custom-python --with-lua vim"
 }
 
-APPS=("1password" "alfred" "bettertouchtool" "duet" "macvim" "mattr-slate" "hazel" "resilio-sync" "little-snitch" \
-    "appcleaner" "bartender" "dash" "google-chrome" "itsycal" "keyboard-maestro" "mailplane" "mplayerx" "omnifocus" "taskpaper" "spotify" \
-    "intellij-idea" "pycharm")
+APPS=("1password" "alfred" "bettertouchtool" "duet" "macvim" \
+      "mattr-slate" "hazel" "resilio-sync" "little-snitch" "appcleaner" \
+      "bartender" "dash" "google-chrome" "itsycal" "keyboard-maestro" \
+      "mailplane" "omnifocus" "taskpaper" "spotify" "vlc" \
+      "intellij-idea" "pycharm")
 
 function caskInstall() {
     # brew cask install dropbox
