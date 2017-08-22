@@ -9,13 +9,14 @@ function Stack:Create(size)
     t._maxs = size or -1
 
     function t:push(...)
-        if ...  then
+        if ... then
             local targs = {...}
             for _, v in ipairs(targs) do
-                if #self._et + 1 > self._maxs then
+                if self._maxs > 0 and #self._et + 1 > self._maxs then
                     table.remove(self._et, 1)
                 end
                 table.insert(self._et, v)
+                print("stack["..#self._et.."]=",v["wnd"],"->", hs.inspect.inspect(v))
             end
         end
     end
@@ -33,29 +34,42 @@ function Stack:Create(size)
             end
         end
 
-        return unpack(entries)
+        for i, v in pairs(entries) do
+            print("entries[", i, "]=")
+            for k, u in pairs(v) do
+                print("    ", k, "->", u)
+            end
+        end
+        -- return unpack(entries)
+        return entries
     end
 
     function t:getn()
         return #self._et
     end
 
-    function t:list()
+    function t:list(fn)
         for i, v in pairs(self._et) do
-            print(i, v)
+            if fn ~= nil then
+                print(fn(i, v))
+            else
+                print(i, v)
+            end
         end
     end
 
     return t
 end
 
-stack = Stack:Create(5)
-stack:push("a", "b", "c", "d", "e", "f", "g")
-stack:list()
-print("---")
-stack:pop()
-stack:list()
-print("---")
-stack:push("h")
-stack:list()
-print(stack._maxs)
+-- stack = Stack:Create(5)
+-- stack:push("a", "b", "c", "d", "e", "f", "g")
+-- stack:list()
+-- print("---")
+-- stack:pop()
+-- stack:list()
+-- print("---")
+-- stack:push("h")
+-- stack:list()
+-- print(stack._maxs)
+
+return Stack

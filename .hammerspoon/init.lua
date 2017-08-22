@@ -1,63 +1,13 @@
 local DEBUG = true
 local windowGap = 3
-Stack = {}
 
-function Stack:Create(size)
-    local t = {}
-
-    t._et = {}
-    t._maxs = size or -1
-
-    function t:push(...)
-        if ...  then
-            local targs = {...}
-            for _, v in ipairs(targs) do
-                if #self._et + 1 > self._maxs then
-                    table.remove(self._et, 1)
-                end
-                table.insert(self._et, v)
-                for k, z in pairs(v) do
-                    print("added:", k, z)
-                end
-                print("stack size:", #self._et)
-            end
-        end
-    end
-
-    function t:pop(num)
-        local num = num or 1
-        local entries = {}
-
-        for i = 1, num do
-            if #self._et ~= 0 then
-                table.insert(entries, self._et[#self._et])
-                table.remove(self._et)
-            else
-                break
-            end
-        end
-        for _, v in ipairs(entries) do
-            for k, z in pairs(v) do
-                print(k,z)
-            end
-        end
-        return entries
-        -- return unpack(entries)
-    end
-
-    function t:getn()
-        return #self._et
-    end
-
-    function t:list()
-        for i, v in pairs(self._et) do
-            print(i, v)
-        end
-    end
-
-    return t
-end
-local UndoStack = Stack:Create(10)
+-- Key combinations
+local alt = {"⌥"}
+local ctrl_cmd = {"⌃", "⌘"}
+local alt_shift_cmd = {"⌥", "⇧", "⌘"}
+local alt_cmd = {"⌘", "⌥"}
+local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
+local hyper = {"⌘", "⌥", "⌃", "⇧"}
 
 -- Disable animation
 hs.window.animationDuration = 0
@@ -69,13 +19,58 @@ local screenwatcher = hs.screen.watcher.new(function()
 end)
 screenwatcher:start()
 
--- Key combinations
-local alt = {"⌥"}
-local ctrl_cmd = {"⌃", "⌘"}
-local alt_shift_cmd = {"⌥", "⇧", "⌘"}
-local alt_cmd = {"⌘", "⌥"}
-local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
-local hyper = {"⌘", "⌥", "⌃", "⇧"}
+-- Managing UNDO
+local Stack = require('stack')
+local UndoStack = Stack:Create(50)
+local stateCache = {}
+
+function stackPosition(wnd)
+    local frm = wnd:frame()
+    local wndKey = wnd:application():title()..":"..wnd:id()
+    local prevState = stateCache[wndKey]
+    if prevState ~= nil then
+        UndoStack:push(prevState)
+        if DEBUG then
+            local sFrm = hs.inspect(prevState)
+            print("stackPosition:", wndKey, sFrm)
+        end
+    end
+    stateCache[wndKey] = {wnd=wnd:id(), app=wnd:application():title(), x=frm.x, y=frm.y, w=frm.w, h=frm.h}
+    if DEBUG then
+        local sFrm = hs.inspect(frm)
+        print("cachePosition:", wndKey, sFrm)
+    end
+end
+
+hs.hotkey.bind(ctrl_alt_cmd, "z", function()
+    local prev = UndoStack:pop()
+    print("undo", hs.inspect.inspect(prev))
+    if #prev ~= 0 then
+        state = prev[1]
+        local wndKey = state["app"]..":"..state["wnd"]
+        if DEBUG then
+            print("Restore window:", wndKey, "to:{", state["x"], state["y"], state["w"], state["h"], "}")
+        end
+        local wnd = hs.window.find(state["wnd"])
+        if wnd then
+            stateCache[wndKey] = nil
+            local frm = wnd:frame()
+            frm.x = state["x"]
+            frm.y = state["y"]
+            frm.w = state["w"]
+            frm.h = state["h"]
+            wnd:setFrame(frm)
+        end
+    end
+end)
+-- https://groups.google.com/d/msg/hammerspoon/d371xDcRsCo/W89am9oACwAJ
+hs.window.filter.allowedWindowRoles = {AXStandardWindow=true,AXDialog=false}
+local wndFilter = hs.window.filter.new()
+wndFilter:setAppFilter("Alfred 3", false)
+wndFilter:setAppFilter("Bartender 2", false)
+wndFilter:setAppFilter("Safari Technology Preview Networking", false)
+wndFilter:subscribe({hs.window.filter.windowCreated, hs.window.filter.windowMoved, hs.window.filter.windowUnminimized}, stackPosition)
+
 
 -- Hints
 hs.hotkey.bind(alt_cmd, "tab", function()
@@ -98,23 +93,12 @@ hs.hotkey.bind(ctrl_alt_cmd, "g", function()
     hs.grid.toggleShow()
 end)
 
-hs.hotkey.bind(ctrl_alt_cmd, "z", function()
-    UndoStack:list()
-    local prev = UndoStack:pop()
-    if #prev ~= 0 then
-        state = prev[1]
-        local wnd = hs.window.find(state["wnd"])
-        if wnd then
-            wnd:setFrame(state["frm"])
-        end
-    end
-end)
+
 
 function dynamicResizeLeft()
     local win = hs.window.focusedWindow()
     local frm = win:frame()
     local scr = win:screen():frame()
-    -- UndoStack:push({wnd=win:id(), frm=frm})
     if DEBUG then   
         wtf("dynamicResizeLeft", win)
     end
@@ -155,7 +139,6 @@ function dynamicResizeRight()
     local win = hs.window.focusedWindow()
     local frm = win:frame()
     local scr = win:screen():frame()
-    -- UndoStack:push({wnd=win:id(), frm=frm})
     if DEBUG then   
         wtf("dynamicResizeRight:", win)
     end
@@ -341,6 +324,7 @@ end
 function nudge(xpos, ypos)
     local win = hs.window.focusedWindow()
     local frm = win:frame()
+
     frm.x = frm.x + xpos
     frm.y = frm.y + ypos
     win:setFrame(frm)
@@ -404,10 +388,10 @@ end
 --
 
 -- Snap to screen edge {{{1
-hs.hotkey.bind(alt_cmd, "left", dynamicResizeLeft) 		-- left side
-hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight) 		-- left side
-hs.hotkey.bind(alt_cmd, "up", dynamicResizeTop) 		-- top half
-hs.hotkey.bind(alt_cmd, "down", dynamicResizeBottom) 		-- top half
+hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
+hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
+hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
+hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- }}}
 
 -- Predefined positions:
@@ -427,14 +411,14 @@ hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 
 
 -- Move
-hs.hotkey.bind(alt_shift_cmd, 'down', function() nudge(0,25) end)   --down
-hs.hotkey.bind(alt_shift_cmd, "up", function() nudge(0,-25) end)    --up
-hs.hotkey.bind(alt_shift_cmd, "right", function() nudge(25,0) end)  --right
-hs.hotkey.bind(alt_shift_cmd, "left", function() nudge(-25, 0) end)  --left
+hs.hotkey.bind(alt_shift_cmd, 'down',  function() nudge(0, 50) end)
+hs.hotkey.bind(alt_shift_cmd, "up",    function() nudge(0,-50) end)
+hs.hotkey.bind(alt_shift_cmd, "right", function() nudge(50,0) end)
+hs.hotkey.bind(alt_shift_cmd, "left",  function() nudge(-50, 0) end)
 
-hs.hotkey.bind(hyper, 'up',    function() resize(0, -100) end)
-hs.hotkey.bind(hyper, 'down',  function() resize(0, 100) end)
-hs.hotkey.bind(hyper, 'right', function() resize(100, 0) end)
-hs.hotkey.bind(hyper, 'left',  function() resize(-100, 0) end)
+hs.hotkey.bind(ctrl_alt_cmd, 'up',    function() resize(0, -50) end)
+hs.hotkey.bind(ctrl_alt_cmd, 'down',  function() resize(0, 50) end)
+hs.hotkey.bind(ctrl_alt_cmd, 'right', function() resize(50, 0) end)
+hs.hotkey.bind(ctrl_alt_cmd, 'left',  function() resize(-50, 0) end)
 
 -- https://github.com/digitalbase/hammerspoon/blob/master/init.lua
