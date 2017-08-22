@@ -38,6 +38,8 @@ function installVim() {
     echo "brew install --build-from-source --with-custom-python --with-lua vim"
 }
 
+# separate in essentials and optionals
+# add: Evernote, Vox
 APPS=("1password" "alfred" "bettertouchtool" "duet" "macvim" \
       "mattr-slate" "hazel" "resilio-sync" "little-snitch" "appcleaner" \
       "bartender" "dash" "google-chrome" "itsycal" "keyboard-maestro" \
