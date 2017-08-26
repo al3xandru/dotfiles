@@ -325,7 +325,7 @@ inoremap <silent><Down> <esc><Down>
 " nnoremap <CR> o<Esc>
 nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 " insert at the end of line while in insert mode; i_CTRL-I is insert <tab>
-inoremap <C-a> <C-o>A 
+inoremap <C-a> <C-o>A
 
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
@@ -1236,13 +1236,14 @@ augroup rainbowpar
 augroup END
 
 Plugin 'jiangmiao/auto-pairs'
+let g:AutoPairsMapSpace=1
 " Alt+0 and Alt+9
 if has('mac')
-    let g:AutoPairsShortcutJump='º'
-    let g:AutoPairsShortcutFastWrap='ª'
+    let g:AutoPairsShortcutJump='ª'
+    let g:AutoPairsShortcutFastWrap='º'
 else
-    let g:AutoPairsShortcutJump='<M-0>'
-    let g:AutoPairsShortcutFastWrap='<A-9>'
+    let g:AutoPairsShortcutJump='<M-9>'
+    let g:AutoPairsShortcutFastWrap='<A-0>'
 endif
 "Plugin 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
