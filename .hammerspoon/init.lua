@@ -1,11 +1,12 @@
+local log = hs.logger.new('mine', 'debug')
 local DEBUG = true
 local windowGap = 3
 
 -- Key combinations
 local alt = {"⌥"}
+local alt_cmd = {"⌘", "⌥"}
 local ctrl_cmd = {"⌃", "⌘"}
 local alt_shift_cmd = {"⌥", "⇧", "⌘"}
-local alt_cmd = {"⌘", "⌥"}
 local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
 local hyper = {"⌘", "⌥", "⌃", "⇧"}
 
@@ -20,56 +21,204 @@ end)
 screenwatcher:start()
 
 -- Managing UNDO
-local Stack = require('stack')
-local UndoStack = Stack:Create(50)
-local stateCache = {}
+local undoStack = require('stack')
+local UndoStack = undoStack:new(50, true)
 
-function stackPosition(wnd)
-    local frm = wnd:frame()
-    local wndKey = wnd:application():title()..":"..wnd:id()
-    local prevState = stateCache[wndKey]
-    if prevState ~= nil then
-        UndoStack:push(prevState)
-        if DEBUG then
-            local sFrm = hs.inspect(prevState)
-            print("stackPosition:", wndKey, sFrm)
-        end
-    end
-    stateCache[wndKey] = {wnd=wnd:id(), app=wnd:application():title(), x=frm.x, y=frm.y, w=frm.w, h=frm.h}
-    if DEBUG then
-        local sFrm = hs.inspect(frm)
-        print("cachePosition:", wndKey, sFrm)
-    end
+function windowKey(wnd)
+    return wnd:application():title()..":"..wnd:id()
 end
 
-hs.hotkey.bind(ctrl_alt_cmd, "z", function()
-    local prev = UndoStack:pop()
-    print("undo", hs.inspect.inspect(prev))
-    if #prev ~= 0 then
-        state = prev[1]
-        local wndKey = state["app"]..":"..state["wnd"]
-        if DEBUG then
-            print("Restore window:", wndKey, "to:{", state["x"], state["y"], state["w"], state["h"], "}")
-        end
-        local wnd = hs.window.find(state["wnd"])
-        if wnd then
-            stateCache[wndKey] = nil
-            local frm = wnd:frame()
-            frm.x = state["x"]
-            frm.y = state["y"]
-            frm.w = state["w"]
-            frm.h = state["h"]
-            wnd:setFrame(frm)
+function stackPosition(wnd)
+    local wndKey = windowKey(wnd)
+    local frm = wnd:frame()
+    UndoStack:push({key=wndKey, 
+                    val={
+                        wnd=wnd:id(), 
+                        app=wnd:application():title(),
+                        x=frm.x,
+                        y=frm.y,
+                        w=frm.w,
+                        h=frm.h}})
+end
+
+--
+-- LAYOUTS
+--
+-- dynamically determine if there's a secondary screen
+function attemptSecondaryScreen()
+    local screens = hs.screen.allScreens()
+    local primary = hs.screen.primaryScreen()
+    -- print("main", primary:id(), primary:name(), primary)
+    local usePrimary = true
+    local result = primary
+    if #screens > 1 then
+        for _, scr in ipairs(screens) do
+            print("scr ", scr:id(), scr:name(), scr)
+            if scr ~= hs.screen.primaryScreen() then
+                result = scr
+                usePrimary = false
+                break
+            end
         end
     end
+    if DEBUG then
+        print("use screen:", result, " primary:", usePrimary)
+    end
+    return result
+end
+
+-- Define window layouts
+--   Format reminder:
+--     {"App name", "Window name", "Display Name/function", "unitrect", "framerect", "fullframerect"},
+LAYOUTS = {
+    calls = {
+        name = "Calls",
+        subtitle = "Zoom, Evernote, Safari, Slack",
+        layout = {
+            {"zoom.us", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.6), nil, nil},
+            {"zoom.us", "Zoom - Pro Account", nil, hs.geometry.unitrect(0.8, 0, 0.1, 0.1)},
+            {"Evernote", nil, nil, hs.geometry.unitrect(0.6, 0, 0.4, 0.8), nil, nil},
+            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.5, 0.75, 0.5), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.25, 0.5, 0.75, 0.5), nil, nil}
+        }
+    },
+    communication = {
+        name = "Email & Slack",
+        subtitle = "Mail, Slack",
+        layout = {
+            {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, 0.7), nil, nil},
+            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.3, 1, 0.7), nil, nil}
+        }
+    },
+    vimcode = {
+        name = "Vim coding",
+        subtitle = "MacVim, Safari",
+        layout = {
+            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 1), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.55, 0, 0.45, 1), nil, nil}
+        }
+    }
+}
+
+
+hs.hotkey.bind(ctrl_alt_cmd, "l", function()
+    local chooser = hs.chooser.new(function(result)
+        if result == nil then
+            return
+        end
+
+        if DEBUG then
+            print("activate layout:", result["uuid"])
+        end
+        local selectedLayout = LAYOUTS[result["uuid"]]["layout"]
+
+        -- hide all apps that are not in the selected layout
+        local layoutActiveApps = {}
+        layoutActiveApps["Hammerspoon"] = true
+        for _, appLayout in pairs(selectedLayout) do
+            layoutActiveApps[appLayout[1]] = true
+        end
+        if DEBUG then
+            print("  1. apps in layout", hs.inspect.inspect(layoutActiveApps))
+        end
+
+        if DEBUG then
+            print("  2. minimize other apps")
+        end
+        for _, wnd in pairs(hs.window.allWindows()) do
+            if not layoutActiveApps[wnd:application():title()] then
+                wnd:minimize()
+            end
+        end
+
+        -- unsure if layouts work with minimized windows
+        -- so let's restore them
+        if DEBUG then
+            print("  3. unminimize apps in layout")
+        end
+        for _, l in pairs(selectedLayout) do
+            local app = hs.appfinder.appFromName(l[1])
+            if app ~= nil then
+                for _, wnd in ipairs(app:allWindows()) do
+                    wnd:unminimize()
+                end
+            end
+        end
+
+        if DEBUG then
+            print("  4. calculate layout details")
+        end
+        local updatedLayout = {}
+        for i, l in ipairs(selectedLayout) do
+            if DEBUG then
+                print("     processing layout def", hs.inspect.inspect(l))
+            end
+            local app = hs.appfinder.appFromName(l[1])
+            if app ~= nil and app:isRunning() then
+                if type(l[3]) ~= "function" then
+                    table.insert(updatedLayout, {l[1], l[2], l[3], l[4], l[5], l[6]})
+                    print("      use static screen for app ", app:title(), hs.inspect.inspect(updatedLayout[#updatedLayout]))
+                else
+                    local scr = l[3]()
+                    table.insert(updatedLayout, {l[1], l[2], scr, l[4], l[5], l[6]})
+                    print("      use dynamic screen for app", app:title(), hs.inspect.inspect(updatedLayout[#updatedLayout]))
+                end
+            else
+                if DEBUG then
+                    print("      dismiss def", l[1], "app is not running")
+                end
+            end
+        end
+        if DEBUG then
+            print("  5. applying computed layout", result["uuid"], hs.inspect.inspect(updatedLayout))
+        end
+        hs.layout.apply(updatedLayout)
+    end)
+
+    -- index layouts for presenting the chooser
+    local choices = {}
+    for k, v in pairs(LAYOUTS) do
+        table.insert(choices, {["text"] = v["name"], ["subText"] = v["subtitle"], ["uuid"] = k}) 
+    end
+    chooser:choices(choices)
+    chooser:show()
 end)
+
+
+hs.hotkey.bind(ctrl_alt_cmd, "z", function()
+    local wnd = hs.window.focusedWindow()
+    local wndKey = windowKey(wnd)
+    local prev = UndoStack:pop(wndKey)
+
+    if prev ~= nil then
+        local state = prev["val"]
+        if DEBUG then
+            print("Restore", wndKey, "to:{", state["x"], state["y"], state["w"], state["h"], "}")
+        end
+        -- this is an important trick to avoid cycling between the last 2 states
+        UndoStack:deleteCache(wndKey)
+
+        local frm = wnd:frame()
+        frm.x = state["x"]
+        frm.y = state["y"]
+        frm.w = state["w"]
+        frm.h = state["h"]
+        wnd:setFrame(frm)
+    end
+end)
+
 -- https://groups.google.com/d/msg/hammerspoon/d371xDcRsCo/W89am9oACwAJ
 hs.window.filter.allowedWindowRoles = {AXStandardWindow=true,AXDialog=false}
 local wndFilter = hs.window.filter.new()
 wndFilter:setAppFilter("Alfred 3", false)
 wndFilter:setAppFilter("Bartender 2", false)
+wndFilter:setAppFilter("Day One Networking")
+wndFilter:setAppFilter("Electron Helper", false)
+wndFilter:setAppFilter("Evernote Networking")
 wndFilter:setAppFilter("Safari Technology Preview Networking", false)
-wndFilter:subscribe({hs.window.filter.windowCreated, hs.window.filter.windowMoved, hs.window.filter.windowUnminimized}, stackPosition)
+wndFilter:subscribe({hs.window.filter.windowCreated, 
+                     hs.window.filter.windowMoved,
+                     hs.window.filter.windowUnminimized}, stackPosition)
 
 
 -- Hints
@@ -87,8 +236,6 @@ hs.grid.HINTS = {
 }
 hs.grid.setGrid('8x6')
 hs.grid.ui.textSize = 64
--- hs.grid.ui.cellStrokeColor = {0.25, 0.85, 0.85, 0.75}
--- hs.grid.ui.highlightColor = {0.40, 0.60, 0.8, 0.5}
 hs.hotkey.bind(ctrl_alt_cmd, "g", function()
     hs.grid.toggleShow()
 end)
@@ -329,6 +476,7 @@ function nudge(xpos, ypos)
     frm.y = frm.y + ypos
     win:setFrame(frm)
 end
+
 -- Resize window for chunk of screen.
 -- For x and y: use 0 to expand fully in that dimension, 0.5 to expand halfway
 -- For w and h: use 1 for full, 0.5 for half
@@ -398,7 +546,7 @@ hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- Center
 hs.hotkey.bind(alt_cmd, ".", function() hs.window.focusedWindow():centerOnScreen() end)
 -- Enlarged vertically
-hs.hotkey.bind(alt_cmd, "\\", expandVertically)
+hs.hotkey.bind(alt_cmd, "/", expandVertically)
 -- Enlarged horizontally
 hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
 -- Fullscreen
