@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -43,30 +43,16 @@ function doStatus() {
             t=1
         fi
     done
-    if [ ! -h "$HOME/.vimrc" ]; then
-        echo "Vim ~/.vimrc is NOT a symlink"
-        t=1
-    fi
-    if [ ! -h "$HOME/.ideavimrc" ]; then
-        echo "VimIdea ~/.ideavimrc is NOT a symlink"
-        t=1
-    fi
+    for f in .{hammerspoon,ideavimrc,slate,spacemacs,tmux.conf}; do
+        if [ !  -h "$HOME/$f" ]; then
+            echo "~/$f is NOT a symlink"
+            t=1
+        fi
+    done
     # if [ ! -h "$HOME/.emacs.d/init.el" ]; then
     #     echo "Emacs ~/.emacs.d/init.el is NOT a symlink"
     #     t=1
     # fi
-    if [ ! -h "$HOME/.spacemacs" ]; then
-        echo "Spacemacs ~/.spacemacs is NOT a symlink"
-        t=1
-    fi
-    if [ ! -h "$HOME/.slate" ]; then
-        echo "Slate ~/.slate is NOT a symlink"
-        t=1
-    fi
-    if [ ! -h "$HOME/.tmux.conf" ]; then
-        echo "tmux ~/.tmux.conf is NOT a symlink"
-        t=1
-    fi
     if [ 0 -eq $t ]; then
         echo "[OK]"
     else
@@ -85,7 +71,7 @@ function doStatus() {
 function doInstall() {
     rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
-    for f in .{aliases,exports,functions,ideavimrc,path,prompt_bash,slate,spacemacs,tmux.conf,vimrc}; do
+    for f in .{aliases,exports,functions,hammerspoon,ideavimrc,path,prompt_bash,slate,spacemacs,tmux.conf,vimrc}; do
         proc $f
     done
 
