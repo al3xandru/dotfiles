@@ -1,1 +1,733 @@
-/Users/alexandp/Documents/MyDocs/50-projects/homepage/h.html
+<!DOCTYPE html>
+<head>
+  <title>Start Page</title>
+  <base target="_blank" />
+  <link rel="shortcut icon" href="yamatoman.ico" type="image/x-icon">
+  <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <style type="text/css">
+    /* General Formatting - DO NOT TOUCH UNCOMMENTED LINES UNLESS YOU KNOW WHAT YOU ARE DOING! */
+    body {
+      color: #002b36;
+      font-family: "Ideal Sans", "Whitney", "Proxima Nova", "Avenir", "Helvetica Neue", Helvetica, Verdana, sans-serif;
+      font-size: 14px;
+      background-color: #eee8d5;
+      font-weight: 300;
+    }
+
+    a {
+      color: #000000;
+      text-decoration: none;
+      line-height: 25px;
+      /*font-size: 11px;*/
+    }
+
+    .column {
+      position: absolute;
+      padding-left: 5px;
+      top: 100px;
+      border-left: 1px solid #000;
+    }
+    a.fa {
+        line-height: 25px;
+    }
+    h3.fa {
+        font-size: 18px;
+        height: 22px;
+    }
+    #r1c1 {
+      /* Block 01 Position from left edge */
+      left: 20px;
+    }
+    #r1c2 {
+      /* Block 02 Position from left edge */
+      left: 150px;
+    }
+    #r1c3 {
+      /* Block 03 Position from left edge */
+      left: 280px;
+    }
+    #r1c4 {
+      left: 410px;
+    }
+    #r1c5 {
+      left: 540px;
+    }
+    #r1c6 {
+      left: 670px;
+    }
+    #r1c7 {
+      left: 800px;
+    }
+    #r1c8 {
+      left: 930px;
+    }
+    #r2c1 {
+      left:20px;
+      top: 640px;
+    }
+    #r2c2 {
+    	left: 150px;
+      top: 640px;
+    }
+    #r2c3 {
+      left: 280px;
+      top: 640px;
+    }
+    #r2c4 {
+    	left: 410px;
+    	top: 640px;
+    }
+    #r2c5 {
+    	left: 540px;
+    	top: 640px;
+    }
+    #r2c6 {
+    	left: 670px;
+    	top: 640px;
+    }
+    #r2c7 {
+      left: 800px;
+      top: 640px;
+    }
+    #r3c1 {
+      left: 20px;
+      top: 1160px;
+    }
+    #r3c2 {
+      left: 150px;
+      top: 1160px;
+    }
+    #r3c3 {
+      left: 280px;
+      top: 1160px;
+    }
+    #r3c4 {
+      left: 410px;
+      top: 1160px;
+    }
+    #r3c5 {
+      left: 540px;
+      top: 1160px;
+    }
+    #r3c6 {
+      left: 670px;
+      top: 1160px;
+    }
+    #r3c7 {
+      left: 800px;
+      top: 1160px;
+    }
+    /*
+    yellow: #b58900
+    orange: #cb4b16
+    red: #dc322f
+    magenta: #d33682
+    violet: #6c71c4
+    blue:  #268bd2
+    cyan: #2aa198
+    green: #859900
+    */
+    #r1c1, #r1c1 a, #r3c1, #r3c1 a, #r2c7, #r2c7 a {color: #cb4b16}
+    #r1c2, #r1c2 a, #r3c2, #r3c2 a, #r2c6, #r2c6 a {color: #d30102}
+    #r1c3, #r1c3 a, #r3c3, #r3c3 a, #r2c5, #r2c5 a {color: #d33682;}
+    #r1c4, #r1c4 a, #r3c4, #r3c4 a,#r2c4, #r2c4 a {color: #6c71c4;}
+    #r1c5, #r1c5 a, #r3c5, #r3c5 a,#r2c3, #r2c3 a {color: #268bd2;}
+    #r1c6, #r1c6 a, #r3c6, #r3c6 a,#r2c2, #r2c2 a {color: #2aa198;}
+    #r1c7, #r1c7 a, #r3c7, #r3c7 a,#r2c1, #r2c1 a {color: #859900}
+
+    h2, h3 {margin: 0;padding: 0;font-style:normal;font-weight:normal;}
+    h2 {font-size: 50px;}
+    h3 {
+      /* Title Font Size */
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+
+    #google {
+      /* Search Block Position from left edge */
+      position: absolute;
+      left: 70px;
+      /* Search Block Left Border */
+      /*border-left: 1px solid #93a1a1;*/
+      /*width: 300px;*/
+      height: 53px;
+      padding-top: 17px;
+      /*padding-left: 5px;*/
+    }
+
+    input#qu {
+      /* Searchbox Border */
+      border: 1px solid #ffffff;
+      /* Searchbox Background Color */
+      background-color: #586e75;
+      /* Searchbox Text Color */
+      color: #fdf6e3;
+      font-size: 1.6em;
+    }
+
+    .expandable .expcol {
+        display: none;
+    }
+    .expandable:hover .expcol {
+        display: block;
+    }
+    .expandable .clicked {
+      display: block;
+    }
+
+@media only screen and (min-device-width : 736px) {
+}
+
+    /* JS Formatting - DO NOT TOUCH UNLESS YOU KNOW WHAT YOU ARE DOING! */
+    div.menu {
+      width: 100px;
+      /*height: 80px;*/
+      overflow: hidden;
+    }
+    div.column:hover {
+      color:#586e75;
+    }
+    .column a:hover {
+      padding-left:3px;
+      font-size:1.1em;
+      color: #586e75 !important;
+      text-shadow: 1px 1px 1px #fff;
+    }
+  </style>
+  <!-- <script type="text/javascript" src="mootools-1.2.4-core-yc.js"></script> -->
+  <!--<script type="text/javascript" src="mootools-core-1.4.5-full-nocompat-yc.js"></script>-->
+  <script type="text/javascript">
+function setup() {
+    switchSearch('Google', function(t){return 'http://www.google.com/search?q='+t});
+
+    var expandables = document.querySelectorAll(".expandable");
+    for (i = 0; i < expandables.length; i++) {
+        expandables[i].onclick = function() {
+            var child = this.querySelectorAll(".expcol")[0];
+            if (child.style.display == "none") {
+                child.style.display = "block";
+            } else {
+                child.style.display = "none";
+            }
+        }
+    }
+}
+function switchSearch(name, get_url_function) {
+  var e=document.getElementById('qu');
+  var s=document.getElementById('qs');
+  s.value = name;
+  e.form.onsubmit= function() {var url=get_url_function(escape(e.value));window.open(url, name + " search results " + new Date().getTime());e.value="";return false;}
+  e.focus();
+  return false;
+}
+/*
+   window.addEvent('domready', function(){
+   $$('a').addEvents({
+mouseenter: function(){
+this.morph({
+'padding-left': '7px',
+});
+this.set('default_color', this.getStyle('color'));
+this.setStyle('color', '#586e75');
+},
+mouseleave: function(){
+this.morph({
+'padding-left': '0px'
+});
+this.setStyle('color', this.get('default_color'));
+}
+});
+
+$(document.body).getElements('.menu').addEvents({
+'mouseenter': function(){
+this.set('default_color', this.getStyle('color'));
+this.setStyle('color', '#586e75');
+this.set('tween', {
+duration: 1000,
+transition: Fx.Transitions.Bounce.easeOut
+}).tween('height', '520px');
+},
+'mouseleave': function(){
+this.setStyle('color', this.get('default_color'));
+this.set('tween', {}).tween('height', '80px');
+}
+});
+});
+ */
+</script>
+</head>
+<body onload="setup()">
+  <div id="google">
+    <form method='get' action="http://www.google.com/search" onsubmit="return false;">
+      <input id="qu" maxlength="2048" name="q" size="45" autocomplete="off" accesskey="f">
+      <input id="qs" type="submit" value="Google">
+    </form>
+  </div>
+  <div id="r1c1" class='column'>
+    <div class="menu">
+      <!-- Number of First Block -->
+      <h2>a1</h2>
+      <!-- Title of First Block -->
+      <h3>Search <i class="fa fa-search">&nbsp;</i></h3>
+      <!-- Links in First Block -->
+      <a href="http://www.google.com/"
+        onclick="return switchSearch('Google', function(t){return 'http://www.google.com/search?q='+t})">Google <i class="fa fa-google">&nbsp;</i></a><br/>
+      <a href="http://dictionary.reference.com/"
+        onclick="return switchSearch('Dictionary', function(t){return 'http://dictionary.reference.com/browse/'+t})">Dictionary <i class="fa fa-book">&nbsp;</i></a><br/>
+      <a href="http://torrents.to"
+         onclick="return switchSearch('Torrents.to', function(t){return 'http://torrents.to/search/kickass-torrents/'+t})">Torrents.to <i class="fa fa-text-height">&nbsp;</i></a><br/>
+      <a href="http://sci-hub.io">Paper <i class="fa fa-file-pdf-o">&nbsp;</i></a><br/>
+      <a href="https://cse.google.com/cse/publicurl?cx=006052226517581000594:0bxe-ib_l1u">Spacemacs <i class="fa fa-edge">&nbsp;</i></a><br />
+      <a href="http://www.cs.utexas.edu/users/EWD/indexChron.html">Dijkstra</a><br />
+    </div>
+  </div>
+
+  <div id="r1c2" class='column'>
+    <div class="menu">
+      <h2>a2</h2>
+      <h3>My sites <i class="fa fa-bookmark">&nbsp;</i></h3>
+      <a href="http://172.16.10.100:5000"><i class="fa fa-cloud"> Synology</i></a><br />
+      <a href="https://overcast.fm/">Overcast <i class="fa fa-volume-up"></i></a><br />
+      <a href="https://brain.fm">brain.fm <i class="fa fa-music"></i></a><br />
+      <a href="http://jots.mypopescu.com">jots <i class="fa fa-tumblr-square"></i></a><br/>
+      <a href="http://nosql.mypopescu.com">myNoSQL <i class="fa fa-database"></i></a><br />
+      <a href="http://www.google.com/" onclick="return switchSearch('myNoSQL', function(t){return 'http://www.google.com/search?q=site:nosql.mypopescu.com&q='+t})">mynosql?</a><br />
+      <a href="http://gmail.mypopescu.com">myGmail <i class="fa fa-send-o"></i></a><br />
+      <a href="https://www.google.com/voice">GVoice <i class="fa fa-google-wallet"></i></a><br />
+      <a href="http://twitter.com/al3xandru">Twitter <i class="fa fa-twitter"></i></a><br />
+      <a href="http://feedly.com/">Feedly <i class="fa fa-rss"></i></a><br />
+      <a href="https://instapaper.com">Instapaper <i class="fa fa-quote-right"></i></a><br />
+      <a href="https://getpocket.com/a/queue/">Pocket <i class="fa fa-quote-right"></i></a><br />
+      <!--
+      <a href="https://dl.dropboxusercontent.com/u/10078726/yesternews/index.html">YesterNews <i class="fa fa-newspaper-o"></i></a><br />
+      <a href="http://twimblr.appspot.com/">Twimblr</a><br />
+      <a href="https://www.moh.io/mohiomap/app.php">Mohiomap</a><br />
+      <a href="http://groups.google.com/group/nosql-databases">NoSQL Lists</a><br/>
+      <a href="https://dl.dropbox.com/u/10078726/readfavs/readinglist.html">ReadFavs</a><br />
+      <a href="http://delicious.com/the_mindstorm">delicious</a><br />
+      <a href="http://www.diigo.com/dashboard/alexpopescu">diigo</a><br/>
+      <a href="http://themindstorms.wordpress.com">wordpress</a> /
+      <a href="http://themindstorms.wordpress.com/wp-admin/">admin</a><br/>
+      -->
+    </div>
+  </div>
+
+  <div id="r1c3" class='column'>
+    <div class="menu">
+      <h2>a3</h2>
+      <h3>Tools <i class="fa fa-gears"></i></h3>
+      <!-- <a href="https://dl.dropboxusercontent.com/u/10078726/org.html">Orgmode</a><br /> -->
+      <a href="https://junecloud.com/sync/">Deliveries <i class="fa fa-gift"></i></a><br />
+
+      <a href="http://forecast.io">Forecast <i class="fa fa-umbrella"></i></a><br />
+      <a href="https://podcastrank.co/podcasts?period_default=week">PodcastRank <i class="fa fa-bullhorn"></i></a><br />
+      <a href="http://translate.google.com">GTranslate</a><br />
+      <a href="http://time.is">time.is <i class="fa fa-clock-o"></i></a><br />
+      <a href="http://camelcamelcamel.com">Amazon <i class="fa fa-line-chart"></i></a><br />
+      YouTube <a href="http://en.savefrom.net"><i class="fa fa-arrow-down"></i></a> | 
+      <a href="http://www.clipconverter.cc/"><i class="fa fa-arrow-down"></i></a> | 
+      <a href="https://video-download.online"><i class="fa fa-arrow-down"></i></a><br />
+      <a href="http://nullrefer.com"
+        onclick="return switchSearch('Nullrefer', function(t){return 'http://nullrefer.com?http://'+t})">Nullrefer
+        <i class="fa fa-shield"></i></a><br/>
+      <a href="https://fast.com">Fast</a><br/>
+      <a href="https://awwapp.com">Whiteboard <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a><br/>
+      <!--
+      <a href="http://readlists.com">Readlists</a><br />
+      <a href="http://172.16.10.100:8888/gui/">SynoBtSync</a><br />
+      <a href="http://keepvid.com">YouTube &#9660;</a><br />
+      <a href="http://www.google.com/analytics/">GAnalytics</a><br/>
+      <a href="http://www.google.com/webmasters/tools/">GWebmasters</a><br/>
+      <a href="https://mypopescu.freshbooks.com/">Freshbooks</a><br/>
+      <a href="https://www.google.com/dfp/">GAdManager</a><br/>
+      <a href="http://svn.eaudeweb.ro/popescu" title="popescu:aq2popescu@eau">SVN eaudeweb</a><br/>
+      <a href="https://adwords.google.com/select/KeywordToolExternal">Keyword Tool</a><br/>
+      -->
+    </div>
+  </div>
+
+  <div id="r1c4" class='column'>
+    <div class="menu">
+      <h2>a4</h2>
+      <h3>Banks <i class="fa fa-bank"></i></h3>
+      <a href="https://online.citibank.com/US/JPS/portal/Index.do">citibank</a><br />
+      <a href="https://www.wellsfargo.com">wells fargo</a><br />
+      <a href="https://www.chase.com/">chase</a><br />
+      <a href="http://creditkarma.com">creditkarma</a><br />
+      <a href="https://www.homebank.ro/">ing</a><br/>
+      <a href="https://www.mybrdnet.ro/">brd</a><br />
+      <a href="https://www.bancatransilvania.ro/pentru-tine/internet-banking/">transilvania</a><br/>
+      <a href="https://www.alphaclick.ro/">alpha</a><br/>
+      <!--
+      <a href="https://www.brd-net.ro/ro/">brd</a><br/>
+      <a href="https://www.raiffeisenonline.ro">raiffeisen</a><br/>
+      <a href="https://fastbanking.bancpost.ro/">bancpost</a><br/>
+      -->
+      <br />
+    </div>
+  </div>
+
+  <div id="r1c5" class='column'>
+    <div class="menu">
+      <h2>a5</h2>
+      <h3>Accnts <i class="fa fa-openid"></i></h3>
+      <a href="http://www.verizonwireless.com">Verizon <i class="fa fa-mobile"></i></a><br/>
+      <a href="https://my.t-mobile.com/Login/default.aspx">TMobile <i class="fa fa-mobile"></i></a><br />
+      <a href="http://xfinitytv.comcast.net/">xfinity</a><br />
+      TV <a href="http://xfinitytv.comcast.net/tv-listings">list</a> | 
+      <a href="https://www.comcast.com/Clu/ChannelLineUp" title="Digital Starter 80+">channels</a><br />
+      <a href="https://customer.comcast.com/secure/usagemeterdetail.aspx" title="http://xfinity.com/mydatausage">Comcast usage</a><br />
+      <a href="http://xfinitytv.comcast.net/mytv/list#filter=all">Watchlist</a> <br />
+    </div>
+  </div>
+
+  <div id="r1c6" class="column">
+    <div class="menu">
+      <h2>a6</h2>
+      <h3>Movies <i class="fa fa-video-camera"></i></h3>
+      <a href="http://netflix.com">Netflix</a><br />
+      <!-- a href="https://www.hbonow.com/">HBO Now</a><br /> -->
+      <a href="http://www.hbogo.com/" title="xfinity aseem pwd">HBO Go<sup><b>*</b></sup></a><br />
+      <a href="http://www.imdb.com/"
+         onclick="return switchSearch('IMDb', function(t){ return 'http://www.imdb.com/find?q='+t})">IMDb <i class="fa fa-search"></i></a><br />
+      <a href="http://www.rottentomatoes.com/"
+         onclick="return switchSearch('Rotten Tomatoes', function(t){return 'http://www.rottentomatoes.com/search/?search='+t})">Rotten <i class="fa fa-search"></i></a><br />
+      <a href="http://epguides.com/"
+         onclick="return switchSearch('Epguides', function(t){return 'http://www.google.com/search?hl=en&q=site:epguides.com&q='+t})">Epguides <i class="fa fa-search"></i></a><br/>
+      <a href="http://icefilms.info">IceFilms</a><br />
+      <a href="https://gostream.is">GoMovies</a><br />
+      <a href="http://sockshare.net">Online movs</a><br />
+      <a href="http://torrentbutler.eu/">TorrentButler</a><br/>
+      <a href="http://www.themoviedb.org/">MovieDB</a><br />
+      <a href="http://www.rogerebert.com"
+         onclick="return switchSearch('Roger Ebert', function(t){return 'http://rogerebert.com/search?utf8=✓&q='+t})">Roger Ebert <i class="fa fa-search"></i></a><br />
+      <a href="http://www.mrqe.com"
+         onclick="return switchSearch('MRQE', function(t){return 'http://www.mrqe.com/search?utf8=✓&commit=%C2%A0&q='+t})">MRQE <i class="fa fa-search"></i></a><br />
+       <!--<a href="http://www.theguardian.com/profile/peterbradshaw">Guardian</a><br />-->
+      <a href="http://www.canistream.it/"
+         onclick="return switchSearch('CanIStream?', function(t){return 'http://www.canistream.it/search/movie/'+t})">StreamIt? <i class="fa fa-search"></i></a><br />
+      <a href="http://www.southparkstudios.com/">SouthPark</a><br />
+      <a href="http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki" title="Game of Thrones Wiki">GoT &#9818;</a>
+    </div>
+  </div>
+
+  <div id="r1c7" class="column">
+    <div class="menu">
+      <h2>a7</h2>
+      <h3>Tracking <i class="fa fa-bar-chart"></i></h3>
+      <!-- <a href="https://www.rescuetime.com">rescuetime <i class="fa fa-clock-o"></i></a><br/> -->
+      <a href="http://trakt.tv">trakt.tv <i class="fa fa-film"></i></a><br />
+      <a href="https://www.goodreads.com">goodreads <i class="fa fa-book"></i></a><br/>
+      <a href="http://sfpl.org/">SPFL <i class="fa fa-bank"></i></a><br />
+      <!--
+      <a href="https://fitbit.com">fitbit <i class="fa fa-heartbeat"></i></a><br/>
+      -->
+      <br />
+      <h3>Refs <i class="fa fa-book"></i></h3>
+      JDK: <a href="http://download.java.net/jdk8/docs/api/index.html">8</a> | 
+      <a href="http://docs.oracle.com/javase/7/docs/api/">7</a> | 
+      <a href="http://docs.oracle.com/javase/6/docs/api/">6</a> | 
+      <a href="http://docs.oracle.com/javase/1.5.0/docs/api/">5</a><br />
+      <a href="http://docs.python.org/2.7/">Python 2.7</a><br />
+      <a href="http://maven-repository.com">Maven</a><br/>
+    </div>
+  </div>
+
+  <div id="r1c8" class="column">
+    <div class="menu">
+      <h2>a8</h2>
+      <h3>Sports <i class="fa fa-futbol-o"></i></h3>
+      <a href="http://www.nhl.com/tv/" title="Subscription">NHL</a><br />
+      <a href="http://www.tennistv.com/" title="Subscription">TennisTV</a><br />
+      <a href="http://www.wtatv.com/" title="Subscription">WTA.tv</a><br />
+      <div class="expandable">
+        <h4>General</h4>
+        <div class="expcol">
+          <a href="https://www.foxsportsgo.com" title="xfinity aseem pwd">FoxGo<sup><b>*</b></sup></a><br />
+          <a href="http://nullrefer.com/?http://www.tsn.ca/" title="CA VPN &amp; cristi pwd">TSN.ca<sup><b>*</b></sup></a><br/>
+          <a href="http://nullrefer.com/?http://zattoo.com/" title="Swiss VPN">zattoo<sup><b>*</b></sup></a><br />
+        </div>
+      </div>
+
+      <div class="expandable">
+        <h4>NFL &#127944;</h4>
+        <div class="expcol">
+          <a href="https://www.reddit.com/r/nflstreams/">/r/NFLstreams</a><br/>
+          <a href="http://www.watchnfl.live/">watchNFL</a><br/>
+          <a href="http://www.nflfullhd.com">NFL replays</a>
+          <a href="https://www.nfl.com/gamepass/" title="Subscription">NFL</a><br />
+        </div>
+      </div>
+      <div class="expandable">
+        <h4>MLB &#9918;</h4>
+        <div class="expcol">
+          <a href="https://www.reddit.com/r/MLBStreams/">/r/MLBStreams</a><br/>
+          <a href="https://www.mlbstream.me/">mlbstream.me</a><br/>
+          <a href="http://www.strikeout.co">strikeout</a><br/>
+        </div>
+      </div>
+      <div class="expandable">
+        <h4>NBA &#x1f3c0;</h4>
+        <div class="expcol">
+            <a href="http://nbastream.net/">NBAstream</a><br/>
+            <a href="https://www.reddit.com/r/nbastreams/">/r/NBAstreams</a><br />
+            <a href="https://www.nbafullhd.com">NBA replays</a><br />
+        </div>
+      </div>
+      <div class="expandable">
+        <h4>Handball &#x1F93E;</h4>
+        <div class="expcol">
+          <a href="http://www.eurohandball.com/">eurohandball</a><br/>
+          <a href="http://www.ehftv.com/">ehfTV</a><br/>
+        </div>
+      </div>
+      <div class="expandable">
+        <h4>Online</h4>
+        <div class="expcol">
+          <!--
+          <a href="http://yoursportsinhd.com/">yoursportsinHD</a><br /> 
+          <a href="http://kobestreams.com/">kobestreams</a><br />
+          -->
+          <a href="http://www.stream2watch.cc">stream2watch</a><br />
+          <a href="http://streamsarena.eu">streamsarena</a><br/>
+          <a href="http://www.streamhd.eu/">streamhd</a><br/>
+          <a href="http://grandmastreams.info/">grandmastreams</a><br />
+          <a href="http://www.navixsport.com/">navixsport</a><br />
+          <a href="http://www.foxsoccer2go.com/" title="Requires subscription">FoxSoccer2Go<sup><b>*</b></sup></a><br />
+          <a href="http://lead.ro">Lead.ro</a>
+        </div>
+      </div>
+      <div class="expandable">
+        <h4>Offline</h4>
+        <div class="expcol">
+          <a href="http://720pier.ru/">720p <i class="fa fa-arrow-down"></i></a><br />
+          <a href="http://fullmatchtv.com" title="FullMatchTV">replays &#x1f3c0;&#x26bd;&#x1f3c8;&#9918;&#x1f3d2;</a><br/>
+          <a href="http://fullmatchsports.com">offline replays</a><br />
+          <a href="http://www.fullfootballmatch.com/">offline replays &#x26bd;</a><br />
+        </div>
+      </div>
+      <div class="expandable">
+        <h4 title="Ro VPN">RO</h4>
+        <div class="expcol">
+          <a href="http://www.digi-online.ro/tv/" title="Ro VPN">DigiTV<sup><b>*</b></sup></a><br />
+          <a href="http://telekomtv.ro" title="Ro VPN &amp; Account">DolceTV<sup><b>*</b></sup></a><br />
+          <a href="http://sports-tv.ro">sportsTV</a><br />
+        </div>
+      </div>
+      <div class="expandable">
+        <h4 title="CA VPN">CA</h4>
+        <div class="expcol">
+          <a href="http://www.rogersondemand.com/Live/Sports?lang=en" title="CA VPN">Rogers.ca</a><br />
+          <a href="http://nullrefer.com/?http://cbc.ca/" title="Canadian VPN">CBC</a><br />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="r2c1" class="column">
+    <div class="menu">
+      <h2>b1</h2>
+      <h3>Work <i class="fa fa-anchor"></i></h3>
+      <a href="https://my.oracle.com"><i class="fa fa-fort-awesome" aria-hidden="true"></i> Portal</a><br />
+      <a href="https://global-ebusiness.oraclecorp.com/OA_HTML/OA.jsp?OAFunc=OAHOMEPAGE">Services</a><br />
+      <a href="https://people.us.oracle.com"><i class="fa fa-id-card-o" aria-hidden="true"></i> Aria</a><br />
+      <a href="http://managers.oraclecorp.com/"><i class="fa fa-users" aria-hidden="true"></i> Manager</a><br />
+      <a href="https://myhelp.oracle.com"><i class="fa fa-question-circle" aria-hidden="true"></i> My help</a><br />
+      <a href="https://my.oracle.com/site/fin/wwops/empresources/howdoi/index.htm">How do I?</a><br />
+      <a href="https://pdit-document-repository.oraclecorp.com/display/DISG/PDS-DIS+How+to+Configure+Proxy">Proxy</a><br />
+    </div>
+  </div>
+
+  <div id="r2c2" class='column'>
+    <div class="menu">
+      <h2>b2</h2>
+      <h3>Health <i class="fa fa-medkit" aria-hidden="true"></i></h3>
+      <a href="https://www.oraclebenefits.com/">Benefits</a><br />
+      <a href="http://my.oracle.com/site/hr/RegionalSites/U.S./usbenefits/provider/index.html">Providers</a><br />
+    </div>
+  </div>
+
+  <div id="r2c3" class='column'>
+    <div class="menu">
+      <h2>b3</h2>
+      <h3>Links <i class="fa fa-link"></i></h3>
+      <a href="https://confluence.oraclecorp.com/confluence/pages/viewpage.action?pageId=344663490">ODX</a><br />
+      <a href="https://confluence.oraclecorp.com/confluence/display/AURA/ODX+Aura">ODX Aura <i class="fa fa-rss"></i></a><br/>
+      <a href="https://confluence.oraclecorp.com/confluence/display/AURA/JavaOne+Stories">J1 stories</a><br/>
+      <a href="https://confluence.oraclecorp.com/confluence/display/AURA/Jave+One+Checkpoints+version1">J1 checkpoints</a><br />
+      <a href="https://confluence.oraclecorp.com/confluence/display/AURA/Java+One+Checkpoints">J1 checkpoints v2</a><br />
+      <a href="https://confluence.oraclecorp.com/confluence/display/AURA/IoT">IoT example</a><br />
+    </div>
+  </div>
+
+  <div id="r2c4" class='column'>
+    <div class="menu">
+      <h2>b4</h2>
+      <h3>Accnts <i class="fa fa-openid"></i></h3>
+      <a href="https://stbeehive.oracle.com/zimbra/"><i class="fa fa-envelope-o"></i> Mail</a><br />
+      <a href="https://gitlab-odx.oracle.com"><i class="fa fa-gitlab" aria-hidden="true"></i> Gitlab</a><br />
+      <a href="https://gmp.oracle.com/captcha/"><i class="fa fa-key" aria-hidden="true"></i> Daily PWD</a><br />
+      <a href="https://stbeehive-admin.oraclecorp.com/"><i class="fa fa-cog" aria-hidden="true"></i> Beehive conf</a><br />
+    </div>
+  </div>
+
+  <div id="r2c5" class='column'>
+    <div class="menu">
+      <h2>b5</h2>
+    </div>
+  </div>
+
+  <div id="r2c6" class='column'>
+    <div class="menu">
+      <h2>b6</h2>
+    </div>
+  </div>
+
+  <div id="r2c7" class='column'>
+    <div class="">
+      <h2>b7</h2>
+    </div>
+  </div>
+
+
+  <div id="r3c1" class="column">
+    <div class="menu">
+      <h2>c1</h2>
+      <h3>Gadgets <i class="fa fa-gamepad"></i></h3>
+      <a href="http://iotlist.co/">IoT gadgets</a><br/>
+      <a href="https://meh.com">Meh</a><br />
+      <a href="http://thewirecutter.com">WireCutter</a><br />
+      <a href="http://thesweethome.com">SweetHome</a><br />
+      <a href="http://toolsandtoys.net/">Tools&amp;Toys</a><br />
+      <a href="http://kk.org/cooltools/">CoolTools</a><br />
+      <a href="http://onethingwell.org/">OneThingWell</a><br />
+      <a href="http://dealnews.com">dealnews</a><br />
+
+      <h3>Old searches</h3>
+      <a href="http://citeseerx.ist.psu.edu/">CiteSeerX</a><br/>
+      <a href="http://citeseer.ist.psu.edu/">CiteSeer</a><br/>
+      <a href="http://rapidlibrary.com/">RapidShare</a><br/>
+      <a href="http://www.google.com/s2/favicons?domain=" onclick="return switchSearch('Favicon', function(t){return 'http://www.google.com/s2/favicons?domain=' + t})">Favicons</a><br/>
+      <a href="http://www.bing.com/" 
+        onclick="return switchSearch('Bing.com', function(t){return 'http://www.bing.com/search?q='+t})">Bing</a><br/>
+      <a href="http://search.gmane.org" 
+        onclick="return switchSearch('Gmane', function(t){return 'http://search.gmane.org/?query='+t})">Gmane</a><br />
+      <a href="http://markmail.org" 
+        onclick="return switchSearch('MarkMail', function(t){return 'http://markmail.org/search/?q='+t})">MarkMail</a><br />
+      <!--
+      <a href="http://www.emugle.com/">eMugle</a><br/>
+      <a href="http://www.filedonkey.com/">Figator</a><br/>
+      NoSQL <a href="http://blogsearch.google.com/blogsearch_feeds?hl=en&scoring=d&q=nosql+OR+%22Key/Value+storage%22&ie=utf-8&num=25&output=atom">[1]</a>
+      / <a href="http://blogsearch.google.com/blogsearch_feeds?hl=en&as_drrb=q&as_qdr=d&scoring=d&q=jackrabbit+OR+apstrata+OR+cassandra+OR+chordless+OR+citrusleaf+OR+cloudbase+OR+couchdb+OR+dynomite+OR+hbase+OR+hypertable+OR+kai+OR+infogrid+OR+lightcloud+OR+luciddb+OR+keyspace+OR+%22kv+storage%22&ie=utf-8&num=25">[2]</a>
+      / <a href="http://blogsearch.google.com/blogsearch_feeds?hl=en&as_drrb=q&as_qdr=d&scoring=d&q=%22M/DB%22+OR+memcachedb+OR+monetdb+OR+mongodb+OR+neo4j+OR+neptune+OR+voldemort+OR+redis+OR+riak+OR+basho+OR+PNUTS+OR+sherpa+OR+simpledb+OR+tigerlogic+OR+vertexdb+OR+scalaris+OR+thrudb+OR+%22tokyo+cabinet%22+OR+%22tokyo+tyrant%22&ie=utf-8&num=25&output=atom">[3]</a><br />
+      <a href='http://www.torrent-search-bar.com/' target='_blank'>Torrent</a><br/>
+      <a href="http://scrapetorrent.com/" target='_blank'>Scape Torrent</a><br/>
+      -->
+    </div>
+  </div>
+
+  <div id="r3c2" class="column">
+    <div class="menu">
+      <h2>c2</h2>
+      <h3>Pens <i class="fa fa-paint-brush"></i></h3>
+      <a href="http://www.penchalet.com">PenChalet</a><br />
+      <a href="http://www.jetpens.com">Jetpens</a><br />
+      <a href="http://www.gouletpens.com">GouletPens</a><br />
+      <a href="http://www.nibs.com">Nibs</a><br />
+      <a href="http://www.andersonpens.com">Anderson Pens</a><br />
+      <a href="http://www.indy-pen-dance.com">IndyPenDance</a><br />
+      <a href="https://vanness1938.com">Vanness Pen Shop</a><br />
+      <a href="http://cwpencils.com/">Pencils</a><br />
+      <a href="http://www.franklin-christoph.com/">FranklinChristoph</a><br/>
+
+      <h4>Headphones <i class="fa fa-headphones"></i></h4>
+      <a href="http://www.head-fi.org">HeadFi</a><br />
+      <a href="http://www.head-fi.org/a/headphone-buying-guide">Reco</a>
+    </div>
+  </div>
+  <div id="r3c3" class="column">
+    <div class="menu">
+      <h2>c3</h2>
+      <h3>Old sites</h3>
+      <a href="http://news.ycombinator.com">HN</a><br />
+      <a href="http://n-gate.com">n-gate HN</a><br />
+      <a href="https://hackernoon.com">hackernoon</a><br/>
+      <a href="http://redef.com">Redef</a><br />
+      <a href="http://phd.thenews.im/">HN&amp;PH</a><br/>
+      <a href="https://barnacl.es" title="News for bootstrappers, not VC hackers">Barnacles</a><br />
+      <a href="http://everydaycarry.com">EveryDayCarry</a><br />
+      <a href="http://www.producthunt.com">ProdHunt</a><br />
+      <a href="http://www.trycaviar.com">Caviar <i class="fa fa-cutlery"></i></a><br />
+      <a href="http://uncrate.com">uncrate</a><br />
+      <a href="http://fab.com">Fab</a><br />
+      <a href="http://huckberry.com">Huckberry</a><br />
+      <a href="http://www.gilt.com">Gilt</a><br />
+      <a href="http://www.thinkgeek.com">ThinkGeek</a><br />
+      <a href="http://www.quirky.com">Quirky</a><br />
+      <a href="http://www.tomshardware.com">tom's hardware</a><br />
+      <a href="http://www.anandtech.com">AnandTech</a><br />
+      <a href="https://www.bespokepost.com">Bespoke</a><br />
+      <!--
+      <a href="http://swish.com">swish</a><br />
+      <a href="https://github.com/crshd/startpage.rwrt">startpage</a><br />
+      <a href="http://www.labnol.org/internet/101-useful-websites/18078/">101 sites</a><br />
+      -->
+    </div>
+  </div>
+
+  <div id="r3c4" class="column">
+    <div class="menu">
+      <h2>c4</h2>
+      <h3>Old tools</h3>
+      <a href="http://pinboard.in">Pinboard</a><br/>
+      <!-- <a href="https://www.readability.com/al3xandru/latest">Readability</a><br /> -->
+      <a href="http://themindstorms.blogspot.com/">mindstorms</a> / <a href="http://blogger.com/">blogger</a><br/>
+      <a href="http://crumbs.mypopescu.com">Soup.io</a><br/>
+      <!-- 
+      <a href="http://mackeys.info">MacKeys <i class="fa fa-apple"></i></a><br /> 
+      <a href="http://flapcast.com">Podcasts </a><br />
+      -->
+      <a href="http://workflowy.com/">Workflowy <i class="fa fa-th-list"></i></a><br />
+      <a href="http://fargo.io">FargoOutliner</a><br />
+      <a href="http://oakoutliner.com">OakOutliner</a><br />
+      <a href="https://draftin.com">Draft</a><br />
+
+      <a href="http://appengine.google.com/">GAE</a> | 
+      <a href="http://localhost:8080/_ah/admin">Local</a><br/>
+      <a href="http://www.emoji-cheat-sheet.com">Emoji</a><br />
+    </div>
+  </div>
+
+  <div id="r3c5" class="column">
+    <div class="menu">
+      <h2>c5</h2>
+      <h3>Comics <i class="fa fa-newspaper-o"></i></h3>
+      <a href="http://europeanclassiccomic.blogspot.com/">European<sup>*</sup></a><br />
+      <a href="http://comicsfordownloads.blogspot.com">ideas</a><br />
+      <a href="http://readcomiconline.to">ReadComicOnline</a><br />
+      <a href="http://newcomic.org">NewComic</a><br />
+      <a href="http://comicsall.net">ComicsAll</a><br />
+      <a href="http://getcomics.info">Getcomics</a><br />
+      <a href="http://planete-bd.org" title="Comics in French">Planete BD</a><br />
+      <a href="https://comicvine.gamespot.com">ComicVine</a><br />
+      <a href="http://www.comiclist.com/index.php" title="Newly published comics">ComicList</a><br />
+      <a href="http://weeklycomicbookreview.com">Reviews</a><br />
+      <!--
+      <a href="http://www.comix4free.com">Comix4Free</a><br />
+      <a href="http://comicfiles.com/">ComicFiles</a><br />
+      <a href="http://www.comicsforest.com/">ComicForest</a><br />
+      -->
+      <br />
+    </div>
+  </div>
+  <div id="r3c6" class="column">
+    <div class="menu">
+      <h2>c6</h2>
+    </div>
+  </div>
+</body>
+</html>
+
+<!-- cc BY-NC-SA License :: k3ttc4r :: 2008 :: http://k3ttc4r.deviantart.com -->
+<!-- background by Alexander-GG :: http://alexander-gg.deviantart.com -->
