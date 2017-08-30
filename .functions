@@ -497,37 +497,93 @@ battery() {
 }
 
 # https://gist.github.com/kaleksandrov/3cfee92845a403da995e7e44ba771183
-globalprotect() {
-    case $# in
-        0)
-            echo "Usage: globalprotect {start|stop}"
-            return 1
-            ;;
-        1)
-            case $1 in
-                start)
-                    echo "Starting GlobalProtect..."
-                    launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangpa.plist
-                    launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangps.plist
-                    echo "Done!"
-                    ;;
-                 stop)
-                    echo "Stopping GlobalProtect..."
-                    launchctl remove com.paloaltonetworks.gp.pangps
-                    launchctl remove com.paloaltonetworks.gp.pangpa
-                    echo "Done!"
-                    ;;
-                 *)
-                    echo "'$1' is not a valid verb."
-                    echo "Usage: $0 {start|stop}"
-                    return 2
-                    ;;
-              esac
-              ;;
-       *)
-          echo "Too many args provided ($#)."
-          echo "Usage: $0 {start|stop}"
-          return 3
-          ;;
-    esac
+# globalprotect() {
+#     case $# in
+#         0)
+#             echo "Usage: globalprotect {start|stop}"
+#             return 1
+#             ;;
+#         1)
+#             case $1 in
+#                 start)
+#                     echo "Starting GlobalProtect..."
+#                     launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangpa.plist
+#                     launchctl load /Library/LaunchAgents/com.paloaltonetworks.gp.pangps.plist
+#                     echo "Done!"
+#                     ;;
+#                  stop)
+#                     echo "Stopping GlobalProtect..."
+#                     launchctl remove com.paloaltonetworks.gp.pangps
+#                     launchctl remove com.paloaltonetworks.gp.pangpa
+#                     echo "Done!"
+#                     ;;
+#                  *)
+#                     echo "'$1' is not a valid verb."
+#                     echo "Usage: $0 {start|stop}"
+#                     return 2
+#                     ;;
+#               esac
+#               ;;
+#        *)
+#           echo "Too many args provided ($#)."
+#           echo "Usage: $0 {start|stop}"
+#           return 3
+#           ;;
+#     esac
+# }
+
+# watch command
+# http://daniel.lubarov.com/simple-watch-script-for-osx
+# also brew install watch
+function watch() {
+    unset TIMER
+    if test "$1" = "-n"; then
+        TIMER=$2
+        shift
+        shift
+    fi
+    cmd="$@"
+    echo "Command: $cmd"
+    echo "Timer  : ${TIMER:-1}"
+    while :; do
+        clear
+        date
+        bash -c "$cmd"
+        sleep ${TIMER:-1}
+    done
+    unset cmd
+}
+
+function extract() {
+    unset REMOVE_ARCHIVE
+    
+    if test "$1" = "-r"; then
+        REMOVE=1
+        shift
+    fi
+    if [[ -f $1 ]]; then
+        case $1 in
+            *.tar.bz2) tar xvjf $1;;
+            *.tar.gz) tar xvzf $1;;
+            *.tar.xz) tar xvJf $1;;
+            *.tar.lzma) tar --lzma -xvf $1;;
+            *.bz2) bunzip $1;;
+            *.rar) unrar x $1;;
+            *.gz) gunzip $1;;
+            *.tar) tar xvf $1;;
+            *.tbz2) tar xvjf $1;;
+            *.tgz) tar xvzf $1;;
+            *.zip) unzip $1;;
+            *.Z) uncompress $1;;
+            *.7z) 7z x $1;;
+            *) echo "'$1' cannot be extracted via >extract<";;
+        esac
+
+        if [[ $REMOVE_ARCHIVE -eq 1 ]]; then
+            echo removing "$1";
+            /bin/rm "$1";
+        fi
+    else
+        echo "'$1' is not a valid file"
+    fi
 }
