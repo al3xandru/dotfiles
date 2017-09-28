@@ -252,32 +252,32 @@ function dynamicResizeLeft()
     if not between(frm.x, scr.x, 5) then
         -- move to the left
         frm.x = scr.x
-        hs.alert.show("< left")
+        hs.alert.show("⬅ ")
     elseif not between(frm.y, scr.y, 25) then
         -- now we also resize
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w * 2/3 - windowGap
         frm.h = scr.h
-        hs.alert.show("< left 2/3")
+        hs.alert.show("⬅  2/3")
     elseif between(frm.w, scr.w * 2/3, windowGap * 2) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w * 1/2 - windowGap
         frm.h = scr.h
-        hs.alert.show("< left 1/2")
+        hs.alert.show("⬅  1/2")
     elseif between(frm.w, scr.w * 1/2, windowGap * 2) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w * 1/3 - windowGap
         frm.h = scr.h
-        hs.alert.show("< left 1/3")
+        hs.alert.show("⬅  1/3")
     else
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w * 2/3 - windowGap
         frm.h = scr.h
-        hs.alert.show("< left 2/3")
+        hs.alert.show("⬅  2/3")
     end
     win:setFrame(frm)
 end
@@ -292,32 +292,32 @@ function dynamicResizeRight()
     if not between(frm.x + frm.w, scr.x + scr.w, 5) then
         -- move to the left
         frm.x = scr.x + (scr.w - frm.w)
-        hs.alert.show("right >")
+        hs.alert.show("➡")
     elseif not between(frm.y, scr.y, 25) then
         -- now we also resize
         frm.w = scr.w * 2/3 - windowGap
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
-        hs.alert.show("2/3 right >")
+        hs.alert.show("2/3 ➡")
     elseif between(frm.w, scr.w * 2/3, windowGap * 2) then
         frm.w = scr.w * 1/2 - windowGap
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
-        hs.alert.show("1/2 right >")
+        hs.alert.show("1/2 ➡")
     elseif between(frm.w, scr.w * 1/2, windowGap * 2) then
         frm.w = scr.w * 1/3 - windowGap
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
-        hs.alert.show("1/3 right >")
+        hs.alert.show("1/3 ➡")
     else
         frm.w = scr.w * 2/3 - windowGap
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
-        hs.alert.show("2/3 right >")
+        hs.alert.show("2/3 ➡")
     end
     win:setFrame(frm)
 end
@@ -335,7 +335,7 @@ function dynamicResizeTop()
     if not between(frm.y, scr.y, 5) then
         -- move to the left
         frm.y = scr.y
-        hs.alert.show("^ top")
+        hs.alert.show("⬆")
     elseif not between(frm.x, scr.x, 5) then
         -- now we also resize
         frm.x = scr.x
@@ -343,28 +343,28 @@ function dynamicResizeTop()
         frm.w = scr.w
         frm.h = scr.h * .7 - windowGap
         print("top 2/3: " .. frm.string)
-        hs.alert.show("^ top 2/3")
+        hs.alert.show("⬆ 2/3")
     elseif between(frm.h, scr.h * .7, windowGap * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * .5 - windowGap
         print("top 1/2: " .. frm.string)
-        hs.alert.show("^ top 1/2")
+        hs.alert.show("⬆ 1/2")
     elseif between(frm.h, scr.h * .5, windowGap * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * 0.3 - windowGap
         print("top 1/3: " .. frm.string)
-        hs.alert.show("^ top 1/3")
+        hs.alert.show("⬆ 1/3")
     else
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * 0.7 - windowGap
         print("re-top 2/3: " .. frm.string)
-        hs.alert.show("^ re-top 2/3")
+        hs.alert.show("⬆ 2/3")
     end
     win:setFrame(frm)
 end
@@ -380,7 +380,7 @@ function dynamicResizeBottom()
     if not between(frm.y + frm.h, scr.y + scr.h, 5) then
         -- move to the left
         frm.y = scr.y + scr.h - frm.h
-        hs.alert.show("v bottom")
+        hs.alert.show("⬇")
     elseif not (between(frm.x, scr.x, 5) and between(frm.w, scr.w, 25)) then
         -- now we also resize
         frm.w = scr.w
@@ -388,28 +388,28 @@ function dynamicResizeBottom()
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 2/3:" .. frm.string)
-        hs.alert.show("v bottom 2/3")
+        hs.alert.show("⬇ 2/3")
     elseif between(frm.h, scr.h * .7, windowGap * 2) then
         frm.w = scr.w
         frm.h = scr.h * .5 - windowGap
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 1/2:" .. frm.string)
-        hs.alert.show("v bottom 1/2")
+        hs.alert.show("⬇ 1/2")
     elseif between(frm.h, scr.h * .5, windowGap * 2.5) then 
         frm.w = scr.w
         frm.h = scr.h * .3 - windowGap
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 1/3:" .. frm.string)
-        hs.alert.show("v bottom 1/3")
+        hs.alert.show("⬇ 1/3")
     else
         frm.w = scr.w
         frm.h = scr.h * .7 - windowGap
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("re-bottom 2/3:" .. frm.string)
-        hs.alert.show("v re-bottom 2/3")
+        hs.alert.show("⬇ 2/3")
     end
     win:setFrame(frm)
 end
@@ -546,9 +546,9 @@ hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- Center
 hs.hotkey.bind(alt_cmd, ".", function() hs.window.focusedWindow():centerOnScreen() end)
 -- Enlarged vertically
-hs.hotkey.bind(alt_cmd, "/", expandVertically)
+hs.hotkey.bind(alt_cmd, "=", expandVertically)
 -- Enlarged horizontally
-hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
+hs.hotkey.bind(alt_cmd, "-", expandHorizontally)
 -- Fullscreen
 hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
 
