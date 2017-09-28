@@ -48,7 +48,7 @@ if [ -z "$JAVA_HOME" ]; then
             ;;
     esac
     if [ -z "$VM_VERSION" ]; then
-        VM_VERSION="1.8"
+        VM_VERSION="jdk-9"
     fi
     if [ -d "$vmdir" ]; then
         PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
@@ -118,7 +118,7 @@ if [ -z "$GRADLE_HOME" ]; then
     fi
     if [ -n "$GRADLE_HOME" ]; then
         export GRADLE_HOME
-        export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
+        # export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
     else
         unset GRADLE_HOME
     fi
