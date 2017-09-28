@@ -1,34 +1,44 @@
 # Custom global snippets
 
 # Date snippets
-snippet     dateymd
-alias       xdat1
+snippet     xdatymd-
+alias       xd1975-08-23 xd197508
 abbr        "Date 1975-08-23"
 options     word
     `strftime("%Y-%m-%d")`
 
-snippet     datewmd
-alias       xdataa
+snippet     xdatabd
+alias       xdaug23 xdwedaug23 
 abbr        "Date Wed, Aug.23"
 options     word
     `strftime("%a, %b.%d")`${0}
 
-
-snippet     datewmdy
-alias       xdatab
+snippet     xdatabdy
+alias       xdaug2375
 abbr        "Date Wed, Aug.23, 1975"
 options     word
     `strftime("%a, %b.%d")`${0}, `strftime("%y")`
 
-snippet     datewdmy/
-alias       xdatbb
+snippet     xdattabd
+alias       xdtaug23
+abbr        "Date 10:10am on Wed, Aug.23"
+options     word
+    `strftime("%-I:%M%p on %a, %b.%d")`
+
+snippet     xdattabdy
+alias       xdtaug2375
+abbr        "Date 10:10am on Wed, Aug.23, 1975"
+options     word
+    `strftime("%-I:%M%p on %a, %b.%d")`${0}, `strftime("%y")`
+
+snippet     xdatadmy/
+alias       xd2308 xdwed2308
 abbr        "Date Wed.23/08/75"
 options     word
     `strftime("%a.%d/%m/%Y")`
 
-
-snippet     datetwdmy
-alias       xdatbc
+snippet     xdattadmy/
+alias       xdt2308
 abbr        "Date 10:10am on Wed.23/08/75"
 options     word
     `strftime("%-I:%M%p on %a.%d/%m/%Y")`
