@@ -1069,7 +1069,7 @@ augroup markdown
     autocmd FileType markdown vmap <buffer> bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
     " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
     " https://sts10.github.io/post/2015-08-02-markdwon-hyperlink-remap-for-vim/
-    autocmd FileType markdown vnoremap <buffer> il <esc>`<i[<esc>`>a](<esc>"*]pa) <esc>
+    autocmd FileType markdown vnoremap <buffer> il <esc>`<i[<esc>`>a](<esc>"+]pa) <esc>
 augroup END
 
 "}}}
