@@ -640,3 +640,17 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (powerline org-category-capture org-plus-contrib flycheck markdown-mode multiple-cursors dash-functional company sbt-mode scala-mode csharp-mode counsel swiper packed avy inf-ruby iedit smartparens highlight evil goto-chg undo-tree ivy go-mode projectile helm helm-core skewer-mode js2-mode magit magit-popup git-commit with-editor dash async alert hydra yasnippet php-mode haml-mode s github-browse-file yapfify yaml-mode xkcd ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit symon swift-mode string-inflection spaceline smex smeargle slim-mode selectric-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor rubocop rspec-mode robe restart-emacs request realgud rbenv rake rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode password-generator paradox orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file omnisharp noflet neotree move-text monokai-theme mmm-mode minitest meghanada material-theme markdown-toc magithub magit-gitflow magit-gh-pulls macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode keyfreq key-chord json-mode js2-refactor js-doc ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme help-fns+ helm-make gruvbox-theme groovy-mode groovy-imports gradle-mode google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flycheck-bashate flx-ido flatui-theme fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav editorconfig eclim dumb-jump disaster diff-hl deft define-word cython-mode counsel-projectile column-enforce-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme anaconda-mode ample-theme alect-themes aggressive-indent adoc-mode adaptive-wrap ace-window ace-link))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
