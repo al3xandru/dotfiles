@@ -81,3 +81,5 @@ alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Ver
 # human logger in audo
 # alias todo="python $HOME/workspace/miscellaneous/audo/humlog.py"
 
+# brew 
+alias brewvim="brew upgrade --build-from-source --with-custom-python --with-lua vim"
