@@ -149,57 +149,57 @@ function appid() {
 }
 
 # Switch DNS
-function dnsswitch() {
-    local flushdns="1"
-    if [ -z "$1" ]; then
-        echo "Known options: aft, g(oogle), opendns"
-        flushdns="0"
-    else
-        case $1 in 
-            aft)
-                echo "Switching DNS to AdFreeTime (aft)"
-                sudo networksetup -setdnsservers Wi-Fi 192.169.71.180 208.110.81.51 192.254.74.201
-                sudo networksetup -setdnsservers "USB Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
-                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
-                ;;
-            g)
-                echo "Switching DNS to Google (g)"
-                sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4
-                sudo networksetup -setdnsservers "USB ethernet" 8.8.8.8 8.8.4.4
-                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 8.8.8.8 8.8.4.4 
-                ;;
-            opendns)
-                echo "Switching DNS to Opendns (opendns)"
-                sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
-                sudo networksetup -setdnsservers "USB ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
-                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
-                ;;
-#            ub)
-#                echo "Switching DNS to unblock-us.com (ub)"
-#                sudo networksetup -setdnsservers Wi-Fi 208.122.23.23 208.122.23.22
-#                sudo networksetup -setdnsservers "USB Ethernet" 208.122.23.23 208.122.23.22
-#                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 
-#                ;;
-#            upc)
-#                echo "Switching DNS to UPC (upc)"
-#                sudo networksetup -setdnsservers Wi-Fi 95.77.94.88 78.96.7.88
-#                sudo networksetup -setdnsservers "USB Ethernet" 95.77.94.88 78.96.7.88
-#                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 95.77.94.88 78.96.7.88
-#                ;;
-            *)
-                echo "Resetting DNS to defaults"
-                sudo networksetup -setdnsservers Wi-Fi empty
-                sudo networksetup -setdnsservers "USB Ethernet" empty
-                sudo networksetup -setdnsservers "Thunderbolt Ethernet" empty
-                ;;
-        esac               
-    fi
-    if [ ${flushdns} = "1" ]; then
-        echo "Flushing the DNS cache"
-        sudo killall -HUP mDNSResponder
-    fi
-}
-alias switchdns=dnsswitch
+# function dnsswitch() {
+#     local flushdns="1"
+#     if [ -z "$1" ]; then
+#         echo "Known options: aft, g(oogle), opendns"
+#         flushdns="0"
+#     else
+#         case $1 in 
+#             aft)
+#                 echo "Switching DNS to AdFreeTime (aft)"
+#                 sudo networksetup -setdnsservers Wi-Fi 192.169.71.180 208.110.81.51 192.254.74.201
+#                 sudo networksetup -setdnsservers "USB Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
+#                 sudo networksetup -setdnsservers "Thunderbolt Ethernet" 192.169.71.180 208.110.81.51 192.254.74.201
+#                 ;;
+#             g)
+#                 echo "Switching DNS to Google (g)"
+#                 sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4
+#                 sudo networksetup -setdnsservers "USB ethernet" 8.8.8.8 8.8.4.4
+#                 sudo networksetup -setdnsservers "Thunderbolt Ethernet" 8.8.8.8 8.8.4.4 
+#                 ;;
+#             opendns)
+#                 echo "Switching DNS to Opendns (opendns)"
+#                 sudo networksetup -setdnsservers Wi-Fi 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
+#                 sudo networksetup -setdnsservers "USB ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
+#                 sudo networksetup -setdnsservers "Thunderbolt Ethernet" 208.67.222.222 208.67.220.220 208.67.220.222 208.67.222.220
+#                 ;;
+# #            ub)
+# #                echo "Switching DNS to unblock-us.com (ub)"
+# #                sudo networksetup -setdnsservers Wi-Fi 208.122.23.23 208.122.23.22
+# #                sudo networksetup -setdnsservers "USB Ethernet" 208.122.23.23 208.122.23.22
+# #                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 
+# #                ;;
+# #            upc)
+# #                echo "Switching DNS to UPC (upc)"
+# #                sudo networksetup -setdnsservers Wi-Fi 95.77.94.88 78.96.7.88
+# #                sudo networksetup -setdnsservers "USB Ethernet" 95.77.94.88 78.96.7.88
+# #                sudo networksetup -setdnsservers "Thunderbolt Ethernet" 95.77.94.88 78.96.7.88
+# #                ;;
+#             *)
+#                 echo "Resetting DNS to defaults"
+#                 sudo networksetup -setdnsservers Wi-Fi empty
+#                 sudo networksetup -setdnsservers "USB Ethernet" empty
+#                 sudo networksetup -setdnsservers "Thunderbolt Ethernet" empty
+#                 ;;
+#         esac               
+#     fi
+#     if [ ${flushdns} = "1" ]; then
+#         echo "Flushing the DNS cache"
+#         sudo killall -HUP mDNSResponder
+#     fi
+# }
+# alias switchdns=dnsswitch
 
 # PYTHONPATH
 function setpythonpath {
@@ -210,23 +210,23 @@ function setpythonpath {
 }
 
 # Node.js NPM
-function nodejs_activate_npm {
-    export PATH=/usr/local/share/npm/bin:${PATH}
-}
-function nodejs_deactivate_npm {
-    IFS=':' read -a path_segments <<< "${PATH}"
-    local NEW_PATH=""
-    for ps in "${path_segments[@]}"; do
-        if [ "/usr/local/share/npm/bin" != "$ps" ]; then
-            if [ -z "$NEW_PATH" ]; then
-                NEW_PATH=$ps
-            else
-                NEW_PATH=$NEW_PATH:$ps
-            fi
-        fi
-    done
-    echo $NEW_PATH
-}
+# function nodejs_activate_npm {
+#     export PATH=/usr/local/share/npm/bin:${PATH}
+# }
+# function nodejs_deactivate_npm {
+#     IFS=':' read -a path_segments <<< "${PATH}"
+#     local NEW_PATH=""
+#     for ps in "${path_segments[@]}"; do
+#         if [ "/usr/local/share/npm/bin" != "$ps" ]; then
+#             if [ -z "$NEW_PATH" ]; then
+#                 NEW_PATH=$ps
+#             else
+#                 NEW_PATH=$NEW_PATH:$ps
+#             fi
+#         fi
+#     done
+#     echo $NEW_PATH
+# }
 
 # image handling
 # http://brettterpstra.com/2013/07/24/bash-image-tools-for-web-designers/
@@ -272,18 +272,18 @@ function goprj {
     fi
 }
 
-function loopback {
-    local max i
-    if [ -z "$1" ]; then
-        echo "Usage loopback nr"
-    else
-        let max=$1+2
-        for((i=2;i<max; i++)); do
-            sudo ifconfig lo0 alias 127.0.0.$i up
-            echo "Loopback enabled on 127.0.0.$i"
-        done
-    fi
-}
+# function loopback {
+#     local max i
+#     if [ -z "$1" ]; then
+#         echo "Usage loopback nr"
+#     else
+#         let max=$1+2
+#         for((i=2;i<max; i++)); do
+#             sudo ifconfig lo0 alias 127.0.0.$i up
+#             echo "Loopback enabled on 127.0.0.$i"
+#         done
+#     fi
+# }
 
 # https://github.com/imwally/battstat
 
@@ -586,5 +586,17 @@ function extract() {
         fi
     else
         echo "'$1' is not a valid file"
+    fi
+}
+
+function brew() {
+    if [[ "$@" == "upgrade vim" ]]; then
+        echo "custom brew upgrade for vim"
+        command brew upgrade --build-from-source --with-custom-python --with-lua vim
+    elif [[ "$@" == "upgrade macvim" ]]; then
+        echo "brew upgrade custom"
+        command brew upgrade --build-from-source --with-custom-python --with-lua vim
+    else
+        command brew "$@"
     fi
 }
