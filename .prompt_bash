@@ -1,72 +1,111 @@
 #
 # Git smart PROMPT
-#
-      __CLR_BLACK="\[\033[0;30m\]"
-        __CLR_RED="\[\033[0;31m\]"
-      __CLR_GREEN="\[\033[0;32m\]"
-     __CLR_YELLOW="\[\033[0;33m\]"
-       __CLR_BLUE="\[\033[0;34m\]"
-     __CLR_PURPLE="\[\033[0;35m\]"
-       __CLR_CYAN="\[\033[0;36m\]"
-      __CLR_WHITE="\[\033[0;37m\]"
-__CLR_LIGHT_BLACK="\[\033[1;30m\]"
-   __CLR_LIGHT_RED="\[\033[1;31m\]"
- __CLR_LIGHT_GREEN="\[\033[1;32m\]"
-__CLR_LIGHT_YELLOW="\[\033[1;33m\]"
-  __CLR_LIGHT_BLUE="\[\033[1;34m\]"
-__CLR_LIGHT_PURPLE="\[\033[1;35m\]"
-  __CLR_LIGHT_CYAN="\[\033[1;36m\]"
-  __CLR_LIGHT_GRAY="\[\033[1;37m\]"
- __CLR_NONE="\[\e[0m\]"
+# with help from https://github.com/riobard/bash-powerline
+# Uncomment to disable git info
+#POWERLINE_GIT=0
+__powerline() {
+          __CLR_BLACK="\[\033[0;30m\]"
+            __CLR_RED="\[\033[0;31m\]"
+          __CLR_GREEN="\[\033[0;32m\]"
+         __CLR_YELLOW="\[\033[0;33m\]"
+           __CLR_BLUE="\[\033[0;34m\]"
+         __CLR_PURPLE="\[\033[0;35m\]"
+           __CLR_CYAN="\[\033[0;36m\]"
+          __CLR_WHITE="\[\033[0;37m\]"
+    __CLR_LIGHT_BLACK="\[\033[1;30m\]"
+       __CLR_LIGHT_RED="\[\033[1;31m\]"
+     __CLR_LIGHT_GREEN="\[\033[1;32m\]"
+    __CLR_LIGHT_YELLOW="\[\033[1;33m\]"
+      __CLR_LIGHT_BLUE="\[\033[1;34m\]"
+    __CLR_LIGHT_PURPLE="\[\033[1;35m\]"
+      __CLR_LIGHT_CYAN="\[\033[1;36m\]"
+      __CLR_LIGHT_GRAY="\[\033[1;37m\]"
+     __CLR_NONE="\[\e[0m\]"
+
+    readonly RESET='\[\033[m\]'
+    readonly COLOR_SUCCESS=${__CLR_GREEN} # green
+    readonly COLOR_FAILURE=${__CLR_RED} # red
+
+    readonly SYMBOL_GIT_BRANCH='⑂'
+    readonly SYMBOL_GIT_MODIFIED='±'
+    readonly SYMBOL_GIT_PUSH='↑'
+    readonly SYMBOL_GIT_PULL='↓'
+    readonly SYMBOL_GIT_DIVERGED='↕'
 
 
-function _parse_git_branch {
-# git rev-parse --git-dir &> /dev/null
-    local git_status branch_pattern remote_pattern diverge_pattern state
-    git_status="$(git status 2> /dev/null)"
-    branch_pattern="On branch ([^${IFS}]*)"
-    remote_pattern="Your branch is (.*) of"
-    diverge_pattern="Your branch and (.*) have diverged"
-    state=""
-    if [[ ${git_status} =~ ${branch_pattern} ]]; then
-        branch=${BASH_REMATCH[1]}
-        # if [[ ! ${git_status} =~ "working [:alnum:]* clean" ]]; then
-        if [[ ! ${git_status} =~ "nothing to commit" ]]; then
-            state="${__CLR_RED}±"
-        fi
-        # add an else if or two here if you want to get more specific
-        if [[ ${git_status} =~ ${remote_pattern} ]]; then
-            if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
-                remote="${__CLR_YELLOW}↑"
-            else
-                remote="${__CLR_YELLOW}↓"
+    if [[ -z "$PS_SYMBOL" ]]; then
+      case "$(uname)" in
+          Darwin)   PS_SYMBOL='';;
+          Linux)    PS_SYMBOL='$';;
+          *)        PS_SYMBOL='%';;
+      esac
+    fi
+
+    function _parse_git_branch {
+        [[ $POWERLINE_GIT = 0 ]] && return # disabled
+        # git rev-parse --git-dir &> /dev/null
+        local git_status branch_pattern remote_pattern diverge_pattern state
+        git_status="$(git status 2> /dev/null)"
+        branch_pattern="On branch ([^${IFS}]*)"
+        remote_pattern="Your branch is (.*) of"
+        diverge_pattern="Your branch and (.*) have diverged"
+        state=""
+        if [[ ${git_status} =~ ${branch_pattern} ]]; then
+            branch=${BASH_REMATCH[1]}
+            # if [[ ! ${git_status} =~ "working [:alnum:]* clean" ]]; then
+            if [[ ! ${git_status} =~ "nothing to commit" ]]; then
+                state="${__CLR_RED}${SYMBOL_GIT_MODIFIED}"
             fi
+            # add an else if or two here if you want to get more specific
+            if [[ ${git_status} =~ ${remote_pattern} ]]; then
+                if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+                    remote="${__CLR_YELLOW}${SYMBOL_GIT_PUSH}"
+                else
+                    remote="${__CLR_YELLOW}${SYMBOL_GIT_PULL}"
+                fi
+            fi
+            if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+                remote="${__CLR_YELLOW}${SYMBOL_GIT_DIVERGED}"
+            fi
+            echo " ${__CLR_GREEN}[${SYMBOL_GIT_BRANCH}${branch} ${remote}${state}${__CLR_GREEN}]"
         fi
-        if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-            remote="${__CLR_YELLOW}↕"
+    }
+
+    _prompt_func() {
+        # status of previous command
+        if [ $? -eq 0 ]; then
+            local symbol="$COLOR_SUCCESS $PS_SYMBOL $RESET"
+        else
+            local symbol="$COLOR_FAILURE $PS_SYMBOL $RESET"
         fi
-        echo " ${__CLR_GREEN}(${branch}${remote}${state}${__CLR_GREEN})"
-    fi
+
+        # current directory
+        local cwd="${__CLR_LIGHT_PURPLE}\W$RESET"
+
+        # Bash by default expands the content of PS1 unless promptvars is disabled.
+        # We must use another layer of reference to prevent expanding any user
+        # provided strings, which would cause security issues.
+        # POC: https://github.com/njhartwell/pw3nage
+        # Related fix in git-bash: https://github.com/git/git/blob/9d77b0405ce6b471cb5ce3a904368fc25e55643d/contrib/completion/git-prompt.sh#L324
+        if shopt -q promptvars; then
+            __powerline_git_info="$(_parse_git_branch)"
+            local git="${__powerline_git_info}$RESET"
+        else
+            local git="$(_parse_git_branch)$RESET"
+        fi
+        # if [ $ITERM_SESSION_ID ]; then
+        #     PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
+        # else
+        #     PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
+        # fi
+
+        PS1="$cwd$git$symbol"
+    }
+
+
+    # PROMPT_COMMAND=_prompt_func
+    PROMPT_COMMAND="_prompt_func${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 }
 
-function _prompt_func() {
-    local prompt="${__CLR_LIGHT_PURPLE}\W$(_parse_git_branch)"
-    if [ $ITERM_SESSION_ID ]; then
-        PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
-    else
-        PS1="${prompt}${__CLR_LIGHT_BLACK}/${__CLR_NONE}\[\033];${PWD##*/}\007 "
-    fi
-#    previous_return_value=$?;
-#    echo "prev: ${previous_return_value}"
-#    if [[ $previous_return_value -eq 0 ]]
-#    then
-#        PS1="${prompt}\$${__CLR_NONE} "
-#    else
-#        PS1="${prompt}${__CLR_RED}\$${__CLR_NONE} "
-#    fi
-}
-
-#PS1='[\[\e[1;34m\]\w\[\e[m\]]\n\[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
-#PS1='[\[\e[1;34m\]\w\[\e[m\]]\[\e[1;32m\]\$\[\e[m\] \[\e[1;37m\]'
-
-PROMPT_COMMAND=_prompt_func
+__powerline
+unset __powerline
