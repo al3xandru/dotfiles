@@ -262,7 +262,7 @@ function gopath {
     go env
 }
 
-function goprj {
+function goworkspace {
     if [ -z "$1" ]; then
         echo "Project name required"
     else
@@ -598,6 +598,12 @@ function brew() {
         echo "brew upgrade custom"
         command brew upgrade --build-from-source --with-custom-python --with-lua vim
     else
-        command brew "$@"
+        if [[ "$1" == "cask" && "$2" == "upgrade" ]]; then
+            echo "custom brew cask upgrade"
+            command brew cask uninstall "$3" --force
+            command brew cask install "$3" --force
+        else
+            command brew "$@"
+        fi
     fi
 }
