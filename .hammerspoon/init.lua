@@ -1,4 +1,3 @@
-local log = hs.logger.new('mine', 'debug')
 local DEBUG = true
 local windowGap = 3
 
@@ -72,7 +71,7 @@ end
 --     {"App name", "Window name", "Display Name/function", "unitrect", "framerect", "fullframerect"},
 LAYOUTS = {
     calls = {
-        name = "Calls",
+        name = "Video calls",
         subtitle = "Zoom, Evernote, Safari, Slack",
         layout = {
             {"zoom.us", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.6), nil, nil},
@@ -83,21 +82,35 @@ LAYOUTS = {
         }
     },
     communication = {
-        name = "Email & Slack",
-        subtitle = "Mail, Slack",
+        name = "Comms & Scheduling",
+        subtitle = "Mail, Slack, Calendar, Zimbra",
         layout = {
-            {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, 0.7), nil, nil},
-            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.3, 1, 0.7), nil, nil}
+            {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, .7), nil, nil},
+            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, .3, 1, .7), nil, nil},
+            {"Calendar", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, 0, .5, .75), nil, nil},
+            {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
         }
     },
     vimcode = {
-        name = "Vim coding",
-        subtitle = "MacVim, Safari",
+        name = "Coding with Vim",
+        subtitle = "MacVim, Terminal, Safari, Dash",
         layout = {
-            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 1), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.55, 0, 0.45, 1), nil, nil}
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.25, 1, 0.75), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.15, 0.5, 0.7), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 1), nil, nil}
         }
-    }
+    },
+    planning = {
+        name = "Task planning",
+        subtitle = "TaskPaper, OmniFocus",
+        layout = {
+            {"OmniFocus", nil, nil, hs.geometry.unitrect(0, 0, 1, 0.70), nil, nil},
+            {"TaskPaper", nil, nil, hs.geometry.unitrect(0, .35, 1, .65), nil, nil}
+        }
+    },
+    
 }
 
 
@@ -568,5 +581,7 @@ hs.hotkey.bind(ctrl_alt_cmd, 'up',    function() resize(0, -50) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'down',  function() resize(0, 50) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'right', function() resize(50, 0) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'left',  function() resize(-50, 0) end)
+
+-- require("controlescape")
 
 -- https://github.com/digitalbase/hammerspoon/blob/master/init.lua
