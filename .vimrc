@@ -1139,6 +1139,8 @@ map <unique><localleader>t <Plug>TaskList
 " Taskpaper
 Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
+
+Plugin 'digitalrounin/vim-yaml-folds'
 " }}}
 
 "
