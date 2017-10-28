@@ -816,8 +816,10 @@ Plugin 'tpope/vim-commentary'
 " Plugin 'scrooloose/nerdcommenter'
 " Plugin 'tomtom/tcomment_vim'
 
+Plugin 'w0rp/ale'
+let g:ale_open_list = 1
 
-Plugin 'scrooloose/syntastic'
+" Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
