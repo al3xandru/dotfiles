@@ -1418,7 +1418,7 @@ if has("unix")
     if has("gui_running")
         colorscheme nova "earendel gruvbox
     else
-        colorscheme ironman "nuvola gruvbox
+        colorscheme gruvbox " ironman nuvola gruvbox
     endif
 endif
 " call <SID>SetCursorLineColors()
