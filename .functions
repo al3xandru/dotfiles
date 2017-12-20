@@ -591,15 +591,19 @@ function extract() {
 }
 
 function brew() {
-    if [[ "$@" == "upgrade vim" ]]; then
-        echo "custom brew upgrade for vim"
+    if [[ "$@" == "update" ]]; then
+        echo "preventively fix permissions"
+        sudo chown -R $(whoami) /usr/local/bin /usr/local/lib
+        command brew update
+    elif [[ "$@" == "upgrade vim" ]]; then
+        echo "brew upgrade vim [custom task]"
         command brew upgrade --build-from-source --with-custom-python --with-lua vim
     elif [[ "$@" == "upgrade macvim" ]]; then
-        echo "brew upgrade custom"
-        command brew upgrade --build-from-source --with-custom-python --with-lua vim
+        echo "brew upgrade macvim [custom task]"
+        command brew upgrade --build-from-source --with-custom-python --with-lua macvim
     else
         if [[ "$1" == "cask" && "$2" == "upgrade" ]]; then
-            echo "custom brew cask upgrade"
+            echo "brew cask upgrade [custom task]"
             command brew cask uninstall "$3" --force
             command brew cask install "$3" --force
         else
