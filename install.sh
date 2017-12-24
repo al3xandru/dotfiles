@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -11,7 +11,7 @@ function doStatus() {
         fi
         echo ""
         echo "Comparing $file with $HOME/$file"
-        diff -rq $file $HOME/$file | grep -v -e '.vim/bundle' -e 'netrwhist' -e 'README.md' -e 'spell' -e 'tmp' -e 'tags' 
+        diff -rq $file $HOME/$file | grep -v -e '.vim/bundle' -e 'netrwhist' -e 'README.md' -e 'spell' -e 'tmp' -e 'tags' -e 'zarchive'
     done
     echo ""
 
@@ -78,6 +78,7 @@ function doInstall() {
     # special treatment for .vim/bundle/
     rsync -aqru .vim/bundle/ ~/.vim/bundle/
 
+
     # proc ".emacs.d/init.el"
 
     #for d in {.vim,.emacs.d,.virtualenv}; do
@@ -106,6 +107,7 @@ function proc() {
     #     echo "test ae: FALSE"
     # fi
     if [ -a "${hf}" ]; then
+        # echo "Target file exists ${hf} [ test -a ] "
         diff -sq "${f}" "${hf}" &> /dev/null
 
         if [ 0 -ne $? ]; then
