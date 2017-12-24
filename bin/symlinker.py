@@ -3,7 +3,7 @@ import os
 import sys
 
 def scan_directory(dirname):
-    """ Scans the given directory for all symlinks and aliases and 
+    """ Scans the given directory for all symlinks and aliases and
     returns a list of tuples
     """
     results = []
@@ -21,7 +21,7 @@ def scan_directory(dirname):
                 else:
                     # symlink is in the same project
                     results.append((False, relative_path(fullpath, dirname), relative_path(os.path.join(os.path.dirname(fullpath), target), dirname)))
-                    
+
         for f in files:
             fullpath = os.path.join(root, f)
             if os.path.islink(fullpath):
@@ -33,13 +33,13 @@ def scan_directory(dirname):
                     # symlink is in the same project
                     results.append((True, relative_path(fullpath, dirname), target))
     return results
-                
+
 def relative_path(fullpath, rootpath):
     """ Calculates the relative path of `fullpath` versus `rootpath` """
     if not rootpath.endswith('/'):
         rootpath += '/'
     return "./" + fullpath[len(rootpath):]
-    
+
 def user_relative_path(fullpath):
     """ Calculates the relative path of `fullpath` versus the current user home directory.
     If `fullpath` is not under user's home directory it returns the full path"""
@@ -48,7 +48,7 @@ def user_relative_path(fullpath):
         return "~" + fullpath[len(user_home_path):]
     else:
         return fullpath
-    
+
 def scan_file(filename):
     """ Checks if the `filename` is a symlink/alias. If `true` it returns
     a tuple with the 2nd value being the target. If `false` return None
@@ -56,7 +56,7 @@ def scan_file(filename):
     if os.path.islink(filename):
         return filename, user_relative_path(os.path.abspath(os.readlink(fullpath)))
     return None
-        
+
 def restore_symlinks(basedir, conf_file):
     confs = read_configuration(conf_file)
     if not confs:
@@ -98,9 +98,9 @@ def restore_symlinks(basedir, conf_file):
                 else:
                     results.append("ln -s %s %s" % (t, l))
     return results
-            
-    
-    
+
+
+
 def read_configuration(conf_file):
     f = open(conf_file, 'r')
     confs = []
@@ -112,9 +112,10 @@ def read_configuration(conf_file):
             confs.append((False, parts[0].strip(), parts[1].strip()))
     f.close()
     return confs
-    
+
 if __name__ == '__main__':
     if len(sys.argv) == 1:
+        print "Scanning current directory:", os.getcwd()
         result = scan_directory(os.getcwd())
         for rel, l, t in result:
             if rel:
@@ -122,7 +123,8 @@ if __name__ == '__main__':
             else:
                 print l, '->', t
     else:
-        input = sys.argv[1]     
+        input = sys.argv[1]
+        print input
         if not os.path.exists(input):
             print >> sys.stderr, 'Input must be a valid file or directory'
             sys.exit(1)
@@ -140,12 +142,12 @@ if __name__ == '__main__':
                 if not os.path.exists(basedir) or not os.path.isdir(basedir):
                     print >> sys.stderr, "Basedir %s is not a directory" % basedir
                     sys.exit(2)
-                current_dir = os.getcwd()    
+                current_dir = os.getcwd()
                 os.chdir(basedir)
                 results = restore_symlinks(basedir, input)
                 if results:
                     print "Run the following commands to restore symlinks"
-                    print 
+                    print
                     if current_dir != basedir:
                         print "cd %s" % basedir
                     for cmd in results:
@@ -154,7 +156,7 @@ if __name__ == '__main__':
                 result = scan_file(input)
                 if result:
                     print result[0], '->', result[1]
-                                
+
 # For Mac OS Aliases:
 #
 # AppleScript:

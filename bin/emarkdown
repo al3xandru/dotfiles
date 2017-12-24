@@ -1,10 +1,8 @@
 #!/bin/sh
-
-# use this only if using symlinks
-#if [ -h $0 ]; then
-#    SLINK=`ls -l $0 | awk '{print $11}'`;
-#    DIR=`dirname $SLINK`
-#else
-#    DIR=`dirname $0`
-#fi
-python "$HOME/Dropbox/workspace/python/markdown/mkdn/markup.py" --type=m1 --format=2 "$@"
+# if [ -h $0 ]; then
+#     SLINK=`ls -l $0 | awk '{print $11}'`;
+#     DIR=`dirname $SLINK`
+# else
+#     DIR=`dirname $0`
+# fi
+python "$HOME/Dropbox/workspace/python/markdown/mkdn/markup.py" "$@"

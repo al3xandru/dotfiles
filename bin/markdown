@@ -1,0 +1,2 @@
+#!/bin/bash
+emarkdown --type=m1 --format=4 $@
