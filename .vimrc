@@ -977,20 +977,25 @@ let g:vim_markdown_folding_level=1
 
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
-function! <SID>MarkdownPreview(file)
-    if has("unix")
-        let l:uname = system("uname -s")
-        if l:uname =~ "Darwin"
-            if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
-                execute ":silent !open -a 'Marked 2.app' '" . a:file . "'"
-                " nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
-            else
-                execute ":silent !open -a Google Chrome.app' '" . a:file . "'"
-                " nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
-            endif
-        endif
-    endif
-endfunction
+Plugin 'JamshedVesuna/vim-markdown-preview'
+" let vim_markdown_preview_hotkey='<localleader>mp'
+let vim_markdown_preview_github=0
+let vim_markdown_preview_perl=0
+let vim_markdown_preview_pandoc=0
+" function! <SID>MarkdownPreview(file)
+"     if has("unix")
+"         let l:uname = system("uname -s")
+"         if l:uname =~ "Darwin"
+"             if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
+"                 execute ":silent !open -a 'Marked 2.app' '" . a:file . "'"
+"                 " nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
+"             else
+"                 execute ":silent !open -a Google Chrome.app' '" . a:file . "'"
+"                 " nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
+"             endif
+"         endif
+"     endif
+" endfunction
 "}}}
 " Markdown editing {{{3
 Plugin 'junegunn/goyo.vim'
@@ -1060,7 +1065,8 @@ augroup markdown
     autocmd FileType markdown setlocal textwidth=80 wrap linebreak foldenable
     autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
+    " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call Vim_Markdown_Preview()<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
     " Paste clipboard as blockquote
     " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
