@@ -1,0 +1,41 @@
+*myvimtips.txt*     For Vim version 8.* Last change: 2017 December 10
+*myvimtips*
+
+This is a collection of tips and tricks that I usually don't remember that
+make vim truly powerful.
+
+Tips for using the help:
+
+* CTRL-] jumps to the link
+* CTRL-O jumps back
+
+=======================================================================
+CONTENTS
+
+    1. Normal mode.................................|myvimtips-normal|
+        1. Navigation..............................|myvimtips-normal-nav|
+
+=======================================================================
+1. Normal mode                                     *myvimtips-normal*
+
+1.1 Navigation in Normal Mode                      *myvimtips-normal-nav*
+
+    - |]]| : next section
+    - |]c| : move to start of change
+    - |]m| : next method
+    - |[m| : back to start of method
+    - |]s| : move to next mispelled word
+    - |[s| : move to prev mispelled word
+
+1.2 Navigation and Windows
+
+  - |CTRL-W ]| : split window and jump to tag under cursor
+
+=======================================================================
+
+Reference materials
+
+- Create a build-in Vim cheatsheet <http://technosophos.com/2014/10/09/create-built-in-vim-cheatsheet.html>
+- Matt's Vim Help <https://github.com/technosophos/vim-myhelp>
+- Creating Vim help files <http://vim.1045645.n5.nabble.com/creating-Vim-help-files-td1188156.html>
+
