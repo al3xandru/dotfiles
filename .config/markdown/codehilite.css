@@ -21,10 +21,7 @@
     margin: 1em 0 1.5em 0;
 }
 
-.codehilite span {
-    font-family: "Operator Mono", "SFMono", "Go Mono", "Hack", "Bitstream Vera Sans Mono", "Anonymous Pro", Inconsolata, Monaco, monospace;
-    font-size: 1em;
-}
+.codehilite span { }
 
 .codehilite .hll { background-color: #49483e }
 .codehilite .c { color: #75715e } /* Comment */
