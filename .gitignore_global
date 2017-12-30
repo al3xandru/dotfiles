@@ -6,6 +6,7 @@
 !*.com/
 *.class
 *.dll
+*.dylib
 *.exe
 *.o
 *.pyc
@@ -34,7 +35,12 @@
 *~
 *#
 *.bak
+*.out
 *.swp
+
+# Editor
+.tags
+.idea/
 
 # OS generated files
 ####################
