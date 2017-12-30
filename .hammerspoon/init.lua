@@ -95,11 +95,12 @@ LAYOUTS = {
         name = "Coding with Vim",
         subtitle = "MacVim, Terminal, Safari, Dash",
         layout = {
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0, 0.6, 1), nil, nil},
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.2, 0, 0.6, 1), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.6, 1), nil, nil},
             {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.25, 1, 0.75), nil, nil},
-            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.15, 0.5, 0.7), nil, nil},
-            {"MacVim", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 1), nil, nil}
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.15, 0.5, 0.8), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.unitrect(0.10, 0, 0.80, 0.80), nil, nil}
         }
     },
     planning = {
