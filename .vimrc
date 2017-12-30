@@ -372,6 +372,8 @@ nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
 
 " Inserts the path of the currently edited file into a command
 cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+cnoremap <C-N> <C-R>=expand("%:t")<CR>
+
 " Save current session
 function! <SID>SaveSession () 
     let parentDir = getcwd()
@@ -439,10 +441,11 @@ nnoremap <leader>eV :vsplit<CR>:CtrlP<CR>
 nnoremap <leader>e. :tabe $MYVIMRC<CR>
 "Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
 nnoremap <leader>s. :source $MYVIMRC<CR>
-augroup myvimrc
-    au!
-    au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
-augroup END
+" disable auto-sourcing of $MYVIMRC
+" augroup myvimrc
+"     au!
+"     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
+" augroup END
 
 " bind f and F to perform grep for the word under cursor
 " grep results go into quicklist: copen/cclose
@@ -666,7 +669,7 @@ nnoremap <silent><leader>bh :Startify<CR>
     autocmd FileType netrw setlocal bufhidden=delete "wipe
     nnoremap <unique><leader>p :Lex<CR>
     nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
-    let g:netrw_browse_split=4 " (open in previous window)
+    let g:netrw_browse_split=0      " re-use the same window
     let g:netrw_hide=0
     " let g:netrw_home='~'
     let g:netrw_preview=0   "horizontal
@@ -817,7 +820,20 @@ Plugin 'tpope/vim-commentary'
 " Plugin 'tomtom/tcomment_vim'
 
 Plugin 'w0rp/ale'
-let g:ale_open_list = 1
+let g:ale_completion_delay = 250
+let g:ale_completion_enabled = 0
+let g:ale_lint_delay = 500
+let g:ale_lint_on_enter = 1
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_open_list = 'on_save'
+let g:ale_set_loclist = 1
+let g:ale_set_signs = 1
+let g:ale_sign_error = 'E'
+let g:ale_sign_info = 'I'
+let g:ale_sign_warning = 'W'
+let g:ale_sign_style_error = 'e'
+let g:ale_sign_style_warning = 'w'
 
 " Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
@@ -892,12 +908,14 @@ Plugin 'OmniCppComplete'
 
 " Go {{{2
 Plugin 'fatih/vim-go'
-let g:go_bin_path = expand("~/.golang")
+" let g:go_bin_path = expand("~/.golang")
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = 'gofmt'
+let g:go_fmt_fail_silently = 0
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
+let g:go_metalinter_autosave = 1
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -1247,10 +1265,10 @@ augroup END
 
 Plugin 'jiangmiao/auto-pairs'
 let g:AutoPairsMapSpace=1
-" Alt+0 and Alt+9
+" Alt+< and Alt+> (changed from Alt+0 and Alt+9)
 if has('mac')
-    let g:AutoPairsShortcutJump='ª'
-    let g:AutoPairsShortcutFastWrap='º'
+    let g:AutoPairsShortcutJump='≥'
+    let g:AutoPairsShortcutFastWrap='≤'
 else
     let g:AutoPairsShortcutJump='<M-9>'
     let g:AutoPairsShortcutFastWrap='<A-0>'
@@ -1303,29 +1321,29 @@ let g:startify_change_to_dir = 1
 " Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
 " Alt - w/b/3/g => ∑/∫/£/©
-map ∑ <Plug>CamelCaseMotion_w
-map ∫ <Plug>CamelCaseMotion_b
-map £ <Plug>CamelCaseMotion_e
-map © <Plug>CamelCaseMotion_ge
-omap <silent> i∑ <Plug>CamelCaseMotion_iw
-xmap <silent> i∑ <Plug>CamelCaseMotion_iw
-omap <silent> i∫ <Plug>CamelCaseMotion_ib
-xmap <silent> i∫ <Plug>CamelCaseMotion_ib
-omap <silent> i£ <Plug>CamelCaseMotion_ie
-xmap <silent> i£ <Plug>CamelCaseMotion_ie
+" map ∑ <Plug>CamelCaseMotion_w
+" map ∫ <Plug>CamelCaseMotion_b
+" map £ <Plug>CamelCaseMotion_e
+" map © <Plug>CamelCaseMotion_ge
+" omap <silent> i∑ <Plug>CamelCaseMotion_iw
+" xmap <silent> i∑ <Plug>CamelCaseMotion_iw
+" omap <silent> i∫ <Plug>CamelCaseMotion_ib
+" xmap <silent> i∫ <Plug>CamelCaseMotion_ib
+" omap <silent> i£ <Plug>CamelCaseMotion_ie
+" xmap <silent> i£ <Plug>CamelCaseMotion_ie
 " these remaps work if I want to
-" noremap ∑ W
-" noremap ∫ B
-" noremap £ E
-" noremap © gE
-" noremap W w
-" noremap B b
-" noremap E e
-" noremap gE ge
-" map w <Plug>CamelCaseMotion_w
-" map b <Plug>CamelCaseMotion_b
-" map e <Plug>CamelCaseMotion_e
-" map ge <Plug>CamelCaseMotion_ge
+noremap ∑ W
+noremap ∫ B
+noremap £ E
+noremap © gE
+noremap W w
+noremap B b
+noremap E e
+noremap gE ge
+map w <Plug>CamelCaseMotion_w
+map b <Plug>CamelCaseMotion_b
+map e <Plug>CamelCaseMotion_e
+map ge <Plug>CamelCaseMotion_ge
 " }}}
 
 " Quick navigation {{{2
