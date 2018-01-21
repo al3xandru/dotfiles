@@ -25,16 +25,13 @@ alias grep='grep --color'
 alias unrar='unrar x'
 alias ziplist='unzip -l'
 
-# editors
-alias v="vim"
-alias vs="vim -S"
-# alias m='mvim'
-# alias t='tvim'
-alias n='nvim'
-alias e="mvim"
-alias es="mvim -S"
-alias E='$HOME/bin/emacscltsrv'
-alias x='$HOME/bin/emacscltsrv'
+# editors: vim, nvim, mvim, vimr
+alias v="nvim"
+alias vs="nvim -S"
+alias e="vimr"
+alias es="vimr -S"
+# alias E='$HOME/bin/emacscltsrv'
+# alias x='$HOME/bin/emacscltsrv'
 # alias em='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
 # alias x='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
 # alias em='emacsclient -n $* -a emacs'
@@ -83,3 +80,6 @@ alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Ver
 
 # brew 
 alias k=kubectl
+
+# Oracle proxy
+alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
