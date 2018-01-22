@@ -39,7 +39,9 @@ if has('clipboard')
         set clipboard=unnamed
     endif
 endif
-set esckeys     " allow cursor keys in insert mode
+if !has('nvim')
+    set esckeys     " allow cursor keys in insert mode
+endif
 set hidden      " allow buffer switching without saving
 set lazyredraw
 set modeline
@@ -207,7 +209,7 @@ augroup END
 set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
-set statusline=%#error#%{toupper(mode())}%*:%n\ >\ 
+set statusline=%n::%#error#%{toupper(mode())}%*\ >\ 
 set statusline+=%f\ %h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
 set statusline+=%= "left/right separator
 set statusline+=[%l:%v\ %p%%\ %L]%q
@@ -244,6 +246,9 @@ if has("gui_running")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
+    set columns=165
+    set lines=80
+elseif has("gui_vimr")
     set columns=165
     set lines=80
 endif
@@ -499,8 +504,8 @@ if has("autocmd")
         autocmd!
         " autosave on focus lost
         autocmd FocusLost, BufLeave * silent! :wall
-        " default to markdown
-        autocmd BufEnter * if &filetype == "" | setlocal ft=markdown | endif
+        " default to markdown if not in diff mode
+        autocmd BufEnter * if &filetype == "" && !&diff | setlocal ft=markdown | endif
         " crontab -e
         autocmd BufNewFile,BufRead crontab.* set nobackup nowritebackup
 
@@ -525,7 +530,7 @@ end
 " https://github.com/macvim-dev/macvim/issues/386
 "if has('gui') && has('mac')
 if has('mac')
-    if executable("pyenv")
+    if executable("pyenv") && !has('nvim')
         let _cmd = 'pyenv version-name'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
@@ -570,6 +575,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " colorschemes {{{1
 Plugin 'Colour-Sampler-Pack'
+Plugin 'arcticicestudio/nord-vim'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
@@ -820,20 +826,27 @@ Plugin 'tpope/vim-commentary'
 " Plugin 'tomtom/tcomment_vim'
 
 Plugin 'w0rp/ale'
+let g:ale_enabled = 1
 let g:ale_completion_delay = 250
 let g:ale_completion_enabled = 0
+let g:ale_echo_delay = 100
 let g:ale_lint_delay = 500
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_open_list = 'on_save'
+let g:ale_set_highlights = 1
 let g:ale_set_loclist = 1
 let g:ale_set_signs = 1
 let g:ale_sign_error = 'E'
 let g:ale_sign_info = 'I'
 let g:ale_sign_warning = 'W'
-let g:ale_sign_style_error = 'e'
-let g:ale_sign_style_warning = 'w'
+" let g:ale_sign_style_error = 'e'
+" let g:ale_sign_style_warning = 'w'
+let g:ale_linters = {
+    \ 'go': ['gometalinter'],
+    \ }
+let g:ale_go_gometalinter_options = '--aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet'
 
 " Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
@@ -909,13 +922,17 @@ Plugin 'OmniCppComplete'
 " Go {{{2
 Plugin 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
+let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
 let g:go_fmt_command = 'gofmt'
 let g:go_fmt_fail_silently = 0
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
-let g:go_metalinter_autosave = 1
+let g:go_list_type = 'locationlist'
+" let g:go_metalinter_autosave = 1
+" let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'errcheck']
+let g:go_list_type_commands = {"GoMetalinter": "quickfix"}
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -954,6 +971,7 @@ augroup go
     autocmd FileType go nmap <localleader>geb <Plug>(go-build)
     autocmd FileType go nmap <localleader>get <Plug>(go-test)
     autocmd FileType go nmap <localleader>gec <Plug>(go-coverage)
+    autocmd BufWritePost *.go GoMetaLinter
 augroup END
 "}}}
 
@@ -990,8 +1008,11 @@ Plugin 'pangloss/vim-javascript'
 
 " Markdown {{{2
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+set conceallevel=2
+let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled=0
 let g:vim_markdown_folding_level=1
+" let g:vim_markdown_no_default_key_mappings=1
 
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
@@ -1404,9 +1425,11 @@ Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/dash.vim'
 " noremap do *not* work with <Plug>
 nmap <leader>h <Plug>DashSearch
+nmap <leader>k <Plug>DashSearch
 
 " Git {{{2
 Plugin 'airblade/vim-gitgutter'
+" let g:gitgutter_map_keys=0
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
 " nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
@@ -1441,6 +1464,8 @@ if has("unix")
 
     if has("gui_running")
         colorscheme nova "earendel gruvbox
+    elseif has("gui_vimr")
+        colorscheme gruvbox
     else
         colorscheme gruvbox " ironman nuvola gruvbox
     endif
