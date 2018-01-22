@@ -14,6 +14,7 @@ CONTENTS
 
     1. Normal mode.................................|myvimtips-normal|
         1. Navigation..............................|myvimtips-normal-nav|
+    2. Insert mode.................................|myvimtips-insert|
 
 =======================================================================
 1. Normal mode                                     *myvimtips-normal*
@@ -22,14 +23,33 @@ CONTENTS
 
     - |]]| : next section
     - |]c| : move to start of change
+    - |]I] : display all lines containing keyword under cursor 
+             from current position
+    - |[I| : like "]I" but from the beginning of the file
     - |]m| : next method
     - |[m| : back to start of method
     - |]s| : move to next mispelled word
     - |[s| : move to prev mispelled word
+    - |[z| : move to start of open fold
+    - |]z| : move to end of open fold
 
 1.2 Navigation and Windows
 
   - |CTRL-W ]| : split window and jump to tag under cursor
+
+1.3 Navigation of "blocks"
+
+  - |`>| - cursor to end of highlight area
+  - |`)| - cursor to first char after end of current sentence
+  - |`[| - cursor to first CHAR on the line of the start of last operated text
+           or start of put text
+  - |`{| - cursor to the start of the current paragraph
+  - |`}| - cursor to the end of the paragraph
+
+=======================================================================
+2.  Insert mode                                    *myvimtips-insert*
+
+- |CTRL-T| and |CTRL-D| : insert/remove shiftwidth
 
 =======================================================================
 
