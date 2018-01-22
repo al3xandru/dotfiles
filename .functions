@@ -592,8 +592,22 @@ function extract() {
 
 function brew() {
     if [[ "$@" == "update" ]]; then
-        echo "preventively fix permissions"
-        sudo chown -R $(whoami) /usr/local/bin /usr/local/lib
+        local _fixperm=0
+        local _brewdir=$(brew --prefix)
+        for dir in $(ls -1 $_brewdir); do
+            if [ -d "$_brewdir/$dir" ]; then
+                local diruname=$(ls -l $_brewdir | grep $dir | awk '{print $3}')
+                # echo "Dir: $(brew --prefix)/$dir Owner: $diruname"
+                if [ $diruname != $(whoami) ]; then
+                    _fixperm=1
+                    echo "Incorrect permissions found for $_brewdir/$dir (expected: $(whoami) found: $diruname)"
+                fi
+            fi
+        done
+        if [ $_fixperm = 1 ]; then
+            echo "Fixing permissions in $_brewdir"
+            sudo chown -R $(whoami) $(brew --prefix)/*
+        fi
         command brew update
     elif [[ "$@" == "upgrade vim" ]]; then
         echo "brew upgrade vim [custom task]"
