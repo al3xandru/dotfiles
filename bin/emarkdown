@@ -5,4 +5,4 @@
 # else
 #     DIR=`dirname $0`
 # fi
-python "$HOME/Dropbox/workspace/python/markdown/mkdn/markup.py" "$@"
+python "$WORKSPACES/mine/python/markdown/mkdn/markup.py" "$@"

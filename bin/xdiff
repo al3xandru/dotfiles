@@ -1,3 +1,4 @@
+#!/bin/bash
 if [ $# -eq 2 ]; then
     OLD=$1
     NEW=$2
@@ -15,7 +16,9 @@ else
     if [ -x /usr/local/bin/bbdiff ]; then
         bbdiff --wait --resume "$NEW" "$OLD"
     else
-        if [ -x $HOME/bin/mvim ]; then
+        if [ -x /usr/local/bin/vimr ]; then
+            /usr/local/bin/vimr --wait  --nvim -d "$OLD" "$NEW"
+        elif [ -x $HOME/bin/mvim ]; then
            $HOME/bin/mvim -d -f "$OLD" "$NEW"
         elif [ -x /usr/local/bin/vimdiff ]; then 
             /usr/local/bin/vimdiff "$OLD" "$NEW"
