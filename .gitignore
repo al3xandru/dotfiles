@@ -1,6 +1,5 @@
 # make sure .extras is ignored
 .extras
-.precfg
 # vim
 .vim/.netrwhist
 .vim/.vim-tmp
