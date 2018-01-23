@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Git smart PROMPT
 # with help from https://github.com/riobard/bash-powerline

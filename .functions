@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # List defined functions 
 function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"

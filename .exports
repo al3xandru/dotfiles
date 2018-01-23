@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export EDITOR="$HOME/bin/editor.sh"
 export VISUAL="$HOME/bin/editor.sh"
 #

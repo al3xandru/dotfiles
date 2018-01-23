@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 if [ "$ANT_HOME" != "" ]; then
