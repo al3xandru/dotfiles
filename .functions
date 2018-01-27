@@ -598,9 +598,9 @@ function brew() {
         local _brewdir=$(brew --prefix)
         for dir in $(ls -1 $_brewdir); do
             if [ -d "$_brewdir/$dir" ]; then
-                local diruname=$(ls -l $_brewdir | grep $dir | awk '{print $3}')
+                local diruname=$(ls -l $_brewdir | grep -w $dir | awk '{print $3}')
                 # echo "Dir: $(brew --prefix)/$dir Owner: $diruname"
-                if [ $diruname != $(whoami) ]; then
+                if [ "$diruname" != "$(whoami)" ]; then
                     _fixperm=1
                     echo "Incorrect permissions found for $_brewdir/$dir (expected: $(whoami) found: $diruname)"
                 fi
