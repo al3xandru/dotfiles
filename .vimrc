@@ -76,6 +76,7 @@ set scrolloff=5
 
 
 " 3. omnicomplete {{{
+set infercase
 set omnifunc=syntaxcomplete#Complete
 " https://github.com/sjl/dotfiles/blob/eea18b00b8c74943f5094fddf91d3c2a7e0a7242/vim/vimrc#L534
 " kspell: dictionary completion only when spell enabled set spell 
@@ -112,7 +113,6 @@ nmap [o- :set number relativenumber<CR>
 nmap ]o- :set norelativenumber number<CR>
 nmap <silent>co- :call <SID>ToggleLineNo()<CR>
 map <silent><C-_> <esc>:call <SID>ToggleLineNo()<CR>
-" nnoremap <silent><C-n> :call <SID>ToggleLineNo()<cr>
 augroup lineno
     autocmd!
     autocmd FocusLost * set norelativenumber number
@@ -177,9 +177,9 @@ endfunction
 " http://vim.wikia.com/wiki/Highlight_current_line
 set cursorline
 augroup CursorLine
-  autocmd!
-  autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  autocmd WinLeave * setlocal nocursorline
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
 augroup END
 function! <SID>SetCursorLineColors()
     hi CursorLine    ctermbg=52 guibg=#424242
@@ -266,7 +266,6 @@ set splitright
 " automatically open the location/quickfix window after :make, :grep,
 " :lvimgrep and friends if there are valid locations/errors
 "augroup qf
-    "autocmd!
     "autocmd QuickFixCmdPost [^l]* cwindow
     "autocmd QuickFixCmdPost l* lwindow
 "augroup END
@@ -275,7 +274,12 @@ set splitright
 
 " 11. messages and info {{{
 set ruler
-set visualbell t_vb=
+set noerrorbells
+set novisualbell
+set t_vb=
+if has("gui_macvim")
+    set visualbell t_vb=
+endif
 " }}}
 
 
@@ -322,8 +326,6 @@ inoremap <silent><Left> <esc><Left>
 inoremap <silent><Right> <esc><Right>
 inoremap <silent><Up> <esc><Up>
 inoremap <silent><Down> <esc><Down>
-" inoremap <Up> <C-o>gk
-" inoremap <Down> <C-o>gj
 
 " Insert a newline in normal mode
 " nnoremap <S-Enter> O<Esc>
@@ -333,10 +335,12 @@ nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 inoremap <C-a> <C-o>A
 
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
-nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
-nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
+" and add the jumplist https://medium.com/@kadek/understanding-vims-jump-list-7e1bfc72cdf0
+nnoremap <expr> k (v:count == 0 ? 'gk' : "m'" .  v:count .  'k')
+nnoremap <expr> j (v:count == 0 ? 'gj' : "m'" .  v:count .  'j')
 nnoremap <Up> gk
 nnoremap <Down> gj
+
 " make ; behave like : (save the Shift)
 " nnoremap ; :
 " nnoremap : ;
@@ -412,8 +416,10 @@ inoremap <silent><C-tab> <ESC>:tabnext<CR>
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
 " Alt+] on OS X
-nnoremap ‘ <C-w><C-]><C-w>T
-inoremap ‘ <C-w><C-]><C-w>T
+if has('mac') || has('macunix')
+    nmap ‘ <C-\>
+    imap ‘ <C-\>
+endif
 " }}}
 
 " Window resizing {{{
@@ -467,6 +473,7 @@ nnoremap /fA :Ack! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<
 
 " bind c[hange] to replace word under cursor
 nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+" change word under cursor and use .  to repeat (cheap rename refactor)
 nnoremap c* *Ncgn
 nnoremap c# #NcgN
 nnoremap cg* g*Ncgn
@@ -1448,8 +1455,9 @@ Plugin 'tpope/vim-fugitive'
 " Experimental {{{1
 Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 
-Plugin 'kopischke/vim-fetch'            " open files at line and column
+" Plugin 'kopischke/vim-fetch'            " open files at line and column
 Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
+Plugin 'roman/golden-ratio'             " automatic resizing of Vim windows to golden ratio
 
 "}}}
 
@@ -1462,17 +1470,19 @@ if has("unix")
     " or use has("mac")
     let s:uname = system("uname -s")
 
+    " alduin earendel gruvbox ironman nova nuvola
     if has("gui_running")
-        colorscheme nova "earendel gruvbox
+        colorscheme nova
     elseif has("gui_vimr")
-        colorscheme gruvbox
+        colorscheme alduin
+    elseif has('nvim')
+        colorscheme earendel
     else
-        colorscheme gruvbox " ironman nuvola gruvbox
+        colorscheme gruvbox
     endif
 endif
 " call <SID>SetCursorLineColors()
 call <SID>SetColorColumn()
-
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
