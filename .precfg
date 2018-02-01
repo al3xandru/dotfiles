@@ -23,69 +23,108 @@ function oldvpnenv() {
     fi
 }
 function vpnenv() {
-    if [[ "$@" = "help" ]]; then
-        open $HOME/Dropbox/dotfiles/vpn.md
-    else
-        local autoProxyURL="http://127.0.0.1:8000/oraproxy.pac"
-        trap ctrl_c INT
-
-        function ctrl_c() {
-            echo ""
-            echo "...  Untrapping"
-            trap - INT
-            echo "Shutting down VPN"
+    case "$@" in 
+        help)
+            open "$HOME/Dropbox/dotfiles/docs/vpn.md"
+            ;;
+        web)
             (
-                echo "...  Disabling Automatic Proxy Configuration"
-                confAutoProxy "off"
-            )
+                echo "Starting SimpleHTTPServer for oraproxy.pac"
+                cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+            ) &
+            ;;
+        kill|killweb)
             (
                 echo "...  Stopping SimpleHTTPServer"
                 kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
                 echo "...  SimpleHTTPServer stopped"
             )
-        }
+            ;;
+        *)
+            local autoProxyURL="http://127.0.0.1:8000/oraproxy.pac"
+            trap ctrl_c INT
 
-        function confAutoProxy() {
-            IFS=$'\n'
-            if [ "$1" = "on" ]; then
-                echo "   ... enabling Automatic Proxy Configuration with $autoProxyURL"
+            function ctrl_c() {
+                echo ""
+                echo "...  Untrapping"
+                trap - INT
+                echo "Shutting down VPN"
+                (
+                    echo "...  Disabling Automatic Proxy Configuration"
+                    confAutoProxy "off"
+                )
+                (
+                    echo "...  Stopping SimpleHTTPServer"
+                    kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
+                    echo "...  SimpleHTTPServer stopped"
+                )
+            }
+
+            function confAutoProxy() {
+                IFS=$'\n'
+                if [ "$1" = "on" ]; then
+                    echo "   ... enabling Automatic Proxy Configuration with $autoProxyURL"
+                else
+                    echo "   ...  disabling Automatic Proxy Configuration"
+                fi
+
+
                 for i in $(networksetup -listallnetworkservices | tail +2);
                 do
                     if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
-                        autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
-                        if [ "$autoProxyURL" != "$autoProxyURLLocal" ]; then
-                            networksetup -setautoproxyurl "$i" "$autoProxyURL"
-                            echo "Set auto proxy for $i to $autoProxyURL (from $autoProxyURLLocal)"
+                        if [ "$1" = "on" ]; then
+                            autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
+                            if [ "$autoProxyURL" != "$autoProxyURLLocal" ]; then
+                                networksetup -setautoproxyurl "$i" "$autoProxyURL"
+                                echo "Set auto proxy for $i to $autoProxyURL (from $autoProxyURLLocal)"
+                            fi
+                            networksetup -setautoproxystate "$i" on
+                        else
+                            networksetup -setautoproxystate "$i" off
                         fi
-                        networksetup -setautoproxystate "$i" on
-                    fi
-                done
-            else
-                echo "   ...  disabling Automatic Proxy Configuration"
-                for i in $(networksetup -listallnetworkservices | tail +2);
-                do
-                    if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
-                        networksetup -setautoproxystate "$i" off
-                    fi
-                done
-            fi
 
-            unset IFS
-        }
-        (
-            echo "Enabling Automatic Proxy Configuration"
-            confAutoProxy "on"
-        ) 
-        (
-            echo "Starting SimpleHTTPServer for oraproxy.pac"
-            cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
-        ) &
-        (
-            echo "Starting VPN"
-            openconnect --script-tun --script "ocproxy -D 8912" https://myaccess.oraclevpn.com
-        )
-        wait %1
-    fi
+                    fi
+                done
+                # if [ "$1" = "on" ]; then
+                #     echo "   ... enabling Automatic Proxy Configuration with $autoProxyURL"
+                #     for i in $(networksetup -listallnetworkservices | tail +2);
+                #     do
+                #         if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
+                #             autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
+                #             if [ "$autoProxyURL" != "$autoProxyURLLocal" ]; then
+                #                 networksetup -setautoproxyurl "$i" "$autoProxyURL"
+                #                 echo "Set auto proxy for $i to $autoProxyURL (from $autoProxyURLLocal)"
+                #             fi
+                #             networksetup -setautoproxystate "$i" on
+                #         fi
+                #     done
+                # else
+                #     echo "   ...  disabling Automatic Proxy Configuration"
+                #     for i in $(networksetup -listallnetworkservices | tail +2);
+                #     do
+                #         if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
+                #             networksetup -setautoproxystate "$i" off
+                #         fi
+                #     done
+                # fi
+
+                unset IFS
+            }
+            (
+                echo "Enabling Automatic Proxy Configuration"
+                confAutoProxy "on"
+            ) 
+            (
+                echo "Starting SimpleHTTPServer for oraproxy.pac"
+                cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+            ) &
+            (
+                echo "Starting VPN"
+                openconnect --script-tun --script "ocproxy -D 8912" https://myaccess.oraclevpn.com
+            )
+            wait %1
+            ;;
+    esac
 }
 # export GOPATH=$HOME/workspace/sandbox/go:$HOME/.golang
 alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
