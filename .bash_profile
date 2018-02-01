@@ -16,7 +16,7 @@ unset ostype
 # * ~/.path can be used to extend `$PATH`
 # * ~/.postcfg can be used for other setttings you don't want to commit
 for file in ~/.{precfg,exports,path,prompt_bash,aliases,functions,postcfg}; do
-    [ -r "$file" ] && [ -f "$file" ]source "$file"
+    [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
 unset _OSTYPE
