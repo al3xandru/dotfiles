@@ -1206,7 +1206,7 @@ let g:org_todo_keywords = [
     \ [ 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)' ],
     \ [ 'WIPR(p)', 'WAIT(w)', '|', 'DONE(d)', 'FILED(f)', 'SKIP(x)'],
 \ ]
-let g:org_agenda_files = ['~/Dropbox/Dox/active/*.org']
+let g:org_agenda_files = ['~/Dropbox/Dox/mydox/*.org']
 " autocmd BufNewFile,BufRead *.org setfiletype org
 autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
 augroup org
@@ -1327,12 +1327,13 @@ let g:startify_list_order = [
     \ 'sessions',
     \ ]
 let g:startify_bookmarks = [
-    \ '~/Dropbox/Dox/active/',
-    \ '~/Dropbox/Dox/active/01-weekly.taskpaper',
-    \ '~/Dropbox/Dox/active/02-thoughts.md',
-    \ '~/Dropbox/Dox/active/03-email_drafts.md',
-    \ '~/Dropbox/Dox/active/04-notes.org',
-    \ '~/Dropbox/Dox/active/05-blog.md',
+    \ '~/Dropbox/Dox/mydox/',
+    \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
+    \ '~/Dropbox/Dox/mydox/02-thoughts.md',
+    \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
+    \ '~/Dropbox/Dox/mydox/04-notes.org',
+    \ '~/Dropbox/Dox/mydox/05-blog.md',
+    \ '~/Dropbox/Dox/mydox/06-blog_ideas_and_drafts.md',
     \ '~/.vimrc',
     \ '~/Documents/MyDocs/50-projects/homepage/h.html',
     \]
