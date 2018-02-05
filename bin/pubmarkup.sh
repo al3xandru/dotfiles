@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCRIPT="$HOME/Dropbox/workspace/python/markdown/mkdn/markuptools.py"
+SCRIPT="$WORKSPACES/mine/python/markdown/mkdn/markuptools.py"
 NOTIFIER_APP=""
 NOTIFIER_TYPE="0"
 if [[ -x "/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier" ]]; then

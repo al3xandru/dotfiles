@@ -1,2 +1,2 @@
 #!/bin/bash
-python $HOME/workspace/python/daywordjournal/word.py $1
+python $WORKSPACES/mine/python/daywordjournal/word.py $1
