@@ -66,14 +66,14 @@
                         ]
                     },
                     {
-                        "description": "Change Option + h/j/k/l to Arrows",
+                        "description": "Change Fn + w/a/s/d to arrows",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "h",
+                                    "key_code": "a",
                                     "modifiers": {
                                         "mandatory": [
-                                            "option"
+                                            "fn"
                                         ],
                                         "optional": [
                                             "caps_lock"
@@ -89,10 +89,10 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "j",
+                                    "key_code": "s",
                                     "modifiers": {
                                         "mandatory": [
-                                            "option"
+                                            "fn"
                                         ],
                                         "optional": [
                                             "caps_lock"
@@ -108,10 +108,10 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "k",
+                                    "key_code": "w",
                                     "modifiers": {
                                         "mandatory": [
-                                            "option"
+                                            "fn"
                                         ],
                                         "optional": [
                                             "caps_lock"
@@ -127,10 +127,10 @@
                             },
                             {
                                 "from": {
-                                    "key_code": "l",
+                                    "key_code": "d",
                                     "modifiers": {
                                         "mandatory": [
-                                            "option"
+                                            "fn"
                                         ],
                                         "optional": [
                                             "caps_lock"
