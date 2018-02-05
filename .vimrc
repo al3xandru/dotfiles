@@ -841,6 +841,7 @@ let g:ale_lint_delay = 500
 let g:ale_lint_on_enter = 1
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
+let g:ale_list_window_size = 10
 let g:ale_open_list = 'on_save'
 let g:ale_set_highlights = 1
 let g:ale_set_loclist = 1
@@ -852,6 +853,7 @@ let g:ale_sign_warning = 'W'
 " let g:ale_sign_style_warning = 'w'
 let g:ale_linters = {
     \ 'go': ['gometalinter'],
+    \ 'python': [],
     \ }
 let g:ale_go_gometalinter_options = '--aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet'
 
@@ -1114,6 +1116,7 @@ augroup markdown
     " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call Vim_Markdown_Preview()<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
     " Paste clipboard as blockquote
     " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
     " autocmd FileType markdown nnoremap <silent><localleader>bq pgw`]V`]:s/^/> /g<CR>:nohlsearch<CR>o
@@ -1144,7 +1147,7 @@ let g:pymode_motion = 1
 let g:pymode_options_max_line_length=99
 let g:pymode_lint = 1
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
-let g:pymode_lint_ignore = "E501"
+let g:pymode_lint_ignore = ["E501"]
 let g:pymode_syntax_slow_sync = 0
 let g:pymode_virtualenv = 1
 let g:pymode_run = 0
@@ -1459,7 +1462,7 @@ Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 " Plugin 'kopischke/vim-fetch'            " open files at line and column
 Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 Plugin 'roman/golden-ratio'             " automatic resizing of Vim windows to golden ratio
-
+let g:golden_ratio_exclude_nonmodifiable = 1
 "}}}
 
 call vundle#end()
