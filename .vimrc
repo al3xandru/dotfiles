@@ -839,21 +839,23 @@ let g:ale_completion_enabled = 0
 let g:ale_echo_delay = 100
 let g:ale_lint_delay = 500
 let g:ale_lint_on_enter = 1
+let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_list_window_size = 10
 let g:ale_open_list = 'on_save'
+" let g:ale_set_balloons = 1
 let g:ale_set_highlights = 1
 let g:ale_set_loclist = 1
 let g:ale_set_signs = 1
 let g:ale_sign_error = 'E'
 let g:ale_sign_info = 'I'
 let g:ale_sign_warning = 'W'
-" let g:ale_sign_style_error = 'e'
-" let g:ale_sign_style_warning = 'w'
+let g:ale_sign_style_error = 'ES'
+let g:ale_sign_style_warning = 'WS'
 let g:ale_linters = {
     \ 'go': ['gometalinter'],
-    \ 'python': [],
+    \ 'python': ['pyflakes',  'pylint'],
     \ }
 let g:ale_go_gometalinter_options = '--aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet'
 
@@ -1145,7 +1147,7 @@ let g:pymode_folding = 1
 let g:pymode_indent = 1
 let g:pymode_motion = 1
 let g:pymode_options_max_line_length=99
-let g:pymode_lint = 1
+let g:pymode_lint = 0
 let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
 let g:pymode_lint_ignore = ["E501"]
 let g:pymode_syntax_slow_sync = 0
