@@ -99,7 +99,7 @@ LAYOUTS = {
             {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.03, 0.5, 0.97), nil, nil},
             {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.03, 0, 0.5, 0.97), nil, nil},
             {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.03, 0.03, 0.5, 0.97), nil, nil},
-            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.10, 0.5, 0.8), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.05, 0.5, 0.9), nil, nil},
             {"MacVim", nil, nil, hs.geometry.unitrect(0.15, 0, 0.64, 0.80), nil, nil},
             {"VimR", nil, nil, hs.geometry.unitrect(0.15, 0, 0.64, 0.80), nil, nil},
             {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.25, 1, 0.75), nil, nil},
