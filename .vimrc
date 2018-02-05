@@ -209,8 +209,8 @@ augroup END
 set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
-set statusline=%n::%#error#%{toupper(mode())}%*\ >\ 
-set statusline+=%f\ %h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
+set statusline=[%#error#%{toupper(mode())}%*:b%n]\ %f\   
+set statusline+=%h%r%m%#todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
 set statusline+=%= "left/right separator
 set statusline+=[%l:%v\ %p%%\ %L]%q
 set statusline+=%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
