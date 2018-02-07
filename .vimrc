@@ -858,7 +858,10 @@ let g:ale_linters = {
     \ 'python': ['pyflakes',  'pylint'],
     \ }
 let g:ale_go_gometalinter_options = '--aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet'
-
+let g:ale_python_pylint_executable = expand('~/.pyenv/versions/neovim2/bin/python')
+let g:ale_python_pylint_options = '-m pylint'
+let g:ale_python_pyflakes_executable = expand('~/.penv/versions/neovim2/bin/pyflakes')
+let g:ale_python_pyflakes_options = '-m pyflakes'
 " Plugin 'scrooloose/syntastic'
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
