@@ -1022,11 +1022,13 @@ Plugin 'pangloss/vim-javascript'
 
 " Markdown {{{2
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
-set conceallevel=2
+" set conceallevel=2
 let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled=0
 let g:vim_markdown_folding_level=1
 " let g:vim_markdown_no_default_key_mappings=1
+nmap <Plug> <Plug>Markdown_MoveToCurHeader
+vmap <Plug> <Plug>Markdown_MoveToCurHeader
 
 " Markdown preview {{{3
 "Plugin 'greyblake/vim-preview' could not get it to work
@@ -1119,7 +1121,7 @@ augroup markdown
     autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
     " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call Vim_Markdown_Preview()<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mv :call Vim_Markdown_Preview()<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
     " Paste clipboard as blockquote
@@ -1385,8 +1387,10 @@ map ge <Plug>CamelCaseMotion_ge
 
 " Quick navigation {{{2
 Plugin 'justinmk/vim-sneak'
+let g:loaded_sneak_plugin = 1
 let g:sneak#label = 1
-let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
+let g:sneak#use_ic_scs = 1
+" let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
 nmap t <Plug>Sneak_t
@@ -1394,6 +1398,7 @@ nmap T <Plug>Sneak_T
 nmap \ <Plug>Sneak_,
 
 Plugin 'easymotion/vim-easymotion'
+let g:EasyMotion_loaded = 1
 " Disable default mappings
 let g:EasyMotion_do_mapping=0
 let g:EasyMotion_use_upper=1
@@ -1418,7 +1423,7 @@ let g:EasyMotion_add_search_history=0
 " vmap <leader><leader>t <Plug>(easymotion-bd-t)
 " nmap <leader><leader>f <Plug>(easymotion-bd-f)
 " vmap <leader><leader>f <Plug>(easymotion-bd-f)
-nmap ,s <plug>(easymotion-sn)
+nmap ,s <Plug>(easymotion-sn)
 nmap ,w <Plug>(easymotion-bd-w)
 nmap ,e <Plug>(easymotion-bd-e)
 nmap ,f <Plug>(easymotion-bd-f)
