@@ -129,9 +129,10 @@ set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
 
 " 5. syntax, highlighting and spelling" {{{
 syntax on       " enable syntax processing
-
-" colorscheme {{{
 colorscheme koehler
+
+" custom colorscheme groups {{{
+" Color scheme sites:
 " http://vimcolors.com/
 " http://colorswat.ch/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
@@ -466,8 +467,9 @@ nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
 "nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 
 " Using the_silver_searcher to look for word under cursor in current dir
-nnoremap /fa :Ack! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=getcwd()<CR>
-nnoremap /fA :Ack! --<C-r>=&filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+" when using with Ferret there're no quotes
+nnoremap /fa :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=getcwd()<CR>
+nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR>
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 
@@ -582,7 +584,6 @@ Plugin 'VundleVim/Vundle.vim'
 
 " colorschemes {{{1
 Plugin 'Colour-Sampler-Pack'
-Plugin 'arcticicestudio/nord-vim'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
@@ -600,6 +601,7 @@ let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
+" Plugin 'arcticicestudio/nord-vim'
 " Plugin 'blerins/flattown'
 " Plugin 'chriskempson/base16-vim'
 " Plugin 'cocopon/iceberg.vim'
@@ -656,16 +658,14 @@ Plugin 'jceb/vim-textobj-uri'
 Plugin 'wellle/targets.vim'
 " }}}
 
-"
+
 " Essentials {{{1
 "
 " Files {{{2
-Plugin 'ctrlpvim/ctrlp.vim'
-" set runtimepath^=~/.vim/bundle/ctrlp
+Plugin 'ctrlpvim/ctrlp.vim' "{{{3
 " let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
-" let g:ctrlp_by_filename = 0
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
 let g:ctrlp_use_caching = 2000
@@ -675,57 +675,29 @@ nnoremap <unique><leader>B :CtrlPBuffer<CR>
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
 nnoremap <unique><leader>b :ls<CR>:buffer<space>
 nnoremap <silent><leader>bh :Startify<CR>
-" nnoremap gB :ls<CR>:sbuffer<Space>
+" }}}
 
-" Netrw/NERDTree {{{3
-" if v:version < 800
-    autocmd FileType netrw setlocal bufhidden=delete "wipe
-    nnoremap <unique><leader>p :Lex<CR>
-    nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
-    let g:netrw_browse_split=0      " re-use the same window
-    let g:netrw_hide=0
-    " let g:netrw_home='~'
-    let g:netrw_preview=0   "horizontal
-    let g:netrw_alto=0      "aboveleft
-    let g:netrw_altv=1      "open splits to the right
-    let g:netrw_liststyle=0 " 3: thin long wide tree; 0: thin list
-    let g:netrw_winsize=25
-    let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
-    let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
-    let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
-    let g:netrw_list_hide =
-          \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
-          \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
-" else
-    " Plugin 'scrooloose/nerdtree'
-    " let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
-    "     \ '\.egg$', '\.idea$',
-    "     \ '\.bzr', '\.git', '\.hg', '\.svn']
-    " let NERDChristmasTree=1
-    " let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
-    " let NERDTreeHighlightCursorline=1
-    " let NERDTreeQuitOnOpen=1
-    " let NERDTreeShowHidden=1
-    " let NERDTreeWinPos="left"
-    " nnoremap <unique><leader>p :NERDTreeToggle<CR>
-    " nnoremap <unique><leader>P :NERDTreeFind<CR>
-" endif
-" nnoremap <silent> <F8> :NERDTreeToggle<CR>
-" nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+
+" Netrw {{{3
+autocmd FileType netrw setlocal bufhidden=delete "wipe
+nnoremap <unique><leader>p :Lex<CR>
+nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
+let g:netrw_browse_split=0      " re-use the same window
+let g:netrw_hide=0
+" let g:netrw_home='~'
+let g:netrw_preview=0   "horizontal
+let g:netrw_alto=0      "aboveleft
+let g:netrw_altv=1      "open splits to the right
+let g:netrw_liststyle=0 " 3: thin long wide tree; 0: thin list
+let g:netrw_winsize=25
+let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
+let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
+let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
+let g:netrw_list_hide =
+      \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
+      \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
 " }}}
 " 2}}}
-
-
-" Buffers {{{2
-" Plugin 'jeetsukumaran/vim-buffergator'
-" let g:buffergator_viewport_split_policy = "T"
-" let g:buffergator_autodismiss_on_select = 1
-" let g:buffergator_suppress_keymaps = 1
-" nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
-" nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
-" Replaced by CtrlPBuffer 
-" Plugin 'jlanzarotta/bufexplorer'
-" }}}
 
 
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
@@ -739,7 +711,6 @@ let g:tagbar_autoclose = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_hide_nonpublic = 0
 nnoremap <silent><leader>t :TagbarToggle<CR>
-" nnoremap <silent> <F9> :TagbarToggle<CR>
 
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
 Plugin 'ludovicchabant/vim-gutentags'
@@ -748,70 +719,13 @@ if filereadable("/usr/local/bin/ctags")
 else
     let g:gutentags_ctags_executable = '/usr/bin/ctags'
 endif
-
-" let g:gutentags_tagfile = '.tags'
 let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
-
-" Plugin 'AndrewRadev/tagfinder.vim'
-" augroup TagFinder
-"   autocmd!
-"   autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
-"   autocmd FileType * DefineTagFinder Method f,m,method,F,singleton\ method
-" augroup END
-
-" Plugin 'AutoTag'
-" Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-easytags'
-if filereadable("/usr/local/bin/ctags")
-    let g:easytags_cmd = '/usr/local/bin/ctags'
-else
-    let g:easytags_cmd = '/usr/bin/ctags'
-endif
-let g:easytags_async = 1
-let g:easytags_dynamic_files = 1
-let g:easytags_auto_highlight = 0
-let g:easytags_include_members = 1
-let g:easytags_updatetime_min = 60000
-let g:easytags_syntax_keyword = 'always'  " 'always'  'auto'
-" if using Universal ctags
-let g:easytags_suppress_ctags_warning = 1
-"let g:easytags_languages = {
-            "\ 'language': {
-            "\   'cmd': g:easytags_cmd,
-            "\   'args': [],
-            "\   'fileoutput_opt': '-f',
-            "\   'stdout_opt': '-f-',
-            "\   'recurse_flag': '-R'
-            "\ }
-"\}
-
-" Plugin 'Shougo/neocomplete.vim'
-" " let g:neocomplete#enable_at_startup=1
-" let g:neocomplete#auto_complete_delay=400
-" let g:neocomplete#auto_completion_start_length=2
-" if !exists('g:neocomplete#sources')
-"     let g:neocomplete#sources = {}
-" endif
-" let g:neocomplete#sources.md = ['dictionary', 'buffer', 'neosnippet'] "['omni', 'tag', 'buffer', 'dictionary', 'neosnippet']
-" let g:neocomplete#fallback_mappings=["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
-" augroup neocomplete
-"     autocmd!
-"     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-"     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-"     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-"     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"     " autocmd BufNew,BufRead css,html,javascript,html,markdown,xml :NeoCompleteEnable<CR>
-" augroup END
-" nmap [op :NeoCompleteEnable<CR>
-" nmap ]op :NeoCompleteDisable<CR>
-" nmap cop :NeoCompleteToggle<CR>
 " }}}
 
 
 Plugin 'beloglazov/vim-online-thesaurus'
-" <localleader>K :OnlineThesaurusCurrentWord
 
 
 Plugin 'mbbill/undotree'
@@ -820,19 +734,14 @@ let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 
 
-" can be replaced by :registers
-" Plugin 'junegunn/vim-peekaboo'
-" let g:peekaboo_delay=800
-" let g:peekaboo_window='vertical botright 45new'
-" let g:peekaboo_window='topleft 15new'
-
-
-Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-commentary'   " {{{
 " Plugin 'al3xandru/nerdcommenter'
 " Plugin 'scrooloose/nerdcommenter'
 " Plugin 'tomtom/tcomment_vim'
+" }}}
 
-Plugin 'w0rp/ale'
+
+Plugin 'w0rp/ale'   " {{{
 let g:ale_enabled = 1
 let g:ale_completion_delay = 250
 let g:ale_completion_enabled = 0
@@ -862,75 +771,46 @@ let g:ale_python_pylint_executable = expand('~/.pyenv/versions/neovim2/bin/pytho
 let g:ale_python_pylint_options = '-m pylint'
 let g:ale_python_pyflakes_executable = expand('~/.penv/versions/neovim2/bin/pyflakes')
 let g:ale_python_pyflakes_options = '-m pyflakes'
+" Alternatives:
 " Plugin 'scrooloose/syntastic'
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_auto_jump = 0
-"let g:syntastic_error_symbol = "✗"
-"let g:syntastic_warning_symbol = "⚠"
-" if _pyvermaj > '3.0'
-"     echom "PYTHON3k  :YES"
-"     let g:syntastic_python_python_exec = g:syntastic_python3_python_exe
-"     let g:syntastic_python_checkers = g:syntastic_python3_checkers
-" else
-"     echom "PYTHON3k  :NO"
-"     let g:syntastic_python_python_exec = g:syntastic_python2_python_exe
-"     let g:syntastic_python_checkers = g:syntastic_python2_checkers
-" endif
-" echom "syntastic:" . g:syntastic_python_python_exec
-" echom "syntastic:" . g:syntastic_python_checkers
+" Plugin 'maralla/validator.vim'
+" }}}
 
-" check syntax on the fly asynchronously
-"Plugin 'maralla/validator.vim'
 
 " Search: Ack and Ag {{{2
-Plugin 'mileszs/ack.vim'
-" if executable('rg')
-"     let g:ackprg = 'rg --vimgrep -n --smart-case -t'
-" elseif executable('ag')
-if executable('ag')
-    let g:ackprg = 'ag --vimgrep --smart-case'
-endif
-" Plugin 'wincent/ferret' " asycn!!!
-" Plugin 'rking/ag.vim'
+Plugin 'wincent/ferret' " asycn!!!
+let g:FerretExecutable='ag,ack'
+let g:FetterMap=1
 " Possible replacements:
+" Plugin 'mileszs/ack.vim'
+" Plugin 'rking/ag.vim'
 " Plugin 'dyng/ctrlsf.vim'
 " Plugin 'mhinz/vim-grepper'
 "}}}
 
 
 " Snippets {{{2
-" if has("python")
-"     Plugin 'SirVer/ultisnips'
-"     let g:UltiSnipsSnippetsDir=expand("~/.vim/xsnippets/ultisnips")
-" else
-"     Plugin 'MarcWeber/vim-addon-mw-utils'
-"     Plugin 'tomtom/tlib_vim'
-"     Plugin 'garbas/vim-snipmate'
-" endif
-" Plugin 'honza/vim-snippets'
 Plugin 'Shougo/neosnippet.vim'
 Plugin 'Shougo/neosnippet-snippets'
 imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
 xmap <C-e> <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
-"}}}
-"}}}
+" }}}
+" }}}
 
-"
+
 " Language support {{{1
 "
 Plugin 'applescript.vim'
 
 
-Plugin 'VimClojure'
+" Plugin 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
 
 " C/C++ 
-Plugin 'OmniCppComplete'
+" Plugin 'OmniCppComplete'
 
 
 " Go {{{2
@@ -1008,6 +888,7 @@ Plugin 'artur-shaik/vim-javacomplete2'
 " Javascript
 Plugin 'pangloss/vim-javascript'
 
+
 " Asciidoc {{{2
 " Plugin 'dahu/vim-asciidoc'
 " Plugin 'dahu/vimple'
@@ -1019,6 +900,7 @@ Plugin 'pangloss/vim-javascript'
 "     autocmd BufNewFile,BufRead *.adoc.txt setfiletype asciidoc syntax=asciidoc
 " augroup END
 "}}}
+
 
 " Markdown {{{2
 Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
@@ -1139,6 +1021,7 @@ augroup END
 "}}}
 "}}}
 
+
 " Node.js https://github.com/joyent/node/wiki/Vim-Plugins
 
 
@@ -1188,9 +1071,9 @@ let g:jedi#rename_command = "<localleader>gr"
 "}}}
 
 
-Plugin 'derekwyatt/vim-scala'
+" Plugin 'derekwyatt/vim-scala'
 
-Plugin 'keith/swift.vim'
+" Plugin 'keith/swift.vim'
 
 " Tasklist
 Plugin 'TaskList.vim'
@@ -1204,95 +1087,22 @@ map <unique><localleader>t <Plug>TaskList
 Plugin 'davidoc/taskpaper.vim'
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 
+
 Plugin 'digitalrounin/vim-yaml-folds'
 " }}}
 
-"
-" Org mode {{{1
-Plugin 'jceb/vim-orgmode'
-let g:org_heading_shade_leading_stars=1
-" let g:org_indent=1
-let g:org_todo_keywords = [
-    \ [ 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)' ],
-    \ [ 'WIPR(p)', 'WAIT(w)', '|', 'DONE(d)', 'FILED(f)', 'SKIP(x)'],
-\ ]
-let g:org_agenda_files = ['~/Dropbox/Dox/mydox/*.org']
-" autocmd BufNewFile,BufRead *.org setfiletype org
-autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
-augroup org
-    autocmd!
-    autocmd FileType org inoremap <M-C-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
-    autocmd FileType org nnoremap <silent><M-C-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
-    autocmd FileType org inoremap <M-S-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
-    autocmd FileType org nnoremap <silent><M-S-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
-    autocmd FileType org inoremap <M-C-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
-    autocmd FileType org nnoremap <silent><M-C-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
-    autocmd FileType org inoremap <M-S-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
-    autocmd FileType org nnoremap <silent><M-S-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
-augroup END
-
-" Orgmode helping plugins
-Plugin 'tpope/vim-speeddating'
-Plugin 'vim-scripts/utl.vim'
-nmap <silent>glo :Utl openLink underCursor edit<CR>
-nmap <silent>glt :Utl openLink underCursor tabe<CR>
-nmap <silent>glv :Utl openLink underCursor vsplit<CR>
-nmap <silent>gls :Utl openLink underCursor split<CR>
-nmap <silent>gly :Utl copyLink underCursor<CR>
-Plugin 'mattn/calendar-vim'
-" }}}
-
-" Scratch files, notes, outliner etc. {{{1
-" :Pad
-Plugin 'fmoralesc/vim-pad'
-let g:pad#dir='~/Dropbox/Dox/nvall'
-let g:pad#default_file_extension='.md'
-let g:pad#search_backend='ag'
-let g:pad#query_dirnames=0
-let g:pad#query_filenames=1
-let g:pad#rename_files=0
-let g:pad#read_nchars_from_files=0
-let g:pad#title_first_line=0
-let g:pad#window_height=12
-let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
-"let g:pad#open_in_split=0
-let g:pad#set_mappings=0
-nmap <localleader>ql <Plug>(pad-list)
-nmap <localleader>qn <Plug>(pad-new)
-nmap <localleader>qq <Plug>(pad-search)
-
-" :Note
-" Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-notes'
-let g:notes_directories=['~/Dropbox/Dox/nvall']
-let g:notes_suffix='.md'
-let g:title_sync='no'
-let g:notes_smart_quotes=0
-let g:notes_list_bullets=['*', '-', '+']
-let g:notes_word_boundaries=1
-let g:notes_unicode_enabled=1
-let g:notes_conceal_code=0
-
-" :scratch :Sscratch
-" Plugin 'duff/vim-scratch'
-
-" outliner .otl
-" Plugin 'vimoutliner/vimoutliner'
-
-" wiki
-" Plugin 'vimwiki/vimwiki'
-"}}}
 
 " Enhancements {{{1
 "
 "
 " Improve matching chars, parentheses {{{2
 " Improved %
+Plugin 'jwhitley/vim-matchit' " {{{
 " Plugin 'edsono/vim-matchit' " dead
 " Plugin 'isa/vim-matchit'
-Plugin 'jwhitley/vim-matchit'
+" }}}
 
-Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'kien/rainbow_parentheses.vim' " {{{
 augroup rainbowpar
     autocmd!
     autocmd VimEnter * RainbowParenthesesToggle
@@ -1300,8 +1110,9 @@ augroup rainbowpar
     autocmd Syntax * RainbowParenthesesLoadSquare
     autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
+" }}}
 
-Plugin 'jiangmiao/auto-pairs'
+Plugin 'jiangmiao/auto-pairs' " {{{
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
 if has('mac')
@@ -1313,16 +1124,17 @@ else
 endif
 "Plugin 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
+" }}}
 
-"auto close parentheses and repeat by dot dot dot
+"auto close parentheses and repeat by dot dot dot {{{
+Plugin 'alvan/vim-closetag'
 "Plugin 'cohama/lexima.vim'
 "Plugin 'Townk/vim-autoclose'
 
-Plugin 'HTML-AutoCloseTag'
-" Disable: let b:mapped_auto_closetag = 1
-let b:mapped_auto_closetag = 1
-Plugin 'alvan/vim-closetag'
-"}}}
+" Plugin 'HTML-AutoCloseTag'
+" let b:mapped_auto_closetag = 1
+" }}}
+" 2}}}
 
 " Startup buffer {{{2
 Plugin 'mhinz/vim-startify'
@@ -1385,100 +1197,111 @@ map e <Plug>CamelCaseMotion_e
 map ge <Plug>CamelCaseMotion_ge
 " }}}
 
-" Quick navigation {{{2
-Plugin 'justinmk/vim-sneak'
-let g:loaded_sneak_plugin = 1
-let g:sneak#label = 1
-let g:sneak#use_ic_scs = 1
-" let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
-nmap t <Plug>Sneak_t
-nmap T <Plug>Sneak_T
-nmap \ <Plug>Sneak_,
+" Quick navigation - disabled {{{2
+" Plugin 'justinmk/vim-sneak'
+" let g:loaded_sneak_plugin = 1
+" let g:sneak#label = 1
+" let g:sneak#use_ic_scs = 1
+" " let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
+" nmap f <Plug>Sneak_f
+" nmap F <Plug>Sneak_F
+" nmap t <Plug>Sneak_t
+" nmap T <Plug>Sneak_T
+" nmap \ <Plug>Sneak_,
 
-Plugin 'easymotion/vim-easymotion'
-let g:EasyMotion_loaded = 1
-" Disable default mappings
-let g:EasyMotion_do_mapping=0
-let g:EasyMotion_use_upper=1
-let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-let g:EasyMotion_inc_highlight=1
-let g:EasyMotion_move_highlight=1
-let g:EasyMotion_landing_highlight=0
-let g:EasyMotion_add_search_history=0
-"map ' <Plug>(easymotion-prefix)
-" nmap <leader>s <Plug>(easymotion-sn)
-" nmap <leader><leader>s <Plug>(easymotion-sn)
-" vmap <leader><leader>s <Plug>(easymotion-sn)
-" nmap <leader><leader>w <Plug>(easymotion-bd-w)
-" vmap <leader><leader>w <Plug>(easymotion-bd-w)
-" nmap <leader><leader>e <Plug>(easymotion-bd-e)
-" vmap <leader><leader>e <Plug>(easymotion-bd-e)
-" nmap <leader><leader>n <Plug>(easymotion-next)
-" vmap <leader><leader>n <Plug>(easymotion-next)
-" nmap <leader><leader>p <Plug>(easymotion-next)
-" vmap <leader><leader>p <Plug>(easymotion-next)
-" nmap <leader><leader>t <Plug>(easymotion-bd-t)
-" vmap <leader><leader>t <Plug>(easymotion-bd-t)
-" nmap <leader><leader>f <Plug>(easymotion-bd-f)
-" vmap <leader><leader>f <Plug>(easymotion-bd-f)
-nmap ,s <Plug>(easymotion-sn)
-nmap ,w <Plug>(easymotion-bd-w)
-nmap ,e <Plug>(easymotion-bd-e)
-nmap ,f <Plug>(easymotion-bd-f)
-nmap ,t <Plug>(easymotion-bd-t)
-nmap ,n <Plug>(easymotion-next)
-vmap ,s <Plug>(easymotion-sn)
-vmap ,w <Plug>(easymotion-bd-w)
-vmap ,e <Plug>(easymotion-bd-e)
-vmap ,f <Plug>(easymotion-bd-f)
-vmap ,t <Plug>(easymotion-bd-t)
-vmap ,n <Plug>(easymotion-next)
+
+"Plugin 'easymotion/vim-easymotion'
+"let g:EasyMotion_loaded = 1
+"" Disable default mappings
+"let g:EasyMotion_do_mapping=0
+"let g:EasyMotion_use_upper=1
+"let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+"let g:EasyMotion_inc_highlight=1
+"let g:EasyMotion_move_highlight=1
+"let g:EasyMotion_landing_highlight=0
+"let g:EasyMotion_add_search_history=0
+""map ' <Plug>(easymotion-prefix)
+"" nmap <leader>s <Plug>(easymotion-sn)
+"" nmap <leader><leader>s <Plug>(easymotion-sn)
+"" vmap <leader><leader>s <Plug>(easymotion-sn)
+"" nmap <leader><leader>w <Plug>(easymotion-bd-w)
+"" vmap <leader><leader>w <Plug>(easymotion-bd-w)
+"" nmap <leader><leader>e <Plug>(easymotion-bd-e)
+"" vmap <leader><leader>e <Plug>(easymotion-bd-e)
+"" nmap <leader><leader>n <Plug>(easymotion-next)
+"" vmap <leader><leader>n <Plug>(easymotion-next)
+"" nmap <leader><leader>p <Plug>(easymotion-next)
+"" vmap <leader><leader>p <Plug>(easymotion-next)
+"" nmap <leader><leader>t <Plug>(easymotion-bd-t)
+"" vmap <leader><leader>t <Plug>(easymotion-bd-t)
+"" nmap <leader><leader>f <Plug>(easymotion-bd-f)
+"" vmap <leader><leader>f <Plug>(easymotion-bd-f)
+"nmap ,s <Plug>(easymotion-sn)
+"nmap ,w <Plug>(easymotion-bd-w)
+"nmap ,e <Plug>(easymotion-bd-e)
+"nmap ,f <Plug>(easymotion-bd-f)
+"nmap ,t <Plug>(easymotion-bd-t)
+"nmap ,n <Plug>(easymotion-next)
+"vmap ,s <Plug>(easymotion-sn)
+"vmap ,w <Plug>(easymotion-bd-w)
+"vmap ,e <Plug>(easymotion-bd-e)
+"vmap ,f <Plug>(easymotion-bd-f)
+"vmap ,t <Plug>(easymotion-bd-t)
+"vmap ,n <Plug>(easymotion-next)
 " }}}
 
+Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
+
+
+Plugin 'roman/golden-ratio'             " automatic resizing of Vim windows to golden ratio {{{
+let g:golden_ratio_exclude_nonmodifiable = 1
+" }}}
+
+
+" tpope extensions: surround, unimpaired {{{
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
+" }}}
 
-
-" Dash.app
+" Dash.app {{{
 Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/dash.vim'
 " noremap do *not* work with <Plug>
 nmap <leader>h <Plug>DashSearch
 nmap <leader>k <Plug>DashSearch
+" }}}
 
 " Git {{{2
 Plugin 'airblade/vim-gitgutter'
 " let g:gitgutter_map_keys=0
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
-" nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 nmap <silent> [og :GitGutterSignsEnable<CR>
 nmap <silent> ]og :GitGutterSignsDisable<CR>
 nmap <silent> cog :GitGutterSignsToggle<CR>
+" nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
 " Plugin 'mhinz/vim-signify'
 
 
 Plugin 'tpope/vim-fugitive'
+
+
+Plugin 'gregsexton/gitv'
+" Plugin 'junegunn/gv.vim'
 " Magit for Vim
 " Plugin 'jreybert/vimagit'
 "}}}
 "}}}
-"
-" Experimental {{{1
-Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 
-" Plugin 'kopischke/vim-fetch'            " open files at line and column
-Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
-Plugin 'roman/golden-ratio'             " automatic resizing of Vim windows to golden ratio
-let g:golden_ratio_exclude_nonmodifiable = 1
+" Experimental {{{1
 "}}}
 
 call vundle#end()
 filetype plugin indent on " required!
 
-" set color scheme
+" colorscheme {{{
+
+" set color scheme based on vim flavor
 if has("unix")
     " use if needed to determine the os
     " or use has("mac")
@@ -1497,10 +1320,16 @@ if has("unix")
 endif
 " call <SID>SetCursorLineColors()
 call <SID>SetColorColumn()
+" }}}
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, unused {{{ 
-" Plugin 'terryma/vim-expand-region'
+
+" Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
+
+" Plugin 'kopischke/vim-fetch'            " open files at line and column
+
+" Plugin 'terryma/vim-expand-region' {{{
 " let g:expand_region_text_objects = {
 "     \ 'iw' :0,
 "     \ 'i"' :0,
@@ -1516,8 +1345,9 @@ call <SID>SetColorColumn()
 "     \ 'ip' :0,
 "     \ 'ie' :0,
 "     \}
+" }}}
 
-" Plugin 'vim-airline/vim-airline'
+" Plugin 'vim-airline/vim-airline' {{{
 " Plugin 'vim-airline/vim-airline-themes'
 " let g:airline_left_sep = '»'
 " let g:airline_right_sep = '«'
@@ -1542,8 +1372,9 @@ call <SID>SetColorColumn()
 " let g:airline_right_sep=''
 " let g:airline#extensions#tabline#left_sep = ' '
 " let g:airline#extensions#tabline#left_alt_sep = '|'
+" }}}
 
-" Unite: can replace CtrlP, Tagbar
+" Unite: can replace CtrlP, Tagbar {{{
 " Note: vimproc requires compiling a c file
 " Plugin 'Shougo/vimproc.vim'
 " Plugin 'Shougo/unite.vim'
@@ -1561,14 +1392,9 @@ call <SID>SetColorColumn()
 " nnoremap <leader>fo :<C-u>Unite -vertical -winwidth=35 -direction=belowright outline<CR>
 " nnoremap <leader>fh :<C-u>Unite history/yank<CR>
 " nnoremap <silent> <F5> <Plug>(unite-redraw)
-"
-" Plugin 'AutoClose'
-" Disable:
-" let g:autoclose_loaded = 1
-" let g:autoclose_on = 1
+" }}}
 
-" Plugin 'project.tar.gz'
-" Plugin 'thisivan/vim-taglist'
+" Plugin 'thisivan/vim-taglist' {{{
 " let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 " let Tlist_Show_One_File=1
 " let Tlist_Auto_Highlight_Tag=1
@@ -1578,19 +1404,229 @@ call <SID>SetColorColumn()
 " let Tlist_Sort_Type="name"
 " nnoremap <silent> <F9> :TlistToggle<CR>
 " map <silent> <Leader>t :TlistToggle<CR>
+" }}}
 
-" Plugin 'git://git.wincent.com/command-t.git'
+" Plugin 'git://git.wincent.com/command-t.git' {{{
 " CommandT settings
 " disabled; using CtrlP
 " let g:command_t_loaded = 1
 " map <unique> <Leader>t :CommandT<CR>
 " let g:CommandTCancelMap='<C-x>'
-"
-" Plugin 'Vim-JDE'
-" Plugin 'javacomplete'
-"
-" YouCompleteMe requires the same version of
-" Python to be used for vim, MacVim, and itself
+" }}}
+
+" Plugin 'scrooloose/nerdtree' {{{
+" let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
+"     \ '\.egg$', '\.idea$',
+"     \ '\.bzr', '\.git', '\.hg', '\.svn']
+" let NERDChristmasTree=1
+" let NERDTreeBookmarksFile='~/.vim/.NERDTreeBookmarks'
+" let NERDTreeHighlightCursorline=1
+" let NERDTreeQuitOnOpen=1
+" let NERDTreeShowHidden=1
+" let NERDTreeWinPos="left"
+" nnoremap <unique><leader>p :NERDTreeToggle<CR>
+" nnoremap <unique><leader>P :NERDTreeFind<CR>
+" nnoremap <silent> <F8> :NERDTreeToggle<CR>
+" nnoremap <silent> <S-F8> :NERDTreeFind<CR>
+" }}}
+
+" Plugin 'jeetsukumaran/vim-buffergator' {{{
+" let g:buffergator_viewport_split_policy = "T"
+" let g:buffergator_autodismiss_on_select = 1
+" let g:buffergator_suppress_keymaps = 1
+" nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
+" nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
+" Replaced by CtrlPBuffer 
+" Plugin 'jlanzarotta/bufexplorer'
+" }}}
+
+" Plugin 'AndrewRadev/tagfinder.vim' {{{
+" augroup TagFinder
+"   autocmd!
+"   autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
+"   autocmd FileType * DefineTagFinder Method f,m,method,F,singleton\ method
+" augroup END
+" }}}
+
+" Plugin 'AutoTag'
+" Plugin 'xolox/vim-misc'
+" Plugin 'xolox/vim-easytags' {{{
+if filereadable("/usr/local/bin/ctags")
+    let g:easytags_cmd = '/usr/local/bin/ctags'
+else
+    let g:easytags_cmd = '/usr/bin/ctags'
+endif
+let g:easytags_async = 1
+let g:easytags_dynamic_files = 1
+let g:easytags_auto_highlight = 0
+let g:easytags_include_members = 1
+let g:easytags_updatetime_min = 60000
+let g:easytags_syntax_keyword = 'always'  " 'always'  'auto'
+" if using Universal ctags
+let g:easytags_suppress_ctags_warning = 1
+"let g:easytags_languages = {
+            "\ 'language': {
+            "\   'cmd': g:easytags_cmd,
+            "\   'args': [],
+            "\   'fileoutput_opt': '-f',
+            "\   'stdout_opt': '-f-',
+            "\   'recurse_flag': '-R'
+            "\ }
+"\}
+" }}}
+
+" Plugin 'Shougo/neocomplete.vim' {{{
+" " let g:neocomplete#enable_at_startup=1
+" let g:neocomplete#auto_complete_delay=400
+" let g:neocomplete#auto_completion_start_length=2
+" if !exists('g:neocomplete#sources')
+"     let g:neocomplete#sources = {}
+" endif
+" let g:neocomplete#sources.md = ['dictionary', 'buffer', 'neosnippet'] "['omni', 'tag', 'buffer', 'dictionary', 'neosnippet']
+" let g:neocomplete#fallback_mappings=["\<C-x>\<C-o>", "\<C-x>\<C-n>"]
+" augroup neocomplete
+"     autocmd!
+"     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"     " autocmd BufNew,BufRead css,html,javascript,html,markdown,xml :NeoCompleteEnable<CR>
+" augroup END
+" nmap [op :NeoCompleteEnable<CR>
+" nmap ]op :NeoCompleteDisable<CR>
+" nmap cop :NeoCompleteToggle<CR>
+" }}}
+
+" Plugin 'junegunn/vim-peekaboo' {{{
+" can be replaced by :registers
+" let g:peekaboo_delay=800
+" let g:peekaboo_window='vertical botright 45new'
+" let g:peekaboo_window='topleft 15new'
+" }}}
+
+" Plugin 'scrooloose/syntastic' {{{
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 0
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_auto_jump = 0
+""let g:syntastic_error_symbol = "✗"
+""let g:syntastic_warning_symbol = "⚠"
+"" if _pyvermaj > '3.0'
+""     echom "PYTHON3k  :YES"
+""     let g:syntastic_python_python_exec = g:syntastic_python3_python_exe
+""     let g:syntastic_python_checkers = g:syntastic_python3_checkers
+"" else
+""     echom "PYTHON3k  :NO"
+""     let g:syntastic_python_python_exec = g:syntastic_python2_python_exe
+""     let g:syntastic_python_checkers = g:syntastic_python2_checkers
+"" endif
+"" echom "syntastic:" . g:syntastic_python_python_exec
+"" echom "syntastic:" . g:syntastic_python_checkers
+" }}}
+
+" Plugin 'maralla/validator.vim' {{{
+" check syntax on the fly asynchronously
+" }}}
+
+" Plugin 'mileszs/ack.vim' {{{
+" if executable('rg')
+"     let g:ackprg = 'rg --vimgrep -n --smart-case -t'
+" elseif executable('ag')
+if executable('ag')
+    let g:ackprg = 'ag --vimgrep --smart-case'
+endif
+" }}}
+
+" Snippets {{{
+" if has("python")
+"     Plugin 'SirVer/ultisnips'
+"     let g:UltiSnipsSnippetsDir=expand("~/.vim/xsnippets/ultisnips")
+" else
+"     Plugin 'MarcWeber/vim-addon-mw-utils'
+"     Plugin 'tomtom/tlib_vim'
+"     Plugin 'garbas/vim-snipmate'
+" endif
+" Plugin 'honza/vim-snippets'
+" }}}
+
+" Plugin 'jceb/vim-orgmode' " Org-mode {{{
+let g:org_heading_shade_leading_stars=1
+" let g:org_indent=1
+let g:org_todo_keywords = [
+    \ [ 'TODO(t)', 'NEXT(n)', '|', 'DONE(d)' ],
+    \ [ 'WIPR(p)', 'WAIT(w)', '|', 'DONE(d)', 'FILED(f)', 'SKIP(x)'],
+\ ]
+let g:org_agenda_files = ['~/Dropbox/Dox/mydox/*.org']
+" autocmd BufNewFile,BufRead *.org setfiletype org
+autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
+" augroup org
+"     autocmd!
+"     autocmd FileType org inoremap <M-C-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
+"     autocmd FileType org nnoremap <silent><M-C-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=False)<CR>
+"     autocmd FileType org inoremap <M-S-Left> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
+"     autocmd FileType org nnoremap <silent><M-S-Left> :py ORGMODE.plugins[u"EditStructure"].promote_heading(including_children=True)<CR>
+"     autocmd FileType org inoremap <M-C-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
+"     autocmd FileType org nnoremap <silent><M-C-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=False)<CR>
+"     autocmd FileType org inoremap <M-S-Right> <C-o>:silent! :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
+"     autocmd FileType org nnoremap <silent><M-S-Right> :py ORGMODE.plugins[u"EditStructure"].demote_heading(including_children=True)<CR>
+" augroup END
+
+" Orgmode helping plugins
+" Plugin 'tpope/vim-speeddating'
+" Plugin 'vim-scripts/utl.vim'
+" nmap <silent>glo :Utl openLink underCursor edit<CR>
+" nmap <silent>glt :Utl openLink underCursor tabe<CR>
+" nmap <silent>glv :Utl openLink underCursor vsplit<CR>
+" nmap <silent>gls :Utl openLink underCursor split<CR>
+" nmap <silent>gly :Utl copyLink underCursor<CR>
+" Plugin 'mattn/calendar-vim'
+" }}}
+
+" Scratch files, notes, outliner etc. {{{1
+" Plugin 'fmoralesc/vim-pad' " {{{
+" :Pad
+let g:pad#dir='~/Dropbox/Dox/nvall'
+let g:pad#default_file_extension='.md'
+let g:pad#search_backend='ag'
+let g:pad#query_dirnames=0
+let g:pad#query_filenames=1
+let g:pad#rename_files=0
+let g:pad#read_nchars_from_files=0
+let g:pad#title_first_line=0
+let g:pad#window_height=12
+let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
+"let g:pad#open_in_split=0
+let g:pad#set_mappings=0
+" nmap <localleader>ql <Plug>(pad-list)
+" nmap <localleader>qn <Plug>(pad-new)
+" nmap <localleader>qq <Plug>(pad-search)
+" }}}
+
+" Plugin 'xolox/vim-misc' " {{{
+" Plugin 'xolox/vim-notes'
+" :Note
+let g:notes_directories=['~/Dropbox/Dox/nvall']
+let g:notes_suffix='.md'
+let g:title_sync='no'
+let g:notes_smart_quotes=0
+let g:notes_list_bullets=['*', '-', '+']
+let g:notes_word_boundaries=1
+let g:notes_unicode_enabled=1
+let g:notes_conceal_code=0
+" }}}
+
+" Plugin 'duff/vim-scratch' " {{{
+" :scratch :Sscratch
+" }}}
+
+" Plugin 'vimoutliner/vimoutliner' " {{{
+" outliner .otl
+" }}}
+
+" Plugin 'vimwiki/vimwiki'
+"}}}
+
+" YouCompleteMe requires the same version of Python to be used for vim, MacVim, and itself
 " both at compile time and runtime 
 " Plugin 'Valloric/YouCompleteMe'
 " let g:ycm_auto_trigger = 0
