@@ -105,6 +105,20 @@ LAYOUTS = {
             {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.25, 1, 0.75), nil, nil},
         }
     },
+    intellij = {
+        name = "IDE Session",
+        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
+        layout = {
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.0, 0.5, 0.95), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.03, 0.5, 0.95), nil, nil},
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.47, 0, 0.5, 0.97), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.47, 0.03, 0.5, 0.97), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.05, 0.5, 0.95), nil, nil},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+        }
+    },
     planning = {
         name = "Task planning",
         subtitle = "TaskPaper, OmniFocus",
