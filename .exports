@@ -26,11 +26,12 @@ fi
 #
 # ENV VARIABLES
 #
-export QQDIR=$HOME/Dropbox/Dox/nvall
+# export QQDIR=$HOME/Dropbox/Dox/nvall
 
 # Code repository
 if [ -z "$WORKSPACES" ]; then
     export WORKSPACES=$HOME/Dropbox/workspaces
+    export MYWORKSPACE=$WORKSPACES/mine
 fi
 
 
@@ -38,9 +39,6 @@ fi
 if [ -z "$GOPATH" ]; then
     export GOPATH=$HOME/.golang
 fi
-# if [ "$(which go)" != ""  ]; then
-#     export GOROOTPATH=$(go env GOROOT)
-# fi
 
 # JVM
 # Mac locations:

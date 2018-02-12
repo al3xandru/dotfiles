@@ -1,8 +1,2 @@
 #!/bin/sh
-# if [ -h $0 ]; then
-#     SLINK=`ls -l $0 | awk '{print $11}'`;
-#     DIR=`dirname $SLINK`
-# else
-#     DIR=`dirname $0`
-# fi
-python "$WORKSPACES/mine/python/markdown/mkdn/markup.py" "$@"
+python "$MYWORKSPACE/python/markdown/mkdn/markup.py" "$@"
