@@ -5,13 +5,15 @@ set ignorecase
 set smartcase
 set incsearch
 set scrolloff=5
-set surround
+set visualbell
+set noerrorbells
+
 " mappings
 nnoremap j gj
 vnoremap j gj
 nnoremap k gk
 vnoremap k gk
-inoremap <C-S-i> <C-o>A
+inoremap <C-a> <C-o>A
 nnoremap gcc :action CommentByLineComment<CR>
 vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
 vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
@@ -23,3 +25,5 @@ nmap [o- :set nonumber relativenumber<CR>
 vmap [o- :set nonumber relativenumber<CR>
 nmap ]o- :set norelativenumber number<CR>
 vmap ]o- :set norelativenumber number<CR>
+" extensions
+set surround

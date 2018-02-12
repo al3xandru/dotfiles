@@ -332,7 +332,8 @@ inoremap <silent><Down> <esc><Down>
 " nnoremap <S-Enter> O<Esc>
 " nnoremap <CR> o<Esc>
 nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
-" insert at the end of line while in insert mode; i_CTRL-I is insert <tab>
+" insert at the end of line while in insert mode; 
+" i_CTRL-A is insert previously inserted text; i_CTRL-I is insert <tab>
 inoremap <C-a> <C-o>A
 
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
