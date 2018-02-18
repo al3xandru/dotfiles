@@ -91,40 +91,93 @@ LAYOUTS = {
             {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
         }
     },
-    vimcode = {
-        name = "Coding with Vim",
-        subtitle = "MacVim/VimR, Terminal, Safari/Chrome, Dash, iBooks/Preview",
-        layout = {
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.0, 0.5, 0.97), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.03, 0.5, 0.97), nil, nil},
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.03, 0, 0.5, 0.97), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.03, 0.03, 0.5, 0.97), nil, nil},
-            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.05, 0.5, 0.9), nil, nil},
-            {"MacVim", nil, nil, hs.geometry.unitrect(0.15, 0, 0.64, 0.80), nil, nil},
-            {"VimR", nil, nil, hs.geometry.unitrect(0.15, 0, 0.64, 0.80), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.25, 1, 0.75), nil, nil},
-        }
-    },
-    intellij = {
-        name = "IDE Session",
-        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
-        layout = {
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.0, 0.5, 0.95), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.03, 0.5, 0.95), nil, nil},
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.47, 0, 0.5, 0.97), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.47, 0.03, 0.5, 0.97), nil, nil},
-            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.05, 0.5, 0.95), nil, nil},
-            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-        }
-    },
     planning = {
         name = "Task planning",
         subtitle = "TaskPaper, OmniFocus",
         layout = {
             {"OmniFocus", nil, nil, hs.geometry.unitrect(0, 0, 1, 0.70), nil, nil},
             {"TaskPaper", nil, nil, hs.geometry.unitrect(0, .35, 1, .65), nil, nil}
+        }
+    },
+    -- coding setups
+    ide = {
+        name = "IDE Session - Single monitor",
+        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.5, 0.94), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+        }
+    },
+    ide_dualmonitor = {
+        name = "IDE Session - Dual monitor",
+        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.0, 0.6, 0.98), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.02, 0.6, 0.98), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 1), nil, nil},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+        }
+    },
+    terminal = {
+        name = "Terminal coding - Single monitor",
+        subtitle = "Terminal, Dash, Safari/Chrome, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.55, 0.94), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+        }
+    },
+    terminal_dualmonior= {
+        name = "Terminal coding - Dual monitor",
+        subtitle = "Terminal, Dash, Safari/Chrome, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0, 0.55, 0.98), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.02, 0.55, 0.98), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.85), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+        }
+    },
+    vim = {
+        name = "Vim GUI - Single monitor",
+        subtitle = "MacVim/VimR, Terminal, Safari/Chrome, Dash, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.55, 0.94), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.80), nil, nil},
+            {"VimR", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.80), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.4, 1, 0.6), nil, nil},
+        }
+    },
+    vim_dualmonitor = {
+        name = "Vim GUI - Dual monitor",
+        subtitle = "MacVim/VimR, Terminal, Safari/Chrome, Dash, iBooks/Preview",
+        layout = {
+            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0, 0.55, 0.98), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.02, 0.55, 0.98), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.85), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.85), nil, nil},
+            {"VimR", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.85), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.4, 1, 0.6), nil, nil},
         }
     },
     
