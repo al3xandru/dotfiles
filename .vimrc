@@ -768,7 +768,7 @@ let g:ale_linters = {
     \ 'go': ['gometalinter'],
     \ 'python': ['pyflakes',  'pylint'],
     \ }
-let g:ale_go_gometalinter_options = '--aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet'
+let g:ale_go_gometalinter_options = '--no-config --disable-all --aggregate --enable=errcheck --enable=golint --enable=gofmt --enable=vet --enable=goimports'
 let g:ale_python_pylint_executable = expand('~/.pyenv/versions/neovim2/bin/python')
 let g:ale_python_pylint_options = '-m pylint'
 let g:ale_python_pyflakes_executable = expand('~/.penv/versions/neovim2/bin/pyflakes')
@@ -820,14 +820,14 @@ Plugin 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
 let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
-let g:go_fmt_command = 'gofmt'
+let g:go_fmt_command = 'goimports'      " alternative gofmt
 let g:go_fmt_fail_silently = 0
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_list_type = 'locationlist'
-" let g:go_metalinter_autosave = 1
-" let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'errcheck']
+let g:go_metalinter_autosave = 1
+let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'errcheck']
 let g:go_list_type_commands = {"GoMetalinter": "quickfix"}
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
@@ -867,7 +867,7 @@ augroup go
     autocmd FileType go nmap <localleader>geb <Plug>(go-build)
     autocmd FileType go nmap <localleader>get <Plug>(go-test)
     autocmd FileType go nmap <localleader>gec <Plug>(go-coverage)
-    autocmd BufWritePost *.go GoMetaLinter
+    " autocmd BufWritePost *.go GoMetaLinter
 augroup END
 "}}}
 
