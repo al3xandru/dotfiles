@@ -29,10 +29,16 @@ fi
 # export QQDIR=$HOME/Dropbox/Dox/nvall
 
 # Code repository
-if [ -z "$WORKSPACES" ]; then
-    export WORKSPACES=$HOME/Dropbox/workspaces
-    export MYWORKSPACE=$WORKSPACES/mine
+if [ -z "$CODEREPOS" ]; then
+    export CODEREPOS=$HOME/Dropbox/workspaces
 fi
+export MYWORKSPACE=$CODEREPOS/mine
+export MYSPACE=$MYWORKSPACE
+export WORKSPACE=$CODEREPOS/work
+export MYGOSPACE=$MYWORKSPACE/goland/gospace
+export MYGO=$MYGOSPACE
+export WORKGOSPACE=$WOWORKSPACE/gospace
+export WORKGO=$WORKGOSPACE
 
 
 # Go
