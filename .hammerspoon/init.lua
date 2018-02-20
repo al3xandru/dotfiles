@@ -1,4 +1,5 @@
 local DEBUG = true
+local UNMINIMIZE_WINDOWS_IN_LAYOUT = false
 local windowGap = 3
 
 -- Key combinations
@@ -52,7 +53,9 @@ function attemptSecondaryScreen()
     local result = primary
     if #screens > 1 then
         for _, scr in ipairs(screens) do
-            print("scr ", scr:id(), scr:name(), scr)
+            if DEBUG then
+                print("scr ", scr:id(), scr:name(), scr)
+            end
             if scr ~= hs.screen.primaryScreen() then
                 result = scr
                 usePrimary = false
@@ -100,6 +103,8 @@ LAYOUTS = {
         }
     },
     -- coding setups
+    -- goals:
+    -- 1.  find a way for some apps to be visible at the same way
     ide = {
         name = "IDE Session - Single monitor",
         subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
@@ -134,10 +139,10 @@ LAYOUTS = {
         layout = {
             {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
             {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.55, 0.94), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.96), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.04, 0.5, 0.96), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.45, 0, 0.55, 0.96), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.55, 1), nil, nil},
         }
     },
     terminal_dualmonior= {
@@ -146,10 +151,13 @@ LAYOUTS = {
         layout = {
             {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
             {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0, 0.55, 0.98), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.02, 0.55, 0.98), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.85), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0, 0.6, 0.98), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.02, 0.6, 0.98), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.45, 0, 0.55, 0.9), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 1), nil, nil},
+        },
+        actions = {
+           function () hs.notify.show("Hammerspoon layout", "Activated \"Terminal coding - Dual monitor\"", "Turn on Hocus Focus Coding") end,
         }
     },
     vim = {
@@ -219,11 +227,13 @@ hs.hotkey.bind(ctrl_alt_cmd, "l", function()
         if DEBUG then
             print("  3. unminimize apps in layout")
         end
-        for _, l in pairs(selectedLayout) do
-            local app = hs.appfinder.appFromName(l[1])
-            if app ~= nil then
-                for _, wnd in ipairs(app:allWindows()) do
-                    wnd:unminimize()
+        if UNMINIMIZE_WINDOWS_IN_LAYOUT then
+            for _, l in pairs(selectedLayout) do
+                local app = hs.appfinder.appFromName(l[1])
+                if app ~= nil then
+                    for _, wnd in ipairs(app:allWindows()) do
+                        wnd:unminimize()
+                    end
                 end
             end
         end
@@ -256,6 +266,18 @@ hs.hotkey.bind(ctrl_alt_cmd, "l", function()
             print("  5. applying computed layout", result["uuid"], hs.inspect.inspect(updatedLayout))
         end
         hs.layout.apply(updatedLayout)
+        if DEBUG then
+            print("  6. execute end actions [UPCOMING FEATURE]", result["uuid"])
+        end 
+        
+        if LAYOUTS[result["uuid"]]["actions"] ~= nil then
+            print("    6.1. layout \"", LAYOUTS[result["uuid"]]["name"], "\" has actions")
+            for _, f in ipairs(LAYOUTS[result["uuid"]]["actions"]) do
+                f()
+            end
+        else
+            print("    6.1. layout \"", LAYOUTS[result["uuid"]]["name"], "\" has no actions")
+        end
     end)
 
     -- index layouts for presenting the chooser
