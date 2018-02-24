@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function oldvpnenv() {
+function cisco_vpn_setup() {
     # https://pdit-document-repository.oraclecorp.com/display/DISG/PDS-DIS+How+to+Configure+Proxy
     # TODO
     # * maven
@@ -8,20 +8,18 @@ function oldvpnenv() {
         # export {http,https}_proxy=http://www-proxy.us.oracle.com:80
         export {http,https}_proxy=http://www-proxy-hqdc.us.oracle.com:80
         export no_proxy='localhost,127.0.0.1,.oracle.com,.oraclecorp.com,.grungy.us,.docker.io'
-        if [ -f ~/.ssh/config_vpn ]; then
-            mv ~/.ssh/config ~/.ssh/config_gen
-            mv ~/.ssh/config_vpn ~/.ssh/config
-        fi
+        cp -f ~/.ssh/config_ciscovpn ~/.ssh/config
+        cp - ~/.m2/settings.xml.ciscovpn ~/.m2/settings.xml
     else
         unset http_proxy
         unset https_proxy
         unset no_proxy
-        if [ -f ~/.ssh/config_gen ]; then
-            mv ~/.ssh/config ~/.ssh/config_vpn
-            mv ~/.ssh/config_gen ~/.ssh/config
-        fi
+        cp -f ~/.ssh/config_openvpn ~/.ssh/config
+        rm -f ~/.m2/settings.xml
     fi
 }
+cisco_vpn_setup
+
 function vpnenv() {
     case "$@" in 
         help)
@@ -141,6 +139,5 @@ function vpnenv() {
             ;;
     esac
 }
-# export GOPATH=$HOME/workspace/sandbox/go:$HOME/.golang
 alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
  
