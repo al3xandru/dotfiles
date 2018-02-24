@@ -27,6 +27,9 @@ elif [[ "$HOSTNAME" = leibniz.* ]]; then
 elif [[ "$HOSTNAME" = lorenz.* ]]; then
     BACKUP_TARGET="/Volumes/TB2016TM/Backups.backupdb"
     DEST_ID="0AE79734-CA65-4729-B134-C46B49FE024E"
+elif [ "$HOSTNAME" = "alexandp-mac" ]; then
+    BACKUP_TARGET="/Volumes/ORATM/Backups.backupdb"
+    DEST_ID="DA8F0776-79F0-4A05-B181-290841C5C476"
 else
     echo "Unknown machine name: ${HOSTNAME}"
     exit 1
