@@ -1,2 +1,2 @@
 #!/bin/sh
-python "$MYWORKSPACE/python/markdown/mkdn/markup.py" "$@"
+python "$MYREPOS/python/markdown/mkdn/markup.py" "$@"

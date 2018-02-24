@@ -1,2 +1,2 @@
 #!/bin/sh
-python "$MYWORKSPACE/python/markdown/tools/pictool/pictool.py" --upload tumblr --rename "$@"
+python "$MYREPOS/python/markdown/tools/pictool/pictool.py" --upload tumblr --rename "$@"
