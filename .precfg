@@ -7,7 +7,7 @@ function oldvpnenv() {
     if nc -z confluence.oraclecorp.com 80 2>/dev/null; then
         # export {http,https}_proxy=http://www-proxy.us.oracle.com:80
         export {http,https}_proxy=http://www-proxy-hqdc.us.oracle.com:80
-            export no_proxy='localhost,127.0.0.1,.oracle.com,.oraclecorp.com,.grungy.us,.docker.io'
+        export no_proxy='localhost,127.0.0.1,.oracle.com,.oraclecorp.com,.grungy.us,.docker.io'
         if [ -f ~/.ssh/config_vpn ]; then
             mv ~/.ssh/config ~/.ssh/config_gen
             mv ~/.ssh/config_vpn ~/.ssh/config
@@ -29,19 +29,25 @@ function vpnenv() {
             ;;
         web)
             (
-                echo "Starting SimpleHTTPServer for oraproxy.pac"
-                cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+                # echo "Starting SimpleHTTPServer for oraproxy.pac"
+                # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+                echo "Starting gowebserv for oraproxy.pac"
+                gowebserv -p 8000 $HOME/Public
             ) &
             ;;
         kill|killweb)
             (
-                echo "...  Stopping SimpleHTTPServer"
-                kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
-                echo "...  SimpleHTTPServer stopped"
+                # echo "...  Stopping SimpleHTTPServer"
+                # kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
+                # echo "...  SimpleHTTPServer stopped"
+                echo "...  Stopping gowebserv"
+                kill $(ps ax | grep gowebserv | grep -v grep | awk '{print $1}')
+                echo "...  gowebserv stopped"
             )
             ;;
         *)
             local autoProxyURL="http://127.0.0.1:8000/oraproxy.pac"
+            local wdatURL="http://wpad.dat"
             trap ctrl_c INT
 
             function ctrl_c() {
@@ -54,9 +60,12 @@ function vpnenv() {
                     confAutoProxy "off"
                 )
                 (
-                    echo "...  Stopping SimpleHTTPServer"
-                    kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
-                    echo "...  SimpleHTTPServer stopped"
+                    # echo "...  Stopping SimpleHTTPServer"
+                    # kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
+                    # echo "...  SimpleHTTPServer stopped"
+                    echo "...  Stopping gowebserv"
+                    kill $(ps ax | grep gowebserv | grep -v grep | awk '{print $1}')
+                    echo "...  gowebserv stopped"
                 )
             }
 
@@ -72,14 +81,18 @@ function vpnenv() {
                 for i in $(networksetup -listallnetworkservices | tail +2);
                 do
                     if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
+                        autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
                         if [ "$1" = "on" ]; then
-                            autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
                             if [ "$autoProxyURL" != "$autoProxyURLLocal" ]; then
                                 networksetup -setautoproxyurl "$i" "$autoProxyURL"
                                 echo "Set auto proxy for $i to $autoProxyURL (from $autoProxyURLLocal)"
                             fi
                             networksetup -setautoproxystate "$i" on
                         else
+                            if [ "$wdatURL" != "$autoProxyURLLocal" ]; then
+                                networksetup -setautoproxyurl "$i" "$wdatURL"
+                                echo "Set auto proxy for $i to $wdatURL (from $autoProxyURLLocal)"
+                            fi
                             networksetup -setautoproxystate "$i" off
                         fi
 
@@ -115,8 +128,10 @@ function vpnenv() {
                 confAutoProxy "on"
             ) 
             (
-                echo "Starting SimpleHTTPServer for oraproxy.pac"
-                cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+                # echo "Starting SimpleHTTPServer for oraproxy.pac"
+                # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+                echo "Starting gowebserv for oraproxy.pac"
+                gowebserv -p 8000 $HOME/Public
             ) &
             (
                 echo "Starting VPN"
