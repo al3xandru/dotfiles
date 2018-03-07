@@ -550,11 +550,29 @@ function watch() {
     echo "Timer  : ${TIMER:-1}"
     while :; do
         clear
+        echo "Every ${TIMER:-1}s: $cmd"
         date
         bash -c "$cmd"
         sleep ${TIMER:-1}
     done
     unset cmd
+}
+
+function repeat() {
+    unset COUNTER
+    COUNTER=1
+    if [ "$1" = "-n" ]; then
+        COUNTER=${2:-1}
+        shift
+        shift
+    fi
+    cmd="$@"
+    echo "repeat ${COUNTER} times \"${cmd}\""
+    for (( i=0; i<$COUNTER; i++ ))
+    do
+        # command "$cmd"
+        bash -c "${cmd}"
+    done
 }
 
 function extract() {
