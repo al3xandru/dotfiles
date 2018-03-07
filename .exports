@@ -32,6 +32,7 @@ fi
 if [ -z "$ALLREPOS" ]; then
     export ALLREPOS=$HOME/Dropbox/workspaces
 fi
+export REPOSALL=$ALLREPOS
 export MYREPOS=$ALLREPOS/mine
 export REPOSMINE=$MYREPOS
 export MYGO=$MYREPOS/goland/gospace
