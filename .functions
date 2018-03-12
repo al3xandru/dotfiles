@@ -16,7 +16,7 @@ function tabtitle() {
 
 # backup a file
 function backup() {
-    cp -v "$1"{,.orig}
+    cp -v "$1"{,.`date +%Y%m%d%H%M`.orig}
 }
 
 # Dropbox functions
