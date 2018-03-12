@@ -609,6 +609,7 @@ let g:solarized_contrast="normal"
 " Plugin 'cocopon/iceberg.vim'
 " Plugin 'colepeters/spacemacs-theme.vim'
 " Plugin 'fcpg/vim-fahrenheit'
+" Plugin 'fenetikm/falcon'
 " Plugin 'freeo/vim-kalisi'
 " Plugin 'jdkanani/vim-material-theme'
 " Plugin 'jeetsukumaran/vim-nefertiti'
@@ -1199,20 +1200,19 @@ map e <Plug>CamelCaseMotion_e
 map ge <Plug>CamelCaseMotion_ge
 " }}}
 
-" Quick navigation - disabled {{{2
-" Plugin 'justinmk/vim-sneak'
-" let g:loaded_sneak_plugin = 1
-" let g:sneak#label = 1
-" let g:sneak#use_ic_scs = 1
-" " let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
-" nmap f <Plug>Sneak_f
-" nmap F <Plug>Sneak_F
-" nmap t <Plug>Sneak_t
-" nmap T <Plug>Sneak_T
-" nmap \ <Plug>Sneak_,
+" Search 2 chars and improved t/f {{{2
+Plugin 'justinmk/vim-sneak'
+let g:sneak#label = 1
+let g:sneak#use_ic_scs = 1
+" let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+nmap \ <Plug>Sneak_,
+" }}}
 
-
-"Plugin 'easymotion/vim-easymotion'
+"Plugin 'easymotion/vim-easymotion' " Disabled: Quick navigation {{{2
 "let g:EasyMotion_loaded = 1
 "" Disable default mappings
 "let g:EasyMotion_do_mapping=0
@@ -1255,8 +1255,16 @@ map ge <Plug>CamelCaseMotion_ge
 Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 
-Plugin 'roman/golden-ratio'             " automatic resizing of Vim windows to golden ratio {{{
+Plugin 'christoomey/vim-tmux-navigator' " vim & tmux
+
+
+" Plugin 'roman/golden-ratio'             " Disabled: automatic resizing of Vim windows to golden ratio {{{
 let g:golden_ratio_exclude_nonmodifiable = 1
+" https://github.com/roman/golden-ratio/issues/22
+
+" Plugin 'zhaocai/GoldenView.Vim'
+let g:goldenview__enable_default_mapping=0
+" nmap <silent><C-L> <Plug>GoldenViewSplit
 " }}}
 
 
