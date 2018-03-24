@@ -1,5 +1,8 @@
 -- WINDOW MANAGEMENT
 
+-- settings
+local DEBUG = true
+local DEFAULT_WND_GAP = 3
 --
 -- Utility functions
 -- 
@@ -18,25 +21,25 @@ function dynamicResizeLeft()
         -- now we also resize
         frm.x = scr.x
         frm.y = scr.y
-        frm.w = scr.w * 2/3 - windowGap
+        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         hs.alert.show("⬅  2/3")
-    elseif between(frm.w, scr.w * 2/3, windowGap * 2) then
+    elseif between(frm.w, scr.w * 2/3, DEFAULT_WND_GAP * 2) then
         frm.x = scr.x
         frm.y = scr.y
-        frm.w = scr.w * 1/2 - windowGap
+        frm.w = scr.w * 1/2 - DEFAULT_WND_GAP
         frm.h = scr.h
         hs.alert.show("⬅  1/2")
-    elseif between(frm.w, scr.w * 1/2, windowGap * 2) then
+    elseif between(frm.w, scr.w * 1/2, DEFAULT_WND_GAP * 2) then
         frm.x = scr.x
         frm.y = scr.y
-        frm.w = scr.w * 1/3 - windowGap
+        frm.w = scr.w * 1/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         hs.alert.show("⬅  1/3")
     else
         frm.x = scr.x
         frm.y = scr.y
-        frm.w = scr.w * 2/3 - windowGap
+        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         hs.alert.show("⬅  2/3")
     end
@@ -56,25 +59,25 @@ function dynamicResizeRight()
         hs.alert.show("➡")
     elseif not between(frm.y, scr.y, 25) then
         -- now we also resize
-        frm.w = scr.w * 2/3 - windowGap
+        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
         hs.alert.show("2/3 ➡")
-    elseif between(frm.w, scr.w * 2/3, windowGap * 2) then
-        frm.w = scr.w * 1/2 - windowGap
+    elseif between(frm.w, scr.w * 2/3, DEFAULT_WND_GAP * 2) then
+        frm.w = scr.w * 1/2 - DEFAULT_WND_GAP
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
         hs.alert.show("1/2 ➡")
-    elseif between(frm.w, scr.w * 1/2, windowGap * 2) then
-        frm.w = scr.w * 1/3 - windowGap
+    elseif between(frm.w, scr.w * 1/2, DEFAULT_WND_GAP * 2) then
+        frm.w = scr.w * 1/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
         hs.alert.show("1/3 ➡")
     else
-        frm.w = scr.w * 2/3 - windowGap
+        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
@@ -101,28 +104,28 @@ function dynamicResizeTop()
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
-        frm.h = scr.h * .7 - windowGap
+        frm.h = scr.h * .7 - DEFAULT_WND_GAP
         print("top 2/3: " .. frm.string)
         hs.alert.show("⬆ 2/3")
-    elseif between(frm.h, scr.h * .7, windowGap * 2.5) then
+    elseif between(frm.h, scr.h * .7, DEFAULT_WND_GAP * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
-        frm.h = scr.h * .5 - windowGap
+        frm.h = scr.h * .5 - DEFAULT_WND_GAP
         print("top 1/2: " .. frm.string)
         hs.alert.show("⬆ 1/2")
-    elseif between(frm.h, scr.h * .5, windowGap * 2.5) then
+    elseif between(frm.h, scr.h * .5, DEFAULT_WND_GAP * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
-        frm.h = scr.h * 0.3 - windowGap
+        frm.h = scr.h * 0.3 - DEFAULT_WND_GAP
         print("top 1/3: " .. frm.string)
         hs.alert.show("⬆ 1/3")
     else
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
-        frm.h = scr.h * 0.7 - windowGap
+        frm.h = scr.h * 0.7 - DEFAULT_WND_GAP
         print("re-top 2/3: " .. frm.string)
         hs.alert.show("⬆ 2/3")
     end
@@ -144,28 +147,28 @@ function dynamicResizeBottom()
     elseif not (between(frm.x, scr.x, 5) and between(frm.w, scr.w, 25)) then
         -- now we also resize
         frm.w = scr.w
-        frm.h = scr.h * .7 - windowGap
+        frm.h = scr.h * .7 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 2/3:" .. frm.string)
         hs.alert.show("⬇ 2/3")
-    elseif between(frm.h, scr.h * .7, windowGap * 2) then
+    elseif between(frm.h, scr.h * .7, DEFAULT_WND_GAP * 2) then
         frm.w = scr.w
-        frm.h = scr.h * .5 - windowGap
+        frm.h = scr.h * .5 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 1/2:" .. frm.string)
         hs.alert.show("⬇ 1/2")
-    elseif between(frm.h, scr.h * .5, windowGap * 2.5) then 
+    elseif between(frm.h, scr.h * .5, DEFAULT_WND_GAP * 2.5) then 
         frm.w = scr.w
-        frm.h = scr.h * .3 - windowGap
+        frm.h = scr.h * .3 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("bottom 1/3:" .. frm.string)
         hs.alert.show("⬇ 1/3")
     else
         frm.w = scr.w
-        frm.h = scr.h * .7 - windowGap
+        frm.h = scr.h * .7 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
         print("re-bottom 2/3:" .. frm.string)

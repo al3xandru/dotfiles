@@ -1,6 +1,4 @@
 local DEBUG = true
-local UNMINIMIZE_WINDOWS_IN_LAYOUT = false
-local windowGap = 3
 
 -- Key combinations
 local alt = {"⌥"}
