@@ -1,5 +1,6 @@
 # make sure .extras is ignored
 .extras
+.sessions/
 # vim
 .vim/.netrwhist
 .vim/.vim-tmp

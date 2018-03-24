@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject" ".sessions")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -37,13 +37,13 @@ function doStatus() {
 
     echo "3) Checking symlinks are in place"
     t=0
-    for f in .{aliases,exports,functions,path,prompt_bash}; do
+    for f in .{aliases,bashrc,bash_profile,exports,functions,ideavimrc,path,prompt_bash,tmux.conf,vimrc}; do
         if [ ! -h $HOME/"${f}" ]; then
             echo "~/${f} is NOT a symlink"
             t=1
         fi
     done
-    for f in .{hammerspoon,ideavimrc,slate,spacemacs,tmux.conf}; do
+    for f in .{hammerspoon,slate,spacemacs,sessions}; do
         if [ !  -h "$HOME/$f" ]; then
             echo "~/$f is NOT a symlink"
             t=1
@@ -71,7 +71,7 @@ function doStatus() {
 function doInstall() {
     rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
-    for f in .{aliases,exports,functions,hammerspoon,ideavimrc,path,prompt_bash,slate,spacemacs,tmux.conf,vimrc}; do
+    for f in .{aliases,bashrc,bash_profile,exports,functions,hammerspoon,ideavimrc,path,prompt_bash,sessions,slate,spacemacs,tmux.conf,vimrc}; do
         proc $f
     done
 
