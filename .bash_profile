@@ -1,6 +1,8 @@
 # 
 # Bash setup inspired by: https://github.com/mathiasbynens/dotfiles
 #
+# disable XON/XOFF flow control
+stty -ixon
 ostype=`uname`
 case "$ostype" in
     "Darwin")
