@@ -1,3 +1,4 @@
+let $TERM="screen-256color"
 set termguicolors
 " https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let $PYENV_ROOT = systemlist('pyenv root')[0]
