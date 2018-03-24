@@ -9,7 +9,7 @@ function cisco_vpn_setup() {
         export {http,https}_proxy=http://www-proxy-hqdc.us.oracle.com:80
         export no_proxy='localhost,127.0.0.1,.oracle.com,.oraclecorp.com,.grungy.us,.docker.io'
         cp -f ~/.ssh/config_ciscovpn ~/.ssh/config
-        cp - ~/.m2/settings.xml.ciscovpn ~/.m2/settings.xml
+        cp -f ~/.m2/settings.xml.ciscovpn ~/.m2/settings.xml
     else
         unset http_proxy
         unset https_proxy
@@ -31,7 +31,7 @@ function vpnenv() {
                 # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
                 echo "Starting gowebserv for oraproxy.pac"
                 gowebserv -p 8000 $HOME/Public
-            ) &
+            ) 
             ;;
         kill|killweb)
             (
@@ -44,8 +44,6 @@ function vpnenv() {
             )
             ;;
         *)
-            local autoProxyURL="http://127.0.0.1:8000/oraproxy.pac"
-            local wdatURL="http://wpad.dat"
             trap ctrl_c INT
 
             function ctrl_c() {
@@ -69,29 +67,31 @@ function vpnenv() {
 
             function confAutoProxy() {
                 IFS=$'\n'
+                local autoProxyURL="http://127.0.0.1:8000/oraproxy.pac"
+                local wdatURL="http://wpad.dat"
+                local autoProxyConfUrl="$autoProxyURL"
+
                 if [ "$1" = "on" ]; then
                     echo "   ... enabling Automatic Proxy Configuration with $autoProxyURL"
                 else
-                    echo "   ...  disabling Automatic Proxy Configuration"
+                    echo "   ... disabling Automatic Proxy Configuration"
+                    autoProxyConfUrl="$wdatURL"
                 fi
 
+                echo "        switching auto proxy configuration to $1 with conf $autoProxyConfUrl"
 
                 for i in $(networksetup -listallnetworkservices | tail +2);
                 do
                     if [[ $i =~ "Ethernet" ]] || [[ $i =~ "Wi-Fi" ]]; then
                         autoProxyURLLocal=$(networksetup -getautoproxyurl "$i" | head -1 | cut -c 6- )
+                        if [ "$autoProxyURLLocal" != "$autoProxyConfUrl" ]; then
+                            sudo networksetup -setautoproxyurl "$i" "$autoProxyConfUrl"
+                            echo "Set auto proxy conf for $i to $autoProxyConfUrl (from $autoProxyURLLocal)"
+                        fi
                         if [ "$1" = "on" ]; then
-                            if [ "$autoProxyURL" != "$autoProxyURLLocal" ]; then
-                                networksetup -setautoproxyurl "$i" "$autoProxyURL"
-                                echo "Set auto proxy for $i to $autoProxyURL (from $autoProxyURLLocal)"
-                            fi
-                            networksetup -setautoproxystate "$i" on
+                            sudo networksetup -setautoproxystate "$i" on
                         else
-                            if [ "$wdatURL" != "$autoProxyURLLocal" ]; then
-                                networksetup -setautoproxyurl "$i" "$wdatURL"
-                                echo "Set auto proxy for $i to $wdatURL (from $autoProxyURLLocal)"
-                            fi
-                            networksetup -setautoproxystate "$i" off
+                            sudo networksetup -setautoproxystate "$i" off
                         fi
 
                     fi
@@ -125,17 +125,17 @@ function vpnenv() {
                 echo "Enabling Automatic Proxy Configuration"
                 confAutoProxy "on"
             ) 
-            (
-                # echo "Starting SimpleHTTPServer for oraproxy.pac"
-                # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
-                echo "Starting gowebserv for oraproxy.pac"
-                gowebserv -p 8000 $HOME/Public
-            ) &
+            # (
+            #     # echo "Starting SimpleHTTPServer for oraproxy.pac"
+            #     # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
+            #     echo "Starting gowebserv for oraproxy.pac"
+            #     gowebserv -p 8000 $HOME/Public
+            # ) &
             (
                 echo "Starting VPN"
                 openconnect --script-tun --script "ocproxy -D 8912" https://myaccess.oraclevpn.com
             )
-            wait %1
+            # wait %1
             ;;
     esac
 }
