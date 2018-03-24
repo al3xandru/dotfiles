@@ -19,6 +19,7 @@ vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action Comme
 vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
 nnoremap ,s :action AceJumpAction<CR>
 nnoremap ,s :action AceAction<CR>
+nnoremap s :action AceAction<CR>
 " nnoremap <space>hh :nohlsearch<CR>
 nnoremap <space><esc> :nohlsearch<CR>
 nmap [o- :set nonumber relativenumber<CR>
