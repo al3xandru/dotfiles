@@ -54,7 +54,8 @@ case "$lastarg" in
         ${MVIM_CMD} "$lastarg"
         ;;
     * )
-        ${MVIM_CMD} "$lastarg"
+        ${VIM_CMD} "$lastarg"
+        # ${MVIM_CMD} "$lastarg"
         ;;
 esac
 # if [ -z "$BBEDIT_CMD" ]; then
