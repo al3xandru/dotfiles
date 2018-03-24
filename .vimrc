@@ -136,7 +136,7 @@ colorscheme koehler
 " http://vimcolors.com/
 " http://colorswat.ch/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 calmbreeze morning pyte lucius autumnleaf buttercream cake16 navajo papayawhip sweater"
+let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 wwdc17 calmbreeze morning pyte lucius autumnleaf buttercream cake16 navajo papayawhip sweater"
 let s:cs_pastel = "earendel gruvbox alduin jellybeans nova railcast2 tango2 kolor lucius wombat wombat256 wombat256mod camo"
 
 function! <SID>ChooseColorscheme(args)
@@ -211,11 +211,12 @@ set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
 " Colors: Error, Question, Search, Todo, Visual, WarningMsg
-set statusline=[%#Error#%{toupper(mode())}%*:b%n]\ %f\ 
-set statusline+=%h%r%m%#Todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
+set statusline=%q[%#Error#%{toupper(mode())}%*:b%n]\ %f%m%r
+set statusline+=\ %#Todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
 set statusline+=%= "left/right separator
-set statusline+=[%l:%v\ %p%%\ %L]%q
-set statusline+=%<%y[%{&fileencoding?&fileencoding:&encoding}][a\%03.3b:h\%02.2B]
+set statusline+=%#Todo#%{exists('g:loaded_obsession')?ObsessionStatus():''}%*
+set statusline+=%y[%{&fileencoding?&fileencoding:&encoding}]
+set statusline+=%<[%v:%l/%L][a\%03.3b:h\%02.2B]
 
 " GUI {{{
 " set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
@@ -317,43 +318,88 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 
-" Change mapleader from <Leader> = \
+" leader = space
+" local leader = ,
 let mapleader="\<space>"
-" let maplocalleader="\\"
 let maplocalleader=","
 
+" (I)Mapping: escape (disabled) {{{
 " inoremap jk <esc>:echoerr "mapping disabled. forget about it :-)"<CR>i
 " inoremap fd <esc>:w<CR>
+" }}}
+"
+" (I)Mapping: disable arrows {{{
 inoremap <silent><Left> <esc><Left>
 inoremap <silent><Right> <esc><Right>
 inoremap <silent><Up> <esc><Up>
 inoremap <silent><Down> <esc><Down>
+" }}}
 
-" Insert a newline in normal mode
-" nnoremap <S-Enter> O<Esc>
-" nnoremap <CR> o<Esc>
-nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
+" (I)Mappings: insert at end of line {{{
 " insert at the end of line while in insert mode; 
 " i_CTRL-A is insert previously inserted text; i_CTRL-I is insert <tab>
 inoremap <C-a> <C-o>A
+" Insert a newline in normal mode
+" nnoremap <S-Enter> O<Esc>
+" nnoremap <CR> o<Esc>
+" nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
+" }}}
 
+" (N)Mapings: buffers {{{
+" https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
+nnoremap <unique><leader>b :ls<CR>:buffer<space>
+
+" buffer switch (disabled) {{{
+" nmap <C-a> :bNext<CR>
+" nmap <C-e> :e#<CR>
+" }}}
+" }}}
+
+" (N)Mappings: change (bind c[hange] to replace word under cursor) {{{2
+nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
+" change word under cursor and use .  to repeat (cheap rename refactor)
+nnoremap c* *Ncgn
+nnoremap c# #NcgN
+nnoremap cg* g*Ncgn
+nnoremap cg# g#NcgN
+" }}}
+
+" (N)Mappings: files {{{
+"  Opens an edit command with the path of the currently edited file filled in
+nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
+nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
+"Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
+nnoremap <leader>e. :tabe $MYVIMRC<CR>
+nnoremap <leader>s. :source $MYVIMRC<CR>
+" see also edit commands using extensions:
+" open with CtrlP
+" }}}
+
+" (N)Mappings: highlights {{{
+" Show special characters (highlighting)
+nmap <silent><leader>hc :set nolist!<CR>
+" Disable highlighted search 
+nnoremap <silent><leader>hh :nohlsearch<CR>
+nnoremap <silent><leader><esc> :nohlsearch<CR>
+" Highlight matches http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
+" case sensitive, partial match inclusive
+nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
+" case sensitive, no partial match
+nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
+" }}}
+
+" (N)Mappings: moves by line {{{
 " make vertical line nav better http://stackoverflow.com/questions/20975928/moving-the-cursor-through-long-soft-wrapped-lines-in-vim/21000307#21000307
 " and add the jumplist https://medium.com/@kadek/understanding-vims-jump-list-7e1bfc72cdf0
 nnoremap <expr> k (v:count == 0 ? 'gk' : "m'" .  v:count .  'k')
 nnoremap <expr> j (v:count == 0 ? 'gj' : "m'" .  v:count .  'j')
 nnoremap <Up> gk
 nnoremap <Down> gj
+" }}}
 
-" make ; behave like : (save the Shift)
-" nnoremap ; :
-" nnoremap : ;
-" remap Alt+; to ;
-" nnoremap … ;    
-" nnoremap <M-;> ;
-" nnoremap <tab> %
-" vnoremap <tab> %
-
-" blip for next highlight word and center the line {{{
+" (N)Mappings: better search n/N blip for next highlight word and center the line {{{
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
 " Plugin 'timakro/vim-searchant'
 nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
@@ -369,47 +415,34 @@ function! <SID>HLNext (blinktime)
 endfunction
 " }}}
 
-" highlights {{{
-" Show special characters (highlighting)
-nmap <silent><leader>hc :set nolist!<CR>
-" Disable highlighted search 
-nnoremap <silent><leader>hh :nohlsearch<CR>
-nnoremap <silent><leader><esc> :nohlsearch<CR>
-" Highlight matches http://www.jeffcomput.es/posts/2016/02/vim-tips-helpful-leader-key-commands/
-" case sensitive, partial match inclusive
-nnoremap <silent><leader>hi :set hlsearch<CR>:let @/='<C-r><C-w>'<CR>
-" case sensitive, no partial match
-nnoremap <silent><leader>ho :set hlsearch<CR>:let @/='\<<C-r><C-w>\>'<CR>
+" (N)Mappings: search with grep {{{
+" bind f and F to perform grep for the word under cursor
+" grep results go into quicklist: copen/cclose
+nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
+nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
+"nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
+"nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
 " }}}
 
-" Inserts the path of the currently edited file into a command
-cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-cnoremap <C-N> <C-R>=expand("%:t")<CR>
+" (N)Mappings: search [I/]I {{{2
+nnoremap [I [I:let nr = input("Jump to: ")<Bar>exe "normal " . nr ."[\t"<CR>
+nnoremap ]I ]I:let nr = input("Jump to: ")<Bar>exe "normal " . nr ."]\t"<CR>
+" 2}}}
+" See (N)Mappings: search with ack/ag
 
-" Save current session
-function! <SID>SaveSession () 
-    let parentDir = getcwd()
-    exec "mksession! " . parentDir . "/.session.vim"
-    echo "session saved " . parentDir . "/.session.vim"
-    " if isdirectory(parentDir . "/.git")
-    "     exec "mksession! " . parentDir . "/.git/.session.vim"
-    "     echo "session saved " . parentDir . "/.git/.session.vim"
-    " else
-    "     exec "mksession! " . parentDir . "/.session.vim"
-    "     echo "session saved " . parentDir . "/.session.vim"
-    " endif
-endfunction
-cnoremap <C-S> <C-R> call <SID>SaveSession()<CR><CR>
-"cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
-"cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
+" Mappings: selections {{{
+" reselect pasted text
+nnoremap <leader>v V`] 
+" https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim#L22
+" select the text that was last edited/pasted
+" http://vimcasts.org/episodes/bubbling-text/
+nmap gV `[v`]
+" keep selection when indenting
+vnoremap > >gv
+vnoremap < <gv
+"}}}
 
-
-" buffer switch (disabled) {{{
-" nmap <C-a> :bNext<CR>
-" nmap <C-e> :e#<CR>
-" }}}
-
-" tab switch {{{
+" Mappings: tabs {{{
 nnoremap <silent><leader>gt :<C-u>tabs<CR>:tabn<space>
 nnoremap <silent><C-S-tab> :silent tabprevious<CR>
 nnoremap <silent><C-tab> :silent tabnext<CR>
@@ -425,63 +458,49 @@ if has('mac') || has('macunix')
 endif
 " }}}
 
-" Window resizing {{{
+" Mappings: window resizing {{{
 nmap <silent><C-w>< :vertical resize -10<CR>
 nmap <silent><C-w>> :vertical resize +10<CR>
 nmap <silent><C-w>- :resize -10<CR>
 nmap <silent><C-w>+ :resize +10<CR>
 " }}}
 
-" Selections {{{
-" reselect pasted text
-nnoremap <leader>v V`] 
-" https://github.com/henrik/dotfiles/blob/master/vim/config/mappings.vim#L22
-" select the text that was last edited/pasted
-" http://vimcasts.org/episodes/bubbling-text/
-nmap gV `[v`]
-" keep selection when indenting
-vnoremap > >gv
-vnoremap < <gv
-"}}}
+" (C)Mappings: Inserts the path of the currently edited file into a command {{{
+cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
+cnoremap <C-N> <C-R>=expand("%:t")<CR>
+" }}}
 
-" Opens an edit command with the path of the currently edited file filled in
-nnoremap <leader>ef :e <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader>et :tabe <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader>eT :tabnew<CR>:CtrlP<CR>
-nnoremap <leader>es :split <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader>eS :split<CR>:CtrlP<CR>
-nnoremap <leader>ev :vsplit <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <leader>eV :vsplit<CR>:CtrlP<CR>
-nnoremap <leader>e. :tabe $MYVIMRC<CR>
-"Source: http://superuser.com/questions/132029/how-do-you-reload-your-vimrc-file-without-restarting-vim
-nnoremap <leader>s. :source $MYVIMRC<CR>
+" (C)Mappings: Save current session {{{
+function! <SID>SaveSession() 
+    let parentDir = getcwd()
+    let sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H:%M:%S") .  "_" .  join(split(parentDir, "/"),"~") . ".vim"
+    " exec "mksession! " . parentDir . "/.session.vim"
+    " echo "session saved " . parentDir . "/.session.vim"
+    if isdirectory(parentDir . "/.git")
+        let sessionFile = parentDir  .  "/.git/.session.vim"
+    endif
+    if exists("g:loaded_obsession")
+        exec "Obsession " .  sessionFile
+    else
+        exec "mksession! " . sessionFile
+    endif
+    echom "session saved in " . sessionFile 
+endfunction
+cnoremap <C-s> <C-R> call <SID>SaveSession()<CR><CR>
+nnoremap <C-s> :call <SID>SaveSession()<CR>
+cnoremap <C-S-s> <C-R>call <SID>SaveSession()<CR><CR>
+nnoremap <C-S-s> :call <SID>SaveSession()<CR>
+"cnoremap <C-S> <C-R>="mksession! " . getcwd() . "/.session.vim" <CR>
+"cnoremap <C-S> <C-R>="mksession! " . expand("%:p:h") . "/.session.vim" <CR>
+" }}}
+
+
 " disable auto-sourcing of $MYVIMRC
 " augroup myvimrc
 "     au!
 "     au BufWritePost .vimrc,_vimrc,vimrc,.gvimrc,_gvimrc,gvimrc so $MYVIMRC | if has('gui_running') | so $MYGVIMRC | endif
 " augroup END
 
-" bind f and F to perform grep for the word under cursor
-" grep results go into quicklist: copen/cclose
-nnoremap /fg :grep! -R '<C-r><C-w>' <C-r>=getcwd()<CR>
-nnoremap /fG :grep -R '<C-r><C-w>' <C-r>=expand("%:p:h")<CR>
-"nnoremap <leader>F :vimgrep! /\C\<<C-r><C-w>\>/gj <C-r>=expand("%:p:h")<CR>
-"nnoremap <Leader>F :vimgrep! /\<<C-r><C-w>\>/j
-
-" Using the_silver_searcher to look for word under cursor in current dir
-" when using with Ferret there're no quotes
-nnoremap /fa :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=getcwd()<CR>
-nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR>
-" Using Ack to search the word under cursor in the current dir
-" nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
-
-" bind c[hange] to replace word under cursor
-nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
-" change word under cursor and use .  to repeat (cheap rename refactor)
-nnoremap c* *Ncgn
-nnoremap c# #NcgN
-nnoremap cg* g*Ncgn
-nnoremap cg# g#NcgN
 " }}}
 
 " 19. backup & swap file {{{
@@ -589,6 +608,7 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
+Plugin 'lifepillar/vim-wwdc17-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
 Plugin 'trevordmiller/nova-vim'
@@ -666,18 +686,41 @@ Plugin 'wellle/targets.vim'
 "
 " Files {{{2
 Plugin 'ctrlpvim/ctrlp.vim' "{{{3
-" let g:loaded_ctrlp = 1
+let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
 let g:ctrlp_use_caching = 2000
-nnoremap <unique><leader>o :CtrlP<CR>
-nnoremap <unique><leader>] :CtrlPBufTag<CR>
-nnoremap <unique><leader>B :CtrlPBuffer<CR>
-" https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
-nnoremap <unique><leader>b :ls<CR>:buffer<space>
-nnoremap <silent><leader>bh :Startify<CR>
+" Mappings: CtrlP {{{4
+" nnoremap <unique><leader>o :CtrlP<CR>
+" nnoremap <unique><leader>] :CtrlPBufTag<CR>
+" nnoremap <unique><leader>B :CtrlPBuffer<CR>
+" " open with CtrlP
+" nnoremap <leader>eT :tabnew<CR>:CtrlP<CR>
+" nnoremap <leader>eS :split<CR>:CtrlP<CR>
+" nnoremap <leader>eV :vsplit<CR>:CtrlP<CR>
+" 4}}}
+" 3}}}
+
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+let g:fzf_layout = {'up': '~20%'}
+" Mappings: fzf {{{4
+nnoremap <unique><leader>of :Files<CR>
+nnoremap <unique><leader>og :GFiles<CR>
+nnoremap <unique><leader>ob :Buffers<CR>
+nnoremap <unique><leader>oB :History<CR>
+nnoremap <unique><leader>ot :BTags<CR>
+nnoremap <unique><leader>o] :BTags<CR>
+nnoremap <unique><leader>oT :Tags<CR>
+" Other commands:
+" :BLines, :Lines, :Marks
+" :Commits, BCommits
+" :Windows
+" :Colors, :Commands, :Filetypes, :Maps
+" :History:, :History/
+" 4}}}
 " }}}
 
 
@@ -685,6 +728,7 @@ nnoremap <silent><leader>bh :Startify<CR>
 autocmd FileType netrw setlocal bufhidden=delete "wipe
 nnoremap <unique><leader>p :Lex<CR>
 nnoremap <unique><leader>P :Lex <C-R>=expand("%:p:h") . "/"<CR><CR>
+let g:netrw_banner = 0
 let g:netrw_browse_split=0      " re-use the same window
 let g:netrw_hide=0
 " let g:netrw_home='~'
@@ -693,6 +737,7 @@ let g:netrw_alto=0      "aboveleft
 let g:netrw_altv=1      "open splits to the right
 let g:netrw_liststyle=0 " 3: thin long wide tree; 0: thin list
 let g:netrw_winsize=25
+" from vinegar
 let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
 let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
 let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'escape(v:val, ".*$~")'), '\|') . '\)[*@]\=$'
@@ -789,6 +834,14 @@ let g:FetterMap=1
 " Plugin 'rking/ag.vim'
 " Plugin 'dyng/ctrlsf.vim'
 " Plugin 'mhinz/vim-grepper'
+" (N)Mappings: ack {{{3
+" Using the_silver_searcher to look for word under cursor in current dir
+" when using with Ferret there're no quotes
+nnoremap /fa :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=getcwd()<CR>
+nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR>
+" Using Ack to search the word under cursor in the current dir
+" nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
+" 3}}}
 "}}}
 
 
@@ -869,6 +922,7 @@ augroup go
     autocmd FileType go nmap <localleader>get <Plug>(go-test)
     autocmd FileType go nmap <localleader>gec <Plug>(go-coverage)
     " autocmd BufWritePost *.go GoMetaLinter
+    autocmd BufNewFile,BufRead *.toml setlocal ts=2 sts=2 sw=2 expandtab
 augroup END
 "}}}
 
@@ -1168,6 +1222,7 @@ let g:startify_skiplist = [
     \ '.hg/.*',
     \ ]
 let g:startify_change_to_dir = 1
+nnoremap <silent><leader>bh :Startify<CR>
 "}}}
 
 " CamelCase {{{2
@@ -1210,9 +1265,20 @@ nmap F <Plug>Sneak_F
 nmap t <Plug>Sneak_t
 nmap T <Plug>Sneak_T
 nmap \ <Plug>Sneak_,
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+xmap \ <Plug>Sneak_,
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+omap \ <Plug>Sneak_,
+
 " }}}
 
-"Plugin 'easymotion/vim-easymotion' " Disabled: Quick navigation {{{2
+"Plugin 'easymotion/vim-easymotion'     " Disabled: Quick navigation {{{2
 "let g:EasyMotion_loaded = 1
 "" Disable default mappings
 "let g:EasyMotion_do_mapping=0
@@ -1258,7 +1324,7 @@ Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 Plugin 'christoomey/vim-tmux-navigator' " vim & tmux
 
 
-" Plugin 'roman/golden-ratio'             " Disabled: automatic resizing of Vim windows to golden ratio {{{
+" Plugin 'roman/golden-ratio'   " Disabled: automatic resizing of Vim windows to golden ratio {{{
 let g:golden_ratio_exclude_nonmodifiable = 1
 " https://github.com/roman/golden-ratio/issues/22
 
@@ -1271,6 +1337,7 @@ let g:goldenview__enable_default_mapping=0
 " tpope extensions: surround, unimpaired {{{
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'tpope/vim-obsession'
 " }}}
 
 " Dash.app {{{
@@ -1323,7 +1390,7 @@ if has("unix")
     elseif has("gui_vimr")
         colorscheme alduin
     elseif has('nvim')
-        colorscheme earendel
+        colorscheme gruvbox
     else
         colorscheme gruvbox
     endif
