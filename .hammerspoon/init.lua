@@ -80,7 +80,7 @@ wndFilter:subscribe({hs.window.filter.windowCreated,
 require('layouts')
 
 -- Layout snapshots
-require('snapshot')
+-- require('snapshot')
 
 -- Hints
 hs.hotkey.bind(alt_cmd, "tab", function()
