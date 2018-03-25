@@ -473,7 +473,7 @@ cnoremap <C-N> <C-R>=expand("%:t")<CR>
 " (C)Mappings: Save current session {{{
 function! <SID>SaveSession() 
     let parentDir = getcwd()
-    let sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H:%M:%S") .  "_" .  join(split(parentDir, "/"),"~") . ".vim"
+    let sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H%M%S") .  "_" .  join(split(parentDir, "/"),"~") . ".vim"
     " exec "mksession! " . parentDir . "/.session.vim"
     " echo "session saved " . parentDir . "/.session.vim"
     if isdirectory(parentDir . "/.git")
