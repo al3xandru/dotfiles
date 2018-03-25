@@ -251,15 +251,12 @@ function saveLayoutSnapshot()
         return
     end
     -- print("d:3")
-    function rectToString(r)
-        return "hs.geometry.rect(" ..  r.x ..  "," ..  r.y ..  "," ..  r.w ..  "," ..  r.h ..  ")"
-    end
 
     function rectToTbl(r)
         return {["x"] = r.x, ["y"] = r.y, ["w"] = r.w, ["h"] = r.h}
     end
 
-
+    local timestampTerminal = ""
     local result = {}
     for _, appName in ipairs(apps) do
         if appName ~= "Textual" then
@@ -278,6 +275,12 @@ function saveLayoutSnapshot()
                     result[app:title()] = wndPositions
 
                 end
+                if appName == "Terminal" then
+                    app:activate()
+                    hs.eventtap.keyStroke({"ctrl"}, "s")
+                    hs.eventtap.keyStroke({"ctrl"}, "s")
+                    timestampTerminal = os.date("%Y-%m-%dT%H:%M:%S")
+                end
                 -- print("  d:5:end")
             end
             -- print("d:4:end", app:name())
@@ -285,11 +288,34 @@ function saveLayoutSnapshot()
     end
 
     print(hs.json.encode(result))
-    local fileName = os.date("%Y-%m-%dT%H%M%S.json")
+    local timestamp = os.date("%Y-%m-%dT%H%M%S")
+    local fileName = timestamp ..  ".json"
     io.output(os.getenv("HOME").."/.sessions/hammerspoon_layout/"..fileName)
     io.write(hs.json.encode(result))
     io.close()
     hs.alert.show("Layout saved:"..fileName)
+    -- let's take a screenshot too
+    hs.eventtap.keyStroke({"cmd", "shift"}, "3")
+    local screenshotTimestamp = os.date("%Y-%m-%dT%H%M%S")
+
+    local snapshotManifest = os.getenv("HOME").."/.sessions/"..timestamp..".txt"
+    io.output(snapshotManifest)
+    io.write("Layout file: ", "~/.sessions/hammerspoon_layout/"..fileName, "\n")
+    io.write("Screenshot : ", "~/Dropbox/Photos/screenshots/ ", screenshotTimestamp.."-Screenshot_from_[...]", "\n")
+    io.write("Vim (opt)  : ", "~/.sesisons/vim/"..timestamp.."[...]", "\n")
+    if result["Terminal"] ~= nil then
+        io.write("tmux       : ", "~/.sessions/tmux_resurrect/last", "\n", 
+                 "             ", "~/.sessions/tmux_resurrect/", " tmux_resurect_"..timestampTerminal..".txt", "\n")
+    end
+    io.write("\n")
+    if result["Safari"] ~= nil then
+        io.write("# Safari tabs", "\n\n")
+    end
+    if result["Google Chrome"] ~= nil then
+        io.write("# Chrome tabs", "\n\n")
+    end
+    io.close()
+    hs.alert.show("Snapshot manifest:"..snapshotManifest)
     -- print(hs.inspect.inspect(result))
     -- return result
 end
@@ -313,6 +339,7 @@ function loadLayoutSnapshot(result)
         if app == nil then
             print("  ", appName, "not found")
             app = hs.application.open(appName)
+            app = hs.application.get(appName)
         end 
         if app ~= nil and app:isRunning() then
             print("  ", appName, "now running")
@@ -324,7 +351,9 @@ function loadLayoutSnapshot(result)
                     print("    app doesn't have menu 'New Window'", appName)
                     if not app:selectMenuItem("New", true) then
                         print("    app doesn't have menu 'New'", appName)
-                        hs.osascript.applescript('tell application "System Events" \n activate application "' ..  appName ..  '"\n tell process "' ..  appName ..  '" to keystroke "n" using command down \n end tell')
+                        app:activate()
+                        hs.eventtap.keyStroke("cmd", "n")
+                        -- hs.osascript.applescript('tell application "System Events" \n activate application "' ..  appName ..  '"\n tell process "' ..  appName ..  '" to keystroke "n" using command down \n end tell')
                     else
                         print("    app has menu 'New'", appName)
                     end
