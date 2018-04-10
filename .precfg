@@ -27,10 +27,24 @@ function vpnenv() {
             ;;
         web)
             (
-                # echo "Starting SimpleHTTPServer for oraproxy.pac"
-                # cd $HOME/Public && python -m SimpleHTTPServer &> /dev/null
-                echo "Starting gowebserv for oraproxy.pac"
-                gowebserv -p 8000 $HOME/Public
+                trap ctrl_c INT
+
+                function ctrl_c() {
+                    echo ""
+                    echo "...  Untrapping"
+                    trap - INT
+                    echo "... Stopping gowebserv"
+                    kill $(ps ax | grep gowebserv | grep /Public | grep -v grep | awk '{print $1}') && echo "..... killed"
+                    echo "... gowebserv stopped"
+                    exit
+                }
+                echo "Starting gowebserv for oraproxy.pac ($(date +%H:%M:%S))"
+                while true; do
+                    gowebserv -p 8000 $HOME/Public &
+                    sleep 180
+                    kill $(ps ax | grep gowebserv | grep /Public | grep -v grep | awk '{print $1}')
+                    echo "...  restarting ($(date +%H:%M:%S))"
+                done
             ) 
             ;;
         kill|killweb)
@@ -55,14 +69,14 @@ function vpnenv() {
                     echo "...  Disabling Automatic Proxy Configuration"
                     confAutoProxy "off"
                 )
-                (
-                    # echo "...  Stopping SimpleHTTPServer"
-                    # kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
-                    # echo "...  SimpleHTTPServer stopped"
-                    echo "...  Stopping gowebserv"
-                    kill $(ps ax | grep gowebserv | grep -v grep | awk '{print $1}')
-                    echo "...  gowebserv stopped"
-                )
+                # (
+                #     # echo "...  Stopping SimpleHTTPServer"
+                #     # kill $(ps ax | grep SimpleHTTPServer | grep -v grep | awk '{print $1}')
+                #     # echo "...  SimpleHTTPServer stopped"
+                #     echo "...  Stopping gowebserv"
+                #     kill $(ps ax | grep gowebserv | grep -v grep | awk '{print $1}')
+                #     echo "...  gowebserv stopped"
+                # )
             }
 
             function confAutoProxy() {
