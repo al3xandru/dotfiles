@@ -43,14 +43,14 @@ export WORKREPOS=$ALLREPOS/work
 export REPOSWORK=$WORKREPOS
 export WORKGO=$WORKREPOS/gospace
 export GOWORK=$WORKGO
-ln -s $MYREPOS $HOME/.marks/myrepos &>/dev/null
-ln -s $MYREPOS $HOME/.marks/reposmine &>/dev/null
-ln -s $MYGO $HOME/.marks/mygo &>/dev/null
-ln -s $MYGO $HOME/.marks/gomine &>/dev/null
-ln -s $WORKREPOS $HOME/.marks/workrepos &>/dev/null
-ln -s $WORKREPOS $HOME/.marks/reposwork &>/dev/null
-ln -s $WORKGO $HOME/.marks/workgo &>/dev/null
-ln -s $WORKGO $HOME/.marks/gowork &>/dev/null
+# ln -s $MYREPOS $HOME/.marks/myrepos &>/dev/null
+# ln -s $MYREPOS $HOME/.marks/reposmine &>/dev/null
+# ln -s $MYGO $HOME/.marks/mygo &>/dev/null
+# ln -s $MYGO $HOME/.marks/gomine &>/dev/null
+# ln -s $WORKREPOS $HOME/.marks/workrepos &>/dev/null
+# ln -s $WORKREPOS $HOME/.marks/reposwork &>/dev/null
+# ln -s $WORKGO $HOME/.marks/workgo &>/dev/null
+# ln -s $WORKGO $HOME/.marks/gowork &>/dev/null
 
 
 # Go
