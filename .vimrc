@@ -1210,9 +1210,8 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
-    \ '~/Dropbox/Dox/mydox/04-notes.org',
-    \ '~/Dropbox/Dox/mydox/05-blog.md',
-    \ '~/Dropbox/Dox/mydox/06-blog_ideas_and_drafts.md',
+    \ '~/Dropbox/Dox/mydox/04-blog.md',
+    \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
     \ '~/.vimrc',
     \ '~/Documents/MyDocs/50-projects/homepage/h.html',
     \]
