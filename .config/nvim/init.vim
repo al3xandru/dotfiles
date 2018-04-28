@@ -1,5 +1,7 @@
-let $TERM="screen-256color"
-set termguicolors
+" let $TERM="screen-256color"
+if empty("$TMUX")
+    set termguicolors
+endif
 " https://github.com/zchee/deoplete-jedi/wiki/Setting-up-Python-for-Neovim
 let $PYENV_ROOT = systemlist('pyenv root')[0]
 let g:python_host_prog=systemlist('pyenv root')[0].'/versions/neovim2/bin/python'
