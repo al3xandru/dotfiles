@@ -1,4 +1,10 @@
 # make sure .extras is ignored
+.config/configstore/
+.config/gocode/
+.config/nvim/.netrwhist
+.config/ranger/bookmarks
+.config/ranger/history
+.config/ranger/tagged
 .extras
 .sessions/
 # vim
