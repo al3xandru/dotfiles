@@ -14,8 +14,9 @@ values."
      ivy
      (spell-checking :variables
                      spell-checking-enable-by-default nil
-                     spell-checking-enable-auto-dictionary t)
+                     spell-checking-enable-auto-dictionary nil)
      ;; UI
+     ;; themes-megapack
      theming
      ;; source countrol
      git
@@ -28,43 +29,29 @@ values."
      markdown
      org
      ;; languages
-     asciidoc
-     c-c++
-     csharp
-     go
-     html
-     java
-     javascript
-     php
-     python
-     ruby
-     scala
-     shell-scripts
-     swift
-     yaml
+     ;; asciidoc
+     ;; c-c++
+     ;; csharp
+     ;; go
+     ;; html
+     ;; java
+     ;; javascript
+     ;; php
+     ;; python
+     ;; ruby
+     ;; scala
+     ;; shell-scripts
+     ;; swift
+     ;; yaml
+
      ;; vim
      evil-commentary
      evil-snipe
-     ;; unimpaired
+
      ;; misc
-     deft
+     ;; deft
      selectric
      xkcd
-     ;;; previous setup
-     ;; dash
-     ;; ;; cscope
-     ;; semantic
-     ;; (syntax-checking :variables
-     ;;                  syntax-checking-enable-by-default nil
-     ;;                  syntax-checking-enable-tooltips nil)
-     ;; ;; completion
-     ;; (auto-completion :variables
-     ;;                  auto-completion-enable-help-tooltip t
-     ;;                  auto-completion-enable-snippets-in-popup t)
-     ;;; misc unused
-     ;; imenu-list
-     ;; (ranger :variables ranger-show-preview t)
-     ;; ;; twitter
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -72,15 +59,15 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(
-     ;; evil-vimish-fold
      focus
      keyfreq
      key-chord
-     (taskpaper-mode :location "~/Dropbox/workspace/emacs/taskpaper-mode/")
+     (taskpaper-mode :location "~/Dropbox/workspaces/mine/emacs/taskpaper-mode/")
      ;; (taskpaper-mode :location (recipe
      ;;                            :fetcher github
      ;;                            :repo "al3xandru/taskpaper-mode"
      ;;                            ))
+     ;; themes
      )
    ;; A list of packages that will not be install and loaded.
    dotspacemacs-excluded-packages
@@ -95,7 +82,10 @@ values."
      company-tern
      tern
      ;; ;; php
-     drupal-mode)))
+     drupal-mode
+     ;; spacemacs-layouts
+     ;; eyebrowse
+     )))
 
 (defun dotspacemacs/init ()
   "Initialization function.
@@ -141,33 +131,29 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(alect-dark
-                         alect-light ;; alect-dark-alt
-                         spacemacs-dark
+   dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light
-                         misterioso
-                         flatui
-                         gruvbox
-                         leuven
-                         material
-                         material-light
-                         ;; zenburn
-                         ample
-                         heroku
-                         monokai
-                         anti-zenburn)
-                         ;; solarized-light
-                         ;; solarized-dark
+                         gruvbox-dark-soft
+                         gruvbox-light-soft)
+                        ;; Org aware: leuven manoj tango wombat
+                        ;; misterioso
+                        ;; leuven
+                        ;; gruvbox
+                        ;; flatui
+                        ;; leuven
+                        ;; ample
+                        ;; heroku
+                        ;; monokai
+                        ;; anti-zenburn
+                        ;; solarized-light
+                        ;; solarized-dark
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
-   ;; Number of recent files to show in the startup buffer. Ignored if
-   ;; `dotspacemacs-startup-lists' doesn't include `recents'. (default 5)
-   ;; dotspacemacs-startup-recent-list-size 10
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    ;; "Hack"  "Input Mono" "Liberation Mono" "Operator Mono" "PragmataPro Mono" "SF Mono Regular"
-   dotspacemacs-default-font '("PragmataPro Mono"
-                               :size  12
+   dotspacemacs-default-font '("Anka/Coder Narrow"
+                               :size 13
                                :weight normal
                                :width normal
                                :powerline-scale 1.0)
@@ -193,7 +179,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab t
+   dotspacemacs-distinguish-gui-tab nil
    ;; If non nil the paste micro-state is enabled. When enabled pressing `p`
    ;; several times cycle between the kill ring content. (default nil)
    dotspacemacs-enable-paste-transient-state t
@@ -218,8 +204,18 @@ values."
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
    dotspacemacs-smooth-scrolling t
-   ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
-   ;; derivatives. If set to `relative', also turns on relative line numbers.
+   ;; Control line numbers activation.
+   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
+   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; This variable can also be set to a property list for finer control:
+   ;; '(:relative nil
+   ;;   :disabled-for-modes dired-mode
+   ;;                       doc-view-mode
+   ;;                       markdown-mode
+   ;;                       org-mode
+   ;;                       pdf-view-mode
+   ;;                       text-mode
+   ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers t
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
@@ -247,8 +243,27 @@ before packages are loaded. If you are unsure, you should try in setting them in
                        (powerline-inactive1 :background "#b2b2b2" :foreground "#151515")
                        (powerline-active2 :background "#5fafd7" :foreground "#eeeeee") ;; afffff 00[5d]fff afd700
                        (powerline-inactive2 :background "#8a8a8a" :foreground "#efefef")
-                       (mode-line :foreground "#00875F"))))
-  )
+                       (mode-line :foreground "#00875F")
+                       (org-level-2 :weight normal :height 1.1)
+                       (org-level-3 :weight normal :height 1)
+                       (org-level-4 :weight normal :height 1)
+                       (org-level-5 :weight normal :height 1)
+                       (org-level-6 :weight normal :height 1)
+                       (org-level-7 :weight normal :height 1)
+                       (org-level-8 :weight normal :height 1))
+          (alect-dark (org-level-1 :height 1.1)
+                      (org-level-2 :weight normal :height 0.9)
+                      (org-level-3 :weight normal :height 0.9)
+                      (org-level-4 :weight normal :height 0.9)
+                      (org-level-5 :weight normal :height 0.9)
+                      (org-level-6 :weight normal :height 0.9)
+                      (org-level-7 :weight normal :height 0.9)
+                      (org-level-8 :weight normal :height 0.9))
+          (spacemacs-dark (org-level-2 :weight normal :height 1.1)
+                          (org-level-3 :height 1.1)
+                          (org-agenda-done :height 1.0 :foreground "#52676f" )
+                          (org-scheduled-today :foreground "#e0211d" :height 1.1))))
+  (setq eyebrowse-keymap-prefix (kbd "C-c C-y")))
 
 
 ;; http://stackoverflow.com/questions/18172728/the-difference-between-setq-and-setq-default-in-emacs-lisp
@@ -310,12 +325,12 @@ you should place your code here."
   ;;
   ;; evil settings
   ;;
-  (setq-default evil-escape-key-sequence "jk"
-                evil-escape-delay 0.2)
+  ;; (setq-default evil-escape-key-sequence "jk"
+  ;;               evil-escape-delay 0.2)
   ;;; key-chord
   (setq key-chord-two-keys-delay 0.2)
   (key-chord-mode 1)
-  (key-chord-define evil-insert-state-map "fd" #'evil-escape)
+  ;; (key-chord-define evil-insert-state-map "fd" #'evil-escape)
   ;;; bindings
   (define-key evil-normal-state-map "j" #'evil-next-visual-line)
   (define-key evil-visual-state-map "j" #'evil-next-visual-line)
@@ -544,76 +559,323 @@ Consider only documented, non-obsolete functions."
   ;; ORG
   ;;
   (with-eval-after-load 'org
-    (setq org-directory "~/Dropbox/Dox/active/"
-          org-default-notes-file "04-notes.org"
-          org-agenda-files (list org-default-notes-file))
+    (add-to-list 'org-modules 'org-habit)
+    (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")
+          org-hide-leading-stars t
+          org-startup-indented t)
 
-    ;; (setq org-log-done t
-    ;;       org-todo-keywords '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
-    ;;                           (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
+    (setq org-directory "~/Dropbox/Dox/mydox/"
+          org-default-notes-file (concat org-directory "mlo.org")
+          org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "mlo.org"
+                                                                               "12-habits.org")))
+
+    ;; check https://github.com/pisemsky/dotfiles/blob/b287adf0278ffc55e4fa47ee083c36e72c6ab751/.emacs.d/lisp/init-org.el
+    (setq org-refile-targets '((org-agenda-files :maxlevel .  4)
+                               ("99-org-cheatsheet.org" :maxlevel .  8))
+          org-refile-use-outline-path 'file
+          org-outline-path-complete-in-steps nil
+          org-refile-allow-creating-parent-nodes t)
+
+    (setq org-archive-location "orgdata/archive/%s_archive::"
+          org-attach-directory "orgdata/attachments/")
+
+    ;; MobileOrg https://orgmode.org/org.html#MobileOrg
+    (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"
+          org-mobile-inbox-for-pull "~/Dropbox/Dox/mydox/11-inbox.org")
+
     (setq org-log-done t
-          org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-                              (sequence "WIPR(p)" "WAIT(w@/!)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")))
-    ;; colors: 6495ed
-    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#cd4f39"))
-                                   ("NEXT" . (:foreground "#6c71c4" :weight bold))
-                                   ("DONE" . (:foreground "#698b69"))
-                                   ("FILED" . (:foreground "#698b69" :slant italic))
-                                   ("WIPR" . (:foreground "#268bd2" :weight bold))
-                                   ("WAIT" . (:foreground "#b58900" :slant italic))
-                                   ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))
-                                   ("MUST" . (:foreground "#fe2500" :weight bold))
-                                   ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
-                                   ("WISH" . (:foreground "#cd4f39" :slant italic))))
+          org-log-into-drawer "LOGBOOK")
+    (setq org-enforce-todo-dependencies t
+          org-track-ordered-property-with-tag t
+          org-agenda-dim-blocked-tasks t)
 
-     (setq org-capture-templates
-        '(("l" "Log (+ [H:M])" item (file+datetree org-default-notes-file)
-           "+ [%<%H:%M>] %?")
-          ("h" "Heading [H:M]" entry (file+datetree org-default-notes-file)
-           "* %? [%<%H:%M>]")
-          ("t" "Todo" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %U\n  %i")
-          ("T" "Todo with ref" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %U\n  %a\n  %i")
-          ("v" "Todo with clipboard" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n  %c\n  %U\n  %i")
-          ("c" "Task (- [])" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %U\n  %i")
-          ("C" "Task with ref" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %U\n  %a\n  %i")
-          ("V" "Task with clipboard" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n  %c\n  %U\n  %i")
-          ("n" "Note" item (file+datetree org-default-notes-file)
-           "+ %? %U")
-          ("N" "Note with clipboard" item (file+datetree org-default-notes-file)
-           "+ %? %U\n  %c")
-          ("m" "Meeting" entry (file+datetree org-default-notes-file)
-           "* MEETING with %? %U" :clock-in t)))
+    ;; Past sequences
+    ;; '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
+    ;;   (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
+    ;; '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+    ;;   (sequence "WIPR(p)" "WAIT(w@/!)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")))
+    (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)" )
+                              (sequence "WAIT(w@/!)" "SOMEDAY(s)" "HOLD(h@/!)" "|" "SKIP(x@/!)")
+                              (sequence "PRJ")))
+
+    (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
+                                   ("NEXT" . (:foreground "#c61b6e" :weight bold))
+                                   ("WAIT" . (:foreground "#5859b7" :slant italic))
+                                   ("HOLD" . (:foreground "#2075c7" :slant italic))
+                                   ("DONE" . (:foreground "#52676f" :weight normal :strike-through t))
+                                   ("SKIP" . (:foreground "#465a61" :weight normal :slant italic :strike-through t))
+                                   ("SOMEDAY" .  (:foreground "#a57705" :weight normal))
+                                   ("PRJ" .  (:foreground "#4f97d7" :weight bold :height 1.2))))
+    ;; Past keyword faces
+    ;; ("TODO" . (:foreground "#cd4f39"))
+    ;; ("NEXT" . (:foreground "#6c71c4" :weight bold))
+    ;; ("DONE" . (:foreground "#698b69"))
+    ;; ("WAIT" . (:foreground "#b58900" :slant italic))
+    ;; ("HOLD"  . (:foreground "#698b69" :slant italic))
+    ;; ("SKIP" . (:foreground "#ffd39b" :weight normal :strike-through t))
+
+    ;; ("FILED" . (:foreground "#698b69" :slant italic))
+    ;; ("WIPR" . (:foreground "#268bd2" :weight bold))
+    ;; ("MUST" . (:foreground "#fe2500" :weight bold))
+    ;; ("WANT" . (:foreground "#cc1b00" :weight bold :slant italic))
+    ;; ("WISH" . (:foreground "#cd4f39" :slant italic))))
+
+    (setq org-capture-templates
+          '(("t"
+             "* TODO"
+             entry
+             (file+datetree org-default-notes-file)
+             "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+            ("e"
+             "* TODO Respond to email"
+             entry
+             (file+datetree org-default-notes-file)
+             "* TODO Respond to email subject:\"%^{mail|zol[mp]}\" (from:%?) :email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
+            ("u"
+             "* TODO with link in clipboard"
+             entry
+             (file+datetree org-default-notes-file)
+             "* TODO %^{Action|Read|Check|Bookmark} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+            ("U"
+             "* TODO from link"
+             entry
+             (file+datetree org-default-notes-file)
+             "* TODO %^{Action|Read|Check|Bookmark} \"%?\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+            ("r"
+             "* SOMEDAY Read later link in clipboard"
+             entry
+             (file+olp org-default-notes-file "Read later")
+             "* SOMEDAY %^{Action|Read|Check|Bookmark} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+             ("R"
+              "* SOMEDAY Read later from link"
+              entry
+              (file+olp org-default-notes-file "Read later")
+              "* SOMEDAY %^{Action|Read|Check|Bookmark} \"%?\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+             ("m"
+              "* Meeting"
+              entry
+              (file+datetree org-default-notes-file)
+              "* MEETING %? :meeting:\n:MEETING:\n:CREATED: %U:\n:PEOPLE:\n:RECORDING:\n:END:"
+              :clock-in t
+              :clock-keep t)
+
+             ("c"
+              "- [ ] Checkbox"
+              checkitem
+              (file+datetree org-default-notes-file)
+              "- [ ] %?\n%U\n  %i")
+             ("h"
+              "* Heading [H:M]"
+              entry
+              (file+datetree org-default-notes-file)
+              "* %? [%<%H:%M>]")
+             ("+"
+              "Log (+ [H:M])"
+              item
+              (file+datetree org-default-notes-file)
+              "+ [%<%H:%M>] %?")
+             ("n"
+              "Note"
+              item
+              (file+datetree org-default-notes-file)
+              "+ %? %U")
+
+             ("x" "Using clipboard")
+             ("xt" "* TODO with clipboard" entry (file+datetree org-default-notes-file)
+              "* TODO %?\n%c\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%i")
+             ("xc" "- [ ] Checbox with clipboard" checkitem (file+datetree org-default-notes-file) "- [ ] %?\n%c\n%U\n%i")
+             ("xn" "Note with clipboard" item (file+datetree org-default-notes-file) "+ %? %U\n%c")
+
+             ("w" "Using references")
+             ("wt" "* TODO with ref" entry (file+datetree org-default-notes-file)
+              "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%a\n%i")
+             ("wc" "- [ ] Checkbox with ref" checkitem (file+datetree org-default-notes-file)
+              "- [ ] %?\n%U\n%a\n%i")
+
+             ("L" "Library")
+             ("Lp" "Pick up book" entry (file+olp org-default-notes-file "Tasks") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+             ("Lr" "Return book to library" entry (file+olp org-default-notes-file "Tasks") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+          ))
 
     (setq org-agenda-span 14
           org-agenda-start-on-weekday 1)
 
+    (setq org-agenda-custom-commands
+          '(("w" "Weekly tasks"
+             (
+              (agenda "Agenda"
+                      ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
+                       (org-agenda-span 'week)
+                       (org-deadline-warning-days 0)
+                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
+
+              (todo "NEXT"
+                    ((org-agenda-overriding-header "Next actions:")
+                     (org-agenda-sorting-strategy '(todo-state-up priority-down))))
+
+              (tags-todo "DEADLINE<\"<+5d>\"|SCHEDULED<\"<+5d>\""
+                         ((org-agenda-overriding-header "Scheduled for next 5 days:")
+                          (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down habit-down))))
+
+              (todo "WAIT|HOLD"
+                    ((org-agenda-overriding-header "Parked/Waiting")
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+
+              (tags-todo "notes/!TODO|NEXT"
+                         ((org-agenda-overriding-header "Refile?")
+                          (org-tags-match-list-sublevels t)))
+              )
+
+             ;; Uncomment next 2 lines to change the format of the view
+             ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
+             ;;  (org-agenda-view-columns-initially t))
+             )
+            ("A" "Task ready to archive"
+             (
+              (tags-todo "CLOSED<\"<-30d>\"+TODO=\"DONE\"|TODO=\"SKIP\""
+                         ((org-agenda-overriding-header "Archive")
+                          (org-tags-match-list-sublevels nil)))
+              ))
+            ("B" "Backlog"
+              ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
+                    ((org-agenda-overriding-header "Urgent deadlines (today and past):")
+                     (org-agenda-sorting-strategy '(deadline-down priority-down))))
+
+              (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT"
+                     ((org-agenda-overriding-header "Available now:")
+                      (org-agenda-sorting-strategy '(ts-down scheduled-down priority-down))
+                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'deadline))))
+
+              (tags-todo "+DEADLINE>\"<now>\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT"
+                         ((org-agenda-overriding-header "Deadlines in next 7 days:")
+                          (org-agenda-sorting-strategy '(deadline-up priority-down))))
+
+              (tags-todo "+TIMESTAMP>\"<now>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<now>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT"
+                         ((org-agenda-overriding-header "Planned for next week:")
+                          (org-agenda-sorting-strategy '(timestamp-up priority-down))
+                          (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+
+
+              (tags-todo "-DEADLINE<=\"<+1w>\"&-SCHEDULED<=\"<+1w>\"/!TODO|NEXT"
+                         ((org-agenda-overriding-header "Backlog")
+                          (org-agenda-sorting-strategy '(timestamp-up priority-down))))
+
+ 
+              ))
+            ))
+
+
+    (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
+                                                             (shell .  t)
+                                                             (sh .  t)
+                                                             (dot .  t)
+                                                             (org .  t)))
+    (setq org-export-coding-system 'utf-8)
+
+    ;; org-habit
+    (setq org-habit-preceding-days 14
+          org-habit-graph-column 60)
+
+    ;; custom links
     ;; http://orgmode.org/manual/Adding-hyperlink-types.html#Adding-hyperlink-types
-    (org-add-link-type "twodo" #'alpo/org-2do-open-link)
-    (org-add-link-type "mailplane" #'alpo/org-mailplane-open-link)
-    (org-add-link-type "omnifocus" #'alpo/org-omnifocus-open-link))
+    ;; org-add-link-type is deprecated and replaced with http://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
+    ;; (org-add-link-type "dayone2" #'alpo/org-dayone-open-link)
+    (org-link-set-parameters
+     "dayone2"
+     :follow #'alpo/org-dayone-open-link
+     :face '(:foreground "#42b2fc" :underline t)
+     :help-echo "Open in DayOne")
+    ;; (org-add-link-type "mailplane" #'alpo/org-mailplane-open-link)
+    (org-link-set-parameters
+     "mailplane"
+     :follow #'alpo/org-mailplane-open-link
+     :face '(:foreground "#2f71e1" :underline t)
+     :help-echo "Open in Mailplane")
+    ;; (org-add-link-type "message" #'alpo/org-applemail-open-link)
+    (org-link-set-parameters
+     "message"
+     :follow #'alpo/org-applemail-open-link
+     :face '(:foreground "#1862de" :underline t)
+     :help-echo "Open Mail")
+    ;; (org-add-link-type "omnifocus" #'alpo/org-omnifocus-open-link)
+    (org-link-set-parameters
+     "omnifocus"
+     :follow #'alpo/org-omnifocus-open-link
+     :face '(:foreground "#a249ff" :underline t)
+     :help-echo "Open in OmniFocus")
+    (org-add-link-type "twodo" #'alpo/org-2do-open-link))
 
-(defun alpo/org-omnifocus-open-link (path)
-  "Open an omnifocus url scheme"
-  (message "Open OmniFocus link: omnifocus:%s" path)
-  (shell-command (concat "open \"omnifocus:" path "\"")))
+  (defun alpo/org-dayone-open-link (path)
+    "Open a DayOne url scheme"
+    (message "Open DayOne link: dayone2:%s" path)
+    (shell-command (concat "open \"dayone2:" path "\"")))
 
-(defun alpo/org-mailplane-open-link (path)
-  "Open a Mailplane url scheme"
-  (let ((escpath (replace-regexp-in-string " " "%20" path)))
-    (message "Open Mailplane link: mailplane:%s" escpath)
-    (shell-command (concat "open \"mailplane:" escpath "\""))))
+  (defun alpo/org-omnifocus-open-link (path)
+    "Open an omnifocus url scheme"
+    (message "Open OmniFocus link: omnifocus:%s" path)
+    (shell-command (concat "open \"omnifocus:" path "\"")))
 
-(defun alpo/org-2do-open-link (path)
-  "Open a 2Do url scheme"
-  (let ((escpath (replace-regexp-in-string " " "%20" path)))
-    (message "Open 2Do link: twodo:%s" escpath)
-    (shell-command (concat "open \"twodo:" escpath "\""))))
+  (defun alpo/org-mailplane-open-link (path)
+    "Open a Mailplane url scheme"
+    (let ((escpath (replace-regexp-in-string " " "%20" path)))
+      (message "Open Mailplane link: mailplane:%s" escpath)
+      (shell-command (concat "open \"mailplane:" escpath "\""))))
+
+  (defun alpo/org-2do-open-link (path)
+    "Open a 2Do url scheme"
+    (let ((escpath (replace-regexp-in-string " " "%20" path)))
+      (message "Open 2Do link: twodo:%s" escpath)
+      (shell-command (concat "open \"twodo:" escpath "\""))))
+
+  (defun alpo/org-applemail-open-link (path)
+    "Open an omnifocus url scheme"
+    (message "Open Apple Mail link: message:%s" path)
+    (shell-command (concat "open \"message:" path "\"")))
+
+  ;; https://emacs.stackexchange.com/questions/3981/how-to-copy-links-out-of-org-mode
+  (defun alpo/org-retrieve-url-at-point ()
+    (interactive)
+    (let* ((link-info (assoc :link (org-context)))
+           (text (when link-info
+                   (buffer-substring-no-properties (or (cadr link-info) (point-min))
+                                                   (or (caddr link-info) (point-max))))))
+      (if (not text)
+          (error "Not in Org link")
+        (add-text-properties 0 (length text) '(yank-handler (alpo/org-yank-link)) text)
+        (kill-new text))))
+
+  (defun alpo/org-yank-link (text)
+    (if (derived-mode-p 'org-mode)
+        (insert text)
+      (string-match org-bracket-link-regexp text)
+      (insert (substring text (match-beginning 1) (match-end 1)))))
+
+  (global-set-key (kbd "C-c M-c") 'alpo/org-retrieve-url-at-point)
+
+  ;; apt
+  (setq appt-audible t
+        appt-display-format 'window
+        appt-display-duration 90
+        appt-message-warning-time 15
+        appt-display-interval 5)
+  ;; Based on http://doc.norang.ca/org-mode.html#Reminders
+  (defun alpo/org-agenda-to-appt ()
+    (interactive)
+    (setq appt-time-msg-list nil)
+    (org-agenda-to-appt))
+
+  ;; Rebuild the reminders everytime the agenda is displayed
+  (add-hook 'org-finalize-agenda-hook 'alpo/org-agenda-to-appt 'append)
+
+  ;; This is at the end of my .emacs - so appointments are set up when Emacs starts
+  (alpo/org-agenda-to-appt)
+
+                                        ; Activate appointments so we get notifications
+  (appt-activate t)
+
+                                        ; If we leave Emacs running overnight - reset the appointments one minute after midnight
+  (run-at-time "24:01" nil 'alpo/org-agenda-to-appt)
+
 ;; Load local customizations (local to the computer)
 ;; (when (file-exists-p "~/local.el")
 ;;   (load "~/local.el")))
@@ -625,20 +887,6 @@ Consider only documented, non-obsolete functions."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (ghub+ apiwrap ghub gh s ruby-refactor realgud test-simple loc-changes load-relative password-generator godoctor flycheck-bashate evil-lion editorconfig diminish shut-up log4e f symon string-inflection meghanada groovy-mode groovy-imports gradle-mode go-rename browse-at-remote flatui-theme auto-complete material-theme sbt-mode packed evil flyspell-correct multiple-cursors avy skewer-mode simple-httpd async imenu-list monokai-theme magithub dash heroku-theme gruvbox-theme autothemer anti-zenburn-theme ample-theme markdown-mode company scala-mode counsel swiper bind-key iedit smartparens highlight go-mode helm helm-core ivy pcache csharp-mode flycheck alert projectile magit magit-popup git-commit with-editor hydra yasnippet php-mode inf-ruby haml-mode js2-mode winum yapfify yaml-mode xkcd ws-butler window-numbering which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit swift-mode spacemacs-theme spaceline smex smeargle slim-mode selectric-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe restart-emacs request rbenv rake rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode paradox orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file omnisharp noflet neotree move-text mmm-mode minitest markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode keyfreq key-chord json-mode js2-refactor js-doc ivy-purpose ivy-hydra insert-shebang info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio go-guru go-eldoc gnuplot gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav eclim dumb-jump disaster diff-hl deft define-word cython-mode counsel-projectile column-enforce-mode cmake-mode clean-aindent-mode clang-format chruby bundler auto-highlight-symbol auto-dictionary auto-compile anaconda-mode alect-themes aggressive-indent adoc-mode adaptive-wrap ace-window ace-link))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -647,10 +895,18 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (powerline org-category-capture org-plus-contrib flycheck markdown-mode multiple-cursors dash-functional company sbt-mode scala-mode csharp-mode counsel swiper packed avy inf-ruby iedit smartparens highlight evil goto-chg undo-tree ivy go-mode projectile helm helm-core skewer-mode js2-mode magit magit-popup git-commit with-editor dash async alert hydra yasnippet php-mode haml-mode s github-browse-file yapfify yaml-mode xkcd ws-butler winum which-key wgrep web-mode web-beautify volatile-highlights uuidgen use-package toc-org tagedit symon swift-mode string-inflection spaceline smex smeargle slim-mode selectric-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode ruby-refactor rubocop rspec-mode robe restart-emacs request realgud rbenv rake rainbow-delimiters pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements phpunit phpcbf php-extras php-auto-yasnippets persp-mode password-generator paradox orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file omnisharp noflet neotree move-text monokai-theme mmm-mode minitest meghanada material-theme markdown-toc magithub magit-gitflow magit-gh-pulls macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode keyfreq key-chord json-mode js2-refactor js-doc ivy-purpose ivy-hydra insert-shebang info+ indent-guide hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt heroku-theme help-fns+ helm-make gruvbox-theme groovy-mode groovy-imports gradle-mode google-translate golden-ratio godoctor go-rename go-guru go-eldoc gnuplot gitignore-mode github-search github-clone gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flycheck-bashate flx-ido flatui-theme fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu ensime emmet-mode elisp-slime-nav editorconfig eclim dumb-jump disaster diff-hl deft define-word cython-mode counsel-projectile column-enforce-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme anaconda-mode ample-theme alect-themes aggressive-indent adoc-mode adaptive-wrap ace-window ace-link))))
+    (gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-agenda-done ((t (:height 1.0 :foreground "#52676f"))))
+ '(org-level-1 ((t (:height 1.1))))
+ '(org-level-2 ((t (:weight normal))))
+ '(org-level-3 ((t (:weight normal))))
+ '(org-level-4 ((t (:weight normal))))
+ '(org-level-5 ((t (:weight normal))))
+ '(org-level-6 ((t (:weight normal))))
+ '(org-level-7 ((t (:weight normal))))
+ '(org-level-8 ((t (:weight normal)))))
