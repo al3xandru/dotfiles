@@ -7,12 +7,17 @@ local DEFAULT_WND_GAP = 3
 -- Utility functions
 -- 
 function dynamicResizeLeft()
-    local win = hs.window.focusedWindow()
-    local frm = win:frame()
-    local scr = win:screen():frame()
-    if DEBUG then   
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("dynamicResizeLeft: ERROR no window found")
+        return
+    elseif DEBUG then   
         wtf("dynamicResizeLeft", win)
     end
+
+    local frm = win:frame()
+    local scr = win:screen():frame()
+
     if not between(frm.x, scr.x, 5) then
         -- move to the left
         frm.x = scr.x
@@ -47,12 +52,17 @@ function dynamicResizeLeft()
 end
 
 function dynamicResizeRight()
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("dynamicResizeRight: ERROR no window found")
+        return
+    elseif DEBUG then
+        print("dynamicResizeRight", win)
+    end
+
     local frm = win:frame()
     local scr = win:screen():frame()
-    if DEBUG then   
-        wtf("dynamicResizeRight:", win)
-    end
+
     if not between(frm.x + frm.w, scr.x + scr.w, 5) then
         -- move to the left
         frm.x = scr.x + (scr.w - frm.w)
@@ -87,13 +97,17 @@ function dynamicResizeRight()
 end
 
 function dynamicResizeTop()
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("dynamicResizeTop: ERROR no window found")
+        return
+    elseif DEBUG then   
+        wtf("dynamicResizeTop:", win)
+    end
+
     local frm = win:frame()
     local scr = win:screen():frame()
     -- UndoStack:push({wnd=win:id(), frm=frm})
-    if DEBUG then   
-        wtf("dynamicResizeTop:", win)
-    end
 
     if not between(frm.y, scr.y, 5) then
         -- move to the left
@@ -133,13 +147,18 @@ function dynamicResizeTop()
 end
 
 function dynamicResizeBottom()
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("dynamicResizeBottom: ERROR no window found")
+        return
+    elseif DEBUG then   
+        wtf("dynamicResizeBottom:", win)
+    end
+
     local frm = win:frame()
     local scr = win:screen():frame()
     -- UndoStack:push({wnd=win:id(), frm=frm})
-    if DEBUG then   
-        wtf("dynamicResizeBottom:", win)
-    end
+    --
     if not between(frm.y + frm.h, scr.y + scr.h, 5) then
         -- move to the left
         frm.y = scr.y + scr.h - frm.h
@@ -178,7 +197,11 @@ function dynamicResizeBottom()
 end
 
 function expandVertically()
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("expandVertically: ERROR no window found")
+        return
+    end
     local frm = win:frame()
     local scr = win:screen():frame()
 
@@ -188,7 +211,11 @@ function expandVertically()
 end
 
 function expandHorizontally()
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("expandHorizontally: ERROR no window found")
+        return
+    end
     local frm = win:frame()
     local scr = win:screen():frame()
 
@@ -200,7 +227,11 @@ end
 -- Move window to `incr` monitors from current one 
 -- Index starts with 1
 function moveToMonitor(incr)
-	local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("moveToMonitor: ERROR no window found")
+        return
+    end
     local scr = win:screen()
     local currentScrIdx = nil
 
@@ -232,7 +263,11 @@ end
 --
 -- nudge: move a window with xpos in x and ypos in y pixels
 function nudge(xpos, ypos)
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("nudge: ERROR no window found")
+        return
+    end
     local frm = win:frame()
 
     frm.x = frm.x + xpos
@@ -244,7 +279,11 @@ end
 -- For x and y: use 0 to expand fully in that dimension, 0.5 to expand halfway
 -- For w and h: use 1 for full, 0.5 for half
 function push(x, y, w, h)
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("push: ERROR no window found")
+        return
+    end
     local frm = win:frame()
     local scr = win:screen()
     local max = scr:frame()
@@ -257,8 +296,9 @@ function push(x, y, w, h)
 end
 
 function resize(xpixels, ypixels)
-    local win = hs.window.focusedWindow()
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
     if not win then
+        print("resize: ERROR no window found")
         return
     end
     local frm = win:frame()
@@ -269,6 +309,10 @@ function resize(xpixels, ypixels)
 end
 
 function wtf(msg, wnd)
+    if not wnd then
+        print(msg ..  "(no wnd)")
+        return
+    end
     local frm = wnd:frame()
     local scr = wnd:screen():frame()
 
@@ -305,7 +349,12 @@ hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 
 -- Predefined positions:
 -- Center
-hs.hotkey.bind(alt_cmd, ".", function() hs.window.focusedWindow():centerOnScreen() end)
+hs.hotkey.bind(alt_cmd, ".", function() 
+    local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
+    if wnd then
+        wnd:centerOnScreen() 
+    end
+end)
 -- Enlarged vertically
 hs.hotkey.bind(alt_cmd, "=", expandVertically)
 -- Enlarged horizontally
