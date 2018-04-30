@@ -679,6 +679,11 @@ Consider only documented, non-obsolete functions."
               item
               (file+datetree org-default-notes-file)
               "+ %? %U")
+             ("p"
+              "Project"
+              entry
+              (file+olp org-default-notes-file "Projects")
+              "* PRJ %? [%]\n** NEXT Write down what is the purpose or what are the goals/objectives for this project\n** TODO Write down what are the deliverables or what does it mean to be done\n** TODO Brainstorm initial set of tasks\n** TODO Organize tasks\n** TODO Identify next action")
 
              ("x" "Using clipboard")
              ("xt" "* TODO with clipboard" entry (file+datetree org-default-notes-file)
@@ -739,20 +744,20 @@ Consider only documented, non-obsolete functions."
             ("B" "Backlog"
               ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
                     ((org-agenda-overriding-header "Urgent deadlines (today and past):")
-                     (org-agenda-sorting-strategy '(deadline-down priority-down))))
+                     (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
 
               (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT"
                      ((org-agenda-overriding-header "Available now:")
-                      (org-agenda-sorting-strategy '(ts-down scheduled-down priority-down))
+                      (org-agenda-sorting-strategy '(habit-down ts-down scheduled-down priority-down))
                       (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'deadline))))
 
               (tags-todo "+DEADLINE>\"<now>\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT"
                          ((org-agenda-overriding-header "Deadlines in next 7 days:")
-                          (org-agenda-sorting-strategy '(deadline-up priority-down))))
+                          (org-agenda-sorting-strategy '(habit-down deadline-up priority-down))))
 
               (tags-todo "+TIMESTAMP>\"<now>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<now>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT"
                          ((org-agenda-overriding-header "Planned for next week:")
-                          (org-agenda-sorting-strategy '(timestamp-up priority-down))
+                          (org-agenda-sorting-strategy '(habit-down timestamp-up priority-down))
                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
 
 
@@ -760,7 +765,7 @@ Consider only documented, non-obsolete functions."
                          ((org-agenda-overriding-header "Backlog")
                           (org-agenda-sorting-strategy '(timestamp-up priority-down))))
 
- 
+
               ))
             ))
 
