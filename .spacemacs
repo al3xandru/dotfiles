@@ -11,20 +11,22 @@ values."
    dotspacemacs-configuration-layers
    '(
      ;; Generic
-     ivy
+     (ivy :variables
+          ivy-count-format "%d/%d "
+          ivy-use-virtual-buffers t)
      (spell-checking :variables
                      spell-checking-enable-by-default nil
                      spell-checking-enable-auto-dictionary nil)
      ;; UI
      ;; themes-megapack
      theming
+
      ;; source countrol
-     git
-     github
-     (version-control :variables
-                      version-control-diff-tool 'diff-hl
-                      version-control-global-margin t)
-     ;; languages
+     ;; git
+     ;; github
+     ;; (version-control :variables
+     ;;                  version-control-diff-tool 'diff-hl
+     ;;                  version-control-global-margin t)
      emacs-lisp
      markdown
      org
@@ -62,12 +64,20 @@ values."
      focus
      keyfreq
      key-chord
+     org-alert
      (taskpaper-mode :location "~/Dropbox/workspaces/mine/emacs/taskpaper-mode/")
      ;; (taskpaper-mode :location (recipe
      ;;                            :fetcher github
      ;;                            :repo "al3xandru/taskpaper-mode"
      ;;                            ))
      ;; themes
+     ;; autothemer
+     ;; color-theme-sanityinc-tomorrow
+     alect-themes
+     darktooth-theme
+     nova-theme
+     subatomic-theme
+     ;; zenburn-theme
      )
    ;; A list of packages that will not be install and loaded.
    dotspacemacs-excluded-packages
@@ -76,13 +86,13 @@ values."
      ;; srefactor
      ;; space-doc ;; #5837
      ;; ;; java
-     emacs-eclim
+     ;; emacs-eclim
      ;; ;; javascript
-     coffee-mode
-     company-tern
-     tern
+     ;; coffee-mode
+     ;; company-tern
+     ;; tern
      ;; ;; php
-     drupal-mode
+     ;; drupal-mode
      ;; spacemacs-layouts
      ;; eyebrowse
      )))
@@ -123,7 +133,7 @@ values."
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
-   ;; List sizes may be nil, in which case
+    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((bookmarks . 10)
                                 (recents . 10)
@@ -131,10 +141,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         gruvbox-dark-soft
-                         gruvbox-light-soft)
+   dotspacemacs-themes '(subatomic
+                         spacemacs-dark)
                         ;; Org aware: leuven manoj tango wombat
                         ;; misterioso
                         ;; leuven
@@ -148,7 +156,7 @@ values."
                         ;; solarized-light
                         ;; solarized-dark
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
-   dotspacemacs-colorize-cursor-according-to-state t
+   dotspacemacs-colorize-cursor-according-to-state nil
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    ;; "Hack"  "Input Mono" "Liberation Mono" "Operator Mono" "PragmataPro Mono" "SF Mono Regular"
@@ -172,8 +180,8 @@ values."
    dotspacemacs-major-mode-leader-key ","
    ;; Major mode leader key accessible in `emacs state' and `insert state'.
    ;; (default "C-M-m")
-   dotspacemacs-major-mode-emacs-leader-key "C-M-m"
-   ;; These variables control whether separate commands are bound in the GUI to
+   dotspacemacs-major-mode-emacs-leader-key "M-m M-m"
+   ;; THESE variables control whether separate commands are bound in the GUI to
    ;; the key pairs C-i, TAB and C-m, RET.
    ;; Setting it to a non-nil value, allows for separate commands under <C-i>
    ;; and TAB or <C-m> and RET.
@@ -259,7 +267,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
                       (org-level-6 :weight normal :height 0.9)
                       (org-level-7 :weight normal :height 0.9)
                       (org-level-8 :weight normal :height 0.9))
-          (spacemacs-dark (org-level-2 :weight normal :height 1.1)
+          ;; (nova (cursor :background "#3C4C55" :foreground "#DF8C8C"))
+          (spacemacs-dark (ivy-current-match :background "#696676")
+                          (org-level-2 :weight normal :height 1.1)
                           (org-level-3 :height 1.1)
                           (org-agenda-done :height 1.0 :foreground "#52676f" )
                           (org-scheduled-today :foreground "#e0211d" :height 1.1))))
@@ -280,7 +290,7 @@ you should place your code here."
   (evil-define-key 'insert company-quickhelp-mode-map (kbd "C-k") 'company-select-previous)
   ;; (setq debug-on-error t)
   ;; frame size
-  (setq default-frame-alist '((width . 105)
+  (setq default-frame-alist '((width . 111)
                               (height . 75)))
   ;; transparency
   ;; (spacemacs/toggle-transparency)
@@ -474,7 +484,7 @@ Consider only documented, non-obsolete functions."
           ;; when scrolling
           ;; (redraw-frame (selected-frame))
           ;; (redraw-display)
-          (setq alpo/markdown-in-edit-mode 1)
+         (setq alpo/markdown-in-edit-mode 1)
           (message "alpo/markdown-in-edit-mode(2): %d (enabled) %s" alpo/markdown-in-edit-mode alpo/markdown-prev-theme)
           )
       (progn
@@ -558,15 +568,32 @@ Consider only documented, non-obsolete functions."
   ;;
   ;; ORG
   ;;
+  (defun alpo/switch-evil-to-emacs ()
+    (if (evil-emacs-state-p)
+        (message "Expected Vim mode, but found Emacs mode.  Weird!")
+      (progn
+        (evil-emacs-state)
+        ;; (setq unread-command-events (listify-key-sequence "\C-z"))
+        (message "Switching to Emacs mode"))))
+
+
+  (add-hook 'org-capture-mode-hook #'alpo/switch-evil-to-emacs)
+  (add-hook 'org-mode-hook #'alpo/switch-evil-to-emacs)
+  (add-hook 'orgstruct-mode-hook #'alpo/switch-evil-to-emacs)
+  (add-hook 'org-load-hook #'alpo/switch-evil-to-emacs)
+  (add-hook 'orgstruct-setup-hook #'alpo/switch-evil-to-emacs)
+
   (with-eval-after-load 'org
     (add-to-list 'org-modules 'org-habit)
     (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")
           org-hide-leading-stars t
-          org-startup-indented t)
+          org-startup-indented t
+          org-use-speed-commands t)
 
     (setq org-directory "~/Dropbox/Dox/mydox/"
           org-default-notes-file (concat org-directory "mlo.org")
           org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "mlo.org"
+                                                                               "11-inbox.org"
                                                                                "12-habits.org")))
 
     ;; check https://github.com/pisemsky/dotfiles/blob/b287adf0278ffc55e4fa47ee083c36e72c6ab751/.emacs.d/lisp/init-org.el
@@ -588,7 +615,9 @@ Consider only documented, non-obsolete functions."
     (setq org-enforce-todo-dependencies t
           org-track-ordered-property-with-tag t
           org-agenda-dim-blocked-tasks t)
-
+    ;; enable on a per-file basis #+STARTUP: customtime
+    ;; (setq org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>")
+    ;;       org-display-custom-times t)
     ;; Past sequences
     ;; '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
     ;;   (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
@@ -596,7 +625,7 @@ Consider only documented, non-obsolete functions."
     ;;   (sequence "WIPR(p)" "WAIT(w@/!)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")))
     (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)" )
                               (sequence "WAIT(w@/!)" "SOMEDAY(s)" "HOLD(h@/!)" "|" "SKIP(x@/!)")
-                              (sequence "PRJ")))
+                              (sequence "PRJ" "|")))
 
     (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
                                    ("NEXT" . (:foreground "#c61b6e" :weight bold))
@@ -630,7 +659,7 @@ Consider only documented, non-obsolete functions."
              "* TODO Respond to email"
              entry
              (file+datetree org-default-notes-file)
-             "* TODO Respond to email subject:\"%^{mail|zol[mp]}\" (from:%?) :email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
+             "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
             ("u"
              "* TODO with link in clipboard"
              entry
@@ -700,10 +729,16 @@ Consider only documented, non-obsolete functions."
              ("L" "Library")
              ("Lp" "Pick up book" entry (file+olp org-default-notes-file "Tasks") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
              ("Lr" "Return book to library" entry (file+olp org-default-notes-file "Tasks") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
-          ))
+
+             ("*"
+              "Random todo"
+              entry
+              (file+datetree org-default-notes-file)
+              "* %?\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+          ))2
 
     (setq org-agenda-span 14
-          org-agenda-start-on-weekday 1)
+          org-agenda-start-on-weekday nil) ;; nil: begin on current day, t: begin Monday
 
     (setq org-agenda-custom-commands
           '(("w" "Weekly tasks"
@@ -718,10 +753,12 @@ Consider only documented, non-obsolete functions."
                     ((org-agenda-overriding-header "Next actions:")
                      (org-agenda-sorting-strategy '(todo-state-up priority-down))))
 
-              (tags-todo "DEADLINE<\"<+5d>\"|SCHEDULED<\"<+5d>\""
-                         ((org-agenda-overriding-header "Scheduled for next 5 days:")
-                          (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down habit-down))))
-
+              ;; (tags-todo "DEADLINE<\"<+5d>\"|SCHEDULED<\"<+5d>\""
+              ;;            ((org-agenda-overriding-header "Scheduled for next 5 days:")
+              ;;             (org-agenda-sorting-strategy '(deadline-up scheduled-up todo-state-up priority-down habit-down))
+              ;;             (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "mlo.org"
+                                                                                                 ;; "11-inbox.org")))))
+        
               (todo "WAIT|HOLD"
                     ((org-agenda-overriding-header "Parked/Waiting")
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
@@ -781,62 +818,55 @@ Consider only documented, non-obsolete functions."
     (setq org-habit-preceding-days 14
           org-habit-graph-column 60)
 
+    ;; org-alert
+    ;; (require 'org-alert)
+    ;; (setq alert-default-style 'osx-notifier)
+    ;; (org-alert-enable)
+
     ;; custom links
     ;; http://orgmode.org/manual/Adding-hyperlink-types.html#Adding-hyperlink-types
     ;; org-add-link-type is deprecated and replaced with http://kitchingroup.cheme.cmu.edu/blog/2016/11/04/New-link-features-in-org-9/
+    ;; (org-add-link-type "dayone" #'alpo/org-dayone-open-link)
     ;; (org-add-link-type "dayone2" #'alpo/org-dayone-open-link)
     (org-link-set-parameters
+     "dayone"
+     :follow (lambda (path) (alpo/org-open-typed-link "dayone2" path))
+     :face '(:foreground "#42b2fc" :underline t)
+     :help-echo "Open in DayOne")
+    (org-link-set-parameters
      "dayone2"
-     :follow #'alpo/org-dayone-open-link
+     :follow (lambda (path) (alpo/org-open-typed-link "dayone2" path))
      :face '(:foreground "#42b2fc" :underline t)
      :help-echo "Open in DayOne")
     ;; (org-add-link-type "mailplane" #'alpo/org-mailplane-open-link)
     (org-link-set-parameters
      "mailplane"
-     :follow #'alpo/org-mailplane-open-link
+     :follow (lambda (path) (alpo/org-open-typed-link "mailplane" path))
      :face '(:foreground "#2f71e1" :underline t)
      :help-echo "Open in Mailplane")
     ;; (org-add-link-type "message" #'alpo/org-applemail-open-link)
     (org-link-set-parameters
      "message"
-     :follow #'alpo/org-applemail-open-link
+     :follow (lambda (path) (alpo/org-open-typed-link "message" path))
      :face '(:foreground "#1862de" :underline t)
      :help-echo "Open Mail")
     ;; (org-add-link-type "omnifocus" #'alpo/org-omnifocus-open-link)
     (org-link-set-parameters
      "omnifocus"
-     :follow #'alpo/org-omnifocus-open-link
+     :follow (lambda (path) (alpo/org-open-typed-link "omnifocus" path))
      :face '(:foreground "#a249ff" :underline t)
      :help-echo "Open in OmniFocus")
-    (org-add-link-type "twodo" #'alpo/org-2do-open-link))
+    ;; (org-add-link-type "twodo" #'alpo/org-2do-open-link)
+  )
 
-  (defun alpo/org-dayone-open-link (path)
-    "Open a DayOne url scheme"
-    (message "Open DayOne link: dayone2:%s" path)
-    (shell-command (concat "open \"dayone2:" path "\"")))
-
-  (defun alpo/org-omnifocus-open-link (path)
-    "Open an omnifocus url scheme"
-    (message "Open OmniFocus link: omnifocus:%s" path)
-    (shell-command (concat "open \"omnifocus:" path "\"")))
-
-  (defun alpo/org-mailplane-open-link (path)
-    "Open a Mailplane url scheme"
+  (defun alpo/org-open-typed-link (type path)
+    "Open an URL using a custom scheme"
     (let ((escpath (replace-regexp-in-string " " "%20" path)))
-      (message "Open Mailplane link: mailplane:%s" escpath)
-      (shell-command (concat "open \"mailplane:" escpath "\""))))
+      (message "Open link: %s:%s" type escpath)
+      (shell-command (format "open \"%s:%s\"" type escpath))))
 
-  (defun alpo/org-2do-open-link (path)
-    "Open a 2Do url scheme"
-    (let ((escpath (replace-regexp-in-string " " "%20" path)))
-      (message "Open 2Do link: twodo:%s" escpath)
-      (shell-command (concat "open \"twodo:" escpath "\""))))
 
-  (defun alpo/org-applemail-open-link (path)
-    "Open an omnifocus url scheme"
-    (message "Open Apple Mail link: message:%s" path)
-    (shell-command (concat "open \"message:" path "\"")))
-
+  ;; Copy URL from Org
   ;; https://emacs.stackexchange.com/questions/3981/how-to-copy-links-out-of-org-mode
   (defun alpo/org-retrieve-url-at-point ()
     (interactive)
@@ -856,30 +886,60 @@ Consider only documented, non-obsolete functions."
       (insert (substring text (match-beginning 1) (match-end 1)))))
 
   (global-set-key (kbd "C-c M-c") 'alpo/org-retrieve-url-at-point)
+  (spacemacs/set-leader-keys-for-major-mode 'org-mode "y" 'alpo/org-retrieve-url-at-point)
 
-  ;; apt
+
+  ;; Notifications using appt
+  ;; Based on http://doc.norang.ca/org-mode.html#Reminders
+  ;; and https://gist.github.com/squiter/4475c96365575b7237c4
   (setq appt-audible t
+        appt-disp-window-function (function alpo/osx-appt-display)
+        appt-delete-window-function (function appt-delete-window)
         appt-display-format 'window
         appt-display-duration 90
-        appt-message-warning-time 15
-        appt-display-interval 5)
-  ;; Based on http://doc.norang.ca/org-mode.html#Reminders
+        appt-display-interval 5
+        appt-message-warning-time 15)
+
   (defun alpo/org-agenda-to-appt ()
     (interactive)
     (setq appt-time-msg-list nil)
     (org-agenda-to-appt))
 
-  ;; Rebuild the reminders everytime the agenda is displayed
-  (add-hook 'org-finalize-agenda-hook 'alpo/org-agenda-to-appt 'append)
+  (defsubst alert-encode-string (str)
+    (encode-coding-string str (keyboard-coding-system)))
 
+  (defun alpo/osx-appt-display (min-to-appt new-time msg)
+    (or (listp min-to-appt)
+        (setq min-to-appt (list min-to-appt)
+              msg (list msg)
+              new-time (list new-time)))
+    (dotimes (i (length msg))
+      (if (string= "0" (nth i min-to-appt))
+          (apply #'call-process "osascript" nil nil nil "-e"
+                 (list (format "display notification %S with title %S subtitle %S"
+                               (alert-encode-string (nth i msg))
+                               (alert-encode-string "Org")
+                               (alert-encode-string "Now"))))
+ 
+        (apply #'call-process "osascript" nil nil nil "-e"
+               (list (format "display notification %S with title %S subtitle %S"
+                             (alert-encode-string (nth i msg))
+                             (alert-encode-string "Org")
+                             (alert-encode-string (format "In %s minutes" (nth i min-to-appt)))))))
+      (message "appt: %s in %s minutes at %s" (nth i msg) (nth i min-to-appt) (nth i new-time))))
+
+
+  (defun appt-delete-window()
+    "Nothing. overwrite built-in func to avoid error: Error running timer ‘appt-delete-window’: (error \"No buffer named *appt-buf*\")")
+
+  ;; Activate appointments so we get notifications
+  ;; (appt-activate t)
   ;; This is at the end of my .emacs - so appointments are set up when Emacs starts
   (alpo/org-agenda-to-appt)
-
-                                        ; Activate appointments so we get notifications
-  (appt-activate t)
-
-                                        ; If we leave Emacs running overnight - reset the appointments one minute after midnight
-  (run-at-time "24:01" nil 'alpo/org-agenda-to-appt)
+  ;; If we leave Emacs running overnight - reset the appointments one minute after midnight
+  (run-at-time "24:01" 3600 'alpo/org-agenda-to-appt)
+  ;; Rebuild the reminders everytime the agenda is displayed
+  (add-hook 'org-finalize-agenda-hook 'alpo/org-agenda-to-appt 'append)
 
 ;; Load local customizations (local to the computer)
 ;; (when (file-exists-p "~/local.el")
@@ -898,14 +958,59 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   ["#32302F" "#FB4934" "#B8BB26" "#FABD2F" "#83A598" "#D3869B" "#17CCD5" "#EBDBB2"])
+ '(beacon-color "#f2777a")
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-safe-themes
+   (quote
+    ("2941526f0165b681482a7bfe61b071db10c6df090d04a530c593254ea6412054" default)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#37474f" t)
+ '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
+ '(frame-background-mode (quote dark))
+ '(hl-sexp-background-color "#1c1f26")
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link))))
+    (alect-themes subatomic-theme subatomic256-theme darktooth-theme zenburn-theme color-theme-sanityinc-tomorrow flyspell-correct counsel smartparens helm-core async projectile hydra nova-theme org-alert gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8")
+ '(vc-annotate-background nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#f36c60")
+     (40 . "#ff9800")
+     (60 . "#fff59d")
+     (80 . "#8bc34a")
+     (100 . "#81d4fa")
+     (120 . "#4dd0e1")
+     (140 . "#b39ddb")
+     (160 . "#f36c60")
+     (180 . "#ff9800")
+     (200 . "#fff59d")
+     (220 . "#8bc34a")
+     (240 . "#81d4fa")
+     (260 . "#4dd0e1")
+     (280 . "#b39ddb")
+     (300 . "#f36c60")
+     (320 . "#ff9800")
+     (340 . "#fff59d")
+     (360 . "#8bc34a"))))
+ '(vc-annotate-very-old-color nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Anka/Coder Narrow" :foundry "nil" :slant normal :weight normal :height 130 :width extra-condensed))))
+ '(ivy-current-match ((t (:background "#696676"))))
  '(org-agenda-done ((t (:height 1.0 :foreground "#52676f"))))
  '(org-level-1 ((t (:height 1.1))))
  '(org-level-2 ((t (:weight normal))))
@@ -914,4 +1019,5 @@ This function is called at the very end of Spacemacs initialization."
  '(org-level-5 ((t (:weight normal))))
  '(org-level-6 ((t (:weight normal))))
  '(org-level-7 ((t (:weight normal))))
- '(org-level-8 ((t (:weight normal)))))
+ '(org-level-8 ((t (:weight normal))))
+ '(org-scheduled-today ((t (:foreground "#e0211d" :height 1.1)))))
