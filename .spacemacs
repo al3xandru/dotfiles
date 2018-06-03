@@ -338,6 +338,7 @@ you should place your code here."
   ;; (setq-default evil-escape-key-sequence "jk"
   ;;               evil-escape-delay 0.2)
   ;;; key-chord
+  (evil-set-initial-state 'org-mode 'emacs)
   (setq key-chord-two-keys-delay 0.2)
   (key-chord-mode 1)
   ;; (key-chord-define evil-insert-state-map "fd" #'evil-escape)
@@ -518,7 +519,9 @@ Consider only documented, non-obsolete functions."
         neo-show-hidden-files t)
 
   ;; powerline
-  (setq powerline-default-separator 'alternate)
+  (setq powerline-default-separator 'bar)
+  (spaceline-compile)
+  ;; (setq dotspacemacs-mode-line-theme '(spacemacs :separator 'bar :separator-scale 1.0))
 
   ;; Projectile
   ;; projectile-globally-ignored-files
@@ -591,10 +594,16 @@ Consider only documented, non-obsolete functions."
           org-use-speed-commands t)
 
     (setq org-directory "~/Dropbox/Dox/mydox/"
-          org-default-notes-file (concat org-directory "mlo.org")
-          org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "mlo.org"
-                                                                               "11-inbox.org"
-                                                                               "12-habits.org")))
+          org-default-notes-file (concat org-directory "12-mlo.org")
+          org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                               "12-mlo.org"
+                                                                               "13-tickler.org"
+                                                                               "14-mho.org"
+                                                                               "18-reads.org"
+                                                                               "19-maybes.org")))
+    (setq alpo-org-readlater-file (concat org-directory "18-reads.org")
+          alpo-org-tickler-file (concat org-directory "13-tickler.org")
+          alpo-org-someday-file (concat org-directory "19-maybes.org"))
 
     ;; check https://github.com/pisemsky/dotfiles/blob/b287adf0278ffc55e4fa47ee083c36e72c6ab751/.emacs.d/lisp/init-org.el
     (setq org-refile-targets '((org-agenda-files :maxlevel .  4)
@@ -616,15 +625,16 @@ Consider only documented, non-obsolete functions."
           org-track-ordered-property-with-tag t
           org-agenda-dim-blocked-tasks t)
     ;; enable on a per-file basis #+STARTUP: customtime
-    ;; (setq org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>")
-    ;;       org-display-custom-times t)
+    (setq org-display-custom-times t
+          org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
+
     ;; Past sequences
     ;; '((sequence "TODO(t)" "WANT(w)" "MUST(m)" "|" "DONE(d)")
     ;;   (sequence "WIPR(p)" "WAIT(s@/!)" "|" "FILED(f)" "SKIP(x@/!)")))
     ;; '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
     ;;   (sequence "WIPR(p)" "WAIT(w@/!)" "|" "DONE(d)" "FILED(f)" "SKIP(x@/!)")))
     (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)" )
-                              (sequence "WAIT(w@/!)" "SOMEDAY(s)" "HOLD(h@/!)" "|" "SKIP(x@/!)")
+                              (sequence "WAIT(w@/!)" "SOMEDAY(s)" "MEETING(m)" "|" "SKIP(x@/!)")
                               (sequence "PRJ" "|")))
 
     (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
@@ -673,12 +683,12 @@ Consider only documented, non-obsolete functions."
             ("r"
              "* SOMEDAY Read later link in clipboard"
              entry
-             (file+olp org-default-notes-file "Read later")
+             (file+olp alpo-org-readlater-file "Read later")
              "* SOMEDAY %^{Action|Read|Check|Bookmark} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
              ("R"
               "* SOMEDAY Read later from link"
               entry
-              (file+olp org-default-notes-file "Read later")
+              (file+olp alpo-org-readlater-file "Read later")
               "* SOMEDAY %^{Action|Read|Check|Bookmark} \"%?\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
              ("m"
               "* Meeting"
@@ -688,54 +698,60 @@ Consider only documented, non-obsolete functions."
               :clock-in t
               :clock-keep t)
 
-             ("c"
-              "- [ ] Checkbox"
-              checkitem
-              (file+datetree org-default-notes-file)
-              "- [ ] %?\n%U\n  %i")
-             ("h"
-              "* Heading [H:M]"
-              entry
-              (file+datetree org-default-notes-file)
-              "* %? [%<%H:%M>]")
-             ("+"
-              "Log (+ [H:M])"
-              item
-              (file+datetree org-default-notes-file)
-              "+ [%<%H:%M>] %?")
-             ("n"
-              "Note"
-              item
-              (file+datetree org-default-notes-file)
-              "+ %? %U")
+             ;; ("c"
+             ;;  "- [ ] Checkbox"
+             ;;  checkitem
+             ;;  (file+datetree org-default-notes-file)
+             ;;  "- [ ] %?\n%U\n  %i")
+             ;; ("h"
+             ;;  "* Heading [H:M]"
+             ;;  entry
+             ;;  (file+datetree org-default-notes-file)
+             ;;  "* %? [%<%H:%M>]")
+             ;; ("+"
+             ;;  "Log (+ [H:M])"
+             ;;  item
+             ;;  (file+datetree org-default-notes-file)
+             ;;  "+ [%<%H:%M>] %?")
+             ;; ("n"
+             ;;  "Note"
+             ;;  item
+             ;;  (file+datetree org-default-notes-file)
+             ;;  "+ %? %U")
              ("p"
               "Project"
               entry
               (file+olp org-default-notes-file "Projects")
               "* PRJ %? [%]\n** NEXT Write down what is the purpose or what are the goals/objectives for this project\n** TODO Write down what are the deliverables or what does it mean to be done\n** TODO Brainstorm initial set of tasks\n** TODO Organize tasks\n** TODO Identify next action")
 
-             ("x" "Using clipboard")
+             ("x" "Using clipboard (todo, check, note)")
              ("xt" "* TODO with clipboard" entry (file+datetree org-default-notes-file)
               "* TODO %?\n%c\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%i")
              ("xc" "- [ ] Checbox with clipboard" checkitem (file+datetree org-default-notes-file) "- [ ] %?\n%c\n%U\n%i")
              ("xn" "Note with clipboard" item (file+datetree org-default-notes-file) "+ %? %U\n%c")
 
-             ("w" "Using references")
+             ("w" "Using reference (todo, check, note)")
              ("wt" "* TODO with ref" entry (file+datetree org-default-notes-file)
               "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%a\n%i")
              ("wc" "- [ ] Checkbox with ref" checkitem (file+datetree org-default-notes-file)
               "- [ ] %?\n%U\n%a\n%i")
 
              ("L" "Library")
-             ("Lp" "Pick up book" entry (file+olp org-default-notes-file "Tasks") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
-             ("Lr" "Return book to library" entry (file+olp org-default-notes-file "Tasks") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+             ("Lp" "Pick up book" entry (file+olp alpo-org-tickler-file "Once") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+             ("Lr" "Return book to library" entry (file+olp alpo-org-tickler-file "Once") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+
+             ("M"
+              "Movie"
+              entry (file+olp alpo-org-someday-file "Movies in theater")
+              "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
+
 
              ("*"
-              "Random todo"
+              "Random todo mainly for automation"
               entry
               (file+datetree org-default-notes-file)
               "* %?\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
-          ))2
+          ))
 
     (setq org-agenda-span 14
           org-agenda-start-on-weekday nil) ;; nil: begin on current day, t: begin Monday
@@ -746,7 +762,7 @@ Consider only documented, non-obsolete functions."
               (agenda "Agenda"
                       ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
                        (org-agenda-span 'week)
-                       (org-deadline-warning-days 0)
+                       (org-deadline-warning-days 7)
                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
               (todo "NEXT"
@@ -762,6 +778,10 @@ Consider only documented, non-obsolete functions."
               (todo "WAIT|HOLD"
                     ((org-agenda-overriding-header "Parked/Waiting")
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+
+              (todo "TODO|NEXT|SOMEDATE"
+                    ((org-agenda-overriding-header "Inbox")
+                     (org-agenda-files (list (concat org-directory "11-inbox.org")))))
 
               (tags-todo "notes/!TODO|NEXT"
                          ((org-agenda-overriding-header "Refile?")
@@ -809,7 +829,7 @@ Consider only documented, non-obsolete functions."
 
     (org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
                                                              (shell .  t)
-                                                             (sh .  t)
+                                                             ;; (sh .  t)
                                                              (dot .  t)
                                                              (org .  t)))
     (setq org-export-coding-system 'utf-8)
@@ -952,6 +972,50 @@ Consider only documented, non-obsolete functions."
 This is an auto-generated function, do not modify its content directly, use
 Emacs customize menu instead.
 This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   ["#32302F" "#FB4934" "#B8BB26" "#FABD2F" "#83A598" "#D3869B" "#17CCD5" "#EBDBB2"])
+ '(beacon-color "#f2777a")
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(custom-safe-themes
+   (quote
+    ("2941526f0165b681482a7bfe61b071db10c6df090d04a530c593254ea6412054" default)))
+ '(evil-want-Y-yank-to-eol nil)
+ '(fci-rule-color "#37474f" t)
+ '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
+ '(hl-sexp-background-color "#1c1f26")
+ '(nrepl-message-colors
+   (quote
+    ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (symon string-inflection spaceline-all-the-icons all-the-icons memoize p After exhausting its free trial period, you will be able to purchase the Standard edition for $39.99 and the Pro edition for $59.99 – existing OmniFocus 2 users will receive a 50% discount on those prices. The Pro edition enables creating custom perspectives, setting a tag to appear in your Forecast, and customization of the sidebar view.owerline password-generator spinner overseer org-brain nameless ivy-xref ivy-purpose window-purpose imenu-list parent-mode flx evil-org evil-lion iedit evil-cleverparens paredit anzu highlight editorconfig popup f s dash pkg-info epl swiper centered-cursor-mode packed font-lock+ goto-chg undo-tree bind-map avy markdown-mode bind-key doom-themes org-beautify-theme alect-themes subatomic-theme subatomic256-theme darktooth-theme zenburn-theme color-theme-sanityinc-tomorrow flyspell-correct counsel smartparens helm-core async projectile hydra nova-theme org-alert gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ivy-current-match ((t (:background "#696676"))))
+ '(org-agenda-done ((t (:height 1.0 :foreground "#52676f"))))
+ '(org-level-1 ((t (:height 1.1))))
+ '(org-level-2 ((t (:weight normal))))
+ '(org-level-3 ((t (:weight normal))))
+ '(org-level-4 ((t (:weight normal))))
+ '(org-level-5 ((t (:weight normal))))
+ '(org-level-6 ((t (:weight normal))))
+ '(org-level-7 ((t (:weight normal))))
+ '(org-level-8 ((t (:weight normal))))
+ '(org-scheduled-today ((t (:foreground "#e0211d" :height 1.1)))))
 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -971,46 +1035,21 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol nil)
  '(fci-rule-color "#37474f" t)
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
- '(frame-background-mode (quote dark))
  '(hl-sexp-background-color "#1c1f26")
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (alect-themes subatomic-theme subatomic256-theme darktooth-theme zenburn-theme color-theme-sanityinc-tomorrow flyspell-correct counsel smartparens helm-core async projectile hydra nova-theme org-alert gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link)))
+    (avy markdown-mode bind-key doom-themes org-beautify-theme alect-themes subatomic-theme subatomic256-theme darktooth-theme zenburn-theme color-theme-sanityinc-tomorrow flyspell-correct counsel smartparens helm-core async projectile hydra nova-theme org-alert gruvbox-light-theme material-theme autothemer evil helm org-plus-contrib magit ghub ivy org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download htmlize gnuplot xkcd ws-butler winum which-key wgrep volatile-highlights uuidgen use-package toc-org spaceline smex smeargle selectric-mode restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox orgit org-bullets open-junk-file neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow magit-gh-pulls macrostep lorem-ipsum linum-relative link-hint keyfreq key-chord ivy-hydra indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation heroku-theme helm-make gruvbox-theme google-translate golden-ratio gitignore-mode github-search github-clone github-browse-file gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gist gh-md focus flyspell-correct-ivy flx-ido flatui-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-commentary evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump diminish diff-hl define-word counsel-projectile column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-dictionary auto-compile anti-zenburn-theme ample-theme aggressive-indent adaptive-wrap ace-window ace-link)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#36473A")
- '(pos-tip-foreground-color "#FFFFC8")
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#f36c60")
-     (40 . "#ff9800")
-     (60 . "#fff59d")
-     (80 . "#8bc34a")
-     (100 . "#81d4fa")
-     (120 . "#4dd0e1")
-     (140 . "#b39ddb")
-     (160 . "#f36c60")
-     (180 . "#ff9800")
-     (200 . "#fff59d")
-     (220 . "#8bc34a")
-     (240 . "#81d4fa")
-     (260 . "#4dd0e1")
-     (280 . "#b39ddb")
-     (300 . "#f36c60")
-     (320 . "#ff9800")
-     (340 . "#fff59d")
-     (360 . "#8bc34a"))))
- '(vc-annotate-very-old-color nil))
+ '(pos-tip-foreground-color "#FFFFC8"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Anka/Coder Narrow" :foundry "nil" :slant normal :weight normal :height 130 :width extra-condensed))))
- '(ivy-current-match ((t (:background "#696676"))))
  '(org-agenda-done ((t (:height 1.0 :foreground "#52676f"))))
  '(org-level-1 ((t (:height 1.1))))
  '(org-level-2 ((t (:weight normal))))
