@@ -16,7 +16,13 @@ function tabtitle() {
 
 # backup a file
 function backup() {
-    cp -v "$1"{,.`date +%Y%m%d%H%M`.orig}
+    if [ -d "$1" ]; then
+        local ndir="$(basename $1).`date +%Y%m%d%H%M.orig`"
+        mkdir $ndir 
+        cp -R "$1/." "$ndir"
+    else
+        cp -v "$1"{,.`date +%Y%m%d%H%M`.orig}
+    fi
 }
 
 # Dropbox functions
