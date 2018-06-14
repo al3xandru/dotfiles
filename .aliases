@@ -31,6 +31,7 @@ alias v="nvim"
 alias vs="nvim -S"
 alias e="vimr"
 alias es="vimr --nvim -S"
+alias temacs="emacs -nw"
 # alias E='$HOME/bin/emacscltsrv'
 # alias x='$HOME/bin/emacscltsrv'
 # alias em='/usr/local/bin/emacsclient -n -c -a /usr/local/bin/emacs&'
