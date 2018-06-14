@@ -11,12 +11,6 @@ local hyper = {"⌘", "⌥", "⌃", "⇧"}
 -- Disable animation
 hs.window.animationDuration = 0
 
--- Get list of screens and refresh that list whenever screens are plugged or unplugged:
-local screens = hs.screen.allScreens()
-local screenwatcher = hs.screen.watcher.new(function()
-	screens = hs.screen.allScreens()
-end)
-screenwatcher:start()
 
 -- Managing UNDO
 local undoStack = require('stack')

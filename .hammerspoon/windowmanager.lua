@@ -224,6 +224,12 @@ function expandHorizontally()
     win:setFrame(frm)
 end
 
+-- Get list of screens and refresh that list whenever screens are plugged or unplugged:
+local screens = hs.screen.allScreens()
+local screenwatcher = hs.screen.watcher.new(function()
+	screens = hs.screen.allScreens()
+end)
+screenwatcher:start()
 -- Move window to `incr` monitors from current one 
 -- Index starts with 1
 function moveToMonitor(incr)
