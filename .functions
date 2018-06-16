@@ -652,3 +652,37 @@ function brew() {
         fi
     fi
 }
+
+function ix() {
+    local opts="-u alpo:opla"
+    local OPTIND
+    [ -f "$HOME/.netrc" ] && opts='-n'
+    while getopts ":ehd:i:n:" x; do
+        case $x in
+            h) echo "ix [-d ID] [-i ID] [-n N] [-e] -[-h] [opts]"; return;;
+            e) 
+                echo -e "GET"
+                echo -e "\tix.io/ID\t\traw"; 
+                echo -e "\tix.io/ID/\t\thighlighting (by ext)"; 
+                echo -e "\tix.io/ID/LANG\t\thighlighting";
+                echo -e "\tix.io/ID+\t\tconsole highlighting (default)";
+                echo -e "\tix.io/ID+LANG\t\tconsole highlighting";
+                echo -e "\tix.io/user/USER\t\tpastes for USER";
+                return;;
+            d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+            i) opts="$opts -X PUT"; local id="$OPTARG";;
+            n) opts="$opts -F read:1=$OPTARG";;
+        esac
+    done
+    shift $(($OPTIND - 1))
+    [ -t 0 ] && {
+        local filename="$1"
+        shift
+        [ "$filename" ] && {
+            curl $opts -F f:1=@"$filename" $* ix.io/$id
+            return
+        }
+        echo "^C to cancel, ^D to send."
+    }
+    curl $opts -F f:1='<-' $* ix.io/$id
+}
