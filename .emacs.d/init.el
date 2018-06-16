@@ -102,16 +102,16 @@
 
 ;;; line numbers
 ;; (if (version< emacs-version "26.1")
-(if (< emacs-major-version 26)
-    (progn
-      (global-linum-mode t)
-      (message "enable line numbers: global-linum-mode"))
-  (progn
-;;   ;;   (setq-default display-line-numbers t)
-;;   ;;   (message "enable line numbers: display-line-numbers"))
-    (custom-set-variables '(display-line-numbers-type t)) ;; 'relative
-    (global-display-line-numbers-mode)
-    (message "enable line numbers: display-line-numbers")))
+; (if (< emacs-major-version 26)
+;     (progn
+;       (global-linum-mode t)
+;       (message "enable line numbers: global-linum-mode"))
+;   (progn
+;     (custom-set-variables '(display-line-numbers-type t)) ;; 'relative
+;     (global-display-line-numbers-mode)
+;     (message "enable line numbers: display-line-numbers")))
+    ;;   (setq-default display-line-numbers t)
+    ;;   (message "enable line numbers: display-line-numbers"))
 
 ;;; highlight line
 (global-hl-line-mode t)
