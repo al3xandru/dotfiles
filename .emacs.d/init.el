@@ -54,6 +54,9 @@
 (setq inhibit-splash-screen t
       inhibit-startup-message t
       initial-scratch-message nil)
+;; open the Bookmark list on startup
+;; initial-buffer-choice (lambda () (bookmark-bmenu-list)
+;;                               (switch-to-buffer "*Bookmark List*")))
 
 ;; Files
 ;;; Sessions
@@ -102,16 +105,24 @@
 
 ;;; line numbers
 ;; (if (version< emacs-version "26.1")
-; (if (< emacs-major-version 26)
-;     (progn
-;       (global-linum-mode t)
-;       (message "enable line numbers: global-linum-mode"))
-;   (progn
-;     (custom-set-variables '(display-line-numbers-type t)) ;; 'relative
-;     (global-display-line-numbers-mode)
-;     (message "enable line numbers: display-line-numbers")))
-    ;;   (setq-default display-line-numbers t)
-    ;;   (message "enable line numbers: display-line-numbers"))
+;; (if (< emacs-major-version 26)
+;;     (progn
+;;       (global-linum-mode t)
+;;       (let ((inhibit-message t))
+;;         (message "enable line numbers: global-linum-mode")))
+;;   (progn
+;;     (setq display-line-numers-type t) ;; 'relative 'visual nil
+;;     (global-display-line-numbers-mode)
+;;     (let ((inhibit-message t))
+;;       (message "enable line numbers: display-line-numbers"))))
+
+;; Previous else branch:
+;; version 1
+;; (setq-default display-line-numbers t)
+;; version 2:
+;; (custom-set-variables '(display-line-numbers-type t)) ;; 'relative
+;; (global-display-line-numbers-mode)
+
 
 ;;; highlight line
 (global-hl-line-mode t)
@@ -473,8 +484,8 @@ the current window and the windows state prior to that."
 
 
   (setq org-agenda-custom-commands
-        '(("d" "Daily use"
-           ((agenda "Agenda"
+        '(("w" "Daily use"
+           ((agenda "Weekly agenda"
                     ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
                      (org-agenda-span 'week)
                      (org-deadline-warning-days 7)
@@ -501,7 +512,7 @@ the current window and the windows state prior to that."
            ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
            ;;  (org-agenda-view-columns-initially t))
            )
-          ("B" "Backlog"
+          ("b" "Backlog"
            ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
                         (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
@@ -522,18 +533,15 @@ the current window and the windows state prior to that."
 
             (tags-todo "-DEADLINE<=\"<+1w>\"&-SCHEDULED<=\"<+1w>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Backlog")
-                        (org-agenda-sorting-strategy '(timestamp-up priority-down))))
-
-
-            ))
-          ("A" "Task ready to archive"
+                        (org-agenda-sorting-strategy '(timestamp-up priority-down))))))
+          
+          ("A" "Archive m CLOSED<\"<-1m>\""
            (
-            ;; (tags-todo "CLOSED<\"<-15d>\"+TODO=\"DONE\"|TODO=\"SKIP\""
-            (todo "DONE|SKIP"
+            ;; (todo "DONE|SKIP"
+            (tags-todo "+CLOSED<\"<-1m>\""
                   ((org-agenda-overriding-header "Archive")
                    (org-tags-match-list-sublevels nil)
-                   (org-agenda-sorting-strategy '(tsia-down))))
-            ))
+                   (org-agenda-sorting-strategy '(tsia-down))))))
 
           ))
 
@@ -603,7 +611,7 @@ the current window and the windows state prior to that."
 (defun alpo/org-open-typed-link (type path)
   "Open an URL using a custom scheme"
   (let ((escpath (replace-regexp-in-string " " "%20" path)))
-    (message "Open link: %s:%s" type escpath)
+    (alpo/message-in-buffer "Open link: '%s:%s'" type escpath)
     (shell-command (format "open \"%s:%s\"" type escpath))))
 
 
@@ -611,8 +619,9 @@ the current window and the windows state prior to that."
   "Refresh appointments by firstly cleaning up the list."
   (interactive)
   (setq appt-time-msg-list nil)
-  (org-agenda-to-appt)
-  (message "refresh reminders %s" (format-time-string "%H:%M" (current-time))))
+  (org-agenda-to-appt) 
+  (alpo/message-in-buffer "refresh org reminders"))
+
 
 (defsubst alert-encode-string (str)
   (encode-coding-string str (keyboard-coding-system)))
@@ -639,7 +648,18 @@ the current window and the windows state prior to that."
                            (alert-encode-string (nth i msg))
                            (alert-encode-string "Org")
                            (alert-encode-string (format "In %s minutes" (nth i min-to-appt)))))))
-    (message "appt: %s in %s minutes at %s" (nth i msg) (nth i min-to-appt) (nth i new-time))))
+
+    (alpo/message-in-buffer "appt: %s in %s minutes at %s" (nth i msg) (nth i min-to-appt) (nth i new-time))))
+    ;; (message "appt: %s in %s minutes at %s" (nth i msg) (nth i min-to-appt) (nth i new-time))))
+
+(defun alpo/message-in-buffer (format-string &rest args)
+  "Log the message in the *Message* buffer supressing the minibuffer message"
+  (interactive)
+  (let ((inhibit-message t)
+        (final-format-string (concat "[%s] " format-string))
+        (args-list (cons (format-time-string "%H:%M%p" (current-time)) args)))
+    (apply 'message final-format-string args-list)))
+
 
 ;; all this can become :config according to https://github.com/jwiegley/use-package/issues/453
 ;; (with-eval-after-load 'org )
