@@ -51,18 +51,7 @@
     - [x] avy <https://github.com/abo-abo/avy>
 	- [x] smartparens 
 	- [x] undo-tree
-- [] Scan the following configurations for other plugins
-	- [] <https://github.com/auwsmit/emacsconfig/blob/master/config.org#evil-mode>
-	- [] <https://github.com/jwiegley/dot-emacs/blob/master/init.el>
-	- [] <https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org#smartparens-mode>
 - [x] Customize modeline <http://www.hollenback.net/index.php/EmacsModeLine>
-- [ ] Automatically publish Org mode to MobileOrg
-    <https://stackoverflow.com/questions/8432108/how-to-automatically-do-org-mobile-push-org-mobile-pull-in-emacs#8432149>
-	```
-	(add-hook 'org-mode-hook
-	          (lambda ()
-			              (add-hook 'after-save-hook 'org-html-export-to-html nil t)))
-	```
 - [x] Check native line numbers in Emacs 26
 	> ** Emacs now supports optional display of line numbers in the buffer.
 	This is similar to what 'linum-mode' provides, but much faster and
@@ -92,12 +81,11 @@
 	(custom-set-variables '(display-line-numbers-type 'relative))
 	  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 	```
-- [ ] How to upgrade packages installed using `use-package`
+- [x] How to upgrade packages installed using `use-package`
 	<https://www.reddit.com/r/emacs/comments/3m5tqx/can_usepackage_upgrade_installed_packages/>
-- [ ] Read [Flycheck versus Flymake — Flycheck 32-cvs documentation](http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html)
 - [x] Can I use any region expansion plugin? [Easy-kill](https://github.com/leoliu/easy-kill) or [Expand Region](https://github.com/magnars/expand-region.el)
 
-    ```
+```
   (use-package easy-kill
     :ensure t
     :config
@@ -108,35 +96,13 @@
       :bind (([remap kill-ring-save] . easy-kill)
              ("C-M-SPC" . mark-sexp)
              ([remap mark-sexp] . easy-mark)))
-    ```
+```
 
-## evil-snipe
+- [ ] Read [Flycheck versus Flymake — Flycheck 32-cvs documentation](http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html)
 
-- 2 char jumps mapped to `s` and `S` respectively
-- can replace `f`, `t`, `F`, `T`
-
-SP doesn't bind `)` to "jump out of sexp". Hmmm, not the behavior I'm observing?
-
-*Update*: replaced both evil-snipe and ace-jump with avy
-
-## avy
-
-- in `isearch`, jump to a result with avy by using `C-'`
-- there are Org mode commands
-
-
-
-## ace-window
-
-After triggering `ace-window`, I can perform a series of actions against windows by first choosing the action below and then the window: 
-* `x`: delete
-* `m`: swap
-* `M`: move
-* `j`: select buffer
-* `n`: select the previous window
-* `u`: select buffer in the other window
-* `c`: split window fairly either vertically or horizontally
-* `v`: split window vertically
-* `b`: split window horizontally
-* `o`: maximize current window
-* `?`: display these commands
+- [ ] Automatically publish Org mode to MobileOrg
+    <https://stackoverflow.com/questions/8432108/how-to-automatically-do-org-mobile-push-org-mobile-pull-in-emacs#8432149>
+```
+(add-hook 'org-mode-hook
+          (lambda () (add-hook 'after-save-hook 'org-html-export-to-html nil t)))
+```
