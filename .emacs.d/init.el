@@ -289,7 +289,9 @@ the current window and the windows state prior to that."
   :init
   (setq markdown-command "~/bin/emarkdown"
         markdown-italic-underscore t
-        markdown-reference-location 'end))
+        markdown-reference-location 'end)
+  :config
+  (add-hook 'markdown-mode-hook (lambda () (set-fill-column 74))))
 
 (use-package markdown-toc)
 
