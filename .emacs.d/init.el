@@ -293,6 +293,7 @@ the current window and the windows state prior to that."
   :config
   (add-hook 'markdown-mode-hook (lambda () (set-fill-column 74))))
 
+
 (use-package markdown-toc)
 
 
@@ -521,6 +522,10 @@ the current window and the windows state prior to that."
            ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
                         (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
+
+            (todo "NEXT"
+                  ((org-agenda-overriding-header "My next actions:")
+                   (org-agenda-sorting-strategy '(todo-state-up priority-down))))
 
             (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Available now:")
