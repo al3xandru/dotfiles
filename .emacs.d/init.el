@@ -31,7 +31,9 @@
 (setq default-frame-alist
       ;; (cursor-color . "#ffd700")
       '((width . 111)
-        (height . 75)))
+        (height . 75)
+        (ns-transparent-titlebar . t)
+        (ns-appearance . dark)))
 (when (member "Anka/Coder Narrow" (font-family-list))
   (add-to-list 'default-frame-alist '(font .  "Anka/Coder Narrow-13"))
   (set-face-attribute 'default t :font "Anka/Coder Narrow-13"))
@@ -61,6 +63,9 @@
 ;; Files
 ;;; Sessions
 (desktop-save-mode 1)
+
+;;; Symlinks
+(setq vc-follow-symlinks t)
 
 ;;; Backups
 (setq backup-directory-alist `((".*" . "~/.emacs.d/.backups"))
@@ -163,9 +168,10 @@
 ;;----------------------------------------------------------------------------
 ;; Variables configured via the interactive 'customize' interface
 ;;----------------------------------------------------------------------------
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
+(progn
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file)))
 
 ;; Load local customizations (local to the computer)
 ;; (when (file-exists-p "~/local.el")
@@ -194,6 +200,15 @@ Consider only documented, non-obsolete functions."
   (message (buffer-file-name))
   (kill-new (file-truename buffer-file-name)))
 (global-set-key (kbd "C-c z") #'alpo/show-file-name)
+
+;;; zap-up-to-char instead of zap-to-char https://www.emacswiki.org/emacs/ZapUpToChar
+(autoload 'zap-up-to-char "misc"
+  "Kill up to, but not including ARGth occurrence of CHAR
+
+   (fn arg char)"
+  'interactive)
+(global-set-key (kbd "M-Z") 'zap-to-char)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
 
 ;;; One Window Toggle
 ;;; https://github.com/kaushalmodi/.emacs.d/blob/95da6831a5faad7909960a7772493ae045e51003/setup-files/setup-windows-buffers.el#L473-L493
@@ -230,6 +245,9 @@ the current window and the windows state prior to that."
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
 
+(setq gnutls-verify-error t
+      gnutls-min-prime-bits 2048)
+
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -253,10 +271,13 @@ the current window and the windows state prior to that."
   :config
   (evil-mode t)
   (evil-set-initial-state 'org-mode 'emacs)
+  (evil-set-initial-state 'undo-tree 'emacs)
   (evil-set-initial-state 'markdown-mode 'normal)
   :bind (:map evil-normal-state-map
               ("j" . evil-next-visual-line)
-              ("k" . evil-previous-visual-line))
+              ("k" . evil-previous-visual-line)
+              ("<up>" . evil-previous-visual-line)
+              ("<down>" . evil-next-visual-line))
   :bind (:map evil-visual-state-map
               ("j" . evil-next-visual-line)
               ("k" . evil-previous-visual-line)))
@@ -296,6 +317,25 @@ the current window and the windows state prior to that."
 
 (use-package markdown-toc)
 
+;; Copy reference to current point
+;; Inspired by https://stackoverflow.com/questions/10681766/emacs-org-mode-textual-reference-to-a-fileline
+(defun alpo/ref-at-point ()
+  "Place on kill-ring details of the current point"
+  (interactive)
+  (kill-new (format "file:%s::%d" buffer-file-truename (line-number-at-pos)))
+  (if (derived-mode-p 'org-mode)
+      (let* ((header-info (assoc :headline (org-context)))
+             (text (when header-info
+                     (replace-regexp-in-string "\\ +$" ""
+                                               (replace-regexp-in-string "\\(:[^:]+\\)+:$" ""
+                                                                         (replace-regexp-in-string "\\*+\\ " ""
+                                                                                                   (buffer-substring-no-properties (or (cadr header-info) (point-min))
+                                                                  (or (caddr header-info) (point-max)))))))))
+        (if (not text)
+            (kill-new (format "re:task at line#%d" (line-number-at-pos)))
+          (kill-new (format "re:%s" text))))
+      (kill-new (format "ref %s#%d" (file-name-nondirectory (buffer-file-name)) (line-number-at-pos)))))
+(global-set-key (kbd "C-x M-c") #'alpo/ref-at-point)
 
 ;; Copy URL from Org
 ;; https://emacs.stackexchange.com/questions/3981/how-to-copy-links-out-of-org-mode
@@ -326,6 +366,7 @@ the current window and the windows state prior to that."
          ("C-c M-c" .  alpo/org-retrieve-url-at-point))
   :config
   (add-to-list 'org-modules 'org-habit)
+  (add-to-list 'org-modules 'org-protocol)
   (setq org-hide-leading-stars t
         org-startup-indented t
         org-use-speed-commands t)
@@ -357,6 +398,10 @@ the current window and the windows state prior to that."
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"
         org-mobile-inbox-for-pull "~/Dropbox/Dox/mydox/11-inbox.org")
 
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'after-save-hook 'alpo/org-mobile-push-on-save nil 'make-local)))
+
   (setq org-log-done t
         org-log-into-drawer "LOGBOOK")
   
@@ -382,7 +427,7 @@ the current window and the windows state prior to that."
   ;;       org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
   
   (setq org-tag-alist '((:startgroup . nil)
-                        ("#work" . ?w) ("#me" . ?m)
+                        ("#work" . ?0) ("#me" . ?1)
                         (:endgroup . nil)
                         (:startgroup . nil)
                         ("@office" . ?o)
@@ -395,15 +440,35 @@ the current window and the windows state prior to that."
                         ("calendar" . ?C)
                         ("confluence" . ?X)
                         ("email" . ?E)
+                        ("jira" . ?J)
                         ("meeting" . ?M)
                         ("org" . ?O)
                         ("who" . ?W)
                         ("phone" . ?P)
                         ("slack" . ?S)
                         ("vpn" . ?V)
-                        ("zoom" . ?Z)))
+                        ("zoom" . ?Z)
+                        (:startgroup . nil)
+                        ("aaron_weisberg" . ?a)
+                        ("ajai_joy" . ?A)
+                        ("dimitris_tzannetos" . ?d)
+                        ("edwin_biemond" . ?e)
+                        ("henry_woodbury" . ?h)
+                        ("jeban_kanagarajan" . ?j)
+                        ("phaneendhar_mandala" . ?p)
+                        ("shukun_yang" . ?s)
+                        ("thomas_lau" . ?t)
+                        ("venkat_vengala" . ?v)
+                        ("carter_shanklin" . nil)
+                        ("prashant_jha" . nil)
+                        ("erik_bergenholtz" . nil)
+                        ("greg_pavlik" . nil)
+                        ("durgasuresh_kagitha". nil)
+                        ("sonali_birari" . nil)
+                        ("vani_srivastava" . nil)
+                        (:endgroup . nil)))
   
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "POST(p!/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
                              ;; (sequence "PRJ" "MEETING(m)"  "|")))
 
   (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
@@ -451,9 +516,10 @@ the current window and the windows state prior to that."
            "* Meeting"
            entry
            (file+datetree org-default-notes-file)
-           "* MEETING %? :meeting:\n:MEETING:\n:CREATED: %U:\n:PEOPLE:\n:RECORDING:\n:END:"
+           "* MEETING %? :meeting:\n:PROPERTIES:\n:CREATED: %U:\n:PEOPLE:\n:RECORDING:\n:END:"
            :clock-in t
            :clock-keep t)
+          
           ("p"
            "Project"
            entry
@@ -475,11 +541,34 @@ the current window and the windows state prior to that."
           ("L" "Library")
           ("Lp" "Pick up book" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
           ("Lr" "Return book to library" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+          ("Lm" "Return magazines to library" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Return to library %^{How many magazines} magazines (%^{What magazines}) :#me:@library:\nDEADLINE: %^T")
 
-          ("M"
-           "Movie"
+          ("R" "Reads")
+          ("Rt" "TODO Read" entry (file+datetree org-default-notes-file)
+           "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:")
+          ("Rs" "SOMEDAY Read" entry (file+olp alpo-org-readlater-file "Read later")
+           "* SOMEDAY %?\n:PROPERTIES:\n:CREATED: %u\n:END:")
+          ("Rd" "DONE Read" entry (file+olp alpo-org-readlater-file "Read later")
+           "* DONE %?\n:CLOSED: %U")
+          
+          ("M" "Movies")
+          ("Mn" 
+           "Movie in theather"
            entry (file+olp alpo-org-someday-file "Movies in theater")
            "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
+          ("Mw"
+           "Movie wishlist"
+           entry (file alpo-org-someday-file)
+           "* SOMEDAY Check out %^{Kind|movie|TV series} \"%^{Title}\"%? :#me:")
+          ("Md"
+           "Movie offline"
+           entry (file alpo-org-someday-file)
+           "* SOMEDAY Check availability of movie \"%^{Title}\" :#me:")
+
+          ("T"
+           "Trip checklist"
+           entry (file+datetree org-default-notes-file)
+           (file  "~/Dropbox/Dox/mydox/90-trip.template.org"))
 
           ("*"
            "Random todo mainly for automation"
@@ -490,11 +579,12 @@ the current window and the windows state prior to that."
 
 
   (setq org-agenda-custom-commands
-        '(("w" "Daily use"
+        '(("c" . "Custom agenda views")
+          ("W" "Weekly agenda with NEXT, on HOLD, and INBOX sections for daily use"
            ((agenda "Weekly agenda"
                     ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
                      (org-agenda-span 'week)
-                     (org-deadline-warning-days 7)
+                     (org-deadline-warning-days 0)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
             (todo "NEXT"
@@ -518,7 +608,7 @@ the current window and the windows state prior to that."
            ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
            ;;  (org-agenda-view-columns-initially t))
            )
-          ("b" "Backlog"
+          ("B" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
            ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
                         (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
@@ -543,15 +633,27 @@ the current window and the windows state prior to that."
 
             (tags-todo "-DEADLINE<=\"<+1w>\"&-SCHEDULED<=\"<+1w>\"/!TODO|NEXT"
                        ((org-agenda-overriding-header "Backlog")
-                        (org-agenda-sorting-strategy '(timestamp-up priority-down))))))
+                        (org-agenda-sorting-strategy '(timestamp-up priority-down)))))
+           
+           ((org-agenda-files  (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                             "12-mlo.org"
+                                                                             "13-tickler.org"
+                                                                             ;; "14-mho.org"
+                                                                             "18-reads.org"
+                                                                             "19-maybes.org")))
+           ))
           
-          ("A" "Archive m CLOSED<\"<-1m>\""
-           (
-            ;; (todo "DONE|SKIP"
-            (tags-todo "+CLOSED<\"<-1m>\""
+          ("Z" "Archive m CLOSED<\"<-1m>\""
+           ((tags-todo "+CLOSED<\"<-1m>\""             ;; (todo "DONE|SKIP"
                   ((org-agenda-overriding-header "Archive")
                    (org-tags-match-list-sublevels nil)
-                   (org-agenda-sorting-strategy '(tsia-down))))))
+                   (org-agenda-sorting-strategy '(tsia-down)))))
+           ((org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                  "12-mlo.org"
+                                                                                  "13-tickler.org"
+                                                                                  "14-mho.org"
+                                                                                  ;; "18-reads.org"
+                                                                                  "19-maybes.org")))))
 
           ))
 
@@ -618,6 +720,22 @@ the current window and the windows state prior to that."
   ;; Rebuild the reminders everytime the agenda is displayed
   (add-hook 'org-finalize-agenda-hook 'alpo/org-agenda-to-appt 'append))
 
+;; https://stackoverflow.com/a/31360779
+(defvar alpo/org-mobile-push-timer nil)
+
+(defun alpo/org-mobile-push-on-save ()
+  "Used as 'after-save-hook to automatically push to org-mobile"
+  (interactive)
+  (let ((secs 10))
+  (when (memq this-command '(save-buffer save-some-buffer))
+    (when alpo/org-mobile-push-timer
+      (cancel-timer alpo/org-mobile-push-timer))
+    (setq alpo/org-mobile-push-timer
+          (run-with-idle-timer
+           (* 1 secs) nil (lambda ()
+                            (org-mobile-push)
+                            (alpo/message-in-buffer "org-mobile-push")))))))
+
 (defun alpo/org-open-typed-link (type path)
   "Open an URL using a custom scheme"
   (let ((escpath (replace-regexp-in-string " " "%20" path)))
@@ -680,6 +798,9 @@ the current window and the windows state prior to that."
   :hook (org-mode .  org-bullets-mode)
   :init (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")))
 
+;; (use-package org-protocol
+;;   :after (org))
+
 ;;; --------
 ;;; Optional
 ;;; --------
@@ -695,7 +816,9 @@ the current window and the windows state prior to that."
               ("s" . ace-jump-mode)))
 
 (use-package ace-window
-  :bind ("C-x o" . ace-window))
+  :bind ("C-x o" . ace-window)
+  :config (custom-set-faces '(aw-leading-char-face ((t (:foreground "red" :weight normal :height 1.5))))))
+
 
 (use-package avy
   :init
@@ -716,6 +839,7 @@ the current window and the windows state prior to that."
 (use-package counsel
   :after ivy
   :bind (("M-x" . counsel-M-x)
+         ("M-y" . counsel-yank-pop)
          ("C-x j i" . counsel-imenu)
          ("C-x C-b" . counsel-ibuffer)
          ("C-x C-f" . counsel-find-file)))
@@ -747,6 +871,12 @@ the current window and the windows state prior to that."
          ("C-c i r" . ispell-region))
   :init (setq ispell-program-name "/usr/local/bin/aspell"))
 
+(use-package persistent-scratch
+  :ensure t
+  :init (with-demoted-errors (persistent-scratch-restore))
+  :config
+  (persistent-scratch-setup-default)
+  (persistent-scratch-autosave-mode 1))
 
 (use-package rainbow-delimiters
   :hook (prog-mode .  rainbow-delimiters-mode))
