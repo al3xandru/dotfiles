@@ -29,8 +29,10 @@ alias ziplist='unzip -l'
 # editors: vim, nvim, mvim, vimr
 alias v="nvim"
 alias vs="nvim -S"
-alias e="vimr"
-alias es="vimr --nvim -S"
+# alias e="vimr"
+# alias es="vimr --nvim -S"
+alias e=mvim
+alias es="mvim -S"
 alias temacs="emacs -nw"
 # alias E='$HOME/bin/emacscltsrv'
 # alias x='$HOME/bin/emacscltsrv'
