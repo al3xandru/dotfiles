@@ -75,7 +75,7 @@ if [ -z "$JAVA_HOME" ]; then
             ;;
     esac
     if [ -z "$VM_VERSION" ]; then
-        VM_VERSION="jdk-9"
+        VM_VERSION="jdk1.8"
     fi
     if [ -d "$vmdir" ]; then
         PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
