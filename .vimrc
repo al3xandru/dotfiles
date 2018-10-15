@@ -608,6 +608,8 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
+Plugin 'cormacrelf/vim-colors-github'
+let g:github_colors_soft = 1
 Plugin 'lifepillar/vim-wwdc17-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
@@ -1370,6 +1372,13 @@ Plugin 'gregsexton/gitv'
 "}}}
 
 " Experimental {{{1
+" Plugin 'MattesGroeger/vim-bookmarks'
+"  allows toggling bookmarks per line
+
+
+Plugin 'liuchengxu/vim-which-key'
+nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
+nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 "}}}
 
 call vundle#end()
@@ -1717,4 +1726,4 @@ let g:notes_conceal_code=0
 " https://github.com/tpope/vim-pathogen
 " http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
 " 
-" vim: set foldlevel=0 foldmethod=marker:
+"vim: set foldlevel=0 foldmethod=marker:
