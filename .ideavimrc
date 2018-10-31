@@ -1,4 +1,5 @@
-set clipboard=unnamed
+# mapping conflicts: Preferences -> Editor -> Vim Emulation
+set clipboard+=unnamed
 set history=10000
 set hlsearch
 set ignorecase
@@ -13,15 +14,26 @@ nnoremap j gj
 vnoremap j gj
 nnoremap k gk
 vnoremap k gk
-inoremap <C-a> <C-o>A
+" inoremap <C-a> <C-o>A
+inoremap <A-a> <C-o>A
+nnoremap <space><esc> :nohlsearch<CR>
+" nnoremap <space>hh :nohlsearch<CR>
+" action based
 nnoremap gcc :action CommentByLineComment<CR>
 vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
 vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
-nnoremap ,s :action AceJumpAction<CR>
-nnoremap ,s :action AceAction<CR>
+" nnoremap ,s :action AceJumpAction<CR>
+" nnoremap ,s :action AceAction<CR>
 nnoremap s :action AceAction<CR>
-" nnoremap <space>hh :nohlsearch<CR>
-nnoremap <space><esc> :nohlsearch<CR>
+nnoremap g; :action Back<CR>
+nnoremap g, :action Forward<CR>
+nnoremap cn :action GotoNextError<CR>
+nnoremap ]c :action GotoNextError<CR>
+nnoremap cp :action GotoPreviousError<CR>
+nnoremap [c :action GotoPreviousError<CR>
+" address some conflicts
+" nnoremap <C-D> :action Debug<CR>
+
 nmap [o- :set nonumber relativenumber<CR>
 vmap [o- :set nonumber relativenumber<CR>
 nmap ]o- :set norelativenumber number<CR>
