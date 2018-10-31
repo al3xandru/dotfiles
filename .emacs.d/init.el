@@ -370,6 +370,7 @@ the current window and the windows state prior to that."
   (setq org-hide-leading-stars t
         org-startup-indented t
         org-use-speed-commands t)
+  ;; (setq org-ellipsis "…")             ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html#disqus_thread
 
   (setq org-directory "~/Dropbox/Dox/mydox/"
         org-default-notes-file (concat org-directory "12-mlo.org")
@@ -798,8 +799,39 @@ the current window and the windows state prior to that."
   :hook (org-mode .  org-bullets-mode)
   :init (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")))
 
-;; (use-package org-protocol
-;;   :after (org))
+(use-package org-download
+  :ensure t
+  :hook ((org-mode . org-download-enable)
+         (dired-mode . org-download-enable))
+  :config
+  (setq org-download-method 'attach))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode .  rainbow-delimiters-mode))
+  ;; :commands rainbow-delimiters-mode
+  ;; :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+
+;; https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org#smartparens-mode
+;; run-hooks: Autoloading file /Users/alex/Dropbox/workspaces/mine/miscellaneous/emacs.d/.emacs.d/elpa/smartparens-20180530.1401/smartparens.elc failed to define function smartparens
+(use-package smartparens
+  :hook (text-mode . smartparens-mode)
+  :bind
+  (("C-M-f" . sp-forward-sexp)
+   ("C-M-b" . sp-backward-sexp)
+   ("C-M-k" . sp-kill-sexp )
+   ("C-M-d" . sp-down-sexp)
+   ("C-M-u" . sp-backward-up-sexp)
+   ("M-0" .  sp-forward-slurp-sexp)))
+  ;; :commands smartparens-mode
+  ;; :init (add-hook 'prog-mode-hook #'smartparens-mode))
+
+;; https://github.com/auwsmit/emacsconfig/blob/master/config.org#show-available-key-bindings
+(use-package which-key
+  :defer 5
+  :diminish
+  :commands which-key-mode
+  :config (which-key-mode))
 
 ;;; --------
 ;;; Optional
@@ -848,6 +880,15 @@ the current window and the windows state prior to that."
   :bind (("C-c C-e" . er/expand-region)
          ("C-c e" . er/expand-region)))
 
+;; Bindings start with C-c C-w
+(use-package eyebrowse
+  :ensure t
+  :init
+  (setq eyebrowse-keymap-prefix (kbd "C-c C-3")
+        eyebrowse-new-workspace t)
+  (global-unset-key (kbd "C-c C-w"))
+  :config (eyebrowse-mode t))
+
 ;; `M-o' for extra actions on selection
 (use-package ivy
   :init
@@ -860,7 +901,8 @@ the current window and the windows state prior to that."
 
 (use-package swiper
   :after ivy
-  :bind (("C-x /" . swiper)))
+  :bind (("C-x /" . swiper)
+         ("C-s" .  swiper)))
 
 (use-package ispell
   :no-require t
@@ -878,25 +920,6 @@ the current window and the windows state prior to that."
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode 1))
 
-(use-package rainbow-delimiters
-  :hook (prog-mode .  rainbow-delimiters-mode))
-  ;; :commands rainbow-delimiters-mode
-  ;; :init (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
-
-
-;; https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org#smartparens-mode
-;; run-hooks: Autoloading file /Users/alex/Dropbox/workspaces/mine/miscellaneous/emacs.d/.emacs.d/elpa/smartparens-20180530.1401/smartparens.elc failed to define function smartparens
-(use-package smartparens
-  :hook (text-mode . smartparens-mode)
-  :bind
-  (("C-M-f" . sp-forward-sexp)
-   ("C-M-b" . sp-backward-sexp)
-   ("C-M-k" . sp-kill-sexp )
-   ("C-M-d" . sp-down-sexp)
-   ("C-M-u" . sp-backward-up-sexp)
-   ("M-0" .  sp-forward-slurp-sexp)))
-  ;; :commands smartparens-mode
-  ;; :init (add-hook 'prog-mode-hook #'smartparens-mode))
 
 (use-package undo-tree
   :init
@@ -904,12 +927,6 @@ the current window and the windows state prior to that."
         undo-tree-visualizer-timestamps t)
   :config (global-undo-tree-mode))
 
-;; https://github.com/auwsmit/emacsconfig/blob/master/config.org#show-available-key-bindings
-(use-package which-key
-  :defer 5
-  :diminish
-  :commands which-key-mode
-  :config (which-key-mode))
 
 
 ;;; ------
