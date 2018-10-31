@@ -339,6 +339,8 @@ inoremap <silent><Down> <esc><Down>
 " insert at the end of line while in insert mode; 
 " i_CTRL-A is insert previously inserted text; i_CTRL-I is insert <tab>
 inoremap <C-a> <C-o>A
+inoremap <A-a> <C-o>A
+inoremap å <C-o>A
 " Insert a newline in normal mode
 " nnoremap <S-Enter> O<Esc>
 " nnoremap <CR> o<Esc>
@@ -452,7 +454,9 @@ inoremap <silent><C-tab> <ESC>:tabnext<CR>
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
 " Alt+] on OS X
-if has('mac') || has('macunix')
+nmap <A-]> <C-\>
+imap <A-]> <C-\>
+if (has('mac') || has('macunix')) && has('gui')
     nmap ‘ <C-\>
     imap ‘ <C-\>
 endif
@@ -941,7 +945,7 @@ let g:user_emmet_leader_key='<C-E>'
 
 " Java completion
 " Plugin 'VictorDenisov/javacomplete'
-Plugin 'artur-shaik/vim-javacomplete2'
+" Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Javascript
@@ -1174,11 +1178,11 @@ augroup END
 Plugin 'jiangmiao/auto-pairs' " {{{
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
-if has('mac')
-    let g:AutoPairsShortcutJump='≥'
-    let g:AutoPairsShortcutFastWrap='≤'
+if (has('mac') || has('macunix')) && has('gui')
+    let g:AutoPairsShortcutJump='ª'
+    let g:AutoPairsShortcutFastWrap='º'
 else
-    let g:AutoPairsShortcutJump='<M-9>'
+    let g:AutoPairsShortcutJump='<A-9>'
     let g:AutoPairsShortcutFastWrap='<A-0>'
 endif
 "Plugin 'Raimondi/delimitMate'
