@@ -31,8 +31,8 @@ nnoremap cn :action GotoNextError<CR>
 nnoremap ]c :action GotoNextError<CR>
 nnoremap cp :action GotoPreviousError<CR>
 nnoremap [c :action GotoPreviousError<CR>
-" address some conflicts
-" nnoremap <C-D> :action Debug<CR>
+" nnoremap ]m :action MethodDown<CR>
+" nnoremap [m :action MethodUp<CR>
 
 nmap [o- :set nonumber relativenumber<CR>
 vmap [o- :set nonumber relativenumber<CR>
