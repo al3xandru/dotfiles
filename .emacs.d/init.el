@@ -46,11 +46,6 @@
 (blink-cursor-mode 0)
 (setq ring-bell-function 'ignore)
 
-;;; theme
-;; (if window-system
-;;     (load-theme 'misterioso t)
-;;   (load-theme 'leuven t))
-(load-theme 'leuven t)
 
 ;;; splash screen
 (setq inhibit-splash-screen t
@@ -469,18 +464,27 @@ the current window and the windows state prior to that."
                         ("vani_srivastava" . nil)
                         (:endgroup . nil)))
   
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "POST(p!/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
                              ;; (sequence "PRJ" "MEETING(m)"  "|")))
 
-  (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
-                                 ("NEXT" . (:foreground "#c61b6e" :weight bold))
-                                 ("WAIT" . (:foreground "#5859b7" :slant italic))
-                                 ("HOLD" . (:foreground "#2075c7" :slant italic))
-                                 ("DONE" . (:foreground "#52676f" :weight normal :strike-through t))
-                                 ("SKIP" . (:foreground "#465a61" :weight normal :slant italic :strike-through t))
-                                 ("SOMEDAY" .  (:foreground "#a57705" :weight normal))
-                                 ("PRJ" .  (:foreground "#4f97d7" :weight bold :height 1.2))
-                                 ("MEETING" .  (:foreground "#83AFE5" :weight normal))))
+  ;; (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
+  ;;                                ("NEXT" . (:foreground "#c61b6e" :weight bold))
+  ;;                                ("WAIT" . (:foreground "#5859b7" :slant italic))
+  ;;                                ("HOLD" . (:foreground "#2075c7" :slant italic))
+  ;;                                ("DONE" . (:foreground "#52676f" :weight normal :strike-through t))
+  ;;                                ("SKIP" . (:foreground "#465a61" :weight normal :slant italic :strike-through t))
+  ;;                                ("SOMEDAY" .  (:foreground "#a57705" :weight normal))
+  ;;                                ("PRJ" .  (:foreground "#4f97d7" :weight bold :height 1.2))
+  ;;                                ("MEETING" .  (:foreground "#83AFE5" :weight normal))))
+  (setq org-todo-keyword-faces '(("TODO" . (:weight normal))
+                                 ("NEXT" . (:weight bold))
+                                 ("WAIT" . (:slant italic))
+                                 ("HOLD" . (:slant italic))
+                                 ("DONE" . (:weight normal :strike-through t))
+                                 ("SKIP" . (:weight normal :slant italic :strike-through t))
+                                 ("SOMEDAY" . (:weight normal))
+                                 ("PRJ" . (:weight bold :height 1.2))
+                                 ("MEETING" . (:weight normal))))
 
   (setq org-capture-templates
         '(("t"
@@ -936,10 +940,14 @@ the current window and the windows state prior to that."
 (use-package anti-zenburn-theme :defer t :no-require t)
 ;; (use-package color-theme-github :defer t :no-require t)
 (use-package darktooth-theme :defer t :no-require t)
+;; (use-package doneburn-theme  :defer t :no-require t)
+;; (use-package flatui-theme    :defer t :no-require t)
 (use-package gruvbox-theme   :defer t :no-require t)
 (use-package material-theme  :defer t :no-require t)
 (use-package nova-theme      :defer t :no-require t)
+(use-package plan9-theme     :defer t :no-require t)
 (use-package subatomic-theme :defer t :no-require t)
+(use-package twilight-bright-theme :defer t :no-require t)
 
 
 ;; Tips & Tricks
@@ -951,3 +959,7 @@ the current window and the windows state prior to that."
 ;;     (message "Emacs older than 26.1")
 ;;   (message "Emacs newer than 26.1"))
 
+;;; theme
+;;; light themes: leuven gruvbox-light-[hard|medium|soft] plan9 twilight-bright
+;; (load-theme 'gruvbox-light-hard)
+(load-theme 'material-light)
