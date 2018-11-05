@@ -1234,7 +1234,7 @@ nnoremap <silent><leader>bh :Startify<CR>
 " Plugin 'camelcasemotion'
 " Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
-" Alt - w/b/3/g => ∑/∫/£/©
+" Ver.1: Alt - w/b/3/g => ∑/∫/£/© {{{3
 " map ∑ <Plug>CamelCaseMotion_w
 " map ∫ <Plug>CamelCaseMotion_b
 " map £ <Plug>CamelCaseMotion_e
@@ -1245,19 +1245,27 @@ Plugin 'bkad/CamelCaseMotion'
 " xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 " omap <silent> i£ <Plug>CamelCaseMotion_ie
 " xmap <silent> i£ <Plug>CamelCaseMotion_ie
+" end ver }}}
+" Ver.2: w -> CamelCase, orig w -> W, orig.W -> Alt+w {{{3
 " these remaps work if I want to
-noremap ∑ W
-noremap ∫ B
-noremap £ E
-noremap © gE
-noremap W w
-noremap B b
-noremap E e
-noremap gE ge
-map w <Plug>CamelCaseMotion_w
-map b <Plug>CamelCaseMotion_b
-map e <Plug>CamelCaseMotion_e
-map ge <Plug>CamelCaseMotion_ge
+" noremap ∑ W
+" noremap ∫ B
+" noremap £ E
+" noremap © gE
+" noremap W w
+" noremap B b
+" noremap E e
+" noremap gE ge
+" map w <Plug>CamelCaseMotion_w
+" map b <Plug>CamelCaseMotion_b
+" map e <Plug>CamelCaseMotion_e
+" map ge <Plug>CamelCaseMotion_ge
+" end ver.2}}}
+" Ver.3
+map ]w <Plug>CamelCaseMotion_w
+map [w <Plug>CamelCaseMotion_e
+map ]W <Plug>CamelCaseMotion_b
+map [W <Plug>CamelCaseMotion_ge
 " }}}
 
 " Search 2 chars and improved t/f {{{2
@@ -1342,6 +1350,8 @@ let g:goldenview__enable_default_mapping=0
 " tpope extensions: surround, unimpaired {{{
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
+" to disable a mapping
+let g:nremap = {"[<Space>": '', "]<Space>": ''}
 Plugin 'tpope/vim-obsession'
 " }}}
 
