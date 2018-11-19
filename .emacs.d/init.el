@@ -79,6 +79,7 @@
 
 ;; Editor
 (setq-default indicate-empty-lines t
+              line-spacing 0.1
               scroll-margin 5)
 
 ;;; utf-8
@@ -360,8 +361,9 @@ the current window and the windows state prior to that."
          ("C-c l" . org-store-link)
          ("C-c M-c" .  alpo/org-retrieve-url-at-point))
   :config
+  (add-to-list 'org-modules 'org-checklist)
   (add-to-list 'org-modules 'org-habit)
-  (add-to-list 'org-modules 'org-protocol)
+  ;; (add-to-list 'org-modules 'org-protocol)
   (setq org-hide-leading-stars t
         org-startup-indented t
         org-use-speed-commands t)
@@ -422,10 +424,11 @@ the current window and the windows state prior to that."
   ;; (setq org-display-custom-times t
   ;;       org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
   
-  (setq org-tag-alist '((:startgroup . nil)
-                        ("#work" . ?0) ("#me" . ?1)
+  (setq org-tag-alist '((:startgroup . "area")
+                        ("#me" . ?1)
+                        ("#work" . ?2) 
                         (:endgroup . nil)
-                        (:startgroup . nil)
+                        (:startgroup . "location")
                         ("@office" . ?o)
                         ("@home" . ?h)
                         ("@bank" . ?b)
@@ -433,6 +436,7 @@ the current window and the windows state prior to that."
                         ("@travel" . ?t)
                         ("@errands" . ?e)
                         (:endgroup . nil)
+                        (:startgroup .  "tools")
                         ("calendar" . ?C)
                         ("confluence" . ?X)
                         ("email" . ?E)
@@ -444,17 +448,19 @@ the current window and the windows state prior to that."
                         ("slack" . ?S)
                         ("vpn" . ?V)
                         ("zoom" . ?Z)
-                        (:startgroup . nil)
-                        ("aaron_weisberg" . ?a)
-                        ("ajai_joy" . ?A)
+                        ("endgroup" .  "tools")
+                        (:startgroup . "team")
+                        ("aaron_weisberg" . ?w)
+                        ("ajai_joy" . ?a)
                         ("dimitris_tzannetos" . ?d)
                         ("edwin_biemond" . ?e)
                         ("henry_woodbury" . ?h)
                         ("jeban_kanagarajan" . ?j)
-                        ("phaneendhar_mandala" . ?p)
+                        ("phaneendhar_mandala" . ?f)
                         ("shukun_yang" . ?s)
                         ("thomas_lau" . ?t)
                         ("venkat_vengala" . ?v)
+                        (:endgroup .  nil)
                         ("carter_shanklin" . nil)
                         ("prashant_jha" . nil)
                         ("erik_bergenholtz" . nil)
@@ -462,7 +468,7 @@ the current window and the windows state prior to that."
                         ("durgasuresh_kagitha". nil)
                         ("sonali_birari" . nil)
                         ("vani_srivastava" . nil)
-                        (:endgroup . nil)))
+                        ))
   
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
                              ;; (sequence "PRJ" "MEETING(m)"  "|")))
@@ -585,36 +591,42 @@ the current window and the windows state prior to that."
 
   (setq org-agenda-custom-commands
         '(("c" . "Custom agenda views")
-          ("W" "Weekly agenda with NEXT, on HOLD, and INBOX sections for daily use"
-           ((agenda "Weekly agenda"
+          ("d" "Weekly agenda with NEXT, on HOLD, and INBOX sections for daily use"
+           ((agenda "Today agenda"
                     ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
-                     (org-agenda-span 'week)
+                     (org-agenda-span 'day)
                      (org-deadline-warning-days 0)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
             (todo "NEXT"
-                  ((org-agenda-overriding-header "Next actions:")
+                  ((org-agenda-overriding-header "Focus/Important/Next actions:")
                    (org-agenda-sorting-strategy '(todo-state-up priority-down))))
 
             (todo "WAIT|HOLD"
                   ((org-agenda-overriding-header "Parked/Waiting")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
 
+            (agenda "Weekly agenda"
+                    ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
+                     (org-agenda-span 'week)
+                     (org-deadline-warning-days 0)
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
+            
             (todo "TODO|NEXT|SOMEDAY"
                   ((org-agenda-overriding-header "Inbox")
                    (org-agenda-files (list (concat org-directory "11-inbox.org")))))
-
-            (tags-todo "notes/!TODO|NEXT"
-                       ((org-agenda-overriding-header "Refile?")
-                        (org-tags-match-list-sublevels t)))
+            ;; let's keep these custom views focused
+            ;; (tags-todo "notes/!TODO|NEXT"
+            ;;            ((org-agenda-overriding-header "Refile?")
+            ;;             (org-tags-match-list-sublevels t)))
             )
 
            ;; Uncomment next 2 lines to change the format of the view
            ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
            ;;  (org-agenda-view-columns-initially t))
            )
-          ("B" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
-           ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT"
+          ("b" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
+           ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT|WAIT"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
                         (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
 
@@ -622,23 +634,25 @@ the current window and the windows state prior to that."
                   ((org-agenda-overriding-header "My next actions:")
                    (org-agenda-sorting-strategy '(todo-state-up priority-down))))
 
-            (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT"
+            (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT|WAIT"
                        ((org-agenda-overriding-header "Available now:")
                         (org-agenda-sorting-strategy '(habit-down ts-down scheduled-down priority-down))
                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'deadline))))
 
-            (tags-todo "+DEADLINE>\"<now>\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT"
+            (tags-todo "+DEADLINE>\"<0d>\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT|WAIT"
                        ((org-agenda-overriding-header "Deadlines in next 7 days:")
                         (org-agenda-sorting-strategy '(habit-down deadline-up priority-down))))
 
-            (tags-todo "+TIMESTAMP>\"<now>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<now>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT"
+            (tags-todo "+TIMESTAMP>\"<0d>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<0d>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT|WAIT"
                        ((org-agenda-overriding-header "Planned for next week:")
                         (org-agenda-sorting-strategy '(habit-down timestamp-up priority-down))
                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
 
-            (tags-todo "-DEADLINE<=\"<+1w>\"&-SCHEDULED<=\"<+1w>\"/!TODO|NEXT"
-                       ((org-agenda-overriding-header "Backlog")
-                        (org-agenda-sorting-strategy '(timestamp-up priority-down)))))
+            ;; keeping custom view focused
+            ;; (tags-todo "-DEADLINE<=\"<+1w>\"&-SCHEDULED<=\"<+1w>\"/!TODO|NEXT"
+            ;;            ((org-agenda-overriding-header "Backlog")
+            ;;             (org-agenda-sorting-strategy '(timestamp-up priority-down))))
+            )
            
            ((org-agenda-files  (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
                                                                              "12-mlo.org"
@@ -801,7 +815,8 @@ the current window and the windows state prior to that."
 (use-package org-bullets
   :after (org)
   :hook (org-mode .  org-bullets-mode)
-  :init (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")))
+  :init (setq org-bullets-bullet-list '("✸" "◉" "○" "◆" "▶")
+              inhibit-compacting-font-caches t)) ;; https://github.com/sabof/org-bullets/issues/11#issuecomment-439228372a
 
 (use-package org-download
   :ensure t
@@ -962,4 +977,4 @@ the current window and the windows state prior to that."
 ;;; theme
 ;;; light themes: leuven gruvbox-light-[hard|medium|soft] plan9 twilight-bright
 ;; (load-theme 'gruvbox-light-hard)
-(load-theme 'material-light)
+(load-theme 'dichromacy)
