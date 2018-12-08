@@ -596,6 +596,18 @@ if has('mac')
 endif
 
 
+function! BigWnd() 
+    colorscheme nuvola
+    " set gfn=Operator_Mono:h24
+    set gfn=mononoki:h24
+    set colorcolumn=0
+    set columns=80
+    " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "edit ~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
+    startinsert
+endfunction
+command! Bigwnd call BigWnd()
+
 " Load Vundle
 " Only Plugin settings are allowed until vundle#end()
 filetype off " required!
@@ -945,7 +957,7 @@ let g:user_emmet_leader_key='<C-E>'
 
 " Java completion
 " Plugin 'VictorDenisov/javacomplete'
-" Plugin 'artur-shaik/vim-javacomplete2'
+Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Javascript
