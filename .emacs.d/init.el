@@ -363,11 +363,13 @@ the current window and the windows state prior to that."
   :config
   (add-to-list 'org-modules 'org-checklist)
   (add-to-list 'org-modules 'org-habit)
-  ;; (add-to-list 'org-modules 'org-protocol)
+  (add-to-list 'org-modules 'org-protocol)
   (setq org-hide-leading-stars t
         org-startup-indented t
         org-use-speed-commands t)
-  ;; (setq org-ellipsis "…")             ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html#disqus_thread
+
+  ;; http://endlessparentheses.com/changing-the-org-mode-ellipsis.html#disqus_thread
+  ;; (setq org-ellipsis "…")
 
   (setq org-directory "~/Dropbox/Dox/mydox/"
         org-default-notes-file (concat org-directory "12-mlo.org")
@@ -389,7 +391,7 @@ the current window and the windows state prior to that."
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes t)
 
-  (setq org-archive-location "orgdata/archive/%s_archive::"
+  (setq org-archive-location "orgdata/archive/%s.archive::"
         org-attach-directory "orgdata/attachments/")
 
   ;; MobileOrg https://orgmode.org/org.html#MobileOrg
@@ -424,32 +426,20 @@ the current window and the windows state prior to that."
   ;; (setq org-display-custom-times t
   ;;       org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
   
-  (setq org-tag-alist '((:startgroup . "area")
+  (setq org-tag-alist '(("#PRJ" .  ?0)
+                        (:startgroup)
                         ("#me" . ?1)
                         ("#work" . ?2) 
-                        (:endgroup . nil)
-                        (:startgroup . "location")
-                        ("@office" . ?o)
-                        ("@home" . ?h)
-                        ("@bank" . ?b)
-                        ("@library" . ?l)
-                        ("@travel" . ?t)
-                        ("@errands" . ?e)
-                        (:endgroup . nil)
-                        (:startgroup .  "tools")
-                        ("calendar" . ?C)
-                        ("confluence" . ?X)
-                        ("email" . ?E)
-                        ("jira" . ?J)
-                        ("meeting" . ?M)
-                        ("org" . ?O)
-                        ("who" . ?W)
-                        ("phone" . ?P)
-                        ("slack" . ?S)
-                        ("vpn" . ?V)
-                        ("zoom" . ?Z)
-                        ("endgroup" .  "tools")
-                        (:startgroup . "team")
+                        (:endgroup)
+
+                        (:startgrouptag)
+                        ("who" .  ?W)
+                        (:grouptags)
+                        ("carter_shanklin" . ?c)
+                        ("prashant_jha" . ?p)
+                        ("erik_bergenholtz" . ?b)
+                        ("greg_pavlik" . ?g)
+
                         ("aaron_weisberg" . ?w)
                         ("ajai_joy" . ?a)
                         ("dimitris_tzannetos" . ?d)
@@ -457,20 +447,42 @@ the current window and the windows state prior to that."
                         ("henry_woodbury" . ?h)
                         ("jeban_kanagarajan" . ?j)
                         ("phaneendhar_mandala" . ?f)
-                        ("shukun_yang" . ?s)
+                        ("shukun_yang" . ?y)
                         ("thomas_lau" . ?t)
                         ("venkat_vengala" . ?v)
-                        (:endgroup .  nil)
-                        ("carter_shanklin" . nil)
-                        ("prashant_jha" . nil)
-                        ("erik_bergenholtz" . nil)
-                        ("greg_pavlik" . nil)
+                        (:newline)
                         ("durgasuresh_kagitha". nil)
                         ("sonali_birari" . nil)
                         ("vani_srivastava" . nil)
+                        (:endgrouptag)
+
+                        (:startgrouptag)
+                        (:grouptags)
+                        ("calendar" . ?C)
+                        ("confluence" . ?X)
+                        ("email" . ?E)
+                        ("jira" . ?J)
+                        ("meeting" . ?M)
+                        ("org" . ?O)
+                        ("phone" . ?P)
+                        ("slack" . ?K)
+                        ("vpn" . ?V)
+                        ("zoom" . ?Z)
+                        (:endgrouptag)
+
+                        (:startgroup)
+                        ("@office" . ?R)
+                        ("@home" . ?H)
+                        ("@bank" . ?B)
+                        ("@library" . ?L)
+                        ("@travel" . ?T)
+                        ("@store" . ?S)
+                        (:endgroup)
                         ))
   
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")))
+  (setq org-todo-keywords '(
+                            (sequence "TODO(t)" "NEXT(n!/!)" "DELEGATE(k!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")
+                            (sequence "DELEGATE(k!/!)" "WIP(p!/!)" "TODO(t@/!)"  "|" "DONE(d!)" "SKIP(x@/!)")))
                              ;; (sequence "PRJ" "MEETING(m)"  "|")))
 
   ;; (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
@@ -484,7 +496,9 @@ the current window and the windows state prior to that."
   ;;                                ("MEETING" .  (:foreground "#83AFE5" :weight normal))))
   (setq org-todo-keyword-faces '(("TODO" . (:weight normal))
                                  ("NEXT" . (:weight bold))
+                                 ("DELEGATE" . (:weight bold))
                                  ("WAIT" . (:slant italic))
+                                 ("WIP" . (:slant italic))
                                  ("HOLD" . (:slant italic))
                                  ("DONE" . (:weight normal :strike-through t))
                                  ("SKIP" . (:weight normal :slant italic :strike-through t))
@@ -527,7 +541,7 @@ the current window and the windows state prior to that."
            "* Meeting"
            entry
            (file+datetree org-default-notes-file)
-           "* MEETING %? :meeting:\n:PROPERTIES:\n:CREATED: %U:\n:PEOPLE:\n:RECORDING:\n:END:"
+           "* MEETING %? :meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:"
            :clock-in t
            :clock-keep t)
           
@@ -598,12 +612,12 @@ the current window and the windows state prior to that."
                      (org-deadline-warning-days 0)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
 
-            (todo "NEXT"
-                  ((org-agenda-overriding-header "Focus/Important/Next actions:")
+            (todo "NEXT|DELEGATE"
+                  ((org-agenda-overriding-header "Next actions:")
                    (org-agenda-sorting-strategy '(todo-state-up priority-down))))
 
-            (todo "WAIT|HOLD"
-                  ((org-agenda-overriding-header "Parked/Waiting")
+            (todo "WAIT|HOLD|WIP"
+                  ((org-agenda-overriding-header "Waiting")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
 
             (agenda "Weekly agenda"
@@ -612,7 +626,7 @@ the current window and the windows state prior to that."
                      (org-deadline-warning-days 0)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
             
-            (todo "TODO|NEXT|SOMEDAY"
+            (todo "TODO|NEXT|SOMEDAY|DELEGATE"
                   ((org-agenda-overriding-header "Inbox")
                    (org-agenda-files (list (concat org-directory "11-inbox.org")))))
             ;; let's keep these custom views focused
@@ -626,24 +640,28 @@ the current window and the windows state prior to that."
            ;;  (org-agenda-view-columns-initially t))
            )
           ("b" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
-           ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT|WAIT"
+           ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
                         (org-agenda-sorting-strategy '(habit-down deadline-down priority-down))))
 
-            (todo "NEXT"
+            (todo "NEXT|DELEGATE"
                   ((org-agenda-overriding-header "My next actions:")
                    (org-agenda-sorting-strategy '(todo-state-up priority-down))))
-
-            (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT|WAIT"
+            
+            ;; (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
+            (tags-todo "TIMESTAMP<\"<+1d>\"|SCHEDULED<\"<+1d>\""
                        ((org-agenda-overriding-header "Available now:")
                         (org-agenda-sorting-strategy '(habit-down ts-down scheduled-down priority-down))
-                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'deadline))))
+                        (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'notscheduled 'notdeadline))
+                        ;; (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottimestamp 'deadline))
+                        ))
 
-            (tags-todo "+DEADLINE>\"<0d>\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT|WAIT"
+            (tags-todo "+DEADLINE>\".\"+DEADLINE<=\"<+1w>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
                        ((org-agenda-overriding-header "Deadlines in next 7 days:")
                         (org-agenda-sorting-strategy '(habit-down deadline-up priority-down))))
 
-            (tags-todo "+TIMESTAMP>\"<0d>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<0d>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT|WAIT"
+            ;; (tags-todo "+TIMESTAMP>\"<0d>\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\"<0d>\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT|WAIT"
+            (tags-todo "+TIMESTAMP>\".\"+TIMESTAMP<\"<+8d>\"|+SCHEDULED>\".\"+SCHEDULED<\"<+8d>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
                        ((org-agenda-overriding-header "Planned for next week:")
                         (org-agenda-sorting-strategy '(habit-down timestamp-up priority-down))
                         (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
@@ -917,6 +935,12 @@ the current window and the windows state prior to that."
   :config (ivy-mode 1)
   :bind (:map ivy-switch-buffer-map
               ("C-k" . ivy-switch-buffer-kill)))
+
+(use-package keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1))
+
 
 (use-package swiper
   :after ivy
