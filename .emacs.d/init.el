@@ -447,7 +447,6 @@ the current window and the windows state prior to that."
                         ("henry_woodbury" . ?h)
                         ("jeban_kanagarajan" . ?j)
                         ("phaneendhar_mandala" . ?f)
-                        ("shukun_yang" . ?y)
                         ("thomas_lau" . ?t)
                         ("venkat_vengala" . ?v)
                         (:newline)
