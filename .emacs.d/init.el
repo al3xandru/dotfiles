@@ -82,6 +82,8 @@
               line-spacing 0.1
               scroll-margin 5)
 
+(add-hook 'text-mode-hook #'flyspell-mode)
+
 ;;; utf-8
 (setq buffer-file-coding-system 'utf-8
       file-name-coding-system 'utf-8
@@ -244,7 +246,8 @@ the current window and the windows state prior to that."
 (setq gnutls-verify-error t
       gnutls-min-prime-bits 2048)
 
-(package-initialize)
+(if (< emacs-major-version 27)
+    (package-initialize))
 
 (unless (package-installed-p 'use-package)
   (progn
@@ -308,7 +311,9 @@ the current window and the windows state prior to that."
         markdown-italic-underscore t
         markdown-reference-location 'end)
   :config
-  (add-hook 'markdown-mode-hook (lambda () (set-fill-column 74))))
+  (add-hook 'markdown-mode-hook (lambda () (set-fill-column 74)))
+  (add-hook 'markdown-mode-hook #'flyspell-mode)
+  (add-hook 'gfm-mode-hook #'flyspell-mode))
 
 
 (use-package markdown-toc)
@@ -377,11 +382,12 @@ the current window and the windows state prior to that."
                                                                              "12-mlo.org"
                                                                              "13-tickler.org"
                                                                              "14-mho.org"
-                                                                             "18-reads.org"
+                                                                             "15-wpo.org"
                                                                              "19-maybes.org")))
   
   (setq alpo-org-readlater-file (concat org-directory "18-reads.org")
         alpo-org-tickler-file (concat org-directory "13-tickler.org")
+        alpo-org-work-file (concat org-directory "15-wpo.org")
         alpo-org-someday-file (concat org-directory "19-maybes.org"))
 
   ;; check https://github.com/pisemsky/dotfiles/blob/b287adf0278ffc55e4fa47ee083c36e72c6ab751/.emacs.d/lisp/init-org.el
@@ -419,17 +425,18 @@ the current window and the windows state prior to that."
   (setq org-export-coding-system 'utf-8)
 
   ;; org-habit
-  (setq org-habit-preceding-days 14
-        org-habit-graph-column 60)
+  (setq org-habit-preceding-days 3
+        org-habit-following-days 3
+        org-habit-graph-column 80)
 
   ;; enable on a per-file basis #+STARTUP: customtime
   ;; (setq org-display-custom-times t
   ;;       org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
   
-  (setq org-tag-alist '(("#PRJ" .  ?0)
+  (setq org-tag-alist '(("@PRJ" .  ?0)
                         (:startgroup)
-                        ("#me" . ?1)
-                        ("#work" . ?2) 
+                        ("@me" . ?1)
+                        ("@work" . ?2) 
                         (:endgroup)
 
                         (:startgrouptag)
@@ -449,7 +456,7 @@ the current window and the windows state prior to that."
                         ("phaneendhar_mandala" . ?f)
                         ("thomas_lau" . ?t)
                         ("venkat_vengala" . ?v)
-                        (:newline)
+                        ;; (:newline)
                         ("durgasuresh_kagitha". nil)
                         ("sonali_birari" . nil)
                         ("vani_srivastava" . nil)
@@ -478,11 +485,20 @@ the current window and the windows state prior to that."
                         ("@store" . ?S)
                         (:endgroup)
                         ))
-  
+
+  ;; Remember to document how a sequence works if it's not self-explanatory
   (setq org-todo-keywords '(
+                            ;; my normal sequence:
+                            ;; NEXT: the 
+                            ;; DELEGATE/TASK: are tasks that I want to delegate
+                            ;; SOMEDAY: tasks I could consider sometime in the future
+                            ;; WAIT: I am waiting for something to be able to complete or proceed
                             (sequence "TODO(t)" "NEXT(n!/!)" "DELEGATE(k!/!)" "SOMEDAY(s)" "WAIT(w@/!)" "|" "DONE(d!)" "SKIP(x@/!)")
+                            ;; separate sequence for team tasks
+                            ;; DELEGATE/TASK: a task that I want to delegate.  It is *not* yet delegated
+                            ;; WIP: a task that was assigned and I'm waiting on its completion
                             (sequence "DELEGATE(k!/!)" "WIP(p!/!)" "TODO(t@/!)"  "|" "DONE(d!)" "SKIP(x@/!)")))
-                             ;; (sequence "PRJ" "MEETING(m)"  "|")))
+
 
   ;; (setq org-todo-keyword-faces '(("TODO" . (:foreground "#dc752f" :weight normal))
   ;;                                ("NEXT" . (:foreground "#c61b6e" :weight bold))
@@ -506,93 +522,103 @@ the current window and the windows state prior to that."
                                  ("MEETING" . (:weight normal))))
 
   (setq org-capture-templates
-        '(("t"
-           "* TODO"
-           entry
-           (file+datetree org-default-notes-file)
+        '(("t" "* TODO"
+           entry (file+datetree org-default-notes-file)
            "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
-          ("e"
-           "* TODO Respond to email"
-           entry
-           (file+datetree org-default-notes-file)
+
+          ("e" "* TODO Respond to email"
+           entry (file+datetree org-default-notes-file)
            "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("u"
-           "* TODO with link in clipboard"
-           entry
-           (file+datetree org-default-notes-file)
-           "* TODO %^{Action|Read|Check|Bookmark} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("U"
-           "* TODO from link"
-           entry
-           (file+datetree org-default-notes-file)
-           "* TODO %^{Action|Read|Check|Bookmark} \"%?\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("r"
-           "* SOMEDAY Read later link in clipboard"
-           entry
-           (file+olp alpo-org-readlater-file "Read later")
-           "* SOMEDAY %^{Action|Read|Check|Bookmark} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("R"
-           "* SOMEDAY Read later from link"
-           entry
-           (file+olp alpo-org-readlater-file "Read later")
-           "* SOMEDAY %^{Action|Read|Check|Bookmark} \"%?\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("m"
-           "* Meeting"
-           entry
-           (file+datetree org-default-notes-file)
-           "* MEETING %? :meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:"
+
+          ("T" "* TODO @work"
+           entry (file+datetree alpo-org-work-file)
+           "* TODO %? :@work:\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+
+          ("E" "* TODO Respond to email @work"
+           entry (file+datetree alpo-org-work-file)
+           "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :@work:email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
+
+          
+          ("m" "Meeting"
+           entry (file+datetree alpo-org-work-file)
+           "* MEETING %^{Description} (%U) :@work:meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:\n%?"
            :clock-in t
            :clock-keep t)
-          
-          ("p"
-           "Project"
-           entry
-           (file+olp org-default-notes-file "Projects")
+
+          ("p" "Project"
+           entry (file+olp org-default-notes-file "Projects")
            "* PRJ %? [%]\n** NEXT Write down what is the purpose or what are the goals/objectives for this project\n** TODO Write down what are the deliverables or what does it mean to be done\n** TODO Brainstorm initial set of tasks\n** TODO Organize tasks\n** TODO Identify next action")
 
-          ("x" "Using clipboard (todo, check, note)")
-          ("xt" "* TODO with clipboard" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n%c\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%i")
-          ("xc" "- [ ] Checbox with clipboard" checkitem (file+datetree org-default-notes-file) "- [ ] %?\n%c\n%U\n%i")
-          ("xn" "Note with clipboard" item (file+datetree org-default-notes-file) "+ %? %U\n%c")
-
-          ("w" "Using reference (todo, check, note)")
-          ("wt" "* TODO with ref" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:\nCREATED: %U\n%a\n%i")
-          ("wc" "- [ ] Checkbox with ref" checkitem (file+datetree org-default-notes-file)
-           "- [ ] %?\n%U\n%a\n%i")
-
-          ("L" "Library")
-          ("Lp" "Pick up book" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
-          ("Lr" "Return book to library" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
-          ("Lm" "Return magazines to library" entry (file+olp alpo-org-tickler-file "Calendar") "* TODO Return to library %^{How many magazines} magazines (%^{What magazines}) :#me:@library:\nDEADLINE: %^T")
-
-          ("R" "Reads")
-          ("Rt" "TODO Read" entry (file+datetree org-default-notes-file)
-           "* TODO %?\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("Rs" "SOMEDAY Read" entry (file+olp alpo-org-readlater-file "Read later")
-           "* SOMEDAY %?\n:PROPERTIES:\n:CREATED: %u\n:END:")
-          ("Rd" "DONE Read" entry (file+olp alpo-org-readlater-file "Read later")
-           "* DONE %?\n:CLOSED: %U")
-          
-          ("M" "Movies")
-          ("Mn" 
-           "Movie in theather"
-           entry (file+olp alpo-org-someday-file "Movies in theater")
-           "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
-          ("Mw"
-           "Movie wishlist"
-           entry (file alpo-org-someday-file)
-           "* SOMEDAY Check out %^{Kind|movie|TV series} \"%^{Title}\"%? :#me:")
-          ("Md"
-           "Movie offline"
-           entry (file alpo-org-someday-file)
-           "* SOMEDAY Check availability of movie \"%^{Title}\" :#me:")
-
-          ("T"
-           "Trip checklist"
+          ("T" "Trip checklist"
            entry (file+datetree org-default-notes-file)
            (file  "~/Dropbox/Dox/mydox/90-trip.template.org"))
+
+          
+          ("x" "Using clipboard...")
+          ("xu" "* TODO with URL in clipboard"
+           entry (file+datetree org-default-notes-file)
+           "* TODO %^{Action|Read|Check|Bookmark|Save|Download|Watch} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+
+          ("xs"
+           "* SOMEDAY (Action) with URL in clipboard"
+           entry (file+olp alpo-org-someday-file "Read later")
+           "* SOMEDAY %^{Action|Read|Check|Bookmark|Save|Download|Watch} \"[[%c][%?]]\"\n:PROPERTIES:\n:CREATED: %u\n:END:")
+
+          ("xt" "* TODO with clipboard"
+           entry (file+datetree org-default-notes-file)
+           "* TODO %?\n%c\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+          
+          ("xn" "Note with clipboard"
+           item (file+datetree org-default-notes-file)
+           "+ %c [%u]")
+          ;;; end "x"
+
+          
+          ("y" "Using reference...")
+          ("yt" "* TODO with ref"
+           entry (file+datetree org-default-notes-file)
+           "* TODO %a\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+          
+          ("yn" "Note with ref"
+           item (file+datetree org-default-notes-file)
+           "+ %a [%u]\n%i")
+          ;;; end "w"
+
+          
+          ("L" "Library")
+          ("Lp" "Pick up book"
+           entry (file+olp alpo-org-tickler-file "Calendar")
+           "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+
+          ("Lr" "Return book to library"
+           entry (file+olp alpo-org-tickler-file "Calendar")
+           "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+
+          ("Lm" "Return magazines to library"
+           entry (file+olp alpo-org-tickler-file "Calendar")
+           "* TODO Return to library %^{How many magazines} magazines (%^{What magazines}) :#me:@library:\nDEADLINE: %^T")
+          ;;; end "L"
+ 
+ 
+          ("M" "Movies")
+          ("Mn" "Movie in theather"
+           entry (file+olp alpo-org-someday-file "Movies in theater")
+           "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
+          
+          ("Mw" "Movie wishlist"
+           entry (file alpo-org-someday-file)
+           "* SOMEDAY Check out %^{Kind|movie|TV series} \"%^{Title}\"%? :#me:")
+          
+          ("Md" "Movie offline"
+           entry (file alpo-org-someday-file)
+           "* SOMEDAY Check availability of movie \"%^{Title}\" :#me:")
+          ;;; end "M"
+          
+
+          ;;; automation
+          ("X" "TODO Check URL"
+           entry (file+datetree org-default-notes-file)
+           "* TODO Check link '[[%:link][%:description]]'\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
 
           ("*"
            "Random todo mainly for automation"
@@ -606,10 +632,16 @@ the current window and the windows state prior to that."
         '(("c" . "Custom agenda views")
           ("d" "Weekly agenda with NEXT, on HOLD, and INBOX sections for daily use"
            ((agenda "Today agenda"
-                    ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
+                    ((org-agenda-entry-types '(:deadline :scheduled :timestamp :ts))
+                     (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                           "12-mlo.org"
+                                                                                           "13-tickler.org"
+                                                                                           "15-wpo.org"
+                                                                                           "19-maybes.org")))
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                      (org-agenda-span 'day)
-                     (org-deadline-warning-days 0)
-                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
+                     (org-deadline-warning-days 0)))
+
 
             (todo "NEXT|DELEGATE"
                   ((org-agenda-overriding-header "Next actions:")
@@ -622,22 +654,19 @@ the current window and the windows state prior to that."
             (agenda "Weekly agenda"
                     ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
                      (org-agenda-span 'week)
-                     (org-deadline-warning-days 0)
+                     (org-deadline-warning-days 3)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
             
             (todo "TODO|NEXT|SOMEDAY|DELEGATE"
                   ((org-agenda-overriding-header "Inbox")
                    (org-agenda-files (list (concat org-directory "11-inbox.org")))))
-            ;; let's keep these custom views focused
-            ;; (tags-todo "notes/!TODO|NEXT"
-            ;;            ((org-agenda-overriding-header "Refile?")
-            ;;             (org-tags-match-list-sublevels t)))
             )
 
            ;; Uncomment next 2 lines to change the format of the view
            ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
            ;;  (org-agenda-view-columns-initially t))
            )
+                    
           ("b" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
            ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
@@ -672,11 +701,10 @@ the current window and the windows state prior to that."
             )
            
            ((org-agenda-files  (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
-                                                                             "12-mlo.org"
-                                                                             "13-tickler.org"
-                                                                             ;; "14-mho.org"
-                                                                             "18-reads.org"
-                                                                             "19-maybes.org")))
+                                                                                   "12-mlo.org"
+                                                                                   "13-tickler.org"
+                                                                                   "15-wpo.org"
+                                                                                   "19-maybes.org")))
            ))
           
           ("Z" "Archive m CLOSED<\"<-1m>\""
@@ -684,12 +712,12 @@ the current window and the windows state prior to that."
                   ((org-agenda-overriding-header "Archive")
                    (org-tags-match-list-sublevels nil)
                    (org-agenda-sorting-strategy '(tsia-down)))))
-           ((org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
-                                                                                  "12-mlo.org"
-                                                                                  "13-tickler.org"
-                                                                                  "14-mho.org"
-                                                                                  ;; "18-reads.org"
-                                                                                  "19-maybes.org")))))
+           ;; ((org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+           ;;                                                                        "12-mlo.org"
+           ;;                                                                        "13-tickler.org"
+           ;;                                                                        "14-mho.org"
+           ;;                                                                        "19-maybes.org"))))
+           )
 
           ))
 
@@ -918,7 +946,8 @@ the current window and the windows state prior to that."
 
 ;; Bindings start with C-c C-w
 (use-package eyebrowse
-  :ensure t
+  :disabled
+  ;; :ensure t
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-c C-3")
         eyebrowse-new-workspace t)
