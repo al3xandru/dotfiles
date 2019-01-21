@@ -40,3 +40,5 @@ nmap ]o- :set norelativenumber number<CR>
 vmap ]o- :set norelativenumber number<CR>
 " extensions
 set surround
+" possible ideas
+" https://github.com/marskar/biof309_fall2018/blob/master/setup/.ideavimrc
