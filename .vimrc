@@ -49,6 +49,7 @@ set modelines=5
 set mouse=a
 set mousehide
 set sessionoptions-=options
+set sessionoptions+=curdir
 set showcmd     " show command in bottom bar
 set showmode    " display the current mode
 set wildmenu    " enhance command-line completion
@@ -140,27 +141,27 @@ let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 wwdc17
 let s:cs_pastel = "earendel gruvbox alduin jellybeans nova railcast2 tango2 kolor lucius wombat wombat256 wombat256mod camo"
 
 function! <SID>ChooseColorscheme(args)
-    let cslist = []
+    let l:cslist = []
     if len(a:args) == 0
         echo 'Usage: :THEME [all|dark|light|paster]'
         return
     elseif a:args == 'all'
         let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
-        let cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
+        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
         echo 'List of all installed colorschemes:'
-        echo join(cslist, "\n")
+        echo join(l:cslist, "\n")
         return
     elseif a:args == 'light'
-        let cslist = split(s:cs_light)
+        let l:cslist = split(s:cs_light)
         echo 'Light colorschemes:'
     elseif a:args == 'pastel'
-        let cslist = split(s:cs_pastel)
+        let l:cslist = split(s:cs_pastel)
         echo 'Pastel colorschemes:'
     elseif a:args == 'dark'
-        let cslist = split(s:cs_dark)
+        let l:cslist = split(s:cs_dark)
         echo 'Dark colorschemes:'
     endif
-    echo join(cslist, "\n")
+    echo join(l:cslist, "\n")
     echo "\n"
     execute "colorscheme " . input("Choice: ", "", "color")
 endfunction
@@ -408,11 +409,11 @@ nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
 nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
 
 function! <SID>HLNext (blinktime)
-    let target_pat = '\c\%#'.@/
-    let ring = matchadd('ErrorMsg', target_pat, 101)
+    let l:target_pat = '\c\%#'.@/
+    let l:ring = matchadd('ErrorMsg', l:target_pat, 101)
     redraw
     exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
-    call matchdelete(ring)
+    call matchdelete(l:ring)
     redraw
 endfunction
 " }}}
@@ -476,19 +477,21 @@ cnoremap <C-N> <C-R>=expand("%:t")<CR>
 
 " (C)Mappings: Save current session {{{
 function! <SID>SaveSession() 
-    let parentDir = getcwd()
-    let sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H%M%S") .  "_" .  join(split(parentDir, "/"),"~") . ".vim"
-    " exec "mksession! " . parentDir . "/.session.vim"
-    " echo "session saved " . parentDir . "/.session.vim"
-    if isdirectory(parentDir . "/.git")
-        let sessionFile = parentDir  .  "/.git/.session.vim"
+    let l:parentDir = getcwd()
+    let l:sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H%M%S") .  "_" .  join(split(l:parentDir, "/"),"~") . ".vim"
+    echom "Parent dir  :" .  l:parentDir
+    echom "Session file:" .  l:sessionFile
+    " exec "mksession! " . l:parentDir . "/.session.vim"
+    " echo "session saved " . l:parentDir . "/.session.vim"
+    if isdirectory(l:parentDir . "/.git")
+        let l:sessionFile = l:parentDir  .  "/.git/.session.vim"
     endif
     if exists("g:loaded_obsession")
-        exec "Obsession " .  sessionFile
+        exec "Obsession " .  l:sessionFile
     else
-        exec "mksession! " . sessionFile
+        exec "mksession! " . l:sessionFile
     endif
-    echom "session saved in " . sessionFile 
+    echom "session saved in " . l:sessionFile 
 endfunction
 cnoremap <C-s> <C-R> call <SID>SaveSession()<CR><CR>
 nnoremap <C-s> :call <SID>SaveSession()<CR>
@@ -603,7 +606,7 @@ function! BigWnd()
     set colorcolumn=0
     set columns=80
     " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
-    exec "edit ~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "edit ~/Dropbox/Dox/mydox/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
 command! Bigwnd call BigWnd()
@@ -724,7 +727,7 @@ let g:ctrlp_use_caching = 2000
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 let g:fzf_layout = {'up': '~20%'}
-" Mappings: fzf {{{4
+" Mappings: fzf {{{3
 nnoremap <unique><leader>of :Files<CR>
 nnoremap <unique><leader>og :GFiles<CR>
 nnoremap <unique><leader>ob :Buffers<CR>
@@ -732,13 +735,16 @@ nnoremap <unique><leader>oB :History<CR>
 nnoremap <unique><leader>ot :BTags<CR>
 nnoremap <unique><leader>o] :BTags<CR>
 nnoremap <unique><leader>oT :Tags<CR>
+nnoremap <unique><leader>ol :BLines<CR>
+nnoremap <unique><leader>oL :Lines<CR>
+nnoremap <unique><leader>ow :Windows<CR>
 " Other commands:
 " :BLines, :Lines, :Marks
 " :Commits, BCommits
 " :Windows
 " :Colors, :Commands, :Filetypes, :Maps
 " :History:, :History/
-" 4}}}
+" 3}}}
 " }}}
 
 
@@ -794,10 +800,11 @@ let g:gutentags_generate_on_new = 0
 Plugin 'beloglazov/vim-online-thesaurus'
 
 
-Plugin 'mbbill/undotree'
+Plugin 'mbbill/undotree' " {{{
 nnoremap <leader>u :UndotreeToggle<CR>
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
+" }}}
 
 
 Plugin 'tpope/vim-commentary'   " {{{
@@ -865,18 +872,24 @@ nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR
 
 " Snippets {{{2
 Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets'
+Plugin 'Shougo/neosnippet-snippets' "{{{
 imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
 xmap <C-e> <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " }}}
 " }}}
+" }}}
 
 
 " Language support {{{1
 "
-Plugin 'applescript.vim'
+Plugin 'sheerun/vim-polyglot' "{{{
+let g:polyglot_disabled = []
+" replacing for now applescript, fatih/vim-go, pangloss/vim-javascript,  hdima/python-syntax
+" }}}
+
+" Plugin 'applescript.vim'
 
 
 " Plugin 'VimClojure'
@@ -888,7 +901,7 @@ let vimclojure#SetupKeyMap = 0
 
 
 " Go {{{2
-Plugin 'fatih/vim-go'
+" Plugin 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
 let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
@@ -961,7 +974,7 @@ Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Javascript
-Plugin 'pangloss/vim-javascript'
+" Plugin 'pangloss/vim-javascript'
 
 
 " Asciidoc {{{2
@@ -1102,7 +1115,7 @@ augroup END
 
 " Python {{{2
 " Plugin 'lambdalisue/vim-pyenv'
-Plugin 'hdima/python-syntax'
+" Plugin 'hdima/python-syntax' " disabled with sheerun/vim-polyglot
 Plugin 'klen/python-mode'
 let g:pymode_doc = 1
 let g:pymode_doc_bind = 'K'
@@ -1150,17 +1163,10 @@ let g:jedi#rename_command = "<localleader>gr"
 
 " Plugin 'keith/swift.vim'
 
-" Tasklist
-Plugin 'TaskList.vim'
-augroup tasklist
-    autocmd!
-    autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
-augroup END
-map <unique><localleader>t <Plug>TaskList
 
-" Taskpaper
-Plugin 'davidoc/taskpaper.vim'
+Plugin 'davidoc/taskpaper.vim' " Taskpaper {{{
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
+" }}}
 
 
 Plugin 'digitalrounin/vim-yaml-folds'
@@ -1347,6 +1353,7 @@ Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 
 Plugin 'christoomey/vim-tmux-navigator' " vim & tmux
+" other option: https://github.com/wincent/terminus
 
 
 " Plugin 'roman/golden-ratio'   " Disabled: automatic resizing of Vim windows to golden ratio {{{
@@ -1367,6 +1374,7 @@ let g:nremap = {"[<Space>": '', "]<Space>": ''}
 Plugin 'tpope/vim-obsession'
 " }}}
 
+
 " Dash.app {{{
 Plugin 'rizzatti/funcoo.vim'
 Plugin 'rizzatti/dash.vim'
@@ -1374,6 +1382,16 @@ Plugin 'rizzatti/dash.vim'
 nmap <leader>h <Plug>DashSearch
 nmap <leader>k <Plug>DashSearch
 " }}}
+
+
+Plugin 'TaskList.vim' " Eclipse-like TASK list {{{
+augroup tasklist
+    autocmd!
+    autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
+augroup END
+map <unique><localleader>t <Plug>TaskList
+" }}}
+
 
 " Git {{{2
 Plugin 'airblade/vim-gitgutter'
@@ -1399,7 +1417,7 @@ Plugin 'gregsexton/gitv'
 
 " Experimental {{{1
 " Plugin 'MattesGroeger/vim-bookmarks'
-"  allows toggling bookmarks per line
+" allows toggling bookmarks per line
 
 
 Plugin 'liuchengxu/vim-which-key'
@@ -1420,7 +1438,16 @@ if has("unix")
 
     " alduin earendel gruvbox ironman nova nuvola
     if has("gui_running")
-        colorscheme nova
+        let s:tmstmp = str2nr(strftime('%s'))
+        if fmod(s:tmstmp, 4) == 0
+            colorscheme nuvola
+        elseif fmod(s:tmstmp, 4) == 1
+            colorscheme alduin
+        elseif fmod(s:tmstmp, 4) == 2
+            colorscheme nova
+        else 
+            colorscheme gruvbox
+        endif
     elseif has("gui_vimr")
         colorscheme alduin
     elseif has('nvim')
@@ -1752,4 +1779,4 @@ let g:notes_conceal_code=0
 " https://github.com/tpope/vim-pathogen
 " http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
 " 
-"vim: set foldlevel=0 foldmethod=marker:
+" vim: set foldlevel=0 foldmethod=marker:
