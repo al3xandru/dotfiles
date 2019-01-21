@@ -643,7 +643,7 @@ function brew() {
         echo "brew upgrade macvim [custom task]"
         command brew upgrade --build-from-source --with-custom-python --with-lua macvim
     else
-        if [[ "$1" == "cask" && "$2" == "upgrade" ]]; then
+        if [[ "$1" == "cask" && "$2" == "upgrade" && "$3" != "" ]]; then
             echo "brew cask upgrade [custom task]"
             command brew cask uninstall "$3" --force
             command brew cask install "$3" --force
