@@ -85,5 +85,3 @@ alias cleanlaunchservices='/System/Library/Frameworks/CoreServices.framework/Ver
 # brew 
 alias k=kubectl
 
-# Oracle proxy
-alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
