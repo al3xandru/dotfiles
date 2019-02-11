@@ -23,6 +23,7 @@
 ;;; yes-or-no: https://www.reddit.com/r/emacs/comments/4fzgdn/what_difference_there_is_between_defalias_and_fset/
 ;;; (fset 'yes-or-no-p 'y-or-n-p)
 (defalias 'yes-or-no-p 'y-or-n-p)
+(setq use-dialog-box nil)
 
 ;;; display
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
