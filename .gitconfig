@@ -12,6 +12,7 @@
 [alias]
     s = status
     a = add
+    amend = commit --amend
     b = branch -a
     bd = branch -d
     bD = branch -D
@@ -22,9 +23,8 @@
     ci = commit --interactive -v
     cm = commit -m
     cv = commit -v
-    ca = commit -a -v
+    # ca = commit -a -v
     co = checkout
-    amend = commit --amend
     d = diff
     dh = diff HEAD
     dc = diff --staged
