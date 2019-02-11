@@ -57,3 +57,24 @@ options head
 
     ${5:TARGET}
 
+snippet zjd
+options head
+    # §  `strftime("%a, %b.%d, %y")`
+
+snippet zjm
+options head
+    _¶(`strftime("%I:%M%p")`@<[`substitute(system("/usr/local/bin/LocateMe -f \"{LAT},{LON}\""),'\n\+$', '','')`][`strftime("%H%M")`]>)_
+
+    ${0:TARGET}
+
+    [`strftime("%H%M")`]: `system("/usr/local/bin/LocateMe -f \"https://maps.google.com/maps?q={LAT},{LON}5&ie=UTF8&ll={LAT},{LON}&t=roadmap&z=14&iwloc=A&mrt=loc\"")`
+
+snippet zjs
+options head
+    ## `strftime("%Y-%m-%d %a")`
+
+    ${0:TARGET}
+
+    ༺ --- <[`substitute(system("/usr/local/bin/LocateMe -f \"{LAT},{LON}\""),'\n\+$', '','')`][`strftime("%H%M")`]> --- ༻
+
+    [`strftime("%H%M")`]: `system("/usr/local/bin/LocateMe -f \"https://maps.google.com/maps?q={LAT},{LON}5&ie=UTF8&ll={LAT},{LON}&t=roadmap&z=14&iwloc=A&mrt=loc\"")`
