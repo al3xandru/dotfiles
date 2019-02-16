@@ -130,7 +130,7 @@ set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
 
 " 5. syntax, highlighting and spelling" {{{
 syntax on       " enable syntax processing
-colorscheme koehler
+colorscheme evening " morning zellner
 
 " custom colorscheme groups {{{
 " Color scheme sites:
@@ -321,6 +321,9 @@ cnoreabbrev Q q
 
 " leader = space
 " local leader = ,
+" remap , before
+" nnoremap … ,
+" nmap <A-;> ,
 let mapleader="\<space>"
 let maplocalleader=","
 
@@ -599,7 +602,7 @@ if has('mac')
 endif
 
 
-function! BigWnd() 
+function! <SID>BigWnd() 
     colorscheme nuvola
     " set gfn=Operator_Mono:h24
     set gfn=mononoki:h24
@@ -609,7 +612,17 @@ function! BigWnd()
     exec "edit ~/Dropbox/Dox/mydox/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
-command! Bigwnd call BigWnd()
+command! Bigwnd call <SID>BigWnd()
+
+function! <SID>Fonts()
+    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono Hack IBM_Plex_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    let l:flst = split(l:fonts)
+    echo "Fonts:"
+    echo join(l:flst, "\n")
+    echo "\n"
+    exec "set gfn=" . input("Font: ", "mononoki") . ":h" . input("Size: ", "24")
+endfunction
+command! SetFont call <SID>Fonts()
 
 " Load Vundle
 " Only Plugin settings are allowed until vundle#end()
@@ -627,11 +640,13 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
+Plugin 'ayu-theme/ayu-vim'
 Plugin 'cormacrelf/vim-colors-github'
 let g:github_colors_soft = 1
 Plugin 'lifepillar/vim-wwdc17-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
+Plugin 'nuvola'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
@@ -1004,6 +1019,7 @@ vmap <Plug> <Plug>Markdown_MoveToCurHeader
 "Plugin 'greyblake/vim-preview' could not get it to work
 Plugin 'JamshedVesuna/vim-markdown-preview'
 " let vim_markdown_preview_hotkey='<localleader>mp'
+let vim_markdown_preview_toggle=1
 let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
