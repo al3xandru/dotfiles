@@ -29,7 +29,9 @@
   pre,
   blockquote {
     border: 1px solid #999;
+    font-style: italic;
     page-break-inside: avoid;
+    text-align: justify;
   }
 
   thead {
