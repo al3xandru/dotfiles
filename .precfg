@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+# Oracle proxy
+function savecpu() {
+    echo "Before running:"
+    ps ax | grep VShield
+    sudo /usr/local/McAfee/AntiMalware/VSControl stop
+    sudo /usr/local/McAfee/AntiMalware/VSControl stopoas
+    echo "After:"
+    ps ax | grep VShield
+    echo "DONE"
+}
+alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
+alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
+
 ###################################################################
 # This script will set proxy env variables if within Oracle Network
 ###################################################################
@@ -8,8 +21,8 @@ function cisco_vpn_setup() {
     # TODO
     # * maven
     ORACLE_NETWORK="netstat -nr | grep 2606:b400"
-    if [ -n "$(eval "$ORACLE_NETWORK")" ]; then
-    # if nc -z confluence.oraclecorp.com 80 2>/dev/null; then
+    # if [ -n "$(eval "$ORACLE_NETWORK")" ]; then
+    if nc -w 3 -z confluence.oraclecorp.com 80 2>/dev/null; then
         # export {http,https}_proxy=http://www-proxy.us.oracle.com:80
         export {HTTP,HTTPS}_PROXY=http://www-proxy-hqdc.us.oracle.com:80;
         export {http,https}_proxy=http://www-proxy-hqdc.us.oracle.com:80
@@ -17,6 +30,7 @@ function cisco_vpn_setup() {
         export no_proxy=localhost,127.0.0.1,169.254/16,10.0.0.*,192.168.99.*,/var/run/docker.sock,.us.oracle.com,.oracle.com,.oraclecorp.com,.grungy.us,.local
         cp -f ~/.ssh/config_ciscovpn ~/.ssh/config
         cp -f ~/.m2/settings.xml.oci ~/.m2/settings.xml
+        echo "Inside network (proxies, config_ciscovpn, settings.xml.oci)"
     else
         unset http_proxy
         unset https_proxy
@@ -26,9 +40,10 @@ function cisco_vpn_setup() {
         unset NO_PROXY
         cp -f ~/.ssh/config_openvpn ~/.ssh/config
         rm -f ~/.m2/settings.xml
+        echo "Outside network (no proxy, no settings.xml, config_openvpn)"
     fi
 }
-cisco_vpn_setup
+# cisco_vpn_setup
 
 function vpnenv() {
     case "$@" in 
@@ -163,7 +178,6 @@ function vpnenv() {
             ;;
     esac
 }
-alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
  
 ##########################################################################################
 # This tool allows openconnect to be started, stopped or get its status against Oracle VPN in a
@@ -183,7 +197,7 @@ VPN_USERNAME="alexandp_us"
 
 # Customize Proxy Information
 PROXY_AUTO_CONFIG_URL="http://wpad/wpad.dat"
-PROXY_EXCEPTION_LIST="127.0.0.1 *.local localhost 169.254/16 10.0.0.* 192.168.99.* /var/run/docker.sock *.oracle.com .us.oracle.com .oraclecorp.com .grungy.us"
+PROXY_EXCEPTION_LIST="127.0.0.1 *.local localhost 169.254/16 10.0.0.* 192.168.99.* /var/run/docker.sock .oracle.com .us.oracle.com .oraclecorp.com .grungy.us"
 
 # Specify where openconnect binary exists
 OPENCONNECT="/usr/local/bin/openconnect"
@@ -239,7 +253,7 @@ function _openconnectStop()
     sudo pkill openconnect
 
     REMOVE_RECORD_CMD=""
-    REMOVE_RECORD_MSG="RECORDS TO REMOVE:\n"
+    REMOVE_RECORD_MSG="RECORDS REMOVED:\n"
     # PATTERNS=( "State:/Network/Service/utun[0-9]+/DNS" "State:/Network/Service/utun[0-9]+/IPv4" "State:/Network/Service/utun[0-9]+/Proxies" )
     PATTERNS=( "State:/Network/Service/utun[0-9]+/DNS" "State:/Network/Service/utun[0-9]+/IPv4" "State:/Network/Service/utun[0-9]+/Proxies" "State:/Network/Interface/utun[0-9]/IPv4" "State:/Network/Interface/utun[0-9]/IPv6")
     for PATTERN in "${PATTERNS[@]}"
@@ -249,13 +263,16 @@ function _openconnectStop()
             if [[ "$RECORD" =~ "State" ]]; then
                 REMOVE_RECORD_CMD="${REMOVE_RECORD_CMD}remove $RECORD \n"
                 REMOVE_RECORD_MSG="${REMOVE_RECORD_MSG}$RECORD \n"
+                echo "Removing: $RECORD"
+                echo "remove $RECORD" | sudo scutil
+                echo "Removed : $RECORD $?"
             fi
         done
     done
 
     if [ -n "$REMOVE_RECORD_CMD" ]; then
         printf "$REMOVE_RECORD_MSG"
-        printf "$REMOVE_RECORD_CMD" | sudo scutil
+        # printf "$REMOVE_RECORD_CMD" | sudo scutil
     fi
 }
 
@@ -301,6 +318,9 @@ function vpnconnect()
         stop)
             _openconnectStop
             cisco_vpn_setup
+            if [ -n "$TMUX" ]; then
+                tmux rename-window 'VPN-OFF'
+            fi
             ;;
         status)
             _openconnectVPNConnected
@@ -315,6 +335,9 @@ function vpnconnect()
             if [ -z "$1" -o "$1" == "start" ]; then
                 _openconnectStart $2
                 cisco_vpn_setup
+                if [ -n "$TMUX" ]; then
+                    tmux rename-window 'VPN-ON'
+                fi
             fi
             ;;
     esac
