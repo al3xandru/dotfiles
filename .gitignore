@@ -1,5 +1,6 @@
 # make sure .extras is ignored
 .config/configstore/
+.config/git/gitk
 .config/gocode/
 .config/nvim/.netrwhist
 .config/ranger/bookmarks

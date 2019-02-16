@@ -64,6 +64,9 @@ fi
 # - /Library/Java/JavaVirtualMachines
 # Mint locations:
 # - /usr/lib/jvm
+#
+# There is a different mechanism for macOS using /usr/libexec/java_home
+# see https://metaredux.com/posts/2018/11/05/managing-multiple-jdks-on-macos.html
 if [ -z "$JAVA_HOME" ]; then
     vmdir=""
     case "$_OSTYPE" in
@@ -75,7 +78,7 @@ if [ -z "$JAVA_HOME" ]; then
             ;;
     esac
     if [ -z "$VM_VERSION" ]; then
-        VM_VERSION="jdk-9"
+        VM_VERSION="jdk8"
     fi
     if [ -d "$vmdir" ]; then
         PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)

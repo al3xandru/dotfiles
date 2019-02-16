@@ -1,24 +1,49 @@
 #!/usr/bin/env bash
 
+# Oracle proxy
+function savecpu() {
+    echo "Before running:"
+    ps ax | grep VShield
+    sudo /usr/local/McAfee/AntiMalware/VSControl stop
+    sudo /usr/local/McAfee/AntiMalware/VSControl stopoas
+    echo "After:"
+    ps ax | grep VShield
+    echo "DONE"
+}
+alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
+alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
+
+###################################################################
+# This script will set proxy env variables if within Oracle Network
+###################################################################
 function cisco_vpn_setup() {
     # https://pdit-document-repository.oraclecorp.com/display/DISG/PDS-DIS+How+to+Configure+Proxy
     # TODO
     # * maven
-    if nc -z confluence.oraclecorp.com 80 2>/dev/null; then
+    ORACLE_NETWORK="netstat -nr | grep 2606:b400"
+    # if [ -n "$(eval "$ORACLE_NETWORK")" ]; then
+    if nc -w 3 -z confluence.oraclecorp.com 80 2>/dev/null; then
         # export {http,https}_proxy=http://www-proxy.us.oracle.com:80
+        export {HTTP,HTTPS}_PROXY=http://www-proxy-hqdc.us.oracle.com:80;
         export {http,https}_proxy=http://www-proxy-hqdc.us.oracle.com:80
-        export no_proxy='localhost,127.0.0.1,.oracle.com,.oraclecorp.com,.grungy.us,.docker.io'
+        export NO_PROXY=localhost,127.0.0.1,169.254/16,10.0.0.*,192.168.99.*,/var/run/docker.sock,.us.oracle.com,.oracle.com,.oraclecorp.com,.grungy.us,.local
+        export no_proxy=localhost,127.0.0.1,169.254/16,10.0.0.*,192.168.99.*,/var/run/docker.sock,.us.oracle.com,.oracle.com,.oraclecorp.com,.grungy.us,.local
         cp -f ~/.ssh/config_ciscovpn ~/.ssh/config
-        cp -f ~/.m2/settings.xml.ciscovpn ~/.m2/settings.xml
+        cp -f ~/.m2/settings.xml.oci ~/.m2/settings.xml
+        echo "Inside network (proxies, config_ciscovpn, settings.xml.oci)"
     else
         unset http_proxy
         unset https_proxy
         unset no_proxy
+        unset HTTP_PROXY
+        unset HTTPS_PROXY
+        unset NO_PROXY
         cp -f ~/.ssh/config_openvpn ~/.ssh/config
         rm -f ~/.m2/settings.xml
+        echo "Outside network (no proxy, no settings.xml, config_openvpn)"
     fi
 }
-cisco_vpn_setup
+# cisco_vpn_setup
 
 function vpnenv() {
     case "$@" in 
@@ -153,5 +178,167 @@ function vpnenv() {
             ;;
     esac
 }
-alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
  
+##########################################################################################
+# This tool allows openconnect to be started, stopped or get its status against Oracle VPN in a
+# MAC environment. For usage information, see help for more details (openconnect.sh help).
+# This is an alternative to Cisco AnyConnect and works exactly similar except that it does not
+# put restriction on 192.168.* IP addresses like what the latter is doing making tools like
+# Minikube to fail. When started, the tool also adds PAC proxy to the interface created by
+# openconnect so other tools that require system proxy such as Safari, Slack, Zoom, Chrome, etc.
+# will continue to function.
+#
+# Author: Keith Lustria
+###########################################################################################
+
+#Customize VPN connect details
+VPN_HOST="myaccess.oraclevpn.com"
+VPN_USERNAME="alexandp_us"
+
+# Customize Proxy Information
+PROXY_AUTO_CONFIG_URL="http://wpad/wpad.dat"
+PROXY_EXCEPTION_LIST="127.0.0.1 *.local localhost 169.254/16 10.0.0.* 192.168.99.* /var/run/docker.sock .oracle.com .us.oracle.com .oraclecorp.com .grungy.us"
+
+# Specify where openconnect binary exists
+OPENCONNECT="/usr/local/bin/openconnect"
+
+# Check if VPN is online
+function _openconnectVPNConnected()
+{
+    OPENCONNECT_RUNNING=$(ps -aef | grep $OPENCONNECT | grep -v grep)
+    INTERFACE_CREATED=$(echo 'list State:/Network/Service/utun[0-9]+/DNS' | scutil)
+
+    if [ -n "$OPENCONNECT_RUNNING" ] && [[ "$INTERFACE_CREATED" == *"utun"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Start openconnect and apply PAC proxy to the created interface
+function _openconnectStart()
+{
+    # unset proxy values if there is any
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    unset http_proxy
+    unset https_proxy
+    unset NO_PROXY
+    unset no_proxy
+
+    # stop any running open connect vpn first
+    _openconnectStop
+
+    PASSWD_ON_STDIN=""
+    if [ -n "$1" ]; then
+        PASSWD_ON_STDIN="--passwd-on-stdin"
+    fi
+
+    sudo $OPENCONNECT -b $PASSWD_ON_STDIN -u $VPN_USERNAME $VPN_HOST
+    if [ $? -eq 0 ]; then
+        elapsedTime=0
+        until _openconnectVPNConnected; do
+            sleep 1
+            elapsedTime=$((elapsedTime+1))
+            # break after 10 seconds
+            if [ "$elapsedTime" -ge 10 ]; then break; fi
+        done
+        _openconnectSetProxy
+    fi
+}
+
+# Stop openconnect and clean up all interface related settings.
+function _openconnectStop()
+{
+    sudo pkill openconnect
+
+    REMOVE_RECORD_CMD=""
+    REMOVE_RECORD_MSG="RECORDS REMOVED:\n"
+    # PATTERNS=( "State:/Network/Service/utun[0-9]+/DNS" "State:/Network/Service/utun[0-9]+/IPv4" "State:/Network/Service/utun[0-9]+/Proxies" )
+    PATTERNS=( "State:/Network/Service/utun[0-9]+/DNS" "State:/Network/Service/utun[0-9]+/IPv4" "State:/Network/Service/utun[0-9]+/Proxies" "State:/Network/Interface/utun[0-9]/IPv4" "State:/Network/Interface/utun[0-9]/IPv6")
+    for PATTERN in "${PATTERNS[@]}"
+    do
+        RECORDS=$(echo "list $PATTERN" | scutil)
+        for RECORD in `echo $RECORDS`; do
+            if [[ "$RECORD" =~ "State" ]]; then
+                REMOVE_RECORD_CMD="${REMOVE_RECORD_CMD}remove $RECORD \n"
+                REMOVE_RECORD_MSG="${REMOVE_RECORD_MSG}$RECORD \n"
+                echo "Removing: $RECORD"
+                echo "remove $RECORD" | sudo scutil
+                echo "Removed : $RECORD $?"
+            fi
+        done
+    done
+
+    if [ -n "$REMOVE_RECORD_CMD" ]; then
+        printf "$REMOVE_RECORD_MSG"
+        # printf "$REMOVE_RECORD_CMD" | sudo scutil
+    fi
+}
+
+# Set PAC Proxy to openconnect created interface
+function _openconnectSetProxy()
+{
+    IFACE=$(echo 'list State:/Network/Service/utun[0-9]+/DNS' | scutil | cut -d/ -f4)
+    if [ -n "$IFACE" ]; then
+        echo Setting Proxy for $IFACE
+        eval "sudo scutil <<EOF
+            open
+            d.init
+            d.add ExceptionsList $PROXY_EXCEPTION_LIST
+            d.add ProxyAutoConfigEnable # 1
+            d.add ProxyAutoConfigURLString $PROXY_AUTO_CONFIG_URL
+            d.add HTTPEnable # 0
+            d.add HTTPSEnable # 0
+            d.add SocksEnable # 0
+            set State:/Network/Service/$IFACE/Proxies
+            close
+            quit
+        EOF"
+    fi
+}
+
+# Display usage information for this tool.
+function _displayHelp()
+{
+    echo "Usage: vpnconnect {start|stop|status|help} [start Option] "
+    echo
+    echo "   start            starts openconnect"
+    echo "   stop             stops openconnect"
+    echo "   status           returns 0 if openconnect was succesfully started or 1 if not"
+    echo
+    echo "   start Option     Only allowed for start command. If not set, opeconnect will prompt for a password."
+    echo "                    Otherwise if set to any value, openconnect expects password from STDIN."
+}
+
+function vpnconnect()
+{
+    # Main routine
+    case "$1" in
+        stop)
+            _openconnectStop
+            cisco_vpn_setup
+            if [ -n "$TMUX" ]; then
+                tmux rename-window 'VPN-OFF'
+            fi
+            ;;
+        status)
+            _openconnectVPNConnected
+            return $?
+            # exit $?
+            ;;
+        help)
+            _displayHelp
+            ;;
+        *)
+            # Start openconnect if argument is empty or contains "start"
+            if [ -z "$1" -o "$1" == "start" ]; then
+                _openconnectStart $2
+                cisco_vpn_setup
+                if [ -n "$TMUX" ]; then
+                    tmux rename-window 'VPN-ON'
+                fi
+            fi
+            ;;
+    esac
+}

@@ -13,6 +13,7 @@ import socket
 import subprocess
 import StringIO
 import tempfile
+import time
 import urllib
 import urllib2
 import urlparse
@@ -198,11 +199,10 @@ def theimdbapi_data(title, year=None):
 
 def omdbapi_data(title, year=None):
   """ Another service to try is www.omdbapi.com """
-  APIKEY = 'b8324934'
   short_title = prepare_title(title)
 
   imdb_data = httpGet('www.omdbapi.com',
-                      httpQuery('/', t=short_title, plot='full', r='json', y=year, apikey=APIKEY)) or {}
+                      httpQuery('/', t=short_title, plot='full', r='json', y=year)) or {}
 
   if imdb_data is None:
     return {}, 0
@@ -210,9 +210,6 @@ def omdbapi_data(title, year=None):
     return {}, 0
   if imdb_data and 'imdbID' in imdb_data:
     imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % imdb_data['imdbID']
-
-  if 'imdbRating' in imdb_data:
-    imdb_data['rating'] = imdb_data['imdbRating']
 
   return imdb_data, 1
 
@@ -324,13 +321,13 @@ def match_len(in_title, movie_title):
 
 
 def main(title, opts):
-  print("Trying: themoviedb.org")
+  # print("Trying: themoviedb.org")
   imdbapid, r1 = themoviedb_data(title, opts.year)
   # tmdbapid, r3 = theimdbapi_data(title, opts.year)
   tmdbapid = {}
-  print("Trying: www.omdbapi.com")
-  omdbapid, r2 = omdbapi_data(title, opts.year)
-  # omdbapid = {}
+  # print("Trying: www.omdbapi.com")
+  # omdbapid, r2 = omdbapi_data(title, opts.year)
+  omdbapid = {}
   # Rotten Tomatoes killed the free API
   # print("Trying: rottentomatoes.com")
   # rottend, r3 = rotten_data(title, opts.year)
@@ -338,11 +335,11 @@ def main(title, opts):
 
   data = {
     'title': get('title', '', imdbapid, tmdbapid, rottend, omdbapid),
-    'year': opts.year or get('year', '', imdbapi, tmdbapid, omdbapid),
+    'year': opts.year or get('year', '', imdbapid, tmdbapid, omdbapid),
     'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
-    'imdb_rating': get('rating', 'n/a', imdbapid, tmdbapid, omdbapid),
+    'imdb_rating': get('rating', 'n/a', imdbapid, tmdbapid),
     'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
@@ -354,10 +351,6 @@ def main(title, opts):
     'critics_consensus': '',
     'synopsis': '',
   }
-  if omdbapid and 'Ratings' in omdbapid:
-    for r in [t for t in omdbapid['Ratings'] if t['Source'] == 'Metacritic']:
-      data['metascore'] = r['Value']
-
   if rottend:
     data['rotten_url'] = rottend.get('links', {}).get('alternate', '')
     data['critics_rating'] = rottend.get('ratings', {}).get('critics_rating', 'n/a')
@@ -373,7 +366,7 @@ def main(title, opts):
     rotten_slug = re.sub('\W+', '', rotten_slug)
     data['rotten_url'] = "http://www.rottentomatoes.com/m/%s" % rotten_slug
 
-  generate_output(data, opts.dayone, opts.bear)
+  generate_output(data, opts)
 
   # track(data, opts)
 
@@ -427,9 +420,18 @@ def get_imdb_id(data, id):
   return id
 
 
-def generate_output(data, to_dayone=False, to_bear=False):
+def generate_output(data, opts):
   print_to(sys.stdout, data)
-  if to_dayone:
+  if opts.output == 'j':
+    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], data['title'].replace(' ', '_'))
+    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", filename)
+    print("print to file:", filepath)
+    fout = open(filepath, "w+")
+    print_to(fout, data)
+    fout.close()
+
+  if opts.output == 'd':
+    print("print to DayOne")
     tmpf = tempfile.NamedTemporaryFile()
 
     try:
@@ -437,14 +439,15 @@ def generate_output(data, to_dayone=False, to_bear=False):
       # required for v2 and -j flag doesn't really work
       cat_cmd = subprocess.Popen(['cat', tmpf.name], stdout=subprocess.PIPE)
       if os.path.isfile('/usr/local/bin/dayone2'):
-        subprocess.check_call(['/usr/local/bin/dayone2', '-j', 'Movies'  , 'new'], stdin=cat_cmd.stdout)
+        subprocess.check_call(['/usr/local/bin/dayone2', '-j', 'Movies 🎥'  , 'new'], stdin=cat_cmd.stdout)
       else:
         journal_path_flag = "--journal-file=%s" % os.path.expanduser(DAYONE_JOURNAL)
         subprocess.check_call(['/usr/local/bin/dayone', journal_path_flag  , 'new', '-'], stdin=cat_cmd.stdout)
       cat_cmd.wait()
     finally:
       tmpf.close()
-  if to_bear:
+  if opts.output == 'b':
+    print("Print to Bear")
     output = StringIO.StringIO()
     try:
       print_to(output, data, encode=False)
@@ -467,7 +470,7 @@ def print_to(stream, data, encode=True):
   else:
     stream.write("My rating: %s\n" % RATINGS[data.get('my_rating', '')])
   stream.write("IMDB     : %s/10\n" %  data['imdb_rating'])
-  stream.write("Metascore: %s\n" % data.get('metascore', ''))
+  stream.write("Metascore: \n")
   stream.write("Genre    : %s\n" % ', '.join(data['genre']))
   stream.write("Year     : %s\n" % data['year'])
   if data['imdb_url']:
@@ -554,17 +557,18 @@ def print_to(stream, data, encode=True):
 if __name__ == '__main__':
   # print("Args: ", sys.argv[1:])
   parser = argparse.ArgumentParser(description='Movie details')
-  parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
-  parser.add_argument('--bear', action='store_true', help='Save entry in Bear')
-  parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
-  parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
+  # parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
+  # parser.add_argument('--bear', action='store_true', help='Save entry in Bear')
+  # parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
+  # parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'], default='j')
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
 
   opts = parser.parse_args()
   # opts.dayone = True    # enable DayOne by default
-  opts.bear = False      # enable Bear by default
+  # opts.bear = False      # enable Bear by default
   title = u' '.join(opts.title)
 
   main(title, opts)

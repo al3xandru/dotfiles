@@ -1,0 +1,108 @@
+- [x] Create script to set up/restore test enviroment
+- [x] Create the most basic init.el that sets up `use-package`
+- [x] Figure out settings I want in init.el
+- [x] What packages I want
+	- [x] org
+	- [x] markdown
+	- [x] evil
+		- [x] evil-commentary
+		- [x] evil-snipe
+		- [o] evil-easymotion
+	
+- [x] Find a couple of nice themes
+- [x] Configure `package-archives` with either `http` or `https`
+- [x] Check avy package (as replacement for ace-jump-mode and vim-easymotion) <https://github.com/abo-abo/avy>
+- [x] Add styling for MEETING keyword
+- [x] Use `counsel-imenu` instead of `imenu`
+	- [x] Do I need a binding for `imenu`/`counsel-imenu`?  (global-set-key (kbd "C-.") 'imenu): `C-x j`
+- [x] Does Org refiling gets nice completion too?
+- [x] How can I minimize the differences between Vim and Emacs?  Take for example ace-jump-mode and evil-swipe.
+	- [ ] Can I use this word?
+		```
+		(define-key isearch-mode-map (kbd "*")
+		  (lambda ()
+			"Reset current isearch to a word-mode search of the word under point"
+			(interactive)
+			(setq isearch-word t
+				  isearch-string ""
+				  isearch-message ""
+				  isearch-case-fold-search t)
+			(isearch-yank-string (word-at-point))))
+		```
+- [x] Do I need this show file name function?
+	```
+	;; show current file path in mini buffer
+	(defun alpo/show-file-name ()
+	  "Show the full path file name in the minibuffer"
+	  (interactive)
+	  (message (buffer-file-name))
+	  (kill-new (file-truename buffer-file-name)))
+	(global-set-key "\C-cz" 'alpo/show-file-name)
+	```
+- [ ] Learn installed plugins
+	- [ ] evil
+	- [ ] evil-commentary
+	- [x] evil-snipe
+	- [x] ivy <https://writequit.org/denver-emacs/presentations/2017-04-11-ivy.html> <http://oremacs.com/swiper/#installation>
+	- [x] counsel
+	- [x] swiper
+	- [x] ace-jump-mode
+	- [x] ace-window
+    - [x] avy <https://github.com/abo-abo/avy>
+	- [x] smartparens 
+	- [x] undo-tree
+- [x] Customize modeline <http://www.hollenback.net/index.php/EmacsModeLine>
+- [x] Check native line numbers in Emacs 26
+	> ** Emacs now supports optional display of line numbers in the buffer.
+	This is similar to what 'linum-mode' provides, but much faster and
+	doesn't usurp the display margin for the line numbers.  Customize the
+	buffer-local variable 'display-line-numbers' to activate this optional
+	display.  Alternatively, you can use the 'display-line-numbers-mode'
+	minor mode or the global 'global-display-line-numbers-mode'.  When
+	using these modes, customize 'display-line-numbers-type' with the same
+	value as you would use with 'display-line-numbers'.
+
+	Line numbers are not displayed at all in minibuffer windows and in
+	tooltips, as they are not useful there.
+
+	Lisp programs can disable line-number display for a particular screen
+	line by putting the 'display-line-numbers-disable' text property or
+	overlay property on the first character of that screen line.  This is
+	intended for add-on packages that need a finer control of the display.
+
+	Lisp programs that need to know how much screen estate is used up for
+	line-number display in a window can use the new function
+	'line-number-display-width'.
+
+	'linum-mode' and all similar packages are henceforth becoming obsolete.
+	Users and developers are encouraged to switch to this new feature
+	instead.
+	```
+	(custom-set-variables '(display-line-numbers-type 'relative))
+	  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+	```
+- [x] How to upgrade packages installed using `use-package`
+	<https://www.reddit.com/r/emacs/comments/3m5tqx/can_usepackage_upgrade_installed_packages/>
+- [x] Can I use any region expansion plugin? [Easy-kill](https://github.com/leoliu/easy-kill) or [Expand Region](https://github.com/magnars/expand-region.el)
+
+```
+  (use-package easy-kill
+    :ensure t
+    :config
+    (global-set-key [remap kill-ring-save] 'easy-kill)
+    (global-set-key [remap mark-sexp] 'easy-mark))
+
+    (use-package easy-kill
+      :bind (([remap kill-ring-save] . easy-kill)
+             ("C-M-SPC" . mark-sexp)
+             ([remap mark-sexp] . easy-mark)))
+```
+
+- [ ] Read [Flycheck versus Flymake — Flycheck 32-cvs documentation](http://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html)
+
+- [ ] Automatically publish Org mode to MobileOrg
+    <https://stackoverflow.com/questions/8432108/how-to-automatically-do-org-mobile-push-org-mobile-pull-in-emacs#8432149>
+```
+(add-hook 'org-mode-hook
+          (lambda () (add-hook 'after-save-hook 'org-html-export-to-html nil t)))
+```

@@ -49,6 +49,7 @@ set modelines=5
 set mouse=a
 set mousehide
 set sessionoptions-=options
+set sessionoptions+=curdir
 set showcmd     " show command in bottom bar
 set showmode    " display the current mode
 set wildmenu    " enhance command-line completion
@@ -129,7 +130,7 @@ set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
 
 " 5. syntax, highlighting and spelling" {{{
 syntax on       " enable syntax processing
-colorscheme koehler
+colorscheme evening " morning zellner
 
 " custom colorscheme groups {{{
 " Color scheme sites:
@@ -140,27 +141,27 @@ let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 wwdc17
 let s:cs_pastel = "earendel gruvbox alduin jellybeans nova railcast2 tango2 kolor lucius wombat wombat256 wombat256mod camo"
 
 function! <SID>ChooseColorscheme(args)
-    let cslist = []
+    let l:cslist = []
     if len(a:args) == 0
         echo 'Usage: :THEME [all|dark|light|paster]'
         return
     elseif a:args == 'all'
         let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
-        let cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
+        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
         echo 'List of all installed colorschemes:'
-        echo join(cslist, "\n")
+        echo join(l:cslist, "\n")
         return
     elseif a:args == 'light'
-        let cslist = split(s:cs_light)
+        let l:cslist = split(s:cs_light)
         echo 'Light colorschemes:'
     elseif a:args == 'pastel'
-        let cslist = split(s:cs_pastel)
+        let l:cslist = split(s:cs_pastel)
         echo 'Pastel colorschemes:'
     elseif a:args == 'dark'
-        let cslist = split(s:cs_dark)
+        let l:cslist = split(s:cs_dark)
         echo 'Dark colorschemes:'
     endif
-    echo join(cslist, "\n")
+    echo join(l:cslist, "\n")
     echo "\n"
     execute "colorscheme " . input("Choice: ", "", "color")
 endfunction
@@ -320,6 +321,9 @@ cnoreabbrev Q q
 
 " leader = space
 " local leader = ,
+" remap , before
+" nnoremap … ,
+" nmap <A-;> ,
 let mapleader="\<space>"
 let maplocalleader=","
 
@@ -339,6 +343,8 @@ inoremap <silent><Down> <esc><Down>
 " insert at the end of line while in insert mode; 
 " i_CTRL-A is insert previously inserted text; i_CTRL-I is insert <tab>
 inoremap <C-a> <C-o>A
+inoremap <A-a> <C-o>A
+inoremap å <C-o>A
 " Insert a newline in normal mode
 " nnoremap <S-Enter> O<Esc>
 " nnoremap <CR> o<Esc>
@@ -406,11 +412,11 @@ nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
 nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
 
 function! <SID>HLNext (blinktime)
-    let target_pat = '\c\%#'.@/
-    let ring = matchadd('ErrorMsg', target_pat, 101)
+    let l:target_pat = '\c\%#'.@/
+    let l:ring = matchadd('ErrorMsg', l:target_pat, 101)
     redraw
     exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
-    call matchdelete(ring)
+    call matchdelete(l:ring)
     redraw
 endfunction
 " }}}
@@ -452,7 +458,9 @@ inoremap <silent><C-tab> <ESC>:tabnext<CR>
 nnoremap <C-\> <C-w><C-]><C-w>T
 inoremap <C-\> <C-w><C-]><C-w>T
 " Alt+] on OS X
-if has('mac') || has('macunix')
+nmap <A-]> <C-\>
+imap <A-]> <C-\>
+if (has('mac') || has('macunix')) && has('gui')
     nmap ‘ <C-\>
     imap ‘ <C-\>
 endif
@@ -472,19 +480,21 @@ cnoremap <C-N> <C-R>=expand("%:t")<CR>
 
 " (C)Mappings: Save current session {{{
 function! <SID>SaveSession() 
-    let parentDir = getcwd()
-    let sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H%M%S") .  "_" .  join(split(parentDir, "/"),"~") . ".vim"
-    " exec "mksession! " . parentDir . "/.session.vim"
-    " echo "session saved " . parentDir . "/.session.vim"
-    if isdirectory(parentDir . "/.git")
-        let sessionFile = parentDir  .  "/.git/.session.vim"
+    let l:parentDir = getcwd()
+    let l:sessionFile = expand("~/.sessions/vim/") .  strftime("%Y-%m-%dT%H%M%S") .  "_" .  join(split(l:parentDir, "/"),"~") . ".vim"
+    echom "Parent dir  :" .  l:parentDir
+    echom "Session file:" .  l:sessionFile
+    " exec "mksession! " . l:parentDir . "/.session.vim"
+    " echo "session saved " . l:parentDir . "/.session.vim"
+    if isdirectory(l:parentDir . "/.git")
+        let l:sessionFile = l:parentDir  .  "/.git/.session.vim"
     endif
     if exists("g:loaded_obsession")
-        exec "Obsession " .  sessionFile
+        exec "Obsession " .  l:sessionFile
     else
-        exec "mksession! " . sessionFile
+        exec "mksession! " . l:sessionFile
     endif
-    echom "session saved in " . sessionFile 
+    echom "session saved in " . l:sessionFile 
 endfunction
 cnoremap <C-s> <C-R> call <SID>SaveSession()<CR><CR>
 nnoremap <C-s> :call <SID>SaveSession()<CR>
@@ -592,6 +602,28 @@ if has('mac')
 endif
 
 
+function! <SID>BigWnd() 
+    colorscheme nuvola
+    " set gfn=Operator_Mono:h24
+    set gfn=mononoki:h24
+    set colorcolumn=0
+    set columns=80
+    " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "edit ~/Dropbox/Dox/mydox/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    startinsert
+endfunction
+command! Bigwnd call <SID>BigWnd()
+
+function! <SID>Fonts()
+    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono Hack IBM_Plex_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    let l:flst = split(l:fonts)
+    echo "Fonts:"
+    echo join(l:flst, "\n")
+    echo "\n"
+    exec "set gfn=" . input("Font: ", "mononoki") . ":h" . input("Size: ", "24")
+endfunction
+command! SetFont call <SID>Fonts()
+
 " Load Vundle
 " Only Plugin settings are allowed until vundle#end()
 filetype off " required!
@@ -608,9 +640,13 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
+Plugin 'ayu-theme/ayu-vim'
+Plugin 'cormacrelf/vim-colors-github'
+let g:github_colors_soft = 1
 Plugin 'lifepillar/vim-wwdc17-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
+Plugin 'nuvola'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
 Plugin 'zeis/vim-kolor'
@@ -706,7 +742,7 @@ let g:ctrlp_use_caching = 2000
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 let g:fzf_layout = {'up': '~20%'}
-" Mappings: fzf {{{4
+" Mappings: fzf {{{3
 nnoremap <unique><leader>of :Files<CR>
 nnoremap <unique><leader>og :GFiles<CR>
 nnoremap <unique><leader>ob :Buffers<CR>
@@ -714,13 +750,16 @@ nnoremap <unique><leader>oB :History<CR>
 nnoremap <unique><leader>ot :BTags<CR>
 nnoremap <unique><leader>o] :BTags<CR>
 nnoremap <unique><leader>oT :Tags<CR>
+nnoremap <unique><leader>ol :BLines<CR>
+nnoremap <unique><leader>oL :Lines<CR>
+nnoremap <unique><leader>ow :Windows<CR>
 " Other commands:
 " :BLines, :Lines, :Marks
 " :Commits, BCommits
 " :Windows
 " :Colors, :Commands, :Filetypes, :Maps
 " :History:, :History/
-" 4}}}
+" 3}}}
 " }}}
 
 
@@ -776,10 +815,11 @@ let g:gutentags_generate_on_new = 0
 Plugin 'beloglazov/vim-online-thesaurus'
 
 
-Plugin 'mbbill/undotree'
+Plugin 'mbbill/undotree' " {{{
 nnoremap <leader>u :UndotreeToggle<CR>
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
+" }}}
 
 
 Plugin 'tpope/vim-commentary'   " {{{
@@ -847,18 +887,24 @@ nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR
 
 " Snippets {{{2
 Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets'
+Plugin 'Shougo/neosnippet-snippets' "{{{
 imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
 xmap <C-e> <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " }}}
 " }}}
+" }}}
 
 
 " Language support {{{1
 "
-Plugin 'applescript.vim'
+Plugin 'sheerun/vim-polyglot' "{{{
+let g:polyglot_disabled = []
+" replacing for now applescript, fatih/vim-go, pangloss/vim-javascript,  hdima/python-syntax
+" }}}
+
+" Plugin 'applescript.vim'
 
 
 " Plugin 'VimClojure'
@@ -870,7 +916,7 @@ let vimclojure#SetupKeyMap = 0
 
 
 " Go {{{2
-Plugin 'fatih/vim-go'
+" Plugin 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
 let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
@@ -943,7 +989,7 @@ Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Javascript
-Plugin 'pangloss/vim-javascript'
+" Plugin 'pangloss/vim-javascript'
 
 
 " Asciidoc {{{2
@@ -973,6 +1019,7 @@ vmap <Plug> <Plug>Markdown_MoveToCurHeader
 "Plugin 'greyblake/vim-preview' could not get it to work
 Plugin 'JamshedVesuna/vim-markdown-preview'
 " let vim_markdown_preview_hotkey='<localleader>mp'
+let vim_markdown_preview_toggle=1
 let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
@@ -1084,7 +1131,7 @@ augroup END
 
 " Python {{{2
 " Plugin 'lambdalisue/vim-pyenv'
-Plugin 'hdima/python-syntax'
+" Plugin 'hdima/python-syntax' " disabled with sheerun/vim-polyglot
 Plugin 'klen/python-mode'
 let g:pymode_doc = 1
 let g:pymode_doc_bind = 'K'
@@ -1132,17 +1179,10 @@ let g:jedi#rename_command = "<localleader>gr"
 
 " Plugin 'keith/swift.vim'
 
-" Tasklist
-Plugin 'TaskList.vim'
-augroup tasklist
-    autocmd!
-    autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
-augroup END
-map <unique><localleader>t <Plug>TaskList
 
-" Taskpaper
-Plugin 'davidoc/taskpaper.vim'
+Plugin 'davidoc/taskpaper.vim' " Taskpaper {{{
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
+" }}}
 
 
 Plugin 'digitalrounin/vim-yaml-folds'
@@ -1172,11 +1212,11 @@ augroup END
 Plugin 'jiangmiao/auto-pairs' " {{{
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
-if has('mac')
-    let g:AutoPairsShortcutJump='≥'
-    let g:AutoPairsShortcutFastWrap='≤'
+if (has('mac') || has('macunix')) && has('gui')
+    let g:AutoPairsShortcutJump='ª'
+    let g:AutoPairsShortcutFastWrap='º'
 else
-    let g:AutoPairsShortcutJump='<M-9>'
+    let g:AutoPairsShortcutJump='<A-9>'
     let g:AutoPairsShortcutFastWrap='<A-0>'
 endif
 "Plugin 'Raimondi/delimitMate'
@@ -1228,7 +1268,7 @@ nnoremap <silent><leader>bh :Startify<CR>
 " Plugin 'camelcasemotion'
 " Plugin 'kana/vim-smartword'
 Plugin 'bkad/CamelCaseMotion' 
-" Alt - w/b/3/g => ∑/∫/£/©
+" Ver.1: Alt - w/b/3/g => ∑/∫/£/© {{{3
 " map ∑ <Plug>CamelCaseMotion_w
 " map ∫ <Plug>CamelCaseMotion_b
 " map £ <Plug>CamelCaseMotion_e
@@ -1239,19 +1279,27 @@ Plugin 'bkad/CamelCaseMotion'
 " xmap <silent> i∫ <Plug>CamelCaseMotion_ib
 " omap <silent> i£ <Plug>CamelCaseMotion_ie
 " xmap <silent> i£ <Plug>CamelCaseMotion_ie
+" end ver }}}
+" Ver.2: w -> CamelCase, orig w -> W, orig.W -> Alt+w {{{3
 " these remaps work if I want to
-noremap ∑ W
-noremap ∫ B
-noremap £ E
-noremap © gE
-noremap W w
-noremap B b
-noremap E e
-noremap gE ge
-map w <Plug>CamelCaseMotion_w
-map b <Plug>CamelCaseMotion_b
-map e <Plug>CamelCaseMotion_e
-map ge <Plug>CamelCaseMotion_ge
+" noremap ∑ W
+" noremap ∫ B
+" noremap £ E
+" noremap © gE
+" noremap W w
+" noremap B b
+" noremap E e
+" noremap gE ge
+" map w <Plug>CamelCaseMotion_w
+" map b <Plug>CamelCaseMotion_b
+" map e <Plug>CamelCaseMotion_e
+" map ge <Plug>CamelCaseMotion_ge
+" end ver.2}}}
+" Ver.3
+map ]w <Plug>CamelCaseMotion_w
+map [w <Plug>CamelCaseMotion_e
+map ]W <Plug>CamelCaseMotion_b
+map [W <Plug>CamelCaseMotion_ge
 " }}}
 
 " Search 2 chars and improved t/f {{{2
@@ -1321,6 +1369,7 @@ Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 
 Plugin 'christoomey/vim-tmux-navigator' " vim & tmux
+" other option: https://github.com/wincent/terminus
 
 
 " Plugin 'roman/golden-ratio'   " Disabled: automatic resizing of Vim windows to golden ratio {{{
@@ -1336,8 +1385,11 @@ let g:goldenview__enable_default_mapping=0
 " tpope extensions: surround, unimpaired {{{
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
+" to disable a mapping
+let g:nremap = {"[<Space>": '', "]<Space>": ''}
 Plugin 'tpope/vim-obsession'
 " }}}
+
 
 " Dash.app {{{
 Plugin 'rizzatti/funcoo.vim'
@@ -1346,6 +1398,16 @@ Plugin 'rizzatti/dash.vim'
 nmap <leader>h <Plug>DashSearch
 nmap <leader>k <Plug>DashSearch
 " }}}
+
+
+Plugin 'TaskList.vim' " Eclipse-like TASK list {{{
+augroup tasklist
+    autocmd!
+    autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
+augroup END
+map <unique><localleader>t <Plug>TaskList
+" }}}
+
 
 " Git {{{2
 Plugin 'airblade/vim-gitgutter'
@@ -1370,6 +1432,13 @@ Plugin 'gregsexton/gitv'
 "}}}
 
 " Experimental {{{1
+" Plugin 'MattesGroeger/vim-bookmarks'
+" allows toggling bookmarks per line
+
+
+Plugin 'liuchengxu/vim-which-key'
+nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
+nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 "}}}
 
 call vundle#end()
@@ -1385,7 +1454,16 @@ if has("unix")
 
     " alduin earendel gruvbox ironman nova nuvola
     if has("gui_running")
-        colorscheme nova
+        let s:tmstmp = str2nr(strftime('%s'))
+        if fmod(s:tmstmp, 4) == 0
+            colorscheme nuvola
+        elseif fmod(s:tmstmp, 4) == 1
+            colorscheme alduin
+        elseif fmod(s:tmstmp, 4) == 2
+            colorscheme nova
+        else 
+            colorscheme gruvbox
+        endif
     elseif has("gui_vimr")
         colorscheme alduin
     elseif has('nvim')

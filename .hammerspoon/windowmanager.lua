@@ -24,11 +24,16 @@ function dynamicResizeLeft()
         hs.alert.show("⬅ ")
     elseif not between(frm.y, scr.y, 25) then
         -- now we also resize
+        -- frm.x = scr.x
+        -- frm.y = scr.y
+        -- frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
+        -- frm.h = scr.h
+        -- hs.alert.show("⬅  2/3")
         frm.x = scr.x
         frm.y = scr.y
-        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
+        frm.w = scr.w * 1/2 - DEFAULT_WND_GAP
         frm.h = scr.h
-        hs.alert.show("⬅  2/3")
+        hs.alert.show("⬅  1/2")
     elseif between(frm.w, scr.w * 2/3, DEFAULT_WND_GAP * 2) then
         frm.x = scr.x
         frm.y = scr.y
@@ -69,11 +74,16 @@ function dynamicResizeRight()
         hs.alert.show("➡")
     elseif not between(frm.y, scr.y, 25) then
         -- now we also resize
-        frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
+        -- frm.w = scr.w * 2/3 - DEFAULT_WND_GAP
+        -- frm.h = scr.h
+        -- frm.x = scr.x + (scr.w - frm.w)
+        -- frm.y = scr.y
+        -- hs.alert.show("2/3 ➡")
+        frm.w = scr.w * 1/2 - DEFAULT_WND_GAP
         frm.h = scr.h
         frm.x = scr.x + (scr.w - frm.w)
         frm.y = scr.y
-        hs.alert.show("2/3 ➡")
+        hs.alert.show("1/2 ➡")
     elseif between(frm.w, scr.w * 2/3, DEFAULT_WND_GAP * 2) then
         frm.w = scr.w * 1/2 - DEFAULT_WND_GAP
         frm.h = scr.h
@@ -115,32 +125,33 @@ function dynamicResizeTop()
         hs.alert.show("⬆")
     elseif not between(frm.x, scr.x, 5) then
         -- now we also resize
+        -- frm.x = scr.x
+        -- frm.y = scr.y
+        -- frm.w = scr.w
+        -- frm.h = scr.h * .7 - DEFAULT_WND_GAP
+        -- hs.alert.show("⬆ 2/3")
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
-        frm.h = scr.h * .7 - DEFAULT_WND_GAP
-        print("top 2/3: " .. frm.string)
-        hs.alert.show("⬆ 2/3")
+        frm.h = scr.h * .5 - DEFAULT_WND_GAP
+        hs.alert.show("⬆ 1/2")
     elseif between(frm.h, scr.h * .7, DEFAULT_WND_GAP * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * .5 - DEFAULT_WND_GAP
-        print("top 1/2: " .. frm.string)
         hs.alert.show("⬆ 1/2")
     elseif between(frm.h, scr.h * .5, DEFAULT_WND_GAP * 2.5) then
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * 0.3 - DEFAULT_WND_GAP
-        print("top 1/3: " .. frm.string)
         hs.alert.show("⬆ 1/3")
     else
         frm.x = scr.x
         frm.y = scr.y
         frm.w = scr.w
         frm.h = scr.h * 0.7 - DEFAULT_WND_GAP
-        print("re-top 2/3: " .. frm.string)
         hs.alert.show("⬆ 2/3")
     end
     win:setFrame(frm)
@@ -165,32 +176,33 @@ function dynamicResizeBottom()
         hs.alert.show("⬇")
     elseif not (between(frm.x, scr.x, 5) and between(frm.w, scr.w, 25)) then
         -- now we also resize
+        -- frm.w = scr.w
+        -- frm.h = scr.h * .7 - DEFAULT_WND_GAP
+        -- frm.x = scr.x
+        -- frm.y = scr.y + scr.h - frm.h
+        -- hs.alert.show("⬇ 2/3")
         frm.w = scr.w
-        frm.h = scr.h * .7 - DEFAULT_WND_GAP
+        frm.h = scr.h * .5 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
-        print("bottom 2/3:" .. frm.string)
-        hs.alert.show("⬇ 2/3")
+        hs.alert.show("⬇ 1/2")
     elseif between(frm.h, scr.h * .7, DEFAULT_WND_GAP * 2) then
         frm.w = scr.w
         frm.h = scr.h * .5 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
-        print("bottom 1/2:" .. frm.string)
         hs.alert.show("⬇ 1/2")
     elseif between(frm.h, scr.h * .5, DEFAULT_WND_GAP * 2.5) then 
         frm.w = scr.w
         frm.h = scr.h * .3 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
-        print("bottom 1/3:" .. frm.string)
         hs.alert.show("⬇ 1/3")
     else
         frm.w = scr.w
         frm.h = scr.h * .7 - DEFAULT_WND_GAP
         frm.x = scr.x
         frm.y = scr.y + scr.h - frm.h
-        print("re-bottom 2/3:" .. frm.string)
         hs.alert.show("⬇ 2/3")
     end
     win:setFrame(frm)
