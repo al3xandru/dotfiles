@@ -29,9 +29,16 @@
   pre,
   blockquote {
     border: 1px solid #999;
-    font-style: italic;
     page-break-inside: avoid;
+  }
+
+  blockquote {
+    font-style: italic;
     text-align: justify;
+  }
+
+  pre {
+      font-family: monospace;
   }
 
   thead {
