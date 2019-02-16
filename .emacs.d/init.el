@@ -405,9 +405,9 @@ the current window and the windows state prior to that."
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"
         org-mobile-inbox-for-pull "~/Dropbox/Dox/mydox/11-inbox.org")
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (add-hook 'after-save-hook 'alpo/org-mobile-push-on-save nil 'make-local)))
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (add-hook 'after-save-hook 'alpo/org-mobile-push-on-save nil 'make-local)))
 
   (setq org-log-done t
         org-log-into-drawer "LOGBOOK")
