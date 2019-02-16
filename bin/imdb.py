@@ -13,6 +13,7 @@ import socket
 import subprocess
 import StringIO
 import tempfile
+import time
 import urllib
 import urllib2
 import urlparse
@@ -334,7 +335,7 @@ def main(title, opts):
 
   data = {
     'title': get('title', '', imdbapid, tmdbapid, rottend, omdbapid),
-    'year': opts.year or get('year', '', imdbapi, tmdbapid, omdbapid),
+    'year': opts.year or get('year', '', imdbapid, tmdbapid, omdbapid),
     'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
@@ -365,7 +366,7 @@ def main(title, opts):
     rotten_slug = re.sub('\W+', '', rotten_slug)
     data['rotten_url'] = "http://www.rottentomatoes.com/m/%s" % rotten_slug
 
-  generate_output(data, opts.dayone, opts.bear)
+  generate_output(data, opts)
 
   # track(data, opts)
 
@@ -419,9 +420,18 @@ def get_imdb_id(data, id):
   return id
 
 
-def generate_output(data, to_dayone=False, to_bear=False):
+def generate_output(data, opts):
   print_to(sys.stdout, data)
-  if to_dayone:
+  if opts.output == 'j':
+    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], data['title'].replace(' ', '_'))
+    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", filename)
+    print("print to file:", filepath)
+    fout = open(filepath, "w+")
+    print_to(fout, data)
+    fout.close()
+
+  if opts.output == 'd':
+    print("print to DayOne")
     tmpf = tempfile.NamedTemporaryFile()
 
     try:
@@ -436,7 +446,8 @@ def generate_output(data, to_dayone=False, to_bear=False):
       cat_cmd.wait()
     finally:
       tmpf.close()
-  if to_bear:
+  if opts.output == 'b':
+    print("Print to Bear")
     output = StringIO.StringIO()
     try:
       print_to(output, data, encode=False)
@@ -546,17 +557,18 @@ def print_to(stream, data, encode=True):
 if __name__ == '__main__':
   # print("Args: ", sys.argv[1:])
   parser = argparse.ArgumentParser(description='Movie details')
-  parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
-  parser.add_argument('--bear', action='store_true', help='Save entry in Bear')
-  parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
-  parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
+  # parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
+  # parser.add_argument('--bear', action='store_true', help='Save entry in Bear')
+  # parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
+  # parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'], default='j')
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
 
   opts = parser.parse_args()
-  opts.dayone = True    # enable DayOne by default
-  opts.bear = False      # enable Bear by default
+  # opts.dayone = True    # enable DayOne by default
+  # opts.bear = False      # enable Bear by default
   title = u' '.join(opts.title)
 
   main(title, opts)
