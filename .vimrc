@@ -137,8 +137,8 @@ colorscheme evening " morning zellner
 " http://vimcolors.com/
 " http://colorswat.ch/
 let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "nuvola ironman gruvbox simpleandfriendly summerfruit256 wwdc17 calmbreeze morning pyte lucius autumnleaf buttercream cake16 navajo papayawhip sweater"
-let s:cs_pastel = "earendel gruvbox alduin jellybeans nova railcast2 tango2 kolor lucius wombat wombat256 wombat256mod camo"
+let s:cs_light = "(rich) nuvola ironman gruvbox (vimdefault) morning zellner --- simpleandfriendly summerfruit256 calmbreeze autumnleaf buttercream navajo papayawhip pyte (disabled) cake16 lucius  sweater wwdc17"
+let s:cs_pastel = "(rich) earendel gruvbox nova --- alduin jellybeans railcast2 tango2 wombat wombat256 wombat256mod camo (disabled) kolor lucius"
 
 function! <SID>ChooseColorscheme(args)
     let l:cslist = []
@@ -640,16 +640,10 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'ayu-theme/ayu-vim'
-Plugin 'cormacrelf/vim-colors-github'
-let g:github_colors_soft = 1
-Plugin 'lifepillar/vim-wwdc17-theme'
 Plugin 'morhetz/gruvbox'
 Plugin 'nice/sweater'
-Plugin 'nuvola'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
-Plugin 'zeis/vim-kolor'
 
 " disabled colorschemes {{{2 
 " Plugin 'adampasz/vim-stonewashed'
@@ -660,10 +654,14 @@ let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
 " Plugin 'arcticicestudio/nord-vim'
+" Plugin 'ayu-theme/ayu-vim'
+let ayucolor="light" " mirage dark
 " Plugin 'blerins/flattown'
 " Plugin 'chriskempson/base16-vim'
 " Plugin 'cocopon/iceberg.vim'
 " Plugin 'colepeters/spacemacs-theme.vim'
+" Plugin 'cormacrelf/vim-colors-github'
+let g:github_colors_soft = 1
 " Plugin 'fcpg/vim-fahrenheit'
 " Plugin 'fenetikm/falcon'
 " Plugin 'freeo/vim-kalisi'
@@ -674,6 +672,7 @@ let g:solarized_contrast="normal"
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
 " Plugin 'junegunn/seoul256.vim'
+" Plugin 'lifepillar/vim-wwdc17-theme'
 " Plugin 'mayansmoke'
 " Plugin 'mhartington/oceanic-next'
 " Plugin 'nanotech/jellybeans.vim'
@@ -687,6 +686,7 @@ let g:airline_theme='twofirewatch'
 " Plugin '256-grayvim'
 " Plugin 'blacklight'
 " Plugin 'gregsexton/Atom'
+" Plugin 'zeis/vim-kolor'
 " }}}
 " }}}
 
