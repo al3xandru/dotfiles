@@ -275,6 +275,42 @@ function moveToMonitor(incr)
 	win:moveToScreen(newScreen)
 end
 
+
+-- Move window to adjacent Desktop
+-- inspired by https://github.com/Hammerspoon/hammerspoon/issues/235
+--
+function moveWndNextSpace(direction)
+    local win = hs.window.focusedWindow() or hs.window.frontmostWindow()
+    if not win then
+        print("moveWndNextSpace(", direction, "): ERROR no wnd found")
+        return
+    elseif DEBUG then   
+        wtf("moveWndNextSpace", win)
+    end
+    if not win:isStandard() then
+        print("moveWndNextSpace(", direction, "): ERROR wnd is not standard")
+        return
+    end
+    if win:isFullScreen() then
+        print("moveWndNextSpace(", direction, "): ERROR wnd is full screen")
+        return
+    end
+    local clickPoint = win:zoomButtonRect()
+    clickPoint.x = clickPoint.x + clickPoint.w + 5
+    clickPoint.y = clickPoint.y + (clickPoint.h / 2)
+    hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseDown, clickPoint):post()
+    
+    -- implementing the keyevent this way seem to be required to actually trigger the desktop change
+    hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, true):post()
+    hs.eventtap.event.newKeyEvent(direction, true):post()
+    hs.eventtap.event.newKeyEvent(direction, false):post()
+    hs.eventtap.event.newKeyEvent(hs.keycodes.map.ctrl, false):post()
+
+    hs.timer.doAfter(.25, function()
+        hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseUp, clickPoint):post()
+    end)
+end
+
 -- utilities/foundation functions
 --
 -- https://github.com/exark/dotfiles/blob/master/.hammerspoon/init.lua
@@ -384,6 +420,9 @@ hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
 hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
 hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 
+-- Move to left/right dekstop
+hs.hotkey.bind({"alt", "ctrl"}, 'right', function() moveWndNextSpace('right') end)
+hs.hotkey.bind({"alt", "ctrl"}, 'left', function() moveWndNextSpace('left') end)
 
 
 -- Move
@@ -396,4 +435,5 @@ hs.hotkey.bind(ctrl_alt_cmd, 'up',    function() resize(0, -50) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'down',  function() resize(0, 50) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'right', function() resize(50, 0) end)
 hs.hotkey.bind(ctrl_alt_cmd, 'left',  function() resize(-50, 0) end)
+
 
