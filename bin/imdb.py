@@ -345,9 +345,9 @@ def main(title, opts):
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
     'poster_imdb': imdbapid.get('poster'),
     'audience_rating': 'Upright/Spilled',
-    'audience_score' : '',
+    'audience_score' : '0',
     'critics_rating' : 'Fresh/Rotten',
-    'critics_score'  : '',
+    'critics_score'  : '0',
     'critics_consensus': '',
     'synopsis': '',
   }
@@ -423,7 +423,7 @@ def get_imdb_id(data, id):
 def generate_output(data, opts):
   print_to(sys.stdout, data)
   if opts.output == 'j':
-    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], data['title'].replace(' ', '_'))
+    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], data['title'].replace(' ', '_').replace(':', ''))
     filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", filename)
     print("print to file:", filepath)
     fout = open(filepath, "w+")
@@ -466,30 +466,27 @@ def print_to(stream, data, encode=True):
     stream.write(u"# Movie: %s (%s) " % (data['title'], data['year']))
   stream.write("\n\n")
   if encode:
-    stream.write("My rating: %s\n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
+    stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
   else:
-    stream.write("My rating: %s\n" % RATINGS[data.get('my_rating', '')])
-  stream.write("IMDB     : %s/10\n" %  data['imdb_rating'])
-  stream.write("Metascore: \n")
-  stream.write("Genre    : %s\n" % ', '.join(data['genre']))
-  stream.write("Year     : %s\n" % data['year'])
+    stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')])
+  stream.write("IMDB     : %s(10)   \n" %  data['imdb_rating'])
+  stream.write("Metascore: 0   \n")
+  stream.write("Tomato   : %s %s   \n" % (data['audience_rating'], data['audience_score']))
+  stream.write("Critics  : %s %s   \n" % (data['critics_rating'], data['critics_score']))
+
+  stream.write("\n")
   if data['imdb_url']:
-    stream.write("IMDb link: <%s>\n" % data['imdb_url'])
+    stream.write("IMDb link  : <%s>   \n" % data['imdb_url'])
+  if data['rotten_url']:
+    if data['rotten_url'].startswith('http'):
+      stream.write("Tomato link: <%s>   \n" % data['rotten_url'])
+    else:
+      stream.write("Tomato link: <http:%s>   \n" % data['rotten_url'])
+  stream.write("Year     : %s   \n" % data['year'])
+  stream.write("Genre    : %s   \n" % ', '.join(data['genre']))
   stream.write("Tagline  : \n")
   stream.write("\n")
 
-  # Ratings
-  stream.write("### Ratings \n\n")
-  if data['rotten_url']:
-    if data['rotten_url'].startswith('http'):
-      stream.write("Tomato link      : <%s>\n" % data['rotten_url'])
-    else:
-      stream.write("Tomato link      : <http:%s>\n" % data['rotten_url'])
-  stream.write("Tomato rating    : %s\n" % data['audience_rating'])
-  stream.write("Tomato score     : %s\n" % data['audience_score'])
-  stream.write("Critics rating   : %s\n" % data['critics_rating'])
-  stream.write("Critics score    : %s\n" % data['critics_score'])
-  stream.write("\n")
 
   # Critics
   if data['critics_consensus']:
