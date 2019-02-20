@@ -76,10 +76,16 @@ function doInstall() {
     done
 
     # special treatment for .vim/bundle/
+    if [ ! -d "$HOME/.vim" ]; then
+        mkdir "$HOME/.vim"
+    fi
     rsync -aqru .vim/bundle/ ~/.vim/bundle/
+    proc ".vim/xsnippets"
 
-
-    # proc ".emacs.d/init.el"
+    if [ !  -d "$HOME/.emacs.d" ]; then
+        mkdir "$HOME/.emacs.d"
+    fi
+    proc ".emacs.d/init.el"
 
     #for d in {.vim,.emacs.d,.virtualenv}; do
         #if [ "$d" = ".emacs.d" ]; then
