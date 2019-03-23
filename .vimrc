@@ -250,10 +250,10 @@ if has("gui_running")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
-    set columns=165
+    set columns=110
     set lines=80
 elseif has("gui_vimr")
-    set columns=165
+    set columns=110
     set lines=80
 endif
 " augroup VimTransparency
@@ -571,16 +571,24 @@ end
 "if has('gui') && has('mac')
 if has('mac')
     if executable("pyenv") && !has('nvim')
-        let _cmd = 'pyenv version-name'
+        " v.1
+        " let _cmd = 'pyenv version-name'
+        " let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        " v.2
+        " let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
+        " let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let _cmd = 'pyenv versions | grep "3\." | head -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
-        let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
-        let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
-        let _pyvermaj=strpart(_pyver, 0, 3)
+        let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
+        " let _pyver=_pyenv
+        " following line replaced by next one dealing better with versions
+        " let _pyvermaj=strpart(_pyver, 0, 3)
+        let _pyvermaj=join(split(_pyver, "\\.")[0:1], ".")
+
         let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
-        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyenv . "/lib/python" .  _pyvermaj . "/site-packages/"
+        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyver . "/lib/python" .  _pyvermaj . "/site-packages/"
 
         " I don't know how to do set pythondll thus the let &pythondll
-        " set pythondll="$PYTHONHOME/lib/libpython" . _pyvermaj . ".dylib"
         let &pythondll=$PYTHONHOME . "/lib/libpython" . _pyvermaj . ".dylib"
         " echom "PYENV     :" . _pyenv
         " echom "PYTHONVER :" . _pyver
@@ -590,8 +598,8 @@ if has('mac')
         " echom "PYTHONDLL :" . &pythondll
         " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
         if _pyvermaj > '3.0' && has('python3')
-            echom "PYTHON3k  :YES"
-            " let g:jedi#force_py_version = 3
+            " echom "PYTHON3k  :YES"
+            let g:jedi#force_py_version = 3
             let g:pymode_python = 'python3'
         else
             " echom "PYTHON3k  :NO"
@@ -737,7 +745,7 @@ let g:ctrlp_use_caching = 2000
 " nnoremap <leader>eS :split<CR>:CtrlP<CR>
 " nnoremap <leader>eV :vsplit<CR>:CtrlP<CR>
 " 4}}}
-" 3}}}
+"3}}}
 
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
@@ -1247,6 +1255,7 @@ let g:startify_list_order = [
     \ ]
 let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/',
+    \ '~/Dropbox/Dox/myjrnl/',
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
