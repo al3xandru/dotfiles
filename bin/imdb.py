@@ -339,14 +339,14 @@ def main(title, opts):
     'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
-    'imdb_rating': get('rating', 'n/a', imdbapid, tmdbapid),
+    'imdb_rating': get('rating', '', imdbapid, tmdbapid),
     'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
     'poster_imdb': imdbapid.get('poster'),
-    'audience_rating': 'Upright/Spilled',
+    'audience_rating': 'Upright Spilled',
     'audience_score' : '0',
-    'critics_rating' : 'Fresh/Rotten',
+    'critics_rating' : 'Fresh Rotten',
     'critics_score'  : '0',
     'critics_consensus': '',
     'synopsis': '',
@@ -420,15 +420,22 @@ def get_imdb_id(data, id):
   return id
 
 
+def title_to_filename(title):
+  title = title.replace("'", '')
+  title = title.replace(':', '')
+  title = title.replace('/', '_')
+  title = title.replace(' ', '_')
+  return title
+
+
 def generate_output(data, opts):
   print_to(sys.stdout, data)
   if opts.output == 'j':
-    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], data['title'].replace(' ', '_').replace(':', ''))
-    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", filename)
+    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], title_to_filename(data['title']))
+    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", "m", filename)
     print("print to file:", filepath)
-    fout = open(filepath, "w+")
-    print_to(fout, data)
-    fout.close()
+    with open(filepath, "w+") as fout:
+      print_to(fout, data)
 
   if opts.output == 'd':
     print("print to DayOne")
@@ -470,9 +477,9 @@ def print_to(stream, data, encode=True):
   else:
     stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')])
   stream.write("IMDB     : %s(10)   \n" %  data['imdb_rating'])
-  stream.write("Metascore: 0   \n")
-  stream.write("Tomato   : %s %s   \n" % (data['audience_rating'], data['audience_score']))
-  stream.write("Critics  : %s %s   \n" % (data['critics_rating'], data['critics_score']))
+  stream.write("Metascore:    \n")
+  stream.write("Tomato   : %s %s   \n" % (data['audience_score'], data['audience_rating']))
+  stream.write("Critics  : %s %s   \n" % (data['critics_score'], data['critics_rating']))
 
   stream.write("\n")
   if data['imdb_url']:
@@ -540,10 +547,10 @@ def print_to(stream, data, encode=True):
 
 
   # Tags
-  tags = "#movie:%s" % data['year']
+  tags = "t#movie:%s" % data['year']
   for g in data['genre']:
-    tags += " #movie:%s" % g.lower().replace(' ', '-')
-  tags += " #movie"
+    tags += " t#movie:%s" % g.lower().replace(' ', '-')
+  tags += " t#movie"
   stream.write(tags)
   stream.write("\n")
 
