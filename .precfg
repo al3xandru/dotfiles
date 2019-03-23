@@ -38,9 +38,11 @@ function cisco_vpn_setup() {
         unset HTTP_PROXY
         unset HTTPS_PROXY
         unset NO_PROXY
-        cp -f ~/.ssh/config_openvpn ~/.ssh/config
-        rm -f ~/.m2/settings.xml
-        echo "Outside network (no proxy, no settings.xml, config_openvpn)"
+        # cp -f ~/.ssh/config_openvpn ~/.ssh/config
+        # rm -f ~/.m2/settings.xml
+        cp -f ~/.ssh/config_ocnavpn ~/.ssh/config
+        cp -f ~/.m2/settings.xml.ocna ~/.m2/settings.xml
+        echo "Outside network (no proxy, settings.xml.ocna, config_ocnavpn)"
     fi
 }
 # cisco_vpn_setup
