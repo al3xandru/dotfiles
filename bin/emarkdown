@@ -1,2 +1,5 @@
 #!/bin/sh
+# PYTHON_VERSION=$(pyenv version-name)
+# export PYTHONHOME=$HOME/.pyenv/versions/$PYTHON_VERSION
+# export PYTHONPATH=$HOME/.pyenv/versions/$PYTHON_VERSION/lib/python2.7/site-packages/
 python "$MYREPOS/python/markdown/mkdn/markup.py" "$@"

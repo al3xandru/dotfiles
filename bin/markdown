@@ -1,2 +1,4 @@
 #!/bin/bash
+unset PYTHONHOME
+unset PYTHONPATH
 emarkdown --type=m1 --format=4 $@
