@@ -539,6 +539,9 @@ the current window and the windows state prior to that."
            entry (file+datetree alpo-org-work-file)
            "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :@work:email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
 
+          ("W" "Weekly planning"
+           entry (file+datetree alpo-org-work-file)
+           (file "~/Dropbox/Dox/mydox/90-weeklyplanning.template.org"))
           
           ("m" "Meeting"
            entry (file+datetree alpo-org-work-file)
@@ -550,7 +553,7 @@ the current window and the windows state prior to that."
            entry (file+olp org-default-notes-file "Projects")
            "* PRJ %? [%]\n** NEXT Write down what is the purpose or what are the goals/objectives for this project\n** TODO Write down what are the deliverables or what does it mean to be done\n** TODO Brainstorm initial set of tasks\n** TODO Organize tasks\n** TODO Identify next action")
 
-          ("T" "Trip checklist"
+          ("v" "Trip/vacation checklist"
            entry (file+datetree org-default-notes-file)
            (file  "~/Dropbox/Dox/mydox/90-trip.template.org"))
 
@@ -583,7 +586,7 @@ the current window and the windows state prior to that."
           ("yn" "Note with ref"
            item (file+datetree org-default-notes-file)
            "+ %a [%u]\n%i")
-          ;;; end "w"
+          ;;; end "y"
 
           
           ("L" "Library")
