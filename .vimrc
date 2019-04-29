@@ -1243,33 +1243,43 @@ Plugin 'alvan/vim-closetag'
 
 " Startup buffer {{{2
 Plugin 'mhinz/vim-startify'
-let g:startify_list_order = [
-    \ ['Bookmarks:'],
-    \ 'bookmarks', 
-    \ ['Most recent in current directory:'],
-    \ 'dir', 
-    \ ['Recent files:'], 
-    \ 'files',
-    \ ['Sessions:'], 
-    \ 'sessions',
+let g:startify_lists = [
+    \ {'type': 'bookmarks', 'header': ['   Bookmarks']},
+    \ {'type': 'dir', 'header': ['   MRU in ' .  getcwd()]},
+    \ {'type': 'files', 'header': ['   Recent files']},
+    \ {'type': 'sessions', 'header': ['   Sessions']},
     \ ]
+" DEPRECATED
+" let g:startify_list_order = [
+"     \ ['Bookmarks:'],
+"     \ 'bookmarks', 
+"     \ ['Most recent in current directory:'],
+"     \ 'dir', 
+"     \ ['Recent files:'], 
+"     \ 'files',
+"     \ ['Sessions:'], 
+"     \ 'sessions',
+"     \ ]
 let g:startify_bookmarks = [
-    \ '~/Dropbox/Dox/mydox/',
-    \ '~/Dropbox/Dox/myjrnl/',
+    \ {'d': '~/Dropbox/Dox/mydox/'},
+    \ {'j': '~/Dropbox/Dox/myjrnl/'},
+    \ '~/.vimrc',
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
     \ '~/Dropbox/Dox/mydox/04-blog.md',
     \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
-    \ '~/.vimrc',
     \ '~/Documents/MyDocs/50-projects/homepage/h.html',
     \]
+let g:startify_files_number = 10
 let g:startify_session_autoload = 1
+let g:startify_session_dir = '~/.sessions/vim'
 let g:startify_skiplist = [
     \ '.git/.*',
     \ '.hg/.*',
     \ ]
 let g:startify_change_to_dir = 1
+let g:startify_change_to_vcs_root = 0
 nnoremap <silent><leader>bh :Startify<CR>
 "}}}
 
