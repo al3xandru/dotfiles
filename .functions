@@ -640,7 +640,7 @@ function brew() {
         command brew update
     elif [[ "$@" == "upgrade vim" ]]; then
         echo "brew upgrade vim [custom task]"
-        command brew upgrade --build-from-source --with-custom-python --with-lua vim
+        command brew upgrade --build-from-source vim
     elif [[ "$@" == "upgrade macvim" ]]; then
         echo "brew upgrade macvim [custom task]"
         command brew upgrade --build-from-source --with-custom-python --with-lua macvim
