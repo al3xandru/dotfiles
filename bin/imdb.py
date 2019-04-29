@@ -35,6 +35,8 @@ _API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0',
         'alpo',
         '808a49948b398609e61e62917bd235a8c8139866')
 
+WORDS = ('a', 'an',  'and', 'as', 'at',  'but', 'by', 'for', 'i', 'in', 'not', 'of', 'on','or', 'the', 'yet', 'with')
+
 # this is required for v2
 DAYONE_JOURNAL = '~/Library/Group Containers/5U8NS4GX82.dayoneapp2/Data/Auto Import/Default Journal.dayone'
 
@@ -43,7 +45,7 @@ def prepare_title(title):
   words = title.lower().split(' ')
   swords = []
   for w in words:
-    if w in ('a', 'an', 'i', 'or', 'as', 'at', 'by', 'and', 'but', 'for', 'not', 'the', 'yet', 'with'):
+    if w in WORDS:
       continue
     swords.append(w)
   return ' '.join(swords)
@@ -424,8 +426,13 @@ def title_to_filename(title):
   title = title.replace("'", '')
   title = title.replace(':', '')
   title = title.replace('/', '_')
-  title = title.replace(' ', '_')
-  return title
+  words = title.lower().split(' ')
+  swords = []
+  for w in words:
+    if w in WORDS:
+      continue
+    swords.append(w)
+  return '_'.join(swords)
 
 
 def generate_output(data, opts):
