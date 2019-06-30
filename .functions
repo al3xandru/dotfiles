@@ -638,20 +638,22 @@ function brew() {
             sudo chown -R $(whoami) $(brew --prefix)/*
         fi
         command brew update
-    elif [[ "$@" == "upgrade vim" ]]; then
-        echo "brew upgrade vim [custom task]"
-        command brew upgrade --build-from-source vim
-    elif [[ "$@" == "upgrade macvim" ]]; then
-        echo "brew upgrade macvim [custom task]"
-        command brew upgrade --build-from-source --with-custom-python --with-lua macvim
+    # elif [[ "$@" == "upgrade vim" ]]; then
+    #     echo "brew upgrade vim [custom task]"
+    #     command brew upgrade --build-from-source vim
+    # elif [[ "$@" == "upgrade macvim" ]]; then
+    #     echo "brew upgrade macvim [custom task]"
+    #     command brew upgrade --build-from-source --with-custom-python --with-lua macvim
+    # else
+    #     if [[ "$1" == "cask" && "$2" == "upgrade" && "$3" != "" ]]; then
+    #         echo "brew cask upgrade [custom task]"
+    #         command brew cask uninstall "$3" --force
+    #         command brew cask install "$3" --force
+    #     else
+    #         command brew "$@"
+    #     fi
     else
-        if [[ "$1" == "cask" && "$2" == "upgrade" && "$3" != "" ]]; then
-            echo "brew cask upgrade [custom task]"
-            command brew cask uninstall "$3" --force
-            command brew cask install "$3" --force
-        else
-            command brew "$@"
-        fi
+        command brew "$@"
     fi
 }
 
