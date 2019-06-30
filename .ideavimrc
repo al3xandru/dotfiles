@@ -33,6 +33,7 @@ nnoremap cp :action GotoPreviousError<CR>
 nnoremap [c :action GotoPreviousError<CR>
 " nnoremap ]m :action MethodDown<CR>
 " nnoremap [m :action MethodUp<CR>
+nnoremap <C-S-k> :action SmartSearchAction<CR>
 
 nmap [o- :set nonumber relativenumber<CR>
 vmap [o- :set nonumber relativenumber<CR>
