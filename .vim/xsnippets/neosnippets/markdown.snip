@@ -87,3 +87,21 @@ options head
     ⎈@\`{`substitute(system("/usr/local/bin/LocateMe -f '\"kind\":\"Coordinates\",\"lat\":{LAT},\"lon\":{LON}'"),'\n\+$', '','')`}\`@
 
     [`strftime("%Y%m%d%H%M")`]: `system("/usr/local/bin/LocateMe -f \"https://maps.google.com/maps?q={LAT},{LON}5&ie=UTF8&ll={LAT},{LON}&t=roadmap&z=14&iwloc=A&mrt=loc\"")`
+
+snippet zjc
+options head
+    # ${1:#:title}
+
+    ## Synopsis
+
+    ${0}
+
+    ## Characters
+
+    ## Details
+
+    * Story: ${2:#:author}
+    * Art: ${3:#:art}
+    * Lettering: ${4:#:lettering}
+    * Colors/Ink: ${5:#:colors}
+    * Publisher: ${6:#:publisher}
