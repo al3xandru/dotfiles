@@ -474,10 +474,11 @@ def generate_output(data, opts):
 
 def print_to(stream, data, encode=True):
   """ Write data to the stream. """
+  title = data['title']
   if data['imdb_url']:
-    stream.write(u"# Movie: [%s (%s)](%s) " % (data['title'], data['year'], data['imdb_url']))
+    stream.write(u"# Movie: [%s (%s)](%s) " % (title, data['year'], data['imdb_url']))
   else:
-    stream.write(u"# Movie: %s (%s) " % (data['title'], data['year']))
+    stream.write(u"# Movie: %s (%s) " % (title, data['year']))
   stream.write("\n\n")
   if encode:
     stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
