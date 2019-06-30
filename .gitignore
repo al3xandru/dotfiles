@@ -2,6 +2,7 @@
 .config/configstore/
 .config/git/gitk
 .config/gocode/
+.config/mpv/watch_later
 .config/nvim/.netrwhist
 .config/ranger/bookmarks
 .config/ranger/history
