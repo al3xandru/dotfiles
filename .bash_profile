@@ -28,8 +28,12 @@ shopt -s histappend
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
 
-# With Git 2.17.0 comment this line
-# [ -f /usr/local/etc/bash_completion.d/git-completion.bash ] && source /usr/local/etc/bash_completion.d/git-completion.bash
 
 # if possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
+
+shopt -s nullglob
+for file in /usr/local/etc/bash_completion.d/*; do
+    [ -f "$file" ] && source "$file"
+done
+shopt -u nullglob
