@@ -252,6 +252,9 @@ if has("gui_running")
 
     set columns=110
     set lines=80
+    if &diff 
+        set columns=180
+    endif
 elseif has("gui_vimr")
     set columns=110
     set lines=80
@@ -648,7 +651,8 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'morhetz/gruvbox'
+" Plugin 'morhetz/gruvbox'
+Plugin 'gruvbox-community/gruvbox'
 Plugin 'nice/sweater'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
@@ -729,7 +733,8 @@ Plugin 'wellle/targets.vim'
 " Essentials {{{1
 "
 " Files {{{2
-Plugin 'ctrlpvim/ctrlp.vim' "{{{3
+"{{{3
+" Plugin 'ctrlpvim/ctrlp.vim' 
 let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -1217,7 +1222,8 @@ augroup rainbowpar
 augroup END
 " }}}
 
-Plugin 'jiangmiao/auto-pairs' " {{{
+" {{{ auto pairs 
+" Plugin 'jiangmiao/auto-pairs'
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
 if (has('mac') || has('macunix')) && has('gui')
@@ -1229,6 +1235,21 @@ else
 endif
 "Plugin 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
+
+Plugin 'tmsvg/pear-tree'
+let g:pear_tree_pairs = {
+    \ '(': {'closer': ')'}, 
+    \ '[': {'closer': ']'}, 
+    \ '{': {'closer': '}'},
+    \ "'": {'closer': "'"},
+    \ '"': {'closer': '"'},
+    \ '<*>': {'closer': '</*>', 'not_if': ['br', 'meta', 'http', 'https', 'ftp'], 'not_like': '/$'}
+    \ } 
+if (has('mac') || has('macunix')) && has('gui')
+    imap º <Plug>(PearTreeJump)
+else
+    imap <A-0> <Plug>(PearTreeJump)
+endif
 " }}}
 
 "auto close parentheses and repeat by dot dot dot {{{
@@ -1472,7 +1493,9 @@ if has("unix")
     let s:uname = system("uname -s")
 
     " alduin earendel gruvbox ironman nova nuvola
-    if has("gui_running")
+    if &diff 
+        colorscheme ironman
+    elseif has("gui_running")
         let s:tmstmp = str2nr(strftime('%s'))
         if fmod(s:tmstmp, 4) == 0
             colorscheme nuvola
@@ -1814,4 +1837,4 @@ let g:notes_conceal_code=0
 " https://github.com/tpope/vim-pathogen
 " http://dougireton.com/blog/2013/02/23/layout-your-vimrc-like-a-boss/
 " 
-" vim: set foldlevel=0 foldmethod=marker:
+" vim: set foldlevel=0 foldmethod=marker :
