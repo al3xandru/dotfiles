@@ -1,11 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
+unset PYTHONHOME
+unset PYTHONPATH
 SCRIPT="$MYREPOS/python/markdown/mkdn/markuptools.py"
 NOTIFIER_APP=""
 NOTIFIER_TYPE="0"
 if [ -x "/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier" ]; then
     NOTIFIER_TYPE="1"
     NOTIFIER_APP="/Applications/terminal-notifier.app/Contents/MacOS/terminal-notifier"
+elif [ -x /usr/local/bin/terminal-notifier ]; then
+    NOTIFIER_TYPE="1"
+    NOTIFIER_APP="/usr/local/bin/terminal-notifier"
 elif [ -x "/usr/local/bin/MountainNotifier" ]; then
     NOTIFIER_TYPE="2"
     NOTIFIER_APP="/usr/local/bin/MountainNotifier"
@@ -27,6 +32,7 @@ elif [ "$1" != "" ]; then
 else
     OUTPUT=$(python "$SCRIPT" --type=m1 --tumblr -)
 fi
+# echo "{$OUTPUT}"
 pub_pattern="publish: ([^${IFS}]*)"
 tweet_pattern="tweet: ([^${IFS}]*)"
 pid_pattern="post_id: ([^${IFS}]*)"
@@ -34,19 +40,19 @@ purl_pattern="post_uri: ([^${IFS}]*)"
 pub_state=""
 purl=""
 notif_msg=""
-if [ "$OUTPUT" =~ "$pub_pattern" ]; then
+if [[ "$OUTPUT" =~ $pub_pattern ]]; then
     pub_state="${BASH_REMATCH[1]}"
     #echo "pub_state: ${BASH_REMATCH[1]} -> $pub_state"
     say "$pub_state"
 fi
-if [ "$OUTPUT" =~ "$tweet_pattern" ]; then
+if [[ "$OUTPUT" =~ $tweet_pattern ]]; then
     notif_msg="$notif_msg${IFS}Tweet: ${BASH_REMATCH[1]}"
 fi
-if [ "$OUTPUT" =~ "$pid_pattern" ]; then
+if [[ "$OUTPUT" =~ $pid_pattern ]]; then
     #echo "id: ${BASH_REMATCH[1]}"
     notif_msg="$notif_msg${IFS}Id: ${BASH_REMATCH[1]}"
 fi
-if [ "$OUTPUT" =~ "$purl_pattern" ]; then
+if [[ "$OUTPUT" =~ $purl_pattern ]]; then
     purl="${BASH_REMATCH[1]}"
     #echo "url: $purl"
     echo "$purl" | pbcopy

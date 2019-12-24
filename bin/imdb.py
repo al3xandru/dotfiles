@@ -20,6 +20,9 @@ import urlparse
 import warnings
 
 
+DEBUG_HTTP_STATUS = True
+DEBUG_HTTP_BODY = False
+
 RATINGS = {
   '': '-',
   '1': u'\u2606 (bad. soo bad)',
@@ -204,7 +207,7 @@ def omdbapi_data(title, year=None):
   short_title = prepare_title(title)
 
   imdb_data = httpGet('www.omdbapi.com',
-                      httpQuery('/', t=short_title, plot='full', r='json', y=year)) or {}
+                      httpQuery('/', apikey='b8324934', t=short_title, plot='full', r='json', y=year)) or {}
 
   if imdb_data is None:
     return {}, 0
@@ -254,11 +257,15 @@ def httpGet(server, uri):
     c = httplib.HTTPConnection(server)
     c.request('GET', uri)
     response = c.getresponse()
-    print("    response: ", response.status)
+    if DEBUG_HTTP_STATUS:
+      print("    response: ", response.status)
+    body = response.read()
     if response.status != 200:
       return None
     else:
-      return json.loads(response.read())
+      if DEBUG_HTTP_BODY:
+        print("    body: ", body)
+      return json.loads(body)
   except socket.error:
     return None
   finally:
@@ -328,8 +335,8 @@ def main(title, opts):
   # tmdbapid, r3 = theimdbapi_data(title, opts.year)
   tmdbapid = {}
   # print("Trying: www.omdbapi.com")
-  # omdbapid, r2 = omdbapi_data(title, opts.year)
-  omdbapid = {}
+  omdbapid, r2 = omdbapi_data(title, opts.year)
+  # omdbapid = {}
   # Rotten Tomatoes killed the free API
   # print("Trying: rottentomatoes.com")
   # rottend, r3 = rotten_data(title, opts.year)
@@ -424,12 +431,13 @@ def get_imdb_id(data, id):
 
 def title_to_filename(title):
   title = title.replace("'", '')
+  title = title.replace('&', '')
   title = title.replace(':', '')
   title = title.replace('/', '_')
   words = title.lower().split(' ')
   swords = []
   for w in words:
-    if w in WORDS:
+    if not w or w in WORDS:
       continue
     swords.append(w)
   return '_'.join(swords)
