@@ -30,11 +30,12 @@
 ;; (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 ;; (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (setq default-frame-alist
-      ;; (cursor-color . "#ffd700")
       '((width . 111)
-        (height . 75)
-        (ns-transparent-titlebar . t)
-        (ns-appearance . dark)))
+        (height . 60)
+        ;; (cursor-color . "#ffd700")
+        (cursor-color . "#28c8FA")
+        (ns-transparent-titlebar . t)))
+        ;; (ns-appearance . dark)))
 (when (member "Anka/Coder Narrow" (font-family-list))
   (add-to-list 'default-frame-alist '(font .  "Anka/Coder Narrow-13"))
   (set-face-attribute 'default t :font "Anka/Coder Narrow-13"))
@@ -434,33 +435,44 @@ the current window and the windows state prior to that."
   ;; (setq org-display-custom-times t
   ;;       org-time-stamp-custom-formats '("<%a,%b.%d>" . "<%a,%b.%d %H:%M>"))
   
-  (setq org-tag-alist '(("@PRJ" .  ?0)
+  (setq org-tag-alist '(("@PRJ" . nil)
                         (:startgroup)
-                        ("@me" . ?1)
-                        ("@work" . ?2) 
+                        ("for_me" . ?9)
+                        ("for_work" . ?0) 
                         (:endgroup)
 
+                        (:startgroup)
+                        ("aor_manageup" .  ?1)
+                        ("aor_hiring" .  ?2)
+                        ("aor_projmgmt" .  ?3)
+                        ("aor_teammgmt" .  ?4)
+                        ("aor_learning" .  ?5)
+                        (:endgroup)
+                        
                         (:startgrouptag)
                         ("who" .  ?W)
                         (:grouptags)
                         ("carter_shanklin" . ?c)
                         ("prashant_jha" . ?p)
-                        ("erik_bergenholtz" . ?b)
                         ("greg_pavlik" . ?g)
+                        ("dan_bradford" . nil)
 
-                        ("aaron_weisberg" . ?w)
-                        ("ajai_joy" . ?a)
-                        ("dimitris_tzannetos" . ?d)
-                        ("edwin_biemond" . ?e)
-                        ("henry_woodbury" . ?h)
-                        ("jeban_kanagarajan" . ?j)
-                        ("phaneendhar_mandala" . ?f)
-                        ("thomas_lau" . ?t)
-                        ("venkat_vengala" . ?v)
+                        ("balint_papp" .  nil)
+                        ("dimitris_tzannetos" . ?t)
+                        ("edwin_biemond" . ?b)
+                        ("gyorgy_geiszter" . nil)
+                        ("iris_chen" . ?h)
+                        ("jeban_kanagarajan" . ?k)
+                        ("jon_maron" . ?m)
+                        ("kevin_minder" . ?i)
+                        ("manish_jain" . ?j)
+                        ("peter_gordos" . ?g)
+                        ("robert_levas" . ?l)
+                        ("thomas_lau" . ?a)
+                        ("zoltan_koszegi" . nil)
                         ;; (:newline)
                         ("durgasuresh_kagitha". nil)
                         ("sonali_birari" . nil)
-                        ("vani_srivastava" . nil)
                         (:endgrouptag)
 
                         (:startgrouptag)
@@ -531,13 +543,13 @@ the current window and the windows state prior to that."
            entry (file+datetree org-default-notes-file)
            "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
 
-          ("T" "* TODO @work"
+          ("T" "* TODO for_work"
            entry (file+datetree alpo-org-work-file)
-           "* TODO %? :@work:\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
+           "* TODO %? :for_work:\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
 
-          ("E" "* TODO Respond to email @work"
+          ("E" "* TODO Respond to email for_work"
            entry (file+datetree alpo-org-work-file)
-           "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :@work:email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
+           "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :for_work:email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
 
           ("W" "Weekly planning"
            entry (file+datetree alpo-org-work-file)
@@ -545,9 +557,7 @@ the current window and the windows state prior to that."
           
           ("m" "Meeting"
            entry (file+datetree alpo-org-work-file)
-           "* MEETING %^{Description} (%U) :@work:meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:\n%?"
-           :clock-in t
-           :clock-keep t)
+           "* MEETING %^{Description} (%U) :for_work:meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:\n%?")
 
           ("p" "Project"
            entry (file+olp org-default-notes-file "Projects")
@@ -624,10 +634,14 @@ the current window and the windows state prior to that."
            entry (file+datetree org-default-notes-file)
            "* TODO Check link '[[%:link][%:description]]'\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
 
+          ("xx" "TODO with email URL"
+            entry (file+datetree alpo-org-work-file)
+           "* TODO %^{Action|Check|Respond} (%U) :for_work:\n:PROPERTIES:\n:CREATED: %U\n:END:\n%?")
+
           ("*"
            "Random todo mainly for automation"
            entry
-           (file+datetree org-default-notes-file)
+           (file+datetree alpo-org-work-file)
            "* %?\n:PROPERTIES:\n:CREATED: %u\n:END:\n%i")
           ))
 
@@ -646,6 +660,11 @@ the current window and the windows state prior to that."
                      (org-agenda-span 'day)
                      (org-deadline-warning-days 0)))
 
+            (agenda "Habits"
+                  ((org-agenda-overriding-header "Habits:")
+                   (org-agenda-files (list (concat org-directory "14-mho.org")))
+                   (org-agenda-span 'day)
+                   (org-deadline-warning-days 0)))
 
             (todo "NEXT|DELEGATE"
                   ((org-agenda-overriding-header "Next actions:")
@@ -655,8 +674,14 @@ the current window and the windows state prior to that."
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
 
+
             (agenda "Weekly agenda"
                     ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
+                     (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                           "12-mlo.org"
+                                                                                           "13-tickler.org"
+                                                                                           "15-wpo.org"
+                                                                                           "19-maybes.org")))
                      (org-agenda-span 'week)
                      (org-deadline-warning-days 3)
                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
@@ -710,6 +735,12 @@ the current window and the windows state prior to that."
                                                                                    "15-wpo.org"
                                                                                    "19-maybes.org")))
            ))
+
+          ("h" "Habits"
+           ((agenda "Habits"
+                  ((org-agenda-files (list (concat org-directory "14-mho.org")))
+                   (org-agenda-span 3)
+                   (org-deadline-warning-days 0)))))
           
           ("Z" "Archive m CLOSED<\"<-1m>\""
            ((tags-todo "+CLOSED<\"<-1m>\""             ;; (todo "DONE|SKIP"
@@ -1033,4 +1064,6 @@ the current window and the windows state prior to that."
 ;;; theme
 ;;; light themes: leuven gruvbox-light-[hard|medium|soft] plan9 twilight-bright
 ;; (load-theme 'gruvbox-light-hard)
-(load-theme 'dichromacy)
+(load-theme 'plan9)
+;; (load-theme 'dichromacy)
+
