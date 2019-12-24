@@ -1,22 +1,15 @@
 #!/usr/bin/env bash
 
-# Oracle proxy
-function savecpu() {
-    echo "Before running:"
-    ps ax | grep VShield
-    sudo /usr/local/McAfee/AntiMalware/VSControl stop
-    sudo /usr/local/McAfee/AntiMalware/VSControl stopoas
-    echo "After:"
-    ps ax | grep VShield
-    echo "DONE"
-}
-alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
-alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
+export VIM_APP_DIR=/Applications/m
+
+# Set to 1 if using the CORP VPN; 0 for OCNA VPN
+CORP_VPN=0
 
 ###################################################################
 # This script will set proxy env variables if within Oracle Network
+# using the CORP VPN
 ###################################################################
-function cisco_vpn_setup() {
+function corp_vpn_setup() {
     # https://pdit-document-repository.oraclecorp.com/display/DISG/PDS-DIS+How+to+Configure+Proxy
     # TODO
     # * maven
@@ -32,20 +25,42 @@ function cisco_vpn_setup() {
         cp -f ~/.m2/settings.xml.oci ~/.m2/settings.xml
         echo "Inside network (proxies, config_ciscovpn, settings.xml.oci)"
     else
-        unset http_proxy
-        unset https_proxy
-        unset no_proxy
-        unset HTTP_PROXY
-        unset HTTPS_PROXY
-        unset NO_PROXY
-        # cp -f ~/.ssh/config_openvpn ~/.ssh/config
-        # rm -f ~/.m2/settings.xml
-        cp -f ~/.ssh/config_ocnavpn ~/.ssh/config
-        cp -f ~/.m2/settings.xml.ocna ~/.m2/settings.xml
-        echo "Outside network (no proxy, settings.xml.ocna, config_ocnavpn)"
+        reset_corp_vpn_setup
     fi
 }
-# cisco_vpn_setup
+
+function reset_corp_vpn_setup() {
+    unset http_proxy
+    unset https_proxy
+    unset no_proxy
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    unset NO_PROXY
+    # cp -f ~/.ssh/config_openvpn ~/.ssh/config
+    # rm -f ~/.m2/settings.xml
+    cp -f ~/.ssh/config_ocnavpn ~/.ssh/config
+    cp -f ~/.m2/settings.xml.ocna ~/.m2/settings.xml
+    echo "Outside network (no proxy, settings.xml.ocna, config_ocnavpn)"
+}
+
+if [ $CORP_VPN -eq 1 ]; then
+    corp_vpn_setup
+else
+    reset_corp_vpn_setup
+fi
+
+function savecpu() {
+    echo "Before running:"
+    ps ax | grep VShield
+    sudo /usr/local/McAfee/AntiMalware/VSControl stop
+    sudo /usr/local/McAfee/AntiMalware/VSControl stopoas
+    echo "After:"
+    ps ax | grep VShield
+    echo "DONE"
+}
+
+alias oraproxy='env ALL_PROXY=socks5h://localhost:8912'
+alias brewrepair='sudo chown -R $(whoami) /usr/local/bin /usr/local/lib'
 
 function vpnenv() {
     case "$@" in 
