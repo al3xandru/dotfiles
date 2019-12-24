@@ -1,5 +1,6 @@
 # mapping conflicts: Preferences -> Editor -> Vim Emulation
-set clipboard+=unnamed
+# set commands https://github.com/JetBrains/ideavim/blob/master/doc/set-commands.md
+" set clipboard+=unnamed
 set history=10000
 set hlsearch
 set ignorecase
@@ -17,6 +18,7 @@ vnoremap k gk
 " inoremap <C-a> <C-o>A
 inoremap <A-a> <C-o>A
 nnoremap <space><esc> :nohlsearch<CR>
+" noremap <C-w>p :PrevSplitter<CR>
 " nnoremap <space>hh :nohlsearch<CR>
 " action based
 nnoremap gcc :action CommentByLineComment<CR>
@@ -25,6 +27,7 @@ vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action Comme
 " nnoremap ,s :action AceJumpAction<CR>
 " nnoremap ,s :action AceAction<CR>
 nnoremap s :action AceAction<CR>
+" nnoremap s :action KJumpAction.Char2<CR>
 nnoremap g; :action Back<CR>
 nnoremap g, :action Forward<CR>
 nnoremap cn :action GotoNextError<CR>
@@ -43,3 +46,4 @@ vmap ]o- :set norelativenumber number<CR>
 set surround
 " possible ideas
 " https://github.com/marskar/biof309_fall2018/blob/master/setup/.ideavimrc
+set ideajoin
