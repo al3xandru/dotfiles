@@ -34,7 +34,7 @@ set backspace=indent,eol,start  " allow backspace in insert mode
 " Use the OS clipboard by default (on versions compiled with `+clipboard`)
 if has('clipboard')
     if has('unnamedplus')
-        set clipboard=unnamed,unnamedplus
+        set clipboard^=unnamed,unnamedplus
     else
         set clipboard=unnamed
     endif
@@ -588,11 +588,11 @@ if has('mac')
         " let _pyvermaj=strpart(_pyver, 0, 3)
         let _pyvermaj=join(split(_pyver, "\\.")[0:1], ".")
 
-        let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
-        let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyver . "/lib/python" .  _pyvermaj . "/site-packages/"
+        " let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
+        " let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyver . "/lib/python" .  _pyvermaj . "/site-packages/"
 
         " I don't know how to do set pythondll thus the let &pythondll
-        let &pythondll=$PYTHONHOME . "/lib/libpython" . _pyvermaj . ".dylib"
+        let &pythondll=$HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
         " echom "PYENV     :" . _pyenv
         " echom "PYTHONVER :" . _pyver
         " echom "PYTHONMAJ :" . _pyvermaj
@@ -651,11 +651,23 @@ Plugin 'Colour-Sampler-Pack'
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
+Plugin 'arzg/vim-plan9'
+" Gruvbox
 " Plugin 'morhetz/gruvbox'
 Plugin 'gruvbox-community/gruvbox'
+Plugin 'lifepillar/vim-gruvbox8'
+
 Plugin 'nice/sweater'
 Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
+" well maintained 
+" https://www.reddit.com/r/neovim/comments/e04207/what_are_the_best_maintained_and_most_extensive/ " {{{2
+Plugin 'joshdick/onedark.vim'
+Plugin 'arcticicestudio/nord-vim'
+Plugin 'ayu-theme/ayu-vim'
+let ayucolor="light" " mirage dark
+Plugin 'NLKNguyen/papercolor-theme'
+"}}}
 
 " disabled colorschemes {{{2 
 " Plugin 'adampasz/vim-stonewashed'
@@ -905,6 +917,7 @@ imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
 xmap <C-e> <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
+" let g:neosnippet#expand_word_boundary=0
 " }}}
 " }}}
 " }}}
@@ -1121,8 +1134,8 @@ augroup markdown
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
     " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mv :call Vim_Markdown_Preview()<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! $HOME/bin/emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! $HOME/bin/pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
     " Paste clipboard as blockquote
     " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
     " autocmd FileType markdown nnoremap <silent><localleader>bq pgw`]V`]:s/^/> /g<CR>:nohlsearch<CR>o
@@ -1290,7 +1303,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
     \ '~/Dropbox/Dox/mydox/04-blog.md',
     \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
-    \ '~/Documents/MyDocs/50-projects/homepage/h.html',
+    \ '~/Dropbox/MyDocs/50-projects/homepage/h.html',
     \]
 let g:startify_files_number = 10
 let g:startify_session_autoload = 1
@@ -1497,14 +1510,26 @@ if has("unix")
         colorscheme ironman
     elseif has("gui_running")
         let s:tmstmp = str2nr(strftime('%s'))
-        if fmod(s:tmstmp, 4) == 0
+        " echom "Timestamp:" .  s:tmstmp .  "; Mod:" .  string(fmod(s:tmstmp, 9))
+        let s:mod = 11
+        if fmod(s:tmstmp, s:mod) == 0 || fmod(s:tmstmp, s:mod) == 7
             colorscheme nuvola
-        elseif fmod(s:tmstmp, 4) == 1
+        elseif (fmod(s:tmstmp, s:mod) == 1) || (fmod(s:tmstmp, s:mod) == 8)
+            colorscheme ironman
+        elseif fmod(s:tmstmp, s:mod) == 2 || fmod(s:tmstmp, s:mod) == 9
+            set background=light
+            colorscheme gruvbox8
+        elseif fmod(s:tmstmp, s:mod) == 3 || fmod(s:tmstmp, s:mod) == 10
+            colorscheme plan9
+        elseif fmod(s:tmstmp, s:mod) == 4
             colorscheme alduin
-        elseif fmod(s:tmstmp, 4) == 2
+        elseif fmod(s:tmstmp, s:mod) == 5
             colorscheme nova
-        else 
-            colorscheme gruvbox
+        elseif fmod(s:tmstmp, s:mod) == 6
+            set background=dark
+            colorscheme gruvbox8
+        else
+            colorscheme nuvola
         endif
     elseif has("gui_vimr")
         colorscheme alduin

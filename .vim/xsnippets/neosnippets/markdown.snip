@@ -12,10 +12,10 @@ options word
 
 snippet zfn
 abbr footnote
-options word
-    [^${1:fn1}] ${3}
+alias ^fn
+    [^fn-${1:fn1}] ${3}
 
-    [^$1]: ${2:#:footnote text}
+    [^fn-$1]: ${2:#:footnote text}
 
 snippet zfqe
 abbr "_emphasis_"
@@ -53,9 +53,8 @@ options head
     pubdate: `strftime("%Y-%m-%d %H:%M:%S")`
     title: 
     link: 
-    ${4:#:tweet: no}
 
-    ${5:TARGET}
+    ${4:TARGET}
 
 snippet zjd
 options head
@@ -69,12 +68,33 @@ options head
 
     ${0}
 
+    `system("/usr/bin/osascript /Applications/m/JournalLocationHelper.scpt")`
+
+snippet zjm2
+options head
+    ## ¶(`strftime("%I:%M%p")`)
+
+    ${0}
+
 
     ⎈ [^f`strftime("%H%M")`]
 
     [^f`strftime("%H%M")`]: ⎈<[`substitute(system("/usr/local/bin/LocateMe -f \"{LAT},{LON}\""),'\n\+$', '','')`][`strftime("%H%M")`]>; @\`{`substitute(system("/usr/local/bin/LocateMe -f '\"kind\":\"Coordinates\",\"lat\":{LAT},\"lon\":{LON}'"),'\n\+$', '','')`}\`@
 
     [`strftime("%H%M")`]: `system("/usr/local/bin/LocateMe -f \"https://maps.google.com/maps?q={LAT},{LON}5&ie=UTF8&ll={LAT},{LON}&t=roadmap&z=14&iwloc=A&mrt=loc\"")`
+
+snippet zjms
+options head
+    ## ¶(`strftime("%I:%M%p")`)
+
+    ${0}
+
+
+    ⎈ [^f`strftime("%H%M")`]
+
+    [^f`strftime("%H%M")`]: ⎈<[][`strftime("%H%M")`]>; @\`{}\`@
+
+    [`strftime("%H%M")`]: 
 
 snippet zjs
 options head
@@ -90,9 +110,14 @@ options head
 
 snippet zjc
 options head
-    # ${1:#:title}
+    # ${1:#:title} by ${2:#:by} (${3:#:publisher})
 
     ## Synopsis
+
+    - story
+    - dialog 
+    - drawings (details, scenery, action)
+    - characters (do I like them, do I care about them, do I root for them)
 
     ${0}
 
@@ -100,8 +125,9 @@ options head
 
     ## Details
 
-    * Story: ${2:#:author}
-    * Art: ${3:#:art}
-    * Lettering: ${4:#:lettering}
-    * Colors/Ink: ${5:#:colors}
-    * Publisher: ${6:#:publisher}
+    * Story (Written by)     : $2
+    * Art (Illustrated by)   : ${4:#:illustrated by}
+    * Lettering (Lettered by): ${5:#:lettered by}
+    * Colors/Ink (Colored by): ${6:#:colored by}
+    * Publisher: 
+    * Issues: 
