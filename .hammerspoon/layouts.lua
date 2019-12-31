@@ -4,6 +4,31 @@
 local DEBUG = true
 local UNMINIMIZE_WINDOWS_IN_LAYOUT = false
 
+-- dynamically determine if there's a secondary screen
+function attemptSecondaryScreen()
+    local screens = hs.screen.allScreens()
+    local primary = hs.screen.primaryScreen()
+    print("main", primary:id(), primary:name(), primary)
+    local usePrimary = true
+    local result = primary
+    if #screens > 1 then
+        for _, scr in ipairs(screens) do
+            if DEBUG then
+                print("scr ", scr:id(), scr:name(), scr)
+            end
+            if scr ~= hs.screen.primaryScreen() then
+                result = scr
+                usePrimary = false
+                break
+            end
+        end
+    end
+    if DEBUG then
+        print("use screen:", result, " primary:", usePrimary)
+    end
+    return result
+end
+
 -- Define window layouts
 --   Format reminder:
 --     {"App name", "Window name", "Display Name/function", "unitrect", "framerect", "fullframerect"},
@@ -44,118 +69,142 @@ LAYOUTS = {
         name = "IDE Session - Single monitor",
         subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
         layout = {
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.5, 0.94), nil, nil},
-            {"Dash", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
-            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-        }
-    },
-    ide_dualmonitor = {
-        name = "IDE Session - Dual monitor",
-        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
-        layout = {
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.0, 0.6, 0.98), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.02, 0.6, 0.98), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 1), nil, nil},
-            {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
-            {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+            {"GoLand", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
+            {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
+
+            {"Firefox", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
+            {"Google Chrome", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
+            {"qutebrowser", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
+            {"Safari", nil, nil, hs.geometry.new("[60, 5, 1, 90]"), nil, nil},
+
+            {"Dash", nil, nil, hs.geometry.new("[60, 50, 100, 95]"), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.new("[0, 65, 100, 100]"), nil, nil},
+
+            -- {"Books", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
+            -- {"Preview", nil, nil, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
+        },
+        actions = {
+            function() hs.notify.show("Hammerspoon layouts", "Activated \"IDE Session - Single monitor\"",  "Turn Hocus Focus to Coding") end
         }
     },
     terminal = {
         name = "Terminal coding - Single monitor",
         subtitle = "Terminal, Dash, Safari/Chrome, iBooks/Preview",
         layout = {
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.04, 0.5, 0.96), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.03, 0.5, 0.96), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.96), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.01, 0.5, 0.96), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 0.96), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 1), nil, nil},
+            -- {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.04, 0.5, 0.96), nil, nil},
+            -- {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.03, 0.5, 0.96), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
+
+            {"Firefox", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"Google Chrome", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"qutebrowser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"Safari", nil, nil, hs.geometry.new("[56, 5, 1, 90]"), nil, nil},
+
+            {"Dash", nil, nil, hs.geometry.new("[56, 45, 100, 90]"), nil, nil},
         },
         actions = {
-            function() hs.application.launchOrFocus("Minuteur") end,
+            -- function() hs.application.launchOrFocus("Minuteur") end,
             function() hs.notify.show("Hammerspoon layout", "Activated \"Terminal coding - Single monitor\"", "Turn on Hocus Focus Coding") end,
-        }
-    },
-    terminal_dualmonior= {
-        name = "Terminal coding - Dual monitor",
-        subtitle = "Terminal, Dash, Safari/Chrome, iBooks/Preview",
-        layout = {
-            {"Bear", nil, nil, hs.geometry.unitrect(0.6, 0.5, 0.4, 0.5), nil, nil},
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0, 0.6, 0.98), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.02, 0.6, 0.98), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.45, 0, 0.55, 0.9), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 1), nil, nil},
-        },
-        actions = {
-            function() hs.application.launchOrFocus("Minuteur") end,
-            function() hs.notify.show("Hammerspoon layout", "Activated \"Terminal coding - Dual monitor\"", "Turn on Hocus Focus Coding") end,
         }
     },
     vim = {
         name = "Vim GUI - Single monitor",
         subtitle = "MacVim/VimR, Terminal, Safari/Chrome, Dash, iBooks/Preview",
         layout = {
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.04, 0.55, 0.94), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.06, 0.55, 0.94), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.94), nil, nil},
-            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.80), nil, nil},
-            {"VimR", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.80), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.4, 1, 0.6), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
+            {"VimR", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
+
+            {"Firefox", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"Google Chrome", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"qutebrowser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
+            {"Safari", nil, nil, hs.geometry.new("[56, 5, 1, 90]"), nil, nil},
+
+            {"Dash", nil, nil, hs.geometry.new("[56, 45, 100, 90]"), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.new("[0, 60, 100, 100]"), nil, nil},
+            -- {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
+            -- {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
+        },
+        actions = {
+            function() hs.notify.show("Hammerspoon layouts", "Activated \"Vim GUI - Single monitor\"",  "Turn Hocus Focus to Coding") end
+        }
+    },
+    -- Layouts for dual monitor environments
+    ide_dualmonitor = {
+        name = "IDE Session - Dual monitor",
+        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Qute/Chrome, Dash, Books/Preview, Terminal",
+        layout = {
+            {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Firefox", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Books", nil, attemptSecondaryScreen, hs.geometry.new("[0, 0, 35, 90]"), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.new("[65, 0, 100, 90]"), nil, nil},
+            {"Terminal", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.new("[35, 50, 65, 100]"), nil, nil},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 75, 100]")},
+            {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 75, 100]")},
+            {"GoLand", nil, nil, hs.geometry.new("[0, 0, 75, 100]")}
+        },
+        actions = {
+            function() hs.notify.show("Hammerspoon layouts", "Activated \"IDE Session - Dual monitor\"",  "Turn Hocus Focus to Coding") end
+        }
+    },
+    -- ide_dualmonitor = {
+    --     name = "IDE Session - Dual monitor",
+    --     subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
+    --     layout = {
+    --         {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 05.98), nil, nil},
+    --         {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
+    --         {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.0, 0.6, 0.98), nil, nil},
+    --         {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.4, 0.02, 0.6, 0.98), nil, nil},
+    --         {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 1), nil, nil},
+    --         {"IntelliJ IDEA", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+    --         {"PyCharm", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+    --         {"GoLand", nil, nil, hs.geometry.unitrect(0, 0, .6, 1)},
+    --     }
+    -- },
+    terminal_dualmonior= {
+        name = "Terminal coding - Dual monitor",
+        subtitle = "Terminal, Dash, Safari/Chrome, iBooks/Preview",
+        layout = {
+            {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Firefox", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Books", nil, attemptSecondaryScreen, hs.geometry.new("[0, 0, 35, 90]"), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.new("[65, 0, 100, 90]"), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0, 0.6, .9), nil, nil},
+            {"Dash", nil, nil, hs.geometry.unitrect(0.6, 0, 1, 0.9), nil, nil},
+            {"Bear", nil, nil, hs.geometry.unitrect(0.6, 0.5, 0.4, 0.5), nil, nil},
+        },
+        actions = {
+            function() hs.application.launchOrFocus("Minuteur") end,
+            function() hs.notify.show("Hammerspoon layout", "Activated \"Terminal coding - Dual monitor\"", "Turn on Hocus Focus Coding") end,
         }
     },
     vim_dualmonitor = {
         name = "Vim GUI - Dual monitor",
         subtitle = "MacVim/VimR, Terminal, Safari/Chrome, Dash, iBooks/Preview",
         layout = {
-            {"iBooks", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 0.5, 0.98), nil, nil},
-            {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.02, 0.5, 0.98), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0, 0.55, 0.98), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.45, 0.02, 0.55, 0.98), nil, nil},
-            {"Dash", nil, nil, hs.geometry.unitrect(0.4, 0, 0.6, 0.85), nil, nil},
-            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.85), nil, nil},
-            {"VimR", nil, nil, hs.geometry.unitrect(0, 0, 0.5, 0.85), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.unitrect(0, 0.4, 1, 0.6), nil, nil},
+            {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Firefox", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Books", nil, attemptSecondaryScreen, hs.geometry.new("[0, 0, 35, 90]"), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
+            {"Preview", nil, attemptSecondaryScreen, hs.geometry.new("[65, 0, 100, 90]"), nil, nil},
+            {"Terminal", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
+            {"Dash", nil, attemptSecondaryScreen, hs.geometry.new("[35, 50, 65, 100]"), nil, nil},
+            {"MacVim", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.85), nil, nil},
+            {"VimR", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.85), nil, nil},
+            {"Terminal", nil, nil, hs.geometry.unitrect(0.6, 0, 1, 0.85), nil, nil},
+        },
+        actions = {
+            function() hs.notify.show("Hammerspoon layouts", "Activated \"Vim GUI - Dual monitor\"",  "Turn Hocus Focus to Coding") end
         }
     },
     
 }
-
--- dynamically determine if there's a secondary screen
-function attemptSecondaryScreen()
-    local screens = hs.screen.allScreens()
-    local primary = hs.screen.primaryScreen()
-    -- print("main", primary:id(), primary:name(), primary)
-    local usePrimary = true
-    local result = primary
-    if #screens > 1 then
-        for _, scr in ipairs(screens) do
-            if DEBUG then
-                print("scr ", scr:id(), scr:name(), scr)
-            end
-            if scr ~= hs.screen.primaryScreen() then
-                result = scr
-                usePrimary = false
-                break
-            end
-        end
-    end
-    if DEBUG then
-        print("use screen:", result, " primary:", usePrimary)
-    end
-    return result
-end
 
 -- apply a selected layout
 function applyLayoutPreset(result)
@@ -192,6 +241,7 @@ function applyLayoutPreset(result)
         for _, l in pairs(selectedLayout) do
             local app = hs.appfinder.appFromName(l[1])
             if app ~= nil then
+                print("    3.1 unminimize", app.name())
                 for _, wnd in ipairs(app:allWindows()) do
                     wnd:unminimize()
                 end
@@ -209,12 +259,14 @@ function applyLayoutPreset(result)
         end
         local app = hs.appfinder.appFromName(l[1])
         if app ~= nil and app:isRunning() then
-            if type(l[3]) ~= "function" then
+            print("        parameter screen is of type:", type(l[3]))
+            -- if type(l[3]) ~= "function" then
+            if l[3] == nil then
                 table.insert(updatedLayout, {l[1], l[2], l[3], l[4], l[5], l[6]})
                 print("      use static screen for app ", app:title(), hs.inspect.inspect(updatedLayout[#updatedLayout]))
             else
                 local scr = l[3]()
-                table.insert(updatedLayout, {l[1], l[2], scr, l[4], l[5], l[6]})
+                table.insert(updatedLayout, {l[1], l[2], l[3], l[4], l[5], l[6]})
                 print("      use dynamic screen for app", app:title(), hs.inspect.inspect(updatedLayout[#updatedLayout]))
             end
         else
