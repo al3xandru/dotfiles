@@ -1,6 +1,6 @@
 # mapping conflicts: Preferences -> Editor -> Vim Emulation
 # set commands https://github.com/JetBrains/ideavim/blob/master/doc/set-commands.md
-" set clipboard+=unnamed
+set clipboard+=unnamed
 set history=10000
 set hlsearch
 set ignorecase
