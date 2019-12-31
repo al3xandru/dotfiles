@@ -739,7 +739,7 @@ the current window and the windows state prior to that."
           ("h" "Habits"
            ((agenda "Habits"
                   ((org-agenda-files (list (concat org-directory "14-mho.org")))
-                   (org-agenda-span 3)
+                   (org-agenda-span 7)
                    (org-deadline-warning-days 0)))))
           
           ("Z" "Archive m CLOSED<\"<-1m>\""
