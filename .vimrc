@@ -667,6 +667,11 @@ Plugin 'arcticicestudio/nord-vim'
 Plugin 'ayu-theme/ayu-vim'
 let ayucolor="light" " mirage dark
 Plugin 'NLKNguyen/papercolor-theme'
+" https://www.reddit.com/r/neovim/comments/ehjsbk/looking_for_good_light_colorscheme/
+Plugin 'swalladge/antarctic-vim'
+Plugin 'rakr/vim-one'
+let g:one_allow_italics = 1
+Plugin 'cormacrelf/vim-colors-github'
 "}}}
 
 " disabled colorschemes {{{2 
