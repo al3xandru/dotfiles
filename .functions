@@ -252,7 +252,7 @@ function imgsize() {
 # GOPATH
 function gopath {
     if [ -z "$1" ]; then
-        unset GO15VENDOREXPERIMENT
+        # unset GO15VENDOREXPERIMENT
         export GOPATH=~/.golang
     else
         local dirn
@@ -262,7 +262,8 @@ function gopath {
             else
                 dirn=$(cd $1; pwd -P)
             fi
-            export GO15VENDOREXPERIMENT=1
+            # Default since Go 1.7 (2016)
+            # export GO15VENDOREXPERIMENT=1
             export GOPATH=${dirn}:$GOPATH
             export PATH=${dirn}/bin:$PATH
         fi
