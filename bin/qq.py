@@ -12,9 +12,10 @@ from xml.etree import ElementTree as ET
 
 DEBUG = False
 FILE_PREFIX = 'qq-'
-FILE_EXT = '.md'
+FILE_EXT = ('.md', '.markdown')
 SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/nvall')
-SEARCH_DIRS = (SAVE_DIR, os.path.expanduser('~/Dropbox/ka/knarc/Files'))
+# SEARCH_DIRS = (SAVE_DIR, os.path.expanduser('~/Dropbox/ka/knarc/Files'))
+SEARCH_DIRS = (SAVE_DIR,)
 
 
 def main(action, args, output='text'):
@@ -52,13 +53,25 @@ def search(args):
         cmd.append('-onlyin')
         cmd.append(dir)
     cmd.append('-interpret')
-    cmd.append("filename:%s AND filename:%s AND %s" % (FILE_PREFIX, FILE_EXT, ' '.join(args)))
+    cmd.append(create_query(args))
     if DEBUG:
         print "[DEBUG]: %s" % cmd
     results = subprocess.check_output(cmd)
 
     return results
 
+
+def create_query(args):
+    query = ("filename:%s" % FILE_PREFIX)
+    if len(FILE_EXT) > 1:
+        query += ' AND ('
+        query += ' OR '.join(["filename:%s" % t for t in FILE_EXT])
+        query += ')'
+    else:
+        query += " AND filename:%s" % FILE_EXT[0]
+    query += " AND %s" % ' '.join(args)
+
+    return query
 
 def output_results(outformat, results, query):
     if outformat == 'text':
@@ -77,8 +90,9 @@ def output_as_text(results, query):
     i = 1
     max_lines = 5
     for line in results.splitlines(False):
-        bname = os.path.basename(line)[:-len(FILE_EXT)]
-        question = bname[len(FILE_PREFIX):]
+        bname = os.path.basename(line)
+        bname = bname[:bname.rindex('.')]
+        question = bname[len(FILE_PREFIX):].title()
         answer = u""
         with codecs.open(line, 'r', 'utf8') as fin:
             count_lines = 0
@@ -87,9 +101,11 @@ def output_as_text(results, query):
                     count_lines += 1
                     answer = answer + li.strip() + "\n"
                 if count_lines >= max_lines:
+                    answer = answer[:-1] + ' [...]'
                     break
-        print("%02s. [%s]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
+        print("%d. [\"%s\"]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
         i += 1
+    # print "results:", i
 
 
 def output_as_launchbar_xml(results, query):
@@ -142,17 +158,25 @@ def output_as_alfred_xml(results, query):
     # xml_result = u""
     i = 0
     for line in results.splitlines(False):
-        bname = os.path.basename(line)[:-len(FILE_EXT)]
+        bname = os.path.basename(line)
+        bname = bname[:bname.rindex('.')]
         question = bname[len(FILE_PREFIX):]
         url = "nvalt://find/%s" % urllib.quote(bname)
         item = ET.SubElement(root, 'item',
                              {'uid': question.replace(' ', ''), 'arg': url, 'valid': 'yes'})
-        ET.SubElement(item, 'title').text = question + '?'
+        ET.SubElement(item, 'title').text = question.title()+ '?'
+        lineCount = 0
+        hasSubtitle = False
+        subtitle = u''
         with codecs.open(line, 'r', 'utf8') as fin:
             for li in fin:
                 if li.strip():
-                    ET.SubElement(item, 'subtitle').text = li.strip()
-                    break
+                    lineCount += 1
+                    if not subtitle:
+                        subtitle = li.strip('# \n')
+                        hasSubtitle = True
+
+        ET.SubElement(item, 'subtitle').text = "%s [...] (%d lines)" % (subtitle, lineCount)
         ET.SubElement(item, 'icon').text = u'qq.png'
         i += 1
     print ET.tostring(root).encode('utf8')
