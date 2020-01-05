@@ -130,64 +130,7 @@ set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
 
 " 5. syntax, highlighting and spelling" {{{
 syntax on       " enable syntax processing
-colorscheme evening " morning zellner
 
-" custom colorscheme groups {{{
-" Color scheme sites:
-" http://vimcolors.com/
-" http://colorswat.ch/
-let s:cs_dark = "desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "(rich) nuvola ironman gruvbox (vimdefault) morning zellner --- simpleandfriendly summerfruit256 calmbreeze autumnleaf buttercream navajo papayawhip pyte (disabled) cake16 lucius  sweater wwdc17"
-let s:cs_pastel = "(rich) earendel gruvbox nova --- alduin jellybeans railcast2 tango2 wombat wombat256 wombat256mod camo (disabled) kolor lucius"
-
-function! <SID>ChooseColorscheme(args)
-    let l:cslist = []
-    if len(a:args) == 0
-        echo 'Usage: :THEME [all|dark|light|paster]'
-        return
-    elseif a:args == 'all'
-        let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
-        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
-        echo 'List of all installed colorschemes:'
-        echo join(l:cslist, "\n")
-        return
-    elseif a:args == 'light'
-        let l:cslist = split(s:cs_light)
-        echo 'Light colorschemes:'
-    elseif a:args == 'pastel'
-        let l:cslist = split(s:cs_pastel)
-        echo 'Pastel colorschemes:'
-    elseif a:args == 'dark'
-        let l:cslist = split(s:cs_dark)
-        echo 'Dark colorschemes:'
-    endif
-    echo join(l:cslist, "\n")
-    echo "\n"
-    execute "colorscheme " . input("Choice: ", "", "color")
-endfunction
-command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
-" }}}
-
-" color column & cursor line {{{
-function! <SID>SetColorColumn()
-    " highlight ColorColumn ctermbg=235 guibg=#2c2d27
-    set colorcolumn=81,161
-    " Following setting colors all columns after 121
-    " let &colorcolumn="81,".join(range(121,999),",")
-endfunction
-
-" http://vim.wikia.com/wiki/Highlight_current_line
-set cursorline
-augroup CursorLine
-    autocmd!
-    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-    autocmd WinLeave * setlocal nocursorline
-augroup END
-function! <SID>SetCursorLineColors()
-    hi CursorLine    ctermbg=52 guibg=#424242
-    hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
-endfunction
-" }}}
 
 " keyworkdprg, dictionary, thesaurus {{{
 set dictionary=/usr/share/dict/words
@@ -571,7 +514,6 @@ end
 
 
 " https://github.com/macvim-dev/macvim/issues/386
-"if has('gui') && has('mac')
 if has('mac')
     if executable("pyenv") && !has('nvim')
         " v.1
@@ -580,6 +522,9 @@ if has('mac')
         " v.2
         " let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
         " let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        " Python 2
+        " let _cmd = 'pyenv versions | grep "2\." | head -1'
+        " Python 3
         let _cmd = 'pyenv versions | grep "3\." | head -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
@@ -648,30 +593,47 @@ Plugin 'VundleVim/Vundle.vim'
 
 " colorschemes {{{1
 Plugin 'Colour-Sampler-Pack'
+
+" sources {{{2
+" https://www.reddit.com/r/neovim/comments/e04207/what_are_the_best_maintained_and_most_extensive/ " {{{2
+" https://www.reddit.com/r/neovim/comments/ehjsbk/looking_for_good_light_colorscheme/
+" }}}
+
+" top (supporting text styling) {{{2
+" Plugin 'morhetz/gruvbox'
+Plugin 'gruvbox-community/gruvbox'
+
+" light
+Plugin 'NLKNguyen/papercolor-theme'
+
+" dark
+Plugin 'arcticicestudio/nord-vim'
+Plugin 'joshdick/onedark.vim'
+Plugin 'trevordmiller/nova-vim'
+" }}}
+
+" ok {{{2
 Plugin 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
-Plugin 'arzg/vim-plan9'
-" Gruvbox
-" Plugin 'morhetz/gruvbox'
-Plugin 'gruvbox-community/gruvbox'
-Plugin 'lifepillar/vim-gruvbox8'
 
+" light
 Plugin 'nice/sweater'
-Plugin 'trevordmiller/nova-vim'
 Plugin 'zefei/cake16'
-" well maintained 
-" https://www.reddit.com/r/neovim/comments/e04207/what_are_the_best_maintained_and_most_extensive/ " {{{2
-Plugin 'joshdick/onedark.vim'
-Plugin 'arcticicestudio/nord-vim'
+" }}}
+
+" simple light {{{2
+Plugin 'arzg/vim-plan9'
 Plugin 'ayu-theme/ayu-vim'
-let ayucolor="light" " mirage dark
-Plugin 'NLKNguyen/papercolor-theme'
-" https://www.reddit.com/r/neovim/comments/ehjsbk/looking_for_good_light_colorscheme/
-Plugin 'swalladge/antarctic-vim'
+let ayucolor="light" "options: light mirage dark
+Plugin 'cormacrelf/vim-colors-github'
+let g:github_colors_soft = 1
 Plugin 'rakr/vim-one'
 let g:one_allow_italics = 1
-Plugin 'cormacrelf/vim-colors-github'
+
+" simplified and optimized Gruvbox 
+Plugin 'lifepillar/vim-gruvbox8'
+" }}}
 "}}}
 
 " disabled colorschemes {{{2 
@@ -682,15 +644,10 @@ let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
-" Plugin 'arcticicestudio/nord-vim'
-" Plugin 'ayu-theme/ayu-vim'
-let ayucolor="light" " mirage dark
 " Plugin 'blerins/flattown'
 " Plugin 'chriskempson/base16-vim'
 " Plugin 'cocopon/iceberg.vim'
 " Plugin 'colepeters/spacemacs-theme.vim'
-" Plugin 'cormacrelf/vim-colors-github'
-let g:github_colors_soft = 1
 " Plugin 'fcpg/vim-fahrenheit'
 " Plugin 'fenetikm/falcon'
 " Plugin 'freeo/vim-kalisi'
@@ -706,11 +663,11 @@ let g:github_colors_soft = 1
 " Plugin 'mhartington/oceanic-next'
 " Plugin 'nanotech/jellybeans.vim'
 " Plugin 'NLKNguyen/papercolor-theme'
-" Plugin 'rakr/vim-one'
 " Plugin 'rakr/vim-two-firewatch'
 let g:two_firewatch_italics=1
 let g:airline_theme='twofirewatch'
 " Plugin 'rodnaph/vim-color-schemes'
+" Plugin 'swalladge/antarctic-vim'
 " Plugin 'whatyouhide/vim-gotham'
 " Plugin '256-grayvim'
 " Plugin 'blacklight'
@@ -1302,6 +1259,7 @@ let g:startify_lists = [
 let g:startify_bookmarks = [
     \ {'d': '~/Dropbox/Dox/mydox/'},
     \ {'j': '~/Dropbox/Dox/myjrnl/'},
+    \ {'n': '~/Dropbox/Dox/nvall/'},
     \ '~/.vimrc',
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
@@ -1497,6 +1455,36 @@ Plugin 'gregsexton/gitv'
 Plugin 'liuchengxu/vim-which-key'
 nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
 nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
+
+
+" Plugin 'alok/notational-fzf-vim' " disabled {{{2
+Plugin 'file:///Users/alexandp/Dropbox/workspaces/mine/miscellaneous/notational-fzf-vim', {'name': 'alpo-nv'}
+let g:nv_search_paths = ['~/Dropbox/Dox/nvall']
+let g:nv_use_short_pathnames=0
+let g:nv_ignore_pattern=['non-qq-nvalt/*', 'attachments/*']
+let g:nv_python_executable='~/.pyenv/versions/3.7.1/bin/python3'
+"}}}
+
+
+" Plugin 'fmoralesc/vim-pad' " disabled {{{2
+" :Pad
+let g:pad#dir='~/Dropbox/Dox/nvall'
+let g:pad#exclude_dirnames="attachments,non-qq-nvalt"
+let g:pad#default_file_extension='.md'
+let g:pad#search_backend='ag'
+let g:pad#query_dirnames=0
+let g:pad#query_filenames=1
+let g:pad#rename_files=0
+let g:pad#read_nchars_from_files=0
+let g:pad#title_first_line=0
+let g:pad#window_height=12
+let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
+"let g:pad#open_in_split=0
+let g:pad#set_mappings=0
+" nmap <localleader>ql <Plug>(pad-list)
+" nmap <localleader>qn <Plug>(pad-new)
+" nmap <localleader>qq <Plug>(pad-search)
+" }}}
 "}}}
 
 call vundle#end()
@@ -1504,58 +1492,142 @@ filetype plugin indent on " required!
 
 " colorscheme {{{
 
-" set color scheme based on vim flavor
+" default colorscheme
+colorscheme evening " morning zellner
+
+" THEME command: custom colorscheme groups {{{2
+" Color scheme sites:
+" http://vimcolors.com/
+" http://colorswat.ch/
+let s:cs_dark = "(rich) onedark nord nova (vimdefault) desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
+let s:cs_light = "(rich) ironman nuvola gruvbox (vimdefault) morning zellner (misc) cake16 sweater--- simpleandfriendly summerfruit256 calmbreeze autumnleaf buttercream navajo papayawhip pyte (disabled)"
+let s:cs_pastel = "(rich) earendel gruvbox (misc) alduin lucius --- jellybeans railcast2 tango2 wombat wombat256 wombat256mod camo (disabled) kolor"
+
+function! <SID>ChooseColorscheme(args)
+    let l:cslist = []
+    if len(a:args) == 0
+        echo 'Usage: :THEME [all|dark|light|paster]'
+        return
+    elseif a:args == 'all'
+        let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
+        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
+        echo 'List of all installed colorschemes:'
+        echo join(l:cslist, "\n")
+        return
+    elseif a:args == 'light'
+        let l:cslist = split(s:cs_light)
+        echo 'Light colorschemes:'
+    elseif a:args == 'pastel'
+        let l:cslist = split(s:cs_pastel)
+        echo 'Pastel colorschemes:'
+    elseif a:args == 'dark'
+        let l:cslist = split(s:cs_dark)
+        echo 'Dark colorschemes:'
+    endif
+    echo join(l:cslist, "\n")
+    echo "\n"
+    execute "colorscheme " . input("Choice: ", "", "color")
+endfunction
+command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
+" }}}
+
+function! s:RandomColorschemeFromList(list)
+    let m = len(a:list)
+    let tmstmp = str2nr(strftime('%s'))
+    let selIdx = float2nr(fmod(tmstmp, m))
+    " echom "Timestamp:" .  tmstmp . "; len(list):" . string(m) . "; selected idx:" . string(selIdx)
+    let selColorscheme = a:list[selIdx]
+    " echom "Timestamp:" .  tmstmp . "; len(list):" . string(m) . "; colorscheme :" . selColorscheme
+    return selColorscheme
+endfunction
+
+" set colorscheme based on vim flavor {{{2
 if has("unix")
     " use if needed to determine the os
     " or use has("mac")
-    let s:uname = system("uname -s")
+    " let s:uname = system("uname -s")
 
-    " alduin earendel gruvbox ironman nova nuvola
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let s:tmstmp = str2nr(strftime('%s'))
-        " echom "Timestamp:" .  s:tmstmp .  "; Mod:" .  string(fmod(s:tmstmp, 9))
-        let s:mod = 11
-        if fmod(s:tmstmp, s:mod) == 0 || fmod(s:tmstmp, s:mod) == 7
-            colorscheme nuvola
-        elseif (fmod(s:tmstmp, s:mod) == 1) || (fmod(s:tmstmp, s:mod) == 8)
-            colorscheme ironman
-        elseif fmod(s:tmstmp, s:mod) == 2 || fmod(s:tmstmp, s:mod) == 9
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'ayu', 'github', 'earendel', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
+        let cs = s:RandomColorschemeFromList(color_schemes)
+        if cs == 'gruvbox'
             set background=light
-            colorscheme gruvbox8
-        elseif fmod(s:tmstmp, s:mod) == 3 || fmod(s:tmstmp, s:mod) == 10
-            colorscheme plan9
-        elseif fmod(s:tmstmp, s:mod) == 4
-            colorscheme alduin
-        elseif fmod(s:tmstmp, s:mod) == 5
-            colorscheme nova
-        elseif fmod(s:tmstmp, s:mod) == 6
-            set background=dark
-            colorscheme gruvbox8
-        else
-            colorscheme nuvola
+        elseif cs == 'papercolor'
+            set background='light'
         endif
+
+        execute ":colorscheme " .  cs
+        " if fmod(s:tmstmp, s:mod) == 0 || fmod(s:tmstmp, s:mod) == 7
+        "     colorscheme nuvola
+        " elseif (fmod(s:tmstmp, s:mod) == 1) || (fmod(s:tmstmp, s:mod) == 8)
+        "     colorscheme ironman
+        " elseif fmod(s:tmstmp, s:mod) == 2 || fmod(s:tmstmp, s:mod) == 9
+        "     set background=light
+        "     colorscheme gruvbox8
+        " elseif fmod(s:tmstmp, s:mod) == 3 || fmod(s:tmstmp, s:mod) == 10
+        "     colorscheme plan9
+        " elseif fmod(s:tmstmp, s:mod) == 4
+        "     colorscheme alduin
+        " elseif fmod(s:tmstmp, s:mod) == 5
+        "     colorscheme nova
+        " elseif fmod(s:tmstmp, s:mod) == 6
+        "     set background=dark
+        "     colorscheme gruvbox8
+        " else
+        "     colorscheme nuvola
+        " endif
     elseif has("gui_vimr")
         colorscheme alduin
     elseif has('nvim')
-        colorscheme gruvbox
+        " colorscheme gruvbox
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'nord', 'nova']
+        let cs = s:RandomColorschemeFromList(color_schemes)
+        execute ":colorscheme " .  cs
     else
-        colorscheme gruvbox
+        " colorscheme gruvbox
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'nord', 'nova']
+        let cs = s:RandomColorschemeFromList(color_schemes)
+        execute ":colorscheme " .  cs
     endif
 endif
-" call <SID>SetCursorLineColors()
+" }}}
+
+" color column & cursor line {{{2
+function! <SID>SetColorColumn()
+    " highlight ColorColumn ctermbg=235 guibg=#2c2d27
+    set colorcolumn=81,161
+    " Following setting colors all columns after 121
+    " let &colorcolumn="81,".join(range(121,999),",")
+endfunction
+
+" http://vim.wikia.com/wiki/Highlight_current_line
+set cursorline
+augroup CursorLine
+    autocmd!
+    autocmd VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    autocmd WinLeave * setlocal nocursorline
+augroup END
+function! <SID>SetCursorLineColors()
+    hi CursorLine    ctermbg=52 guibg=#424242
+    hi CursorLineNr  term=bold ctermfg=226 gui=bold guifg=#ffff00
+endfunction
+
+"call <SID>SetCursorLineColors()
 call <SID>SetColorColumn()
 " }}}
 
+" }}}
+
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
-" Old, unused {{{ 
+" Old, disabled plugins {{{ 
 
 " Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 
 " Plugin 'kopischke/vim-fetch'            " open files at line and column
 
-" Plugin 'terryma/vim-expand-region' {{{
+" Plugin 'terryma/vim-expand-region' {{{2
 " let g:expand_region_text_objects = {
 "     \ 'iw' :0,
 "     \ 'i"' :0,
@@ -1573,7 +1645,7 @@ call <SID>SetColorColumn()
 "     \}
 " }}}
 
-" Plugin 'vim-airline/vim-airline' {{{
+" Plugin 'vim-airline/vim-airline' {{{2
 " Plugin 'vim-airline/vim-airline-themes'
 " let g:airline_left_sep = '»'
 " let g:airline_right_sep = '«'
@@ -1600,7 +1672,7 @@ call <SID>SetColorColumn()
 " let g:airline#extensions#tabline#left_alt_sep = '|'
 " }}}
 
-" Unite: can replace CtrlP, Tagbar {{{
+" Unite: can replace CtrlP, Tagbar {{{2
 " Note: vimproc requires compiling a c file
 " Plugin 'Shougo/vimproc.vim'
 " Plugin 'Shougo/unite.vim'
@@ -1620,7 +1692,7 @@ call <SID>SetColorColumn()
 " nnoremap <silent> <F5> <Plug>(unite-redraw)
 " }}}
 
-" Plugin 'thisivan/vim-taglist' {{{
+" Plugin 'thisivan/vim-taglist' {{{2
 " let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 " let Tlist_Show_One_File=1
 " let Tlist_Auto_Highlight_Tag=1
@@ -1632,7 +1704,7 @@ call <SID>SetColorColumn()
 " map <silent> <Leader>t :TlistToggle<CR>
 " }}}
 
-" Plugin 'git://git.wincent.com/command-t.git' {{{
+" Plugin 'git://git.wincent.com/command-t.git' {{{2
 " CommandT settings
 " disabled; using CtrlP
 " let g:command_t_loaded = 1
@@ -1640,7 +1712,7 @@ call <SID>SetColorColumn()
 " let g:CommandTCancelMap='<C-x>'
 " }}}
 
-" Plugin 'scrooloose/nerdtree' {{{
+" Plugin 'scrooloose/nerdtree' {{{2
 " let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
 "     \ '\.egg$', '\.idea$',
 "     \ '\.bzr', '\.git', '\.hg', '\.svn']
@@ -1656,7 +1728,7 @@ call <SID>SetColorColumn()
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 " }}}
 
-" Plugin 'jeetsukumaran/vim-buffergator' {{{
+" Plugin 'jeetsukumaran/vim-buffergator' {{{2
 " let g:buffergator_viewport_split_policy = "T"
 " let g:buffergator_autodismiss_on_select = 1
 " let g:buffergator_suppress_keymaps = 1
@@ -1666,7 +1738,7 @@ call <SID>SetColorColumn()
 " Plugin 'jlanzarotta/bufexplorer'
 " }}}
 
-" Plugin 'AndrewRadev/tagfinder.vim' {{{
+" Plugin 'AndrewRadev/tagfinder.vim' {{{2
 " augroup TagFinder
 "   autocmd!
 "   autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
@@ -1676,7 +1748,7 @@ call <SID>SetColorColumn()
 
 " Plugin 'AutoTag'
 " Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-easytags' {{{
+" Plugin 'xolox/vim-easytags' {{{2
 if filereadable("/usr/local/bin/ctags")
     let g:easytags_cmd = '/usr/local/bin/ctags'
 else
@@ -1701,7 +1773,7 @@ let g:easytags_suppress_ctags_warning = 1
 "\}
 " }}}
 
-" Plugin 'Shougo/neocomplete.vim' {{{
+" Plugin 'Shougo/neocomplete.vim' {{{2
 " " let g:neocomplete#enable_at_startup=1
 " let g:neocomplete#auto_complete_delay=400
 " let g:neocomplete#auto_completion_start_length=2
@@ -1723,14 +1795,14 @@ let g:easytags_suppress_ctags_warning = 1
 " nmap cop :NeoCompleteToggle<CR>
 " }}}
 
-" Plugin 'junegunn/vim-peekaboo' {{{
+" Plugin 'junegunn/vim-peekaboo' {{{2
 " can be replaced by :registers
 " let g:peekaboo_delay=800
 " let g:peekaboo_window='vertical botright 45new'
 " let g:peekaboo_window='topleft 15new'
 " }}}
 
-" Plugin 'scrooloose/syntastic' {{{
+" Plugin 'scrooloose/syntastic' {{{2
 "let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 0
 "let g:syntastic_check_on_wq = 0
@@ -1750,11 +1822,11 @@ let g:easytags_suppress_ctags_warning = 1
 "" echom "syntastic:" . g:syntastic_python_checkers
 " }}}
 
-" Plugin 'maralla/validator.vim' {{{
+" Plugin 'maralla/validator.vim' {{{2
 " check syntax on the fly asynchronously
 " }}}
 
-" Plugin 'mileszs/ack.vim' {{{
+" Plugin 'mileszs/ack.vim' {{{2
 " if executable('rg')
 "     let g:ackprg = 'rg --vimgrep -n --smart-case -t'
 " elseif executable('ag')
@@ -1763,7 +1835,7 @@ if executable('ag')
 endif
 " }}}
 
-" Snippets {{{
+" Snippets {{{2
 " if has("python")
 "     Plugin 'SirVer/ultisnips'
 "     let g:UltiSnipsSnippetsDir=expand("~/.vim/xsnippets/ultisnips")
@@ -1775,7 +1847,10 @@ endif
 " Plugin 'honza/vim-snippets'
 " }}}
 
-" Plugin 'jceb/vim-orgmode' " Org-mode {{{
+
+" Scratch files, notes, outliner etc. {{{2
+
+" Plugin 'jceb/vim-orgmode' " Org-mode {{{3
 let g:org_heading_shade_leading_stars=1
 " let g:org_indent=1
 let g:org_todo_keywords = [
@@ -1808,27 +1883,7 @@ autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
 " Plugin 'mattn/calendar-vim'
 " }}}
 
-" Scratch files, notes, outliner etc. {{{1
-" Plugin 'fmoralesc/vim-pad' " {{{
-" :Pad
-let g:pad#dir='~/Dropbox/Dox/nvall'
-let g:pad#default_file_extension='.md'
-let g:pad#search_backend='ag'
-let g:pad#query_dirnames=0
-let g:pad#query_filenames=1
-let g:pad#rename_files=0
-let g:pad#read_nchars_from_files=0
-let g:pad#title_first_line=0
-let g:pad#window_height=12
-let g:pad#ignored_extensions=["plist", "pdf", "odt", "docx", "doc"]
-"let g:pad#open_in_split=0
-let g:pad#set_mappings=0
-" nmap <localleader>ql <Plug>(pad-list)
-" nmap <localleader>qn <Plug>(pad-new)
-" nmap <localleader>qq <Plug>(pad-search)
-" }}}
-
-" Plugin 'xolox/vim-misc' " {{{
+" Plugin 'xolox/vim-misc' " {{{3
 " Plugin 'xolox/vim-notes'
 " :Note
 let g:notes_directories=['~/Dropbox/Dox/nvall']
@@ -1841,21 +1896,17 @@ let g:notes_unicode_enabled=1
 let g:notes_conceal_code=0
 " }}}
 
-" Plugin 'duff/vim-scratch' " {{{
+" Plugin 'duff/vim-scratch' " {{{3
 " :scratch :Sscratch
 " }}}
 
-" Plugin 'vimoutliner/vimoutliner' " {{{
+" Plugin 'vimoutliner/vimoutliner' " {{{3
 " outliner .otl
 " }}}
 
 " Plugin 'vimwiki/vimwiki'
 "}}}
 
-" YouCompleteMe requires the same version of Python to be used for vim, MacVim, and itself
-" both at compile time and runtime 
-" Plugin 'Valloric/YouCompleteMe'
-" let g:ycm_auto_trigger = 0
 " }}}
 "
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
