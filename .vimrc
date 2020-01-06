@@ -523,7 +523,12 @@ if has('mac')
         " let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
         " let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         " Python 2
-        " let _cmd = 'pyenv versions | grep "2\." | head -1'
+        let _cmd = 'pyenv versions | grep "2\." | head -1'
+        let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
+        let _pyvermaj=join(split(_pyver, "\\.")[0:1], ".")
+        let &pythondll=$HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
+        let &pythonhome=$HOME . "/.pyenv/versions/" . _pyver
         " Python 3
         let _cmd = 'pyenv versions | grep "3\." | head -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
@@ -535,22 +540,29 @@ if has('mac')
 
         " let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
         " let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyver . "/lib/python" .  _pyvermaj . "/site-packages/"
+        " let $PATH=$HOME .  "/.pyenv/versions/" .  _pyver . "/bin:" .  $PATH
 
         " I don't know how to do set pythondll thus the let &pythondll
-        let &pythondll=$HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
+        let &pythonthreehome = $HOME .  "/.pyenv/versions/" . _pyver
+        let &pythonthreedll = $HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
         " echom "PYENV     :" . _pyenv
         " echom "PYTHONVER :" . _pyver
         " echom "PYTHONMAJ :" . _pyvermaj
         " echom "PYTHONHOME:" . $PYTHONHOME
         " echom "PYTHONPATH:" . $PYTHONPATH
         " echom "PYTHONDLL :" . &pythondll
+        " echom "PATH      :" . $PATH
+        echom "&pythonhome     :" . &pythonhome
+        echom "&pythondll      :" . &pythondll
+        echom "&pythonthreehome:" . &pythonthreehome
+        echom "&pythonthreedll :" . &pythonthreedll
         " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
         if _pyvermaj > '3.0' && has('python3')
-            " echom "PYTHON3k  :YES"
+            echom "PYTHON3k  :YES"
             let g:jedi#force_py_version = 3
             let g:pymode_python = 'python3'
         else
-            " echom "PYTHON3k  :NO"
+            echom "PYTHON3k  :NO"
             let g:jedi#force_py_version = 2
             let g:pymode_python = 'python'
         endif
@@ -1458,11 +1470,50 @@ nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 
 
 " Plugin 'alok/notational-fzf-vim' " disabled {{{2
-Plugin 'file:///Users/alexandp/Dropbox/workspaces/mine/miscellaneous/notational-fzf-vim', {'name': 'alpo-nv'}
+" Plugin 'file:///Users/alexandp/Dropbox/workspaces/mine/miscellaneous/notational-fzf-vim', {'name': 'alpo-nv'}
 let g:nv_search_paths = ['~/Dropbox/Dox/nvall']
 let g:nv_use_short_pathnames=0
 let g:nv_ignore_pattern=['non-qq-nvalt/*', 'attachments/*']
 let g:nv_python_executable='~/.pyenv/versions/3.7.1/bin/python3'
+let s:search_paths = map(copy(g:nv_search_paths), 'expand(v:val)')
+let s:search_path_str = join(map(copy(s:search_paths), 'shellescape(v:val)'))
+if has('win64') || has('win32')
+  let s:null_path = 'NUL'
+  let s:command = ''
+else
+  let s:null_path = '/dev/null'
+  let s:command = 'command'
+endif
+" Use `command` in front of 'rg' to ignore aliases.
+" The `' "\S" '` is so that the backslash itself doesn't require escaping.
+" g:search_paths is already shell escaped, so we don't do it again
+command! -nargs=* -bang QQ
+      \ call fzf#run(
+          \ fzf#wrap({
+              \ 'sink': 'e',
+              \ 'window': 'belowright 30%split',
+              \ 'source': join([
+                   \ s:command,
+                   \ 'rg',
+                   \ '--follow',
+                   \ '--smart-case',
+                   \ '--color never',
+                   \ '--no-messages',
+                   \ '--no-heading',
+                   \ '--no-line-number',
+                   \ '--files-with-matches',
+                   \ '--sort accessed',
+                   \ ((<q-args> is '') ?  '"\S"' :  shellescape(<q-args>)),
+                   \ s:search_path_str,
+                   \ '2>' . s:null_path,
+                   \ ]),
+              \ 'options': join([
+                               \ '--exact',
+                               \ '--delimiter=":"',
+                               \ '--tiebreak=' . 'length,begin',
+                               \ '--preview="cat {}"',
+                               \ '--preview-window=right:50%:wrap',
+                               \ ])},<bang>0))
 "}}}
 
 
@@ -1550,7 +1601,7 @@ if has("unix")
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'ayu', 'github', 'earendel', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'ayu', 'github', 'earendel', 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1582,12 +1633,12 @@ if has("unix")
         colorscheme alduin
     elseif has('nvim')
         " colorscheme gruvbox
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'nord', 'nova']
+        let color_schemes = ['ironman', 'gruvbox', 'papercolor', 'onedark','nord', 'alduin']
         let cs = s:RandomColorschemeFromList(color_schemes)
         execute ":colorscheme " .  cs
     else
         " colorscheme gruvbox
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'nord', 'nova']
+        let color_schemes = ['ironman', 'gruvbox', 'papercolor', 'onedark','nord', 'alduin']
         let cs = s:RandomColorschemeFromList(color_schemes)
         execute ":colorscheme " .  cs
     endif
@@ -1619,6 +1670,7 @@ call <SID>SetColorColumn()
 " }}}
 
 " }}}
+
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, disabled plugins {{{ 
