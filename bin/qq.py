@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 # vim: ts=4 shiftwidth=4:
+from __future__ import print_function
 
 import argparse
 import codecs
@@ -32,11 +33,12 @@ def add(args):
     new_file = os.path.join(SAVE_DIR, "%s.md" % ' '.join(args))
     if os.path.exists(new_file):
         if DEBUG:
-            print "WARN: A file for qq already exists '%s'" % new_file
+            print("WARN: A file for qq already exists '%s'" % new_file)
     else:
         with open(new_file, 'a+') as fout:
             fout.flush()
     subprocess.call(['open', new_file])
+
 
 _NO_RESULTS = u"""
 <?xml version="1.0"?>
@@ -54,17 +56,52 @@ def search(options):
     for dir in SEARCH_DIRS:
         cmd.append('-onlyin')
         cmd.append(pipes.quote(dir))
-    cmd.append('-interpret')
-    # cmd.extend(create_query(options))
-    cmd.append(create_query(options))
+
+    if options.mode == 'interpret':
+        cmd.append('-interpret')
+        cmd.append(create_interpret_query(options))
+    elif options.mode == 'literal':
+        cmd.append('-literal')
+        cmd.append(create_literal_query(options))
+    else:
+        print("[ERROR] Unknow mode:", options.mode)
+
     if DEBUG:
-        print "[DEBUG]: %s" % cmd
+        print("[DEBUG]: %s" % cmd)
     results = subprocess.check_output(cmd)
 
     return results
 
 
-def create_query(options):
+def create_literal_query(options):
+    query = []
+    if options.prefix:
+        query.append("kMDItemFSName=%s*" % options.prefix)
+
+    attr = ""
+    if options.text:
+        attr = "kMDItemTextContent"
+    else:
+        attr = "kMDItemFSName"
+
+    for t in options.query:
+        query.append('&&')
+        query.append("%s='*%s*'c" % (attr, t))
+
+    query.append('&&')
+    if len(FILE_EXT) > 1:
+        query.append("(kMDItemFSName=*%s" % FILE_EXT[0])
+        for ext in FILE_EXT[1:-1]:
+            query.append("||")
+            query.append("kMDItemFSName=*%s" % ext)
+        query.append("|| kMDItemFSName=*%s)" % FILE_EXT[-1])
+    else:
+        query.append("kMDItemFSName=*%s" % FILE_EXT[0])
+
+    return ' '.join(query)
+
+
+def create_interpret_query(options):
     query = []
     if options.prefix:
         query.append("name:%s" % options.prefix)
@@ -95,7 +132,7 @@ def output_results(outformat, results, query):
 
 def output_as_text(results, query):
     if not results:
-        print "Tough question... nothing :-("
+        print("Tough question... nothing :-(")
         return
 
     i = 1
@@ -117,7 +154,7 @@ def output_as_text(results, query):
         print("%d. [\"%s\"]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
         i += 1
     if DEBUG:
-        print "[DEBUG] results:", (i-1)
+        print("[DEBUG] results:", (i-1))
 
 
 def output_as_launchbar_xml(results, query):
@@ -150,7 +187,7 @@ def output_as_launchbar_xml(results, query):
                     break
 
         i += 1
-    print ET.tostring(root).encode('utf8')
+    print(ET.tostring(root).encode('utf8'))
 
 
 def output_as_alfred_xml(results, query):
@@ -191,15 +228,16 @@ def output_as_alfred_xml(results, query):
         ET.SubElement(item, 'subtitle').text = "%s [...] (%d lines)" % (subtitle, lineCount)
         ET.SubElement(item, 'icon').text = u'qq.png'
         i += 1
-    print ET.tostring(root).encode('utf8')
+    print(ET.tostring(root).encode('utf8'))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Quick Question')
     parser.add_argument('-a', '--add', action='store_true')
     parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred', 'text'], default='text')
-    parser.add_argument('-t', '--text', action='store_true')
-    parser.add_argument('-p', '--prefix', action='store', default='qq-')
+    parser.add_argument('--text', action='store_true')
+    parser.add_argument('--prefix', action='store', default='qq-')
+    parser.add_argument('--mode', action='store', choices=['interpret', 'literal'], default='interpret')
     parser.add_argument('query', nargs='*')
     options = parser.parse_args()
 
