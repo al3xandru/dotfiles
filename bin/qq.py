@@ -1,8 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
+# -*- coding: utf-8 -*-
+# vim: ts=4 shiftwidth=4:
 
 import argparse
 import codecs
 import os
+import pipes
 import subprocess
 # import sys
 import urllib
@@ -10,20 +13,19 @@ import urllib
 from xml.etree import ElementTree as ET
 
 
-DEBUG = False
+DEBUG = True if os.getenv('DEBUG_SCRIPT', False) == 'True' else False
 FILE_PREFIX = 'qq-'
 FILE_EXT = ('.md', '.markdown')
 SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/nvall')
-# SEARCH_DIRS = (SAVE_DIR, os.path.expanduser('~/Dropbox/ka/knarc/Files'))
 SEARCH_DIRS = (SAVE_DIR,)
 
 
-def main(action, args, output='text'):
+def main(action, options):
     if action == 'add':
-        add(args)
+        add(options.query)
     else:
-        results = search(args)
-        output_results(output, results, args)
+        results = search(options)
+        output_results(options.output, results, options.query)
 
 
 def add(args):
@@ -47,13 +49,14 @@ _NO_RESULTS = u"""
 """
 
 
-def search(args):
+def search(options):
     cmd = ['mdfind']
     for dir in SEARCH_DIRS:
         cmd.append('-onlyin')
-        cmd.append(dir)
+        cmd.append(pipes.quote(dir))
     cmd.append('-interpret')
-    cmd.append(create_query(args))
+    # cmd.extend(create_query(options))
+    cmd.append(create_query(options))
     if DEBUG:
         print "[DEBUG]: %s" % cmd
     results = subprocess.check_output(cmd)
@@ -61,17 +64,25 @@ def search(args):
     return results
 
 
-def create_query(args):
-    query = ("filename:%s" % FILE_PREFIX)
+def create_query(options):
+    query = []
+    if options.prefix:
+        query.append("name:%s" % options.prefix)
+        query.append('AND')
     if len(FILE_EXT) > 1:
-        query += ' AND ('
-        query += ' OR '.join(["filename:%s" % t for t in FILE_EXT])
-        query += ')'
+        query.append("(name:%s" % FILE_EXT[0])
+        for ext in FILE_EXT[1:-1]:
+            query.append('OR')
+            query.append("name:%s" % ext)
+        query.append("OR name:%s)" % FILE_EXT[-1])
     else:
-        query += " AND filename:%s" % FILE_EXT[0]
-    query += " AND %s" % ' '.join(args)
+        query.append("name:%s" % FILE_EXT[0])
+    if options.text:
+        query.extend(options.query)
+    else:
+        query.extend(["AND name:%s" % t for t in options.query])
 
-    return query
+    return ' '.join(query)
 
 def output_results(outformat, results, query):
     if outformat == 'text':
@@ -105,7 +116,8 @@ def output_as_text(results, query):
                     break
         print("%d. [\"%s\"]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
         i += 1
-    # print "results:", i
+    if DEBUG:
+        print "[DEBUG] results:", (i-1)
 
 
 def output_as_launchbar_xml(results, query):
@@ -185,11 +197,12 @@ def output_as_alfred_xml(results, query):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Quick Question')
     parser.add_argument('-a', '--add', action='store_true')
-    parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred'])
+    parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred', 'text'], default='text')
+    parser.add_argument('-t', '--text', action='store_true')
+    parser.add_argument('-p', '--prefix', action='store', default='qq-')
     parser.add_argument('query', nargs='*')
     options = parser.parse_args()
 
     action = 'add' if options.add else 'search'
-    outputf = options.output or 'text'
 
-    main(action, options.query, outputf)
+    main(action, options)
