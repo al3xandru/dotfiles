@@ -551,10 +551,15 @@ the current window and the windows state prior to that."
            entry (file+datetree alpo-org-work-file)
            "* TODO Respond to email subject:(%^{mail|zol[mp]}) from:(%^{name|none}) :for_work:email:\n:PROPERTIES:\n:CREATED: %u\n:END:")
 
-          ("W" "Weekly planning"
-           entry (file+datetree alpo-org-work-file)
-           (file "~/Dropbox/Dox/mydox/90-weeklyplanning.template.org"))
-          
+          ;; ("W" "Weekly planning"
+          ;;  entry (file+datetree alpo-org-work-file)
+          ;;  (file "~/Dropbox/Dox/mydox/90-weeklyplanning.org.template"))
+
+          ("h" "New hire"
+           entry (file+olp alpo-org-work-file "Projects" "PRJ Hire")
+           (file "~/Dropbox/Dox/mydox/90-newhire.org.template"))
+
+         
           ("m" "Meeting"
            entry (file+datetree alpo-org-work-file)
            "* MEETING %^{Description} (%U) :for_work:meeting:\n:PROPERTIES:\n:CREATED: %U\n:PEOPLE:\n:RECORDING:\n:END:\n%?")
@@ -565,7 +570,7 @@ the current window and the windows state prior to that."
 
           ("v" "Trip/vacation checklist"
            entry (file+datetree org-default-notes-file)
-           (file  "~/Dropbox/Dox/mydox/90-trip.template.org"))
+           (file  "~/Dropbox/Dox/mydox/90-trip.org.template"))
 
           
           ("x" "Using clipboard...")
@@ -599,34 +604,34 @@ the current window and the windows state prior to that."
           ;;; end "y"
 
           
-          ("L" "Library")
-          ("Lp" "Pick up book"
-           entry (file+olp alpo-org-tickler-file "Calendar")
-           "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+          ;; ("L" "Library")
+          ;; ("Lp" "Pick up book"
+          ;;  entry (file+olp alpo-org-tickler-file "Calendar")
+          ;;  "* TODO Pick up book from library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
 
-          ("Lr" "Return book to library"
-           entry (file+olp alpo-org-tickler-file "Calendar")
-           "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
+          ;; ("Lr" "Return book to library"
+          ;;  entry (file+olp alpo-org-tickler-file "Calendar")
+          ;;  "* TODO Return book to library \"%^{Book}\" :#me:@library:\nDEADLINE: %^T")
 
-          ("Lm" "Return magazines to library"
-           entry (file+olp alpo-org-tickler-file "Calendar")
-           "* TODO Return to library %^{How many magazines} magazines (%^{What magazines}) :#me:@library:\nDEADLINE: %^T")
-          ;;; end "L"
+          ;; ("Lm" "Return magazines to library"
+          ;;  entry (file+olp alpo-org-tickler-file "Calendar")
+          ;;  "* TODO Return to library %^{How many magazines} magazines (%^{What magazines}) :#me:@library:\nDEADLINE: %^T")
+          ;; ;;; end "L"
  
  
-          ("M" "Movies")
-          ("Mn" "Movie in theather"
-           entry (file+olp alpo-org-someday-file "Movies in theater")
-           "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
+          ;; ("M" "Movies")
+          ;; ("Mn" "Movie in theather"
+          ;;  entry (file+olp alpo-org-someday-file "Movies in theater")
+          ;;  "* SOMEDAY When & where can we/I see movie \"[[https://www.google.com/search?hl=en&q=showtimes+san+francisco+%\\1][%^{Movie}]]\" :#me:@cinema:")
           
-          ("Mw" "Movie wishlist"
-           entry (file alpo-org-someday-file)
-           "* SOMEDAY Check out %^{Kind|movie|TV series} \"%^{Title}\"%? :#me:")
+          ;; ("Mw" "Movie wishlist"
+          ;;  entry (file alpo-org-someday-file)
+          ;;  "* SOMEDAY Check out %^{Kind|movie|TV series} \"%^{Title}\"%? :#me:")
           
-          ("Md" "Movie offline"
-           entry (file alpo-org-someday-file)
-           "* SOMEDAY Check availability of movie \"%^{Title}\" :#me:")
-          ;;; end "M"
+          ;; ("Md" "Movie offline"
+          ;;  entry (file alpo-org-someday-file)
+          ;;  "* SOMEDAY Check availability of movie \"%^{Title}\" :#me:")
+          ;; ;;; end "M"
           
 
           ;;; automation
