@@ -140,7 +140,7 @@ def output_as_text(results, query):
     for line in results.splitlines(False):
         bname = os.path.basename(line)
         bname = bname[:bname.rindex('.')]
-        question = bname[len(FILE_PREFIX):].title()
+        question = bname[len(FILE_PREFIX):].replace('_', ' ').replace('-', ' ').title()
         answer = u""
         with codecs.open(line, 'r', 'utf8') as fin:
             count_lines = 0
@@ -173,10 +173,10 @@ def output_as_launchbar_xml(results, query):
     i = 0
     for line in results.splitlines(False):
         bname = os.path.basename(line)[:-len(FILE_EXT)]
-        question = bname[len(FILE_PREFIX):]
+        question = bname[len(FILE_PREFIX):].replace('_', ' ').replace('-', ' ')
 
         item = ET.SubElement(root, 'item')
-        ET.SubElement(item, 'title').text = question + '?'
+        ET.SubElement(item, 'title').text = question.title() + '?'
         ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.quote(bname)
         # ET.SubElement(item, 'path').text = line
         ET.SubElement(item, 'icon').text = u'qq.png'
@@ -209,7 +209,7 @@ def output_as_alfred_xml(results, query):
     for line in results.splitlines(False):
         bname = os.path.basename(line)
         bname = bname[:bname.rindex('.')]
-        question = bname[len(FILE_PREFIX):]
+        question = bname[len(FILE_PREFIX):].replace('_', ' ').replace('-', ' ')
         url = "nvalt://find/%s" % urllib.quote(bname)
         item = ET.SubElement(root, 'item',
                              {'uid': question.replace(' ', ''), 'arg': url, 'valid': 'yes'})
