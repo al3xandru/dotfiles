@@ -522,6 +522,7 @@ if has('mac')
         " v.2
         " let _cmd = 'python -c "import sys;vt=sys.version_info;sys.stdout.write(\".\".join([str(v) for v in vt[:3]]))"'
         " let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
+        " check: https://github.com/macvim-dev/macvim/blob/b906f87e8c0ef8585e5aaeb72ca4aadbbd1b8155/src/MacVim/vimrc#L21
         " Python 2
         let _cmd = 'pyenv versions | grep "2\." | head -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
@@ -1023,6 +1024,9 @@ let vim_markdown_preview_toggle=1
 let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
+
+" Plugin 'skanehira/preview-markdown.vim'
+" let g:preview_markdown_parser='htmlmarkdown'
 " function! <SID>MarkdownPreview(file)
 "     if has("unix")
 "         let l:uname = system("uname -s")
