@@ -353,7 +353,7 @@ nnoremap <Down> gj
 
 " (N)Mappings: better search n/N blip for next highlight word and center the line {{{
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
-" Plugin 'timakro/vim-searchant'
+" Plug 'timakro/vim-searchant'
 nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
 nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
 
@@ -593,19 +593,15 @@ function! <SID>Fonts()
 endfunction
 command! SetFont call <SID>Fonts()
 
-" Load Vundle
-" Only Plugin settings are allowed until vundle#end()
-filetype off " required!
-
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-" Alternative plugin manager:
+" Load vim-plugin
+call plug#begin('~/.vim/plugged')
+" Alternative plugin managers
+" - vundle
 " - junegunn/vim-plug 
 " - Shougo/neobundle.vim
 
 " colorschemes {{{1
-Plugin 'Colour-Sampler-Pack'
+Plug 'vim-scripts/Colour-Sampler-Pack'
 
 " sources {{{2
 " https://www.reddit.com/r/neovim/comments/e04207/what_are_the_best_maintained_and_most_extensive/ " {{{2
@@ -613,107 +609,107 @@ Plugin 'Colour-Sampler-Pack'
 " }}}
 
 " top (supporting text styling) {{{2
-" Plugin 'morhetz/gruvbox'
-Plugin 'gruvbox-community/gruvbox'
+" Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 
 " light
-Plugin 'NLKNguyen/papercolor-theme'
+Plug 'NLKNguyen/papercolor-theme'
 
 " dark
-Plugin 'arcticicestudio/nord-vim'
-Plugin 'joshdick/onedark.vim'
-Plugin 'trevordmiller/nova-vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
+Plug 'trevordmiller/nova-vim'
 " }}}
 
 " ok {{{2
-Plugin 'AlessandroYorba/Alduin'
+Plug 'AlessandroYorba/Alduin'
 let g:alduin_Shout_Aura_Whisper = 1
 let g:alduin_Shout_Fire_Breath = 1
 
 " light
-Plugin 'nice/sweater'
-Plugin 'zefei/cake16'
+Plug 'nice/sweater'
+Plug 'zefei/cake16'
 " }}}
 
 " simple light {{{2
-Plugin 'arzg/vim-plan9'
-Plugin 'ayu-theme/ayu-vim'
+Plug 'arzg/vim-plan9'
+Plug 'ayu-theme/ayu-vim'
 let ayucolor="light" "options: light mirage dark
-Plugin 'cormacrelf/vim-colors-github'
+Plug 'cormacrelf/vim-colors-github'
 let g:github_colors_soft = 1
-Plugin 'rakr/vim-one'
+Plug 'rakr/vim-one'
 let g:one_allow_italics = 1
 
 " simplified and optimized Gruvbox 
-Plugin 'lifepillar/vim-gruvbox8'
+Plug 'lifepillar/vim-gruvbox8'
 " }}}
 "}}}
 
 " disabled colorschemes {{{2 
-" Plugin 'adampasz/vim-stonewashed'
-" Plugin 'AlessandroYorba/Sierra'
-" Plugin 'altercation/vim-colors-solarized'
+" Plug 'adampasz/vim-stonewashed'
+" Plug 'AlessandroYorba/Sierra'
+" Plug 'altercation/vim-colors-solarized'
 let g:solarized_termtrans=0
 let g:solarized_termcolors=256
 let g:solarized_visibility="high"
 let g:solarized_contrast="normal"
-" Plugin 'blerins/flattown'
-" Plugin 'chriskempson/base16-vim'
-" Plugin 'cocopon/iceberg.vim'
-" Plugin 'colepeters/spacemacs-theme.vim'
-" Plugin 'fcpg/vim-fahrenheit'
-" Plugin 'fenetikm/falcon'
-" Plugin 'freeo/vim-kalisi'
-" Plugin 'jdkanani/vim-material-theme'
-" Plugin 'jeetsukumaran/vim-nefertiti'
-" Plugin 'jonathanfilip/vim-lucius'
+" Plug 'blerins/flattown'
+" Plug 'chriskempson/base16-vim'
+" Plug 'cocopon/iceberg.vim'
+" Plug 'colepeters/spacemacs-theme.vim'
+" Plug 'fcpg/vim-fahrenheit'
+" Plug 'fenetikm/falcon'
+" Plug 'freeo/vim-kalisi'
+" Plug 'jdkanani/vim-material-theme'
+" Plug 'jeetsukumaran/vim-nefertiti'
+" Plug 'jonathanfilip/vim-lucius'
 " After enabling: :Lucius[Black|BlackHighContrast|BlackLowContrast|
 "   Dark|DarkHighContrast|DarkLowContrast|Light|LightLowContrast|
 "   White|WhiteLowContrast]
-" Plugin 'junegunn/seoul256.vim'
-" Plugin 'lifepillar/vim-wwdc17-theme'
-" Plugin 'mayansmoke'
-" Plugin 'mhartington/oceanic-next'
-" Plugin 'nanotech/jellybeans.vim'
-" Plugin 'NLKNguyen/papercolor-theme'
-" Plugin 'rakr/vim-two-firewatch'
+" Plug 'junegunn/seoul256.vim'
+" Plug 'lifepillar/vim-wwdc17-theme'
+" Plug 'mayansmoke'
+" Plug 'mhartington/oceanic-next'
+" Plug 'nanotech/jellybeans.vim'
+" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'rakr/vim-two-firewatch'
 let g:two_firewatch_italics=1
 let g:airline_theme='twofirewatch'
-" Plugin 'rodnaph/vim-color-schemes'
-" Plugin 'swalladge/antarctic-vim'
-" Plugin 'whatyouhide/vim-gotham'
-" Plugin '256-grayvim'
-" Plugin 'blacklight'
-" Plugin 'gregsexton/Atom'
-" Plugin 'zeis/vim-kolor'
+" Plug 'rodnaph/vim-color-schemes'
+" Plug 'swalladge/antarctic-vim'
+" Plug 'whatyouhide/vim-gotham'
+" Plug '256-grayvim'
+" Plug 'blacklight'
+" Plug 'gregsexton/Atom'
+" Plug 'zeis/vim-kolor'
 " }}}
 " }}}
 
 
 " Extra text objects {{{1
-Plugin 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-user'
 " Line object: il al
-Plugin 'kana/vim-textobj-line'
+Plug 'kana/vim-textobj-line'
 " Function argument object: i, a,
 " Shift: <, >,
 " Jump: [, ],
-Plugin 'PeterRincker/vim-argumentative'
-" Plugin 'argtextobj.vim' 
+Plug 'PeterRincker/vim-argumentative'
+" Plug 'argtextobj.vim' 
 " Indent object: ii ai aI iI 
-Plugin 'michaeljsmith/vim-indent-object' 
+Plug 'michaeljsmith/vim-indent-object' 
 " Function call object: am im aM iM
-Plugin 'thalesmello/vim-textobj-methodcall'
+Plug 'thalesmello/vim-textobj-methodcall'
 " Function object: if af iF aF
-Plugin 'kana/vim-textobj-function'
-Plugin 'kamichidu/vim-textobj-function-go'
-Plugin 'thinca/vim-textobj-function-javascript'
-Plugin 'thinca/vim-textobj-function-perl'
-Plugin 'nelstrom/vim-textobj-rubyblock'
+Plug 'kana/vim-textobj-function'
+Plug 'kamichidu/vim-textobj-function-go'
+Plug 'thinca/vim-textobj-function-javascript'
+Plug 'thinca/vim-textobj-function-perl'
+Plug 'nelstrom/vim-textobj-rubyblock'
 " Comment object: ic ac aC
-Plugin 'glts/vim-textobj-comment'
+Plug 'glts/vim-textobj-comment'
 " URIs: iu au
-Plugin 'jceb/vim-textobj-uri'
-Plugin 'wellle/targets.vim'
+Plug 'jceb/vim-textobj-uri'
+Plug 'wellle/targets.vim'
 " }}}
 
 
@@ -721,7 +717,7 @@ Plugin 'wellle/targets.vim'
 "
 " Files {{{2
 "{{{3
-" Plugin 'ctrlpvim/ctrlp.vim' 
+" Plug 'ctrlpvim/ctrlp.vim' 
 let g:loaded_ctrlp = 1
 let g:ctrlp_map = '<F7>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -739,8 +735,8 @@ let g:ctrlp_use_caching = 2000
 " 4}}}
 "3}}}
 
-Plugin 'junegunn/fzf'
-Plugin 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 let g:fzf_layout = {'up': '~20%'}
 " Mappings: fzf {{{3
 nnoremap <unique><leader>of :Files<CR>
@@ -788,7 +784,7 @@ let g:netrw_list_hide =
 
 
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
-Plugin 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 if filereadable("/usr/local/bin/ctags")
     let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 else
@@ -800,7 +796,7 @@ let g:tagbar_hide_nonpublic = 0
 nnoremap <silent><leader>t :TagbarToggle<CR>
 
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
-Plugin 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags'
 if filereadable("/usr/local/bin/ctags")
     let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
 else
@@ -812,24 +808,24 @@ let g:gutentags_generate_on_new = 0
 " }}}
 
 
-Plugin 'beloglazov/vim-online-thesaurus'
+Plug 'beloglazov/vim-online-thesaurus'
 
 
-Plugin 'mbbill/undotree' " {{{
+Plug 'mbbill/undotree' " {{{
 nnoremap <leader>u :UndotreeToggle<CR>
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 " }}}
 
 
-Plugin 'tpope/vim-commentary'   " {{{
-" Plugin 'al3xandru/nerdcommenter'
-" Plugin 'scrooloose/nerdcommenter'
-" Plugin 'tomtom/tcomment_vim'
+Plug 'tpope/vim-commentary'   " {{{
+" Plug 'al3xandru/nerdcommenter'
+" Plug 'scrooloose/nerdcommenter'
+" Plug 'tomtom/tcomment_vim'
 " }}}
 
 
-Plugin 'w0rp/ale'   " {{{
+Plug 'w0rp/ale'   " {{{
 let g:ale_enabled = 1
 let g:ale_completion_delay = 250
 let g:ale_completion_enabled = 0
@@ -860,20 +856,20 @@ let g:ale_python_pylint_options = '-m pylint'
 let g:ale_python_pyflakes_executable = expand('~/.penv/versions/neovim2/bin/pyflakes')
 let g:ale_python_pyflakes_options = '-m pyflakes'
 " Alternatives:
-" Plugin 'scrooloose/syntastic'
-" Plugin 'maralla/validator.vim'
+" Plug 'scrooloose/syntastic'
+" Plug 'maralla/validator.vim'
 " }}}
 
 
 " Search: Ack and Ag {{{2
-Plugin 'wincent/ferret' " asycn!!!
+Plug 'wincent/ferret' " asycn!!!
 let g:FerretExecutable='ag,ack'
 let g:FetterMap=1
 " Possible replacements:
-" Plugin 'mileszs/ack.vim'
-" Plugin 'rking/ag.vim'
-" Plugin 'dyng/ctrlsf.vim'
-" Plugin 'mhinz/vim-grepper'
+" Plug 'mileszs/ack.vim'
+" Plug 'rking/ag.vim'
+" Plug 'dyng/ctrlsf.vim'
+" Plug 'mhinz/vim-grepper'
 " (N)Mappings: ack {{{3
 " Using the_silver_searcher to look for word under cursor in current dir
 " when using with Ferret there're no quotes
@@ -886,8 +882,8 @@ nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR
 
 
 " Snippets {{{2
-Plugin 'Shougo/neosnippet.vim'
-Plugin 'Shougo/neosnippet-snippets' "{{{
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets' "{{{
 imap <C-e> <Plug>(neosnippet_expand_or_jump)
 smap <C-e> <Plug>(neosnippet_expand_or_jump)
 xmap <C-e> <Plug>(neosnippet_expand_target)
@@ -900,24 +896,24 @@ let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 
 " Language support {{{1
 "
-Plugin 'sheerun/vim-polyglot' "{{{
+Plug 'sheerun/vim-polyglot' "{{{
 let g:polyglot_disabled = []
 " replacing for now applescript, fatih/vim-go, pangloss/vim-javascript,  hdima/python-syntax
 " }}}
 
-" Plugin 'applescript.vim'
+" Plug 'applescript.vim'
 
 
-" Plugin 'VimClojure'
+" Plug 'VimClojure'
 let vimclojure#SetupKeyMap = 0
 
 
 " C/C++ 
-" Plugin 'OmniCppComplete'
+" Plug 'OmniCppComplete'
 
 
 " Go {{{2
-" Plugin 'fatih/vim-go'
+" Plug 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
 let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
@@ -975,7 +971,7 @@ augroup END
 
 
 " HTML Zen Coding
-Plugin 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim'
 let g:user_emmet_install_global=0
 augroup emmet
     autocmd!
@@ -985,19 +981,19 @@ let g:user_emmet_leader_key='<C-E>'
 
 
 " Java completion
-" Plugin 'VictorDenisov/javacomplete'
-Plugin 'artur-shaik/vim-javacomplete2'
+" Plug 'VictorDenisov/javacomplete'
+Plug 'artur-shaik/vim-javacomplete2'
 
 
 " Javascript
-" Plugin 'pangloss/vim-javascript'
+" Plug 'pangloss/vim-javascript'
 
 
 " Asciidoc {{{2
-" Plugin 'dahu/vim-asciidoc'
-" Plugin 'dahu/vimple'
-" Plugin 'dahu/Asif'
-" Plugin 'Raimondi/VimRegStyle'
+" Plug 'dahu/vim-asciidoc'
+" Plug 'dahu/vimple'
+" Plug 'dahu/Asif'
+" Plug 'Raimondi/VimRegStyle'
 " let g:asciidoc_title_style = 'setext'
 " augroup asciidoc
 "     autocmd!
@@ -1007,7 +1003,7 @@ Plugin 'artur-shaik/vim-javacomplete2'
 
 
 " Markdown {{{2
-Plugin 'plasticboy/vim-markdown', {'name': 'plasticboy-vim-markdown'}
+Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'}
 " set conceallevel=2
 let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled=0
@@ -1017,15 +1013,15 @@ nmap <Plug> <Plug>Markdown_MoveToCurHeader
 vmap <Plug> <Plug>Markdown_MoveToCurHeader
 
 " Markdown preview {{{3
-"Plugin 'greyblake/vim-preview' could not get it to work
-Plugin 'JamshedVesuna/vim-markdown-preview'
+"Plug 'greyblake/vim-preview' could not get it to work
+Plug 'JamshedVesuna/vim-markdown-preview'
 " let vim_markdown_preview_hotkey='<localleader>mp'
 let vim_markdown_preview_toggle=1
 let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
 
-" Plugin 'skanehira/preview-markdown.vim'
+" Plug 'skanehira/preview-markdown.vim'
 " let g:preview_markdown_parser='htmlmarkdown'
 " function! <SID>MarkdownPreview(file)
 "     if has("unix")
@@ -1043,8 +1039,8 @@ let vim_markdown_preview_pandoc=0
 " endfunction
 "}}}
 " Markdown editing {{{3
-Plugin 'junegunn/goyo.vim'
-Plugin 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 let g:limelight_default_coefficient = 0.7
 let g:limelight_paragraph_span = 1
 nmap [of :Limelight<CR>
@@ -1052,7 +1048,7 @@ nmap ]of :Limelight!<CR>
 nmap cof :Limelight!!<CR>
 
 
-Plugin 'reedes/vim-colors-pencil'
+Plug 'reedes/vim-colors-pencil'
 let g:pencil_higher_contrast_ui = 1
 let g:pencil_neutral_code_bg = 1
 let g:pencil_terminal_italics = 1
@@ -1134,9 +1130,9 @@ augroup END
 
 
 " Python {{{2
-" Plugin 'lambdalisue/vim-pyenv'
-" Plugin 'hdima/python-syntax' " disabled with sheerun/vim-polyglot
-Plugin 'klen/python-mode'
+" Plug 'lambdalisue/vim-pyenv'
+" Plug 'hdima/python-syntax' " disabled with sheerun/vim-polyglot
+Plug 'klen/python-mode'
 let g:pymode_doc = 1
 let g:pymode_doc_bind = 'K'
 let g:pymode_folding = 1
@@ -1156,7 +1152,7 @@ let g:pymode_rope = 0
 let g:pymode_rope_completion = 0
 let g:pymode_rope_complete_on_dot = 0
 
-Plugin 'davidhalter/jedi-vim'
+Plug 'davidhalter/jedi-vim'
 let g:jedi#auto_initialization = 1
 let g:jedi#completions_enabled = 1
 let g:jedi#completions_command = "<C-Space>"
@@ -1179,17 +1175,17 @@ let g:jedi#rename_command = "<localleader>gr"
 "}}}
 
 
-" Plugin 'derekwyatt/vim-scala'
+" Plug 'derekwyatt/vim-scala'
 
-" Plugin 'keith/swift.vim'
+" Plug 'keith/swift.vim'
 
 
-Plugin 'davidoc/taskpaper.vim' " Taskpaper {{{
+Plug 'davidoc/taskpaper.vim' " Taskpaper {{{
 let g:task_paper_date_format="%Y-%m-%d %H:%M%p"
 " }}}
 
 
-Plugin 'digitalrounin/vim-yaml-folds'
+Plug 'digitalrounin/vim-yaml-folds'
 " }}}
 
 
@@ -1198,12 +1194,12 @@ Plugin 'digitalrounin/vim-yaml-folds'
 "
 " Improve matching chars, parentheses {{{2
 " Improved %
-Plugin 'jwhitley/vim-matchit' " {{{
-" Plugin 'edsono/vim-matchit' " dead
-" Plugin 'isa/vim-matchit'
+Plug 'jwhitley/vim-matchit' " {{{
+" Plug 'edsono/vim-matchit' " dead
+" Plug 'isa/vim-matchit'
 " }}}
 
-Plugin 'kien/rainbow_parentheses.vim' " {{{
+Plug 'kien/rainbow_parentheses.vim' " {{{
 augroup rainbowpar
     autocmd!
     autocmd VimEnter * RainbowParenthesesToggle
@@ -1214,7 +1210,7 @@ augroup END
 " }}}
 
 " {{{ auto pairs 
-" Plugin 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
 if (has('mac') || has('macunix')) && has('gui')
@@ -1224,10 +1220,10 @@ else
     let g:AutoPairsShortcutJump='<A-9>'
     let g:AutoPairsShortcutFastWrap='<A-0>'
 endif
-"Plugin 'Raimondi/delimitMate'
+"Plug 'Raimondi/delimitMate'
 "let delimitMate_expand_cr=1
 
-Plugin 'tmsvg/pear-tree'
+Plug 'tmsvg/pear-tree'
 let g:pear_tree_pairs = {
     \ '(': {'closer': ')'}, 
     \ '[': {'closer': ']'}, 
@@ -1244,17 +1240,17 @@ endif
 " }}}
 
 "auto close parentheses and repeat by dot dot dot {{{
-Plugin 'alvan/vim-closetag'
-"Plugin 'cohama/lexima.vim'
-"Plugin 'Townk/vim-autoclose'
+Plug 'alvan/vim-closetag'
+"Plug 'cohama/lexima.vim'
+"Plug 'Townk/vim-autoclose'
 
-" Plugin 'HTML-AutoCloseTag'
+" Plug 'HTML-AutoCloseTag'
 " let b:mapped_auto_closetag = 1
 " }}}
 " 2}}}
 
 " Startup buffer {{{2
-Plugin 'mhinz/vim-startify'
+Plug 'mhinz/vim-startify'
 let g:startify_lists = [
     \ {'type': 'bookmarks', 'header': ['   Bookmarks']},
     \ {'type': 'dir', 'header': ['   MRU in ' .  getcwd()]},
@@ -1297,9 +1293,9 @@ nnoremap <silent><leader>bh :Startify<CR>
 "}}}
 
 " CamelCase {{{2
-" Plugin 'camelcasemotion'
-" Plugin 'kana/vim-smartword'
-Plugin 'bkad/CamelCaseMotion' 
+" Plug 'camelcasemotion'
+" Plug 'kana/vim-smartword'
+Plug 'bkad/CamelCaseMotion' 
 " Ver.1: Alt - w/b/3/g => ∑/∫/£/© {{{3
 " map ∑ <Plug>CamelCaseMotion_w
 " map ∫ <Plug>CamelCaseMotion_b
@@ -1335,7 +1331,7 @@ map [W <Plug>CamelCaseMotion_ge
 " }}}
 
 " Search 2 chars and improved t/f {{{2
-Plugin 'justinmk/vim-sneak'
+Plug 'justinmk/vim-sneak'
 let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
 " let g:sneak#target_labels = "abcdefghijklmnopqrstuvwxyz"
@@ -1357,7 +1353,7 @@ omap \ <Plug>Sneak_,
 
 " }}}
 
-"Plugin 'easymotion/vim-easymotion'     " Disabled: Quick navigation {{{2
+"Plug 'easymotion/vim-easymotion'     " Disabled: Quick navigation {{{2
 "let g:EasyMotion_loaded = 1
 "" Disable default mappings
 "let g:EasyMotion_do_mapping=0
@@ -1397,42 +1393,42 @@ omap \ <Plug>Sneak_,
 "vmap ,n <Plug>(easymotion-next)
 " }}}
 
-Plugin 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
+Plug 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 
-Plugin 'christoomey/vim-tmux-navigator' " vim & tmux
+Plug 'christoomey/vim-tmux-navigator' " vim & tmux
 " other option: https://github.com/wincent/terminus
 
 
-" Plugin 'roman/golden-ratio'   " Disabled: automatic resizing of Vim windows to golden ratio {{{
+" Plug 'roman/golden-ratio'   " Disabled: automatic resizing of Vim windows to golden ratio {{{
 let g:golden_ratio_exclude_nonmodifiable = 1
 " https://github.com/roman/golden-ratio/issues/22
 
-" Plugin 'zhaocai/GoldenView.Vim'
+" Plug 'zhaocai/GoldenView.Vim'
 let g:goldenview__enable_default_mapping=0
 " nmap <silent><C-L> <Plug>GoldenViewSplit
 " }}}
 
 
 " tpope extensions: surround, unimpaired {{{
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
 " to disable a mapping
 let g:nremap = {"[<Space>": '', "]<Space>": ''}
-Plugin 'tpope/vim-obsession'
+Plug 'tpope/vim-obsession'
 " }}}
 
 
 " Dash.app {{{
-Plugin 'rizzatti/funcoo.vim'
-Plugin 'rizzatti/dash.vim'
+Plug 'rizzatti/funcoo.vim'
+Plug 'rizzatti/dash.vim'
 " noremap do *not* work with <Plug>
 nmap <leader>h <Plug>DashSearch
 nmap <leader>k <Plug>DashSearch
 " }}}
 
 
-Plugin 'TaskList.vim' " Eclipse-like TASK list {{{
+Plug 'vim-scripts/TaskList.vim' " Eclipse-like TASK list {{{
 augroup tasklist
     autocmd!
     autocmd BufWinEnter -TaskList_* setlocal norelativenumber number nowrap
@@ -1442,7 +1438,7 @@ map <unique><localleader>t <Plug>TaskList
 
 
 " Git {{{2
-Plugin 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 " let g:gitgutter_map_keys=0
 let g:gitgutter_max_signs = 250
 let g:gitgutter_realtime = 0
@@ -1450,31 +1446,31 @@ nmap <silent> [og :GitGutterSignsEnable<CR>
 nmap <silent> ]og :GitGutterSignsDisable<CR>
 nmap <silent> cog :GitGutterSignsToggle<CR>
 " nnoremap <silent><leader>G :GitGutterSignsToggle<CR>
-" Plugin 'mhinz/vim-signify'
+" Plug 'mhinz/vim-signify'
 
 
-Plugin 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive'
 
 
-Plugin 'gregsexton/gitv'
-" Plugin 'junegunn/gv.vim'
+Plug 'gregsexton/gitv'
+" Plug 'junegunn/gv.vim'
 " Magit for Vim
-" Plugin 'jreybert/vimagit'
+" Plug 'jreybert/vimagit'
 "}}}
 "}}}
 
 " Experimental {{{1
-" Plugin 'MattesGroeger/vim-bookmarks'
+" Plug 'MattesGroeger/vim-bookmarks'
 " allows toggling bookmarks per line
 
 
-Plugin 'liuchengxu/vim-which-key'
+Plug 'liuchengxu/vim-which-key'
 nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
 nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 
 
-" Plugin 'alok/notational-fzf-vim' " disabled {{{2
-" Plugin 'file:///Users/alexandp/Dropbox/workspaces/mine/miscellaneous/notational-fzf-vim', {'name': 'alpo-nv'}
+" Plug 'alok/notational-fzf-vim' " disabled {{{2
+" Plug 'file:///Users/alexandp/Dropbox/workspaces/mine/miscellaneous/notational-fzf-vim', {'name': 'alpo-nv'}
 let g:nv_search_paths = ['~/Dropbox/Dox/nvall']
 let g:nv_use_short_pathnames=0
 let g:nv_ignore_pattern=['non-qq-nvalt/*', 'attachments/*']
@@ -1521,7 +1517,7 @@ command! -nargs=* -bang QQ
 "}}}
 
 
-" Plugin 'fmoralesc/vim-pad' " disabled {{{2
+" Plug 'fmoralesc/vim-pad' " disabled {{{2
 " :Pad
 let g:pad#dir='~/Dropbox/Dox/nvall'
 let g:pad#exclude_dirnames="attachments,non-qq-nvalt"
@@ -1542,9 +1538,7 @@ let g:pad#set_mappings=0
 " }}}
 "}}}
 
-call vundle#end()
-filetype plugin indent on " required!
-
+call plug#end()
 " colorscheme {{{
 
 " default colorscheme
@@ -1679,11 +1673,11 @@ call <SID>SetColorColumn()
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 " Old, disabled plugins {{{ 
 
-" Plugin 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
+" Plug 'chrisbra/NrrwRgn'               " edit just a region (inspired by Emacs)
 
-" Plugin 'kopischke/vim-fetch'            " open files at line and column
+" Plug 'kopischke/vim-fetch'            " open files at line and column
 
-" Plugin 'terryma/vim-expand-region' {{{2
+" Plug 'terryma/vim-expand-region' {{{2
 " let g:expand_region_text_objects = {
 "     \ 'iw' :0,
 "     \ 'i"' :0,
@@ -1701,8 +1695,8 @@ call <SID>SetColorColumn()
 "     \}
 " }}}
 
-" Plugin 'vim-airline/vim-airline' {{{2
-" Plugin 'vim-airline/vim-airline-themes'
+" Plug 'vim-airline/vim-airline' {{{2
+" Plug 'vim-airline/vim-airline-themes'
 " let g:airline_left_sep = '»'
 " let g:airline_right_sep = '«'
 " let g:airline_theme='twofirewatch' "kolor papercolor light kalisi molokai bubblegum solarized durant luna
@@ -1730,13 +1724,13 @@ call <SID>SetColorColumn()
 
 " Unite: can replace CtrlP, Tagbar {{{2
 " Note: vimproc requires compiling a c file
-" Plugin 'Shougo/vimproc.vim'
-" Plugin 'Shougo/unite.vim'
-" Plugin 'Shougo/unite-outline'
-" Plugin 'Shougo/vimfiler.vim'
-" Plugin 'Shougo/neoyank.vim'
-" Plugin 'Shougo/unite-help'
-" Plugin 'tsukkee/unite-tag'
+" Plug 'Shougo/vimproc.vim'
+" Plug 'Shougo/unite.vim'
+" Plug 'Shougo/unite-outline'
+" Plug 'Shougo/vimfiler.vim'
+" Plug 'Shougo/neoyank.vim'
+" Plug 'Shougo/unite-help'
+" Plug 'tsukkee/unite-tag'
 " nnoremap <leader>u  :<C-u>Unite -start-insert file_rec/async<CR>
 " nnoremap <leader>p  :<C-u>Unite -start-insert file_rec/async<CR>
 " nnoremap <leader>gt :<C-u>Unite tab<CR>
@@ -1748,7 +1742,7 @@ call <SID>SetColorColumn()
 " nnoremap <silent> <F5> <Plug>(unite-redraw)
 " }}}
 
-" Plugin 'thisivan/vim-taglist' {{{2
+" Plug 'thisivan/vim-taglist' {{{2
 " let Tlist_Ctags_Cmd='/usr/local/bin/ctags'
 " let Tlist_Show_One_File=1
 " let Tlist_Auto_Highlight_Tag=1
@@ -1760,7 +1754,7 @@ call <SID>SetColorColumn()
 " map <silent> <Leader>t :TlistToggle<CR>
 " }}}
 
-" Plugin 'git://git.wincent.com/command-t.git' {{{2
+" Plug 'git://git.wincent.com/command-t.git' {{{2
 " CommandT settings
 " disabled; using CtrlP
 " let g:command_t_loaded = 1
@@ -1768,7 +1762,7 @@ call <SID>SetColorColumn()
 " let g:CommandTCancelMap='<C-x>'
 " }}}
 
-" Plugin 'scrooloose/nerdtree' {{{2
+" Plug 'scrooloose/nerdtree' {{{2
 " let NERDTreeIgnore=['\.pyc', '\.pyo', '\~$', '\.o$', '\.class$', 
 "     \ '\.egg$', '\.idea$',
 "     \ '\.bzr', '\.git', '\.hg', '\.svn']
@@ -1784,17 +1778,17 @@ call <SID>SetColorColumn()
 " nnoremap <silent> <S-F8> :NERDTreeFind<CR>
 " }}}
 
-" Plugin 'jeetsukumaran/vim-buffergator' {{{2
+" Plug 'jeetsukumaran/vim-buffergator' {{{2
 " let g:buffergator_viewport_split_policy = "T"
 " let g:buffergator_autodismiss_on_select = 1
 " let g:buffergator_suppress_keymaps = 1
 " nnoremap <leader>gt :<C-u>BuffergatorTabsToggle<CR>
 " nnoremap <leader>gb :<C-u>BuffergatorToggle<CR>
 " Replaced by CtrlPBuffer 
-" Plugin 'jlanzarotta/bufexplorer'
+" Plug 'jlanzarotta/bufexplorer'
 " }}}
 
-" Plugin 'AndrewRadev/tagfinder.vim' {{{2
+" Plug 'AndrewRadev/tagfinder.vim' {{{2
 " augroup TagFinder
 "   autocmd!
 "   autocmd FileType * DefineTagFinder Class c,class,e,s,t,u
@@ -1802,9 +1796,9 @@ call <SID>SetColorColumn()
 " augroup END
 " }}}
 
-" Plugin 'AutoTag'
-" Plugin 'xolox/vim-misc'
-" Plugin 'xolox/vim-easytags' {{{2
+" Plug 'AutoTag'
+" Plug 'xolox/vim-misc'
+" Plug 'xolox/vim-easytags' {{{2
 if filereadable("/usr/local/bin/ctags")
     let g:easytags_cmd = '/usr/local/bin/ctags'
 else
@@ -1829,7 +1823,7 @@ let g:easytags_suppress_ctags_warning = 1
 "\}
 " }}}
 
-" Plugin 'Shougo/neocomplete.vim' {{{2
+" Plug 'Shougo/neocomplete.vim' {{{2
 " " let g:neocomplete#enable_at_startup=1
 " let g:neocomplete#auto_complete_delay=400
 " let g:neocomplete#auto_completion_start_length=2
@@ -1851,14 +1845,14 @@ let g:easytags_suppress_ctags_warning = 1
 " nmap cop :NeoCompleteToggle<CR>
 " }}}
 
-" Plugin 'junegunn/vim-peekaboo' {{{2
+" Plug 'junegunn/vim-peekaboo' {{{2
 " can be replaced by :registers
 " let g:peekaboo_delay=800
 " let g:peekaboo_window='vertical botright 45new'
 " let g:peekaboo_window='topleft 15new'
 " }}}
 
-" Plugin 'scrooloose/syntastic' {{{2
+" Plug 'scrooloose/syntastic' {{{2
 "let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 0
 "let g:syntastic_check_on_wq = 0
@@ -1878,11 +1872,11 @@ let g:easytags_suppress_ctags_warning = 1
 "" echom "syntastic:" . g:syntastic_python_checkers
 " }}}
 
-" Plugin 'maralla/validator.vim' {{{2
+" Plug 'maralla/validator.vim' {{{2
 " check syntax on the fly asynchronously
 " }}}
 
-" Plugin 'mileszs/ack.vim' {{{2
+" Plug 'mileszs/ack.vim' {{{2
 " if executable('rg')
 "     let g:ackprg = 'rg --vimgrep -n --smart-case -t'
 " elseif executable('ag')
@@ -1893,20 +1887,20 @@ endif
 
 " Snippets {{{2
 " if has("python")
-"     Plugin 'SirVer/ultisnips'
+"     Plug 'SirVer/ultisnips'
 "     let g:UltiSnipsSnippetsDir=expand("~/.vim/xsnippets/ultisnips")
 " else
-"     Plugin 'MarcWeber/vim-addon-mw-utils'
-"     Plugin 'tomtom/tlib_vim'
-"     Plugin 'garbas/vim-snipmate'
+"     Plug 'MarcWeber/vim-addon-mw-utils'
+"     Plug 'tomtom/tlib_vim'
+"     Plug 'garbas/vim-snipmate'
 " endif
-" Plugin 'honza/vim-snippets'
+" Plug 'honza/vim-snippets'
 " }}}
 
 
 " Scratch files, notes, outliner etc. {{{2
 
-" Plugin 'jceb/vim-orgmode' " Org-mode {{{3
+" Plug 'jceb/vim-orgmode' " Org-mode {{{3
 let g:org_heading_shade_leading_stars=1
 " let g:org_indent=1
 let g:org_todo_keywords = [
@@ -1929,18 +1923,18 @@ autocmd FileType org setlocal textwidth=0 nowrap nolinebreak
 " augroup END
 
 " Orgmode helping plugins
-" Plugin 'tpope/vim-speeddating'
-" Plugin 'vim-scripts/utl.vim'
+" Plug 'tpope/vim-speeddating'
+" Plug 'vim-scripts/utl.vim'
 " nmap <silent>glo :Utl openLink underCursor edit<CR>
 " nmap <silent>glt :Utl openLink underCursor tabe<CR>
 " nmap <silent>glv :Utl openLink underCursor vsplit<CR>
 " nmap <silent>gls :Utl openLink underCursor split<CR>
 " nmap <silent>gly :Utl copyLink underCursor<CR>
-" Plugin 'mattn/calendar-vim'
+" Plug 'mattn/calendar-vim'
 " }}}
 
-" Plugin 'xolox/vim-misc' " {{{3
-" Plugin 'xolox/vim-notes'
+" Plug 'xolox/vim-misc' " {{{3
+" Plug 'xolox/vim-notes'
 " :Note
 let g:notes_directories=['~/Dropbox/Dox/nvall']
 let g:notes_suffix='.md'
@@ -1952,15 +1946,15 @@ let g:notes_unicode_enabled=1
 let g:notes_conceal_code=0
 " }}}
 
-" Plugin 'duff/vim-scratch' " {{{3
+" Plug 'duff/vim-scratch' " {{{3
 " :scratch :Sscratch
 " }}}
 
-" Plugin 'vimoutliner/vimoutliner' " {{{3
+" Plug 'vimoutliner/vimoutliner' " {{{3
 " outliner .otl
 " }}}
 
-" Plugin 'vimwiki/vimwiki'
+" Plug 'vimwiki/vimwiki'
 "}}}
 
 " }}}
