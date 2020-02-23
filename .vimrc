@@ -584,7 +584,7 @@ endfunction
 command! Bigwnd call <SID>BigWnd()
 
 function! <SID>Fonts()
-    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono Hack IBM_Plex_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    let l:fonts = "Anka/Coder_Narrow Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
     let l:flst = split(l:fonts)
     echo "Fonts:"
     echo join(l:flst, "\n")
@@ -1273,9 +1273,9 @@ let g:startify_lists = [
 "     \ 'sessions',
 "     \ ]
 let g:startify_bookmarks = [
-    \ {'d': '~/Dropbox/Dox/mydox/'},
-    \ {'j': '~/Dropbox/Dox/myjrnl/'},
-    \ {'n': '~/Dropbox/Dox/nvall/'},
+    \ {'a': '~/Dropbox/Dox/mydox/'},
+    \ {'b': '~/Dropbox/Dox/myjrnl/'},
+    \ {'c': '~/Dropbox/Dox/nvall/'},
     \ '~/.vimrc',
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
@@ -1610,7 +1610,7 @@ if has("unix")
         if cs == 'gruvbox'
             set background=light
         elseif cs == 'papercolor'
-            set background='light'
+            set background=light
         endif
 
         execute ":colorscheme " .  cs
