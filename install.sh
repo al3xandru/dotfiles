@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "synergy.server.conf" ".ropeproject" ".sessions")
+    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".precfg" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "DefaultKeyBinding.dict" "synergy.server.conf" ".ropeproject" ".sessions")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -11,7 +11,7 @@ function doStatus() {
         fi
         echo ""
         echo "Comparing $file with $HOME/$file"
-        diff -rq $file $HOME/$file | grep -v -e '.vim/bundle' -e 'netrwhist' -e 'README.md' -e 'spell' -e 'tmp' -e 'tags' -e 'zarchive'
+        diff -rq $file $HOME/$file | grep -v -e '.vim/plugged' -e 'netrwhist' -e 'README.md' -e 'spell' -e 'tmp' -e 'tags' -e 'zarchive'
     done
     echo ""
 
@@ -79,13 +79,17 @@ function doInstall() {
     if [ ! -d "$HOME/.vim" ]; then
         mkdir "$HOME/.vim"
     fi
-    rsync -aqru .vim/bundle/ ~/.vim/bundle/
+    # rsync -aqru .vim/bundle/ ~/.vim/bundle/
+    rsync -aqru .vim/autoload/ ~/.vim/autoload/
     proc ".vim/xsnippets"
 
     if [ !  -d "$HOME/.emacs.d" ]; then
         mkdir "$HOME/.emacs.d"
     fi
     proc ".emacs.d/init.el"
+
+    mkdir -p ~/Library/KeyBindings/
+    cp DefaultKeyBinding.dict ~/Library/KeyBindings/
 
     #for d in {.vim,.emacs.d,.virtualenv}; do
         #if [ "$d" = ".emacs.d" ]; then
