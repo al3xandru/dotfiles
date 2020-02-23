@@ -36,9 +36,12 @@
         (cursor-color . "#28c8FA")
         (ns-transparent-titlebar . t)))
         ;; (ns-appearance . dark)))
-(when (member "Anka/Coder Narrow" (font-family-list))
-  (add-to-list 'default-frame-alist '(font .  "Anka/Coder Narrow-13"))
-  (set-face-attribute 'default t :font "Anka/Coder Narrow-13"))
+(when (member "mononoki" (font-family-list))
+  (add-to-list 'default-frame-alist '(font . "mononoki-12"))
+  (set-face-attribute 'default t :font "mononoki-12"))
+(when (member "PragmataPro Mono" (font-family-list))
+  (add-to-list 'default-frame-alist '(font .  "PragmataPro Mono-12"))
+  (set-face-attribute 'default t :font "PragmataPro Mono-12"))
 
 ;;;; scrolling
 (setq scroll-margin 0
@@ -700,7 +703,56 @@ the current window and the windows state prior to that."
            ;; ((org-columns-default-format "%CATEGORY %5TODO %1PRIORITY %20SCHEDULED %20DEADLINE %ITEM")
            ;;  (org-agenda-view-columns-initially t))
            )
-                    
+
+         ("w" "Weekend agenda with NEXT, on HOLD, and INBOX sections for daily use"
+           ((agenda "My agenda"
+                    ((org-agenda-entry-types '(:deadline :scheduled :timestamp :ts))
+                     (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                           "12-mlo.org"
+                                                                                           "13-tickler.org"
+                                                                                           "19-maybes.org")))
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                     (org-agenda-span 'day)
+                     (org-deadline-warning-days 0)))
+
+            (agenda "Habits"
+                  ((org-agenda-overriding-header "Habits:")
+                   (org-agenda-files (list (concat org-directory "14-mho.org")))
+                   (org-agenda-span 'day)
+                   (org-deadline-warning-days 0)))
+
+            (todo "NEXT|DELEGATE"
+                  ((org-agenda-overriding-header "Next actions:")
+                   (org-agenda-sorting-strategy '(todo-state-up priority-down))
+                   (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                         "12-mlo.org"
+                                                                                         "13-tickler.org"
+                                                                                         "19-maybes.org")))))
+
+            (todo "WAIT|HOLD|WIP"
+                  ((org-agenda-overriding-header "Waiting")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+
+
+            (agenda "Weekly agenda"
+                    ((org-agenda-entry-types '(:deadline :scheduled :timestamp))
+                     (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                           "12-mlo.org"
+                                                                                           "13-tickler.org"
+                                                                                           "19-maybes.org")))
+                     (org-agenda-span 'week)
+                     (org-deadline-warning-days 3)
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))))
+            
+            (todo "TODO|NEXT|SOMEDAY|DELEGATE"
+                  ((org-agenda-overriding-header "Inbox")
+                   (org-agenda-files (list (concat org-directory "11-inbox.org")))))
+            )
+
+           )
+
+
+          
           ("b" "Backlog with due now (DEADLINE + NEXT), available now, and due soon"
            ((tags-todo "DEADLINE<\"<+1d>\"/!TODO|NEXT|WAIT|DELEGATE|WIP"
                        ((org-agenda-overriding-header "Urgent deadlines (today and past):")
