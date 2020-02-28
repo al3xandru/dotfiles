@@ -524,14 +524,14 @@ if has('mac')
         " let _pyver=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         " check: https://github.com/macvim-dev/macvim/blob/b906f87e8c0ef8585e5aaeb72ca4aadbbd1b8155/src/MacVim/vimrc#L21
         " Python 2
-        let _cmd = 'pyenv versions | grep "2\." | head -1'
+        let _cmd = 'pyenv versions --bare --skip-aliases | grep -E "2\.[[:digit:]]+\.[[:digit:]]+$" | tail -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
         let _pyvermaj=join(split(_pyver, "\\.")[0:1], ".")
         let &pythondll=$HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
         let &pythonhome=$HOME . "/.pyenv/versions/" . _pyver
         " Python 3
-        let _cmd = 'pyenv versions | grep "3\." | head -1'
+        let _cmd = 'pyenv versions --bare --skip-aliases | grep -E "3\.[[:digit:]]\.[[:digit:]]+$" | tail -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
         " let _pyver=_pyenv
@@ -1512,7 +1512,7 @@ command! -nargs=* -bang QQ
                                \ '--delimiter=":"',
                                \ '--tiebreak=' . 'length,begin',
                                \ '--preview="cat {}"',
-                               \ '--preview-window=right:50%:wrap',
+                               \ '--preview-window=right:40%:wrap',
                                \ ])},<bang>0))
 "}}}
 
