@@ -265,11 +265,9 @@ cnoreabbrev W w
 cnoreabbrev Q q
 
 
-" leader = space
-" local leader = ,
-" remap , before
-" nnoremap … ,
-" nmap <A-;> ,
+" leader = space (default \)
+" localleader = ,
+" remap , 
 let mapleader="\<space>"
 let maplocalleader=","
 
@@ -277,7 +275,7 @@ let maplocalleader=","
 " inoremap jk <esc>:echoerr "mapping disabled. forget about it :-)"<CR>i
 " inoremap fd <esc>:w<CR>
 " }}}
-"
+
 " (I)Mapping: disable arrows {{{
 inoremap <silent><Left> <esc><Left>
 inoremap <silent><Right> <esc><Right>
@@ -309,7 +307,7 @@ nnoremap <unique><leader>b :ls<CR>:buffer<space>
 
 " (N)Mappings: change (bind c[hange] to replace word under cursor) {{{2
 nnoremap <leader>c :%s/\<<C-r><C-w>\>//cg<Left><Left><Left>
-" change word under cursor and use .  to repeat (cheap rename refactor)
+" change word under cursor and use `.` to repeat (cheap rename refactor)
 nnoremap c* *Ncgn
 nnoremap c# #NcgN
 nnoremap cg* g*Ncgn
@@ -351,11 +349,19 @@ nnoremap <Up> gk
 nnoremap <Down> gj
 " }}}
 
-" (N)Mappings: better search n/N blip for next highlight word and center the line {{{
+" (N)Mappings: n/N with blip, center the line, and directional {{{
+" nnoremap <expr> n v:searchforward ? 'nzzzv:call <SID>HLNext(0.6)<CR>' : 'Nzzzv:call <SID>HLNext(0.6)<CR>'
+" nnoremap <expr> N v:searchforward ? 'Nzzzv:call <SID>HLNext(0.6)<CR>' : 'nzzzv:call <SID>HLNext(0.6)<CR>'
+
+nnoremap <expr> n 'Nn'[v:searchforward] . 'zzzv:call <SID>HLNext(0.6)<CR>'
+nnoremap <expr> N 'nN'[v:searchforward] . 'zzzv:call <SID>HLNext(0.6)<CR>'
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
 " Plug 'timakro/vim-searchant'
-nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
-nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
+" nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
+" nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
+" directional n/N
+" nnoremap <expr> n 'Nn'[v:searchforward]
+" nnoremap <expr> N 'nN'[v:searchforward]
 
 function! <SID>HLNext (blinktime)
     let l:target_pat = '\c\%#'.@/
@@ -366,6 +372,9 @@ function! <SID>HLNext (blinktime)
     redraw
 endfunction
 " }}}
+
+" nnoremap <expr> ; getcharsearch().forward ? ';' : ','
+" nnoremap <expr> , getcharsearch().forward ? ',' : ';'
 
 " (N)Mappings: search with grep {{{
 " bind f and F to perform grep for the word under cursor
@@ -539,31 +548,22 @@ if has('mac')
         " let _pyvermaj=strpart(_pyver, 0, 3)
         let _pyvermaj=join(split(_pyver, "\\.")[0:1], ".")
 
-        " let $PYTHONHOME=$HOME . "/.pyenv/versions/" . _pyver
-        " let $PYTHONPATH=$HOME . "/.pyenv/versions/" . _pyver . "/lib/python" .  _pyvermaj . "/site-packages/"
-        " let $PATH=$HOME .  "/.pyenv/versions/" .  _pyver . "/bin:" .  $PATH
-
         " I don't know how to do set pythondll thus the let &pythondll
         let &pythonthreehome = $HOME .  "/.pyenv/versions/" . _pyver
         let &pythonthreedll = $HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
-        " echom "PYENV     :" . _pyenv
-        " echom "PYTHONVER :" . _pyver
-        " echom "PYTHONMAJ :" . _pyvermaj
-        " echom "PYTHONHOME:" . $PYTHONHOME
-        " echom "PYTHONPATH:" . $PYTHONPATH
-        " echom "PYTHONDLL :" . &pythondll
-        " echom "PATH      :" . $PATH
-        echom "&pythonhome     :" . &pythonhome
-        echom "&pythondll      :" . &pythondll
-        echom "&pythonthreehome:" . &pythonthreehome
-        echom "&pythonthreedll :" . &pythonthreedll
+
+        " echom "&pythonhome     :" . &pythonhome
+        " echom "&pythondll      :" . &pythondll
+        " echom "&pythonthreehome:" . &pythonthreehome
+        " echom "&pythonthreedll :" . &pythonthreedll
+
         " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
         if _pyvermaj > '3.0' && has('python3')
-            echom "PYTHON3k  :YES"
+            " echom "PYTHON3k  :YES"
             let g:jedi#force_py_version = 3
             let g:pymode_python = 'python3'
         else
-            echom "PYTHON3k  :NO"
+            " echom "PYTHON3k  :NO"
             let g:jedi#force_py_version = 2
             let g:pymode_python = 'python'
         endif
@@ -593,7 +593,7 @@ function! <SID>Fonts()
 endfunction
 command! SetFont call <SID>Fonts()
 
-" Load vim-plugin
+" Load vim-plug https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 " Alternative plugin managers
 " - vundle
@@ -632,11 +632,13 @@ Plug 'zefei/cake16'
 " }}}
 
 " simple light {{{2
+" Plug 'arzg/vim-colors-xcode'
 Plug 'arzg/vim-plan9'
-Plug 'ayu-theme/ayu-vim'
+" Plug 'ayu-theme/ayu-vim'
 let ayucolor="light" "options: light mirage dark
-Plug 'cormacrelf/vim-colors-github'
+" Plug 'cormacrelf/vim-colors-github'
 let g:github_colors_soft = 1
+" Plug 'jaredgorski/fogbell.vim'
 Plug 'rakr/vim-one'
 let g:one_allow_italics = 1
 
@@ -784,7 +786,8 @@ let g:netrw_list_hide =
 
 
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
-Plug 'majutsushi/tagbar'
+" Disable to use fzf
+" Plug 'majutsushi/tagbar'
 if filereadable("/usr/local/bin/ctags")
     let g:tagbar_ctags_bin = '/usr/local/bin/ctags'
 else
@@ -793,7 +796,7 @@ endif
 let g:tagbar_autoclose = 1
 let g:tagbar_show_linenumbers = 0
 let g:tagbar_hide_nonpublic = 0
-nnoremap <silent><leader>t :TagbarToggle<CR>
+" nnoremap <silent><leader>t :TagbarToggle<CR>
 
 set tags=./.git/tags;,./.tags;,./tags;,~/.vim/.vimtags
 Plug 'ludovicchabant/vim-gutentags'
@@ -864,7 +867,7 @@ let g:ale_python_pyflakes_options = '-m pyflakes'
 " Search: Ack and Ag {{{2
 Plug 'wincent/ferret' " asycn!!!
 let g:FerretExecutable='ag,ack'
-let g:FetterMap=1
+let g:FerretMap=0
 " Possible replacements:
 " Plug 'mileszs/ack.vim'
 " Plug 'rking/ag.vim'
@@ -875,6 +878,8 @@ let g:FetterMap=1
 " when using with Ferret there're no quotes
 nnoremap /fa :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=getcwd()<CR>
 nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR>
+nmap <leader>/ <Plug>(FerretAck)
+
 " Using Ack to search the word under cursor in the current dir
 " nnoremap <Leader>f :Ack! --type=<C-r>=%filetype<CR> "\b<C-r><C-w>\b" <C-r>=expand("%:p:h")<CR>
 " 3}}}
@@ -897,7 +902,7 @@ let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " Language support {{{1
 "
 Plug 'sheerun/vim-polyglot' "{{{
-let g:polyglot_disabled = []
+let g:polyglot_disabled = ['markdown']
 " replacing for now applescript, fatih/vim-go, pangloss/vim-javascript,  hdima/python-syntax
 " }}}
 
@@ -1003,14 +1008,20 @@ Plug 'artur-shaik/vim-javacomplete2'
 
 
 " Markdown {{{2
-Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'}
-" set conceallevel=2
+" Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'} " disabled with sheerun/vim-polyglot
+set conceallevel=2
 let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled=0
 let g:vim_markdown_folding_level=1
+let g:vim_markdown_follow_anchor=0 "use get to jump to anchors
+let g:vim_markdown_strikethrough=1
 " let g:vim_markdown_no_default_key_mappings=1
 nmap <Plug> <Plug>Markdown_MoveToCurHeader
 vmap <Plug> <Plug>Markdown_MoveToCurHeader
+
+Plug 'SidOfc/mkdx'
+" let g:mkdx#settings.map.prefix = '<localleader>'
+" let g:mkdx#settings.tokens.italic = '_'
 
 " Markdown preview {{{3
 "Plug 'greyblake/vim-preview' could not get it to work
@@ -1102,8 +1113,8 @@ function! <SID>IAWriter()
 endfunction
 augroup markdown
     autocmd!
-    autocmd BufRead,BufNewFile *.{mk,markdown,mdown,mkdn,mkd,rst} set filetype=markdown
-    autocmd FileType markdown setlocal textwidth=80 wrap linebreak foldenable
+    " autocmd BufRead,BufNewFile *.{mk,markdown,mdown,mkdn,mkd,rst} set filetype=markdown
+    autocmd FileType markdown setlocal textwidth=80 wrap foldenable "linebreak
     autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
     " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
@@ -1210,6 +1221,8 @@ augroup END
 " }}}
 
 " {{{ auto pairs 
+" Check fork https://krasjet.com/voice/auto.pairs/
+" Plug 'Krasjet/auto.pairs'
 " Plug 'jiangmiao/auto-pairs'
 let g:AutoPairsMapSpace=1
 " Alt+< and Alt+> (changed from Alt+0 and Alt+9)
@@ -1230,8 +1243,12 @@ let g:pear_tree_pairs = {
     \ '{': {'closer': '}'},
     \ "'": {'closer': "'"},
     \ '"': {'closer': '"'},
+    \ "<!--": {'closer': '-->'},
+    \ "/*": {'closer': '*/'},
     \ '<*>': {'closer': '</*>', 'not_if': ['br', 'meta', 'http', 'https', 'ftp'], 'not_like': '/$'}
     \ } 
+let g:pear_tree_smart_openers = 1
+let g:pear_tree_smart_closers = 1
 if (has('mac') || has('macunix')) && has('gui')
     imap º <Plug>(PearTreeJump)
 else
@@ -1278,7 +1295,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
     \ '~/Dropbox/Dox/mydox/04-blog.md',
     \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
-    \ '~/Dropbox/MyDocs/50-projects/homepage/h.html',
+    \ '/Users/Shared/homepage/h.html',
     \]
 let g:startify_files_number = 10
 let g:startify_session_autoload = 1
@@ -1422,8 +1439,8 @@ Plug 'tpope/vim-obsession'
 " Dash.app {{{
 Plug 'rizzatti/funcoo.vim'
 Plug 'rizzatti/dash.vim'
-" noremap do *not* work with <Plug>
-nmap <leader>h <Plug>DashSearch
+" noremap does *not* work with <Plug>
+" nmap <leader>h <Plug>DashSearch
 nmap <leader>k <Plug>DashSearch
 " }}}
 
@@ -1464,9 +1481,9 @@ Plug 'gregsexton/gitv'
 " allows toggling bookmarks per line
 
 
-Plug 'liuchengxu/vim-which-key'
-nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
-nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
+" Plug 'liuchengxu/vim-which-key'
+" nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
+" nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 
 
 " Plug 'alok/notational-fzf-vim' " disabled {{{2
@@ -1599,7 +1616,7 @@ if has("unix")
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'ayu', 'github', 'earendel', 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'github', 'earendel', 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1900,7 +1917,9 @@ endif
 
 " Scratch files, notes, outliner etc. {{{2
 
-" Plug 'jceb/vim-orgmode' " Org-mode {{{3
+"  Org-mode {{{3
+" Plug 'axvr/org.vim'
+" Plug 'jceb/vim-orgmode' 
 let g:org_heading_shade_leading_stars=1
 " let g:org_indent=1
 let g:org_todo_keywords = [
