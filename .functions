@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+function e() {
+    if [ -x "$(command -v vimr)" ]; then
+        if [ $(( RANDOM % 2 )) -eq 0 ]; then
+            mvim "$@"
+        else 
+            vimr "$@"
+        fi
+    else
+        mvim "$@"
+    fi
+}
+
+function v() {
+    if [ -x "$(command -v nvim)" ]; then
+        if [ $(( RANDOM % 2 )) -eq 0 ]; then
+            nvim "$@"
+        else 
+            vim "$@"
+        fi
+    else
+        vim "$@"
+    fi
+}
+
 # List defined functions 
 function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
@@ -506,6 +530,12 @@ battery() {
     printf "\n"
 }
 
+# https://apple.stackexchange.com/questions/54329/can-i-get-the-cpu-temperature-and-fan-speed-from-the-command-line-in-os-x
+function temperature() {
+    echo "Enter password to display fan and CPU temperature"
+    sudo powermetrics --samplers smc -i1 -n1 | grep --color=never "Fan\|temperature"
+}
+
 # https://gist.github.com/kaleksandrov/3cfee92845a403da995e7e44ba771183
 # globalprotect() {
 #     case $# in
@@ -620,77 +650,77 @@ function extract() {
     fi
 }
 
-function brew() {
-    if [[ "$@" == "update" ]]; then
-        local _fixperm=0
-        local _brewdir=$(brew --prefix)
-        for dir in $(ls -1 $_brewdir); do
-            if [ -d "$_brewdir/$dir" ]; then
-                local diruname=$(ls -l $_brewdir | grep -w $dir | awk '{print $3}')
-                # echo "Dir: $(brew --prefix)/$dir Owner: $diruname"
-                if [ "$diruname" != "$(whoami)" ]; then
-                    _fixperm=1
-                    echo "Incorrect permissions found for $_brewdir/$dir (expected: $(whoami) found: $diruname)"
-                fi
-            fi
-        done
-        if [ $_fixperm = 1 ]; then
-            echo "Fixing permissions in $_brewdir"
-            sudo chown -R $(whoami) $(brew --prefix)/*
-        fi
-        command brew update
-    # elif [[ "$@" == "upgrade vim" ]]; then
-    #     echo "brew upgrade vim [custom task]"
-    #     command brew upgrade --build-from-source vim
-    # elif [[ "$@" == "upgrade macvim" ]]; then
-    #     echo "brew upgrade macvim [custom task]"
-    #     command brew upgrade --build-from-source --with-custom-python --with-lua macvim
-    # else
-    #     if [[ "$1" == "cask" && "$2" == "upgrade" && "$3" != "" ]]; then
-    #         echo "brew cask upgrade [custom task]"
-    #         command brew cask uninstall "$3" --force
-    #         command brew cask install "$3" --force
-    #     else
-    #         command brew "$@"
-    #     fi
-    else
-        command brew "$@"
-    fi
-}
+# function brew() {
+#     if [[ "$@" == "update" ]]; then
+#         local _fixperm=0
+#         local _brewdir=$(brew --prefix)
+#         for dir in $(ls -1 $_brewdir); do
+#             if [ -d "$_brewdir/$dir" ]; then
+#                 local diruname=$(ls -l $_brewdir | grep -w $dir | awk '{print $3}')
+#                 # echo "Dir: $(brew --prefix)/$dir Owner: $diruname"
+#                 if [ "$diruname" != "$(whoami)" ]; then
+#                     _fixperm=1
+#                     echo "Incorrect permissions found for $_brewdir/$dir (expected: $(whoami) found: $diruname)"
+#                 fi
+#             fi
+#         done
+#         if [ $_fixperm = 1 ]; then
+#             echo "Fixing permissions in $_brewdir"
+#             sudo chown -R $(whoami) $(brew --prefix)/*
+#         fi
+#         command brew update
+#     # elif [[ "$@" == "upgrade vim" ]]; then
+#     #     echo "brew upgrade vim [custom task]"
+#     #     command brew upgrade --build-from-source vim
+#     # elif [[ "$@" == "upgrade macvim" ]]; then
+#     #     echo "brew upgrade macvim [custom task]"
+#     #     command brew upgrade --build-from-source --with-custom-python --with-lua macvim
+#     # else
+#     #     if [[ "$1" == "cask" && "$2" == "upgrade" && "$3" != "" ]]; then
+#     #         echo "brew cask upgrade [custom task]"
+#     #         command brew cask uninstall "$3" --force
+#     #         command brew cask install "$3" --force
+#     #     else
+#     #         command brew "$@"
+#     #     fi
+#     else
+#         command brew "$@"
+#     fi
+# }
 
-function ix() {
-    local opts="-u alpo:opla"
-    local OPTIND
-    [ -f "$HOME/.netrc" ] && opts='-n'
-    while getopts ":ehd:i:n:" x; do
-        case $x in
-            h) echo "ix [-d ID] [-i ID] [-n N] [-e] -[-h] [opts]"; return;;
-            e) 
-                echo -e "GET"
-                echo -e "\tix.io/ID\t\traw"; 
-                echo -e "\tix.io/ID/\t\thighlighting (by ext)"; 
-                echo -e "\tix.io/ID/LANG\t\thighlighting";
-                echo -e "\tix.io/ID+\t\tconsole highlighting (default)";
-                echo -e "\tix.io/ID+LANG\t\tconsole highlighting";
-                echo -e "\tix.io/user/USER\t\tpastes for USER";
-                return;;
-            d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
-            i) opts="$opts -X PUT"; local id="$OPTARG";;
-            n) opts="$opts -F read:1=$OPTARG";;
-        esac
-    done
-    shift $(($OPTIND - 1))
-    [ -t 0 ] && {
-        local filename="$1"
-        shift
-        [ "$filename" ] && {
-            curl $opts -F f:1=@"$filename" $* ix.io/$id
-            return
-        }
-        echo "^C to cancel, ^D to send."
-    }
-    curl $opts -F f:1='<-' $* ix.io/$id
-}
+# function ix() {
+#     local opts="-u alpo:opla"
+#     local OPTIND
+#     [ -f "$HOME/.netrc" ] && opts='-n'
+#     while getopts ":ehd:i:n:" x; do
+#         case $x in
+#             h) echo "ix [-d ID] [-i ID] [-n N] [-e] -[-h] [opts]"; return;;
+#             e) 
+#                 echo -e "GET"
+#                 echo -e "\tix.io/ID\t\traw"; 
+#                 echo -e "\tix.io/ID/\t\thighlighting (by ext)"; 
+#                 echo -e "\tix.io/ID/LANG\t\thighlighting";
+#                 echo -e "\tix.io/ID+\t\tconsole highlighting (default)";
+#                 echo -e "\tix.io/ID+LANG\t\tconsole highlighting";
+#                 echo -e "\tix.io/user/USER\t\tpastes for USER";
+#                 return;;
+#             d) $echo curl $opts -X DELETE ix.io/$OPTARG; return;;
+#             i) opts="$opts -X PUT"; local id="$OPTARG";;
+#             n) opts="$opts -F read:1=$OPTARG";;
+#         esac
+#     done
+#     shift $(($OPTIND - 1))
+#     [ -t 0 ] && {
+#         local filename="$1"
+#         shift
+#         [ "$filename" ] && {
+#             curl $opts -F f:1=@"$filename" $* ix.io/$id
+#             return
+#         }
+#         echo "^C to cancel, ^D to send."
+#     }
+#     curl $opts -F f:1='<-' $* ix.io/$id
+# }
 
 # https://github.com/SidOfc/dotfiles/blob/d07fa3862ed065c2a5a7f1160ae98416bfe2e1ee/zsh/kp
 # mnemonic: [K]ill [P]rocess
@@ -698,11 +728,54 @@ function ix() {
 # press [enter] to kill selected processes and go back to the process list.
 # or press [escape] to go back to the process list. Press [escape] twice to exit completely.
 function kp() {
-    local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
+    local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process] - use tab to select multiple'" | awk '{print $2}')
 
     if [ "x$pid" != "x" ]
     then
       echo $pid | xargs kill -${1:-9}
       kp
+    fi
+}
+
+# https://gist.github.com/defunkt/318247
+function browser() {
+    if [ -t 0 ]; then
+      if [ -n "$1" ]; then
+        open $1
+      else
+        cat <<usage
+    Usage: browser
+           pipe html to a browser
+    $ echo '<h1>hi mom!</h1>' | browser
+    $ ron -5 man/rip.5.ron | browser
+usage
+    fi
+    else
+      f="/tmp/browser.$RANDOM.html"
+      cat /dev/stdin > $f
+      open $f
+    fi
+}
+
+function shush() {
+    if [ -z "$1" ]; then
+        echo "shush [cpu | dropbox | process_name] cpu_limit"
+        return
+    fi
+    if [ "$1" = "cpu" ]; then
+        savecpu
+        return
+    fi
+    if [ "$1" = "dropbox" ]; then
+        $1="Dropbox"
+    fi
+    PID=$(ps -Ac -o pid,comm | awk "/$1$/{print \$1}" | sort | head -1)
+    if [ $(ps aux | grep "cpulimit -p $PID" | grep -v grep | wc -l) -eq 0 ]; then
+        # cpulimit -p $(ps ax | grep /Applications/m/Dropbox.app/Contents/MacOS/Dropbox | awk '{print $1}' | sort | head -1) -l $2
+        printf "Setting: cpulimit -p $PID ($1) -l $2\n"
+        cpulimit -p $PID -l $2 &
+        # cpulimit -p $(ps -Ac -o pid,comm | awk '/Dropbox$/{print $1}' | sort | head -1) -l $2 &
+    else
+        printf "cpulimit already running for $1 with $PID\n"
     fi
 }
