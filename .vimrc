@@ -1009,28 +1009,32 @@ Plug 'artur-shaik/vim-javacomplete2'
 
 " Markdown {{{2
 " Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'} " disabled with sheerun/vim-polyglot
-set conceallevel=2
-let g:vim_markdown_conceal=1
-let g:vim_markdown_folding_disabled=0
-let g:vim_markdown_folding_level=1
-let g:vim_markdown_follow_anchor=0 "use get to jump to anchors
-let g:vim_markdown_strikethrough=1
-" let g:vim_markdown_no_default_key_mappings=1
-nmap <Plug> <Plug>Markdown_MoveToCurHeader
-vmap <Plug> <Plug>Markdown_MoveToCurHeader
+" set conceallevel=2
+" let g:vim_markdown_conceal=1
+" let g:vim_markdown_folding_disabled=0
+" let g:vim_markdown_folding_level=1
+" let g:vim_markdown_follow_anchor=0 "use get to jump to anchors
+" let g:vim_markdown_strikethrough=1
+" " let g:vim_markdown_no_default_key_mappings=1
+" nmap <Plug> <Plug>Markdown_MoveToCurHeader
+" vmap <Plug> <Plug>Markdown_MoveToCurHeader
 
 Plug 'SidOfc/mkdx'
-" let g:mkdx#settings.map.prefix = '<localleader>'
-" let g:mkdx#settings.tokens.italic = '_'
+let g:mkdx#settings = { 
+    \ 'fold': {'enable': 1, 'components': ['toc']},
+    \ 'highlight': {'enable': 0},
+    \ 'map': {'prefix': '<localleader>'},
+    \ 'tokens': {'fence': '`', 'italic': '*'}
+\ }
 
 " Markdown preview {{{3
-"Plug 'greyblake/vim-preview' could not get it to work
+" Plug 'greyblake/vim-preview' could not get it to work
 Plug 'JamshedVesuna/vim-markdown-preview'
-" let vim_markdown_preview_hotkey='<localleader>mp'
 let vim_markdown_preview_toggle=1
 let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
+" let vim_markdown_preview_hotkey='<localleader>mp'
 
 " Plug 'skanehira/preview-markdown.vim'
 " let g:preview_markdown_parser='htmlmarkdown'
@@ -1253,6 +1257,9 @@ if (has('mac') || has('macunix')) && has('gui')
     imap º <Plug>(PearTreeJump)
 else
     imap <A-0> <Plug>(PearTreeJump)
+endif
+if exists('g:mkdx#settings')
+    autocmd FileType markdown let b:pear_tree_map_special_keys = 0
 endif
 " }}}
 
