@@ -1,5 +1,9 @@
 // Set a binding for repeating action (e.g.: ^u, 5, right arrow)
 // > defaults write -g NSRepeatCountBinding -string "^u"
+// ^ = ctrl
+// ~ = option (alt)
+// $ = shift
+// @ = command
 {
   // General
   // > defaults write -g NSTextKillRingSize -int 6
