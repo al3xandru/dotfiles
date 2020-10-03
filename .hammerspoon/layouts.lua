@@ -135,6 +135,7 @@ LAYOUTS = {
         subtitle = "IntelliJ/PyCharm/GoLand, Safari/Qute/Chrome, Dash, Books/Preview, Terminal",
         layout = {
             {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Brave Browser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             {"Firefox", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             {"Books", nil, attemptSecondaryScreen, hs.geometry.new("[0, 0, 35, 90]"), nil, nil},
