@@ -193,20 +193,19 @@ if has("gui_running")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
-    set columns=110
-    set lines=80
+    if !has("gui_vimr")
+        set columns=110
+        set lines=80
+    endif
     if &diff 
         set columns=180
     endif
-elseif has("gui_vimr")
-    set columns=110
-    set lines=80
+    " augroup VimTransparency
+    "     autocmd!
+    "     autocmd FocusGained * set transparency=0
+    "     autocmd FocusLost * set transparency=25
+    " augroup END
 endif
-" augroup VimTransparency
-"     autocmd!
-"     autocmd FocusGained * set transparency=0
-"     autocmd FocusLost * set transparency=25
-" augroup END
 " }}}
 
 " splits
@@ -271,10 +270,6 @@ cnoreabbrev Q q
 let mapleader="\<space>"
 let maplocalleader=","
 
-" (I)Mapping: escape (disabled) {{{
-" inoremap jk <esc>:echoerr "mapping disabled. forget about it :-)"<CR>i
-" inoremap fd <esc>:w<CR>
-" }}}
 
 " (I)Mapping: disable arrows {{{
 inoremap <silent><Left> <esc><Left>
@@ -289,20 +284,12 @@ inoremap <silent><Down> <esc><Down>
 inoremap <C-a> <C-o>A
 inoremap <A-a> <C-o>A
 inoremap å <C-o>A
-" Insert a newline in normal mode
-" nnoremap <S-Enter> O<Esc>
-" nnoremap <CR> o<Esc>
-" nnoremap <NL> i<CR><Esc> " Ctrl-j: break the line at cursor
 " }}}
 
 " (N)Mapings: buffers {{{
 " https://www.reddit.com/r/vim/comments/4gjbqn/what_tricks_do_you_use_instead_of_popular_plugins/
-nnoremap <unique><leader>b :ls<CR>:buffer<space>
+" nnoremap <unique><leader>b :ls<CR>:buffer<space>
 
-" buffer switch (disabled) {{{
-" nmap <C-a> :bNext<CR>
-" nmap <C-e> :e#<CR>
-" }}}
 " }}}
 
 " (N)Mappings: change (bind c[hange] to replace word under cursor) {{{2
@@ -373,8 +360,6 @@ function! <SID>HLNext (blinktime)
 endfunction
 " }}}
 
-" nnoremap <expr> ; getcharsearch().forward ? ';' : ','
-" nnoremap <expr> , getcharsearch().forward ? ',' : ';'
 
 " (N)Mappings: search with grep {{{
 " bind f and F to perform grep for the word under cursor
@@ -578,7 +563,7 @@ function! <SID>BigWnd()
     set colorcolumn=0
     set columns=80
     " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
-    exec "edit ~/Dropbox/Dox/mydox/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "edit ~/Dropbox/Dox/mydox/myjrnl/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
 command! Bigwnd call <SID>BigWnd()
@@ -613,6 +598,7 @@ Plug 'vim-scripts/Colour-Sampler-Pack'
 Plug 'gruvbox-community/gruvbox'
 
 " light
+Plug 'kamwitsta/flatwhite-vim'
 Plug 'NLKNguyen/papercolor-theme'
 
 " dark
@@ -651,10 +637,10 @@ Plug 'lifepillar/vim-gruvbox8'
 " Plug 'adampasz/vim-stonewashed'
 " Plug 'AlessandroYorba/Sierra'
 " Plug 'altercation/vim-colors-solarized'
-let g:solarized_termtrans=0
-let g:solarized_termcolors=256
-let g:solarized_visibility="high"
-let g:solarized_contrast="normal"
+" let g:solarized_termtrans=0
+" let g:solarized_termcolors=256
+" let g:solarized_visibility="high"
+" let g:solarized_contrast="normal"
 " Plug 'blerins/flattown'
 " Plug 'chriskempson/base16-vim'
 " Plug 'cocopon/iceberg.vim'
@@ -675,8 +661,8 @@ let g:solarized_contrast="normal"
 " Plug 'nanotech/jellybeans.vim'
 " Plug 'NLKNguyen/papercolor-theme'
 " Plug 'rakr/vim-two-firewatch'
-let g:two_firewatch_italics=1
-let g:airline_theme='twofirewatch'
+" let g:two_firewatch_italics=1
+" let g:airline_theme='twofirewatch'
 " Plug 'rodnaph/vim-color-schemes'
 " Plug 'swalladge/antarctic-vim'
 " Plug 'whatyouhide/vim-gotham'
@@ -718,14 +704,13 @@ Plug 'wellle/targets.vim'
 " Essentials {{{1
 "
 " Files {{{2
-"{{{3
-" Plug 'ctrlpvim/ctrlp.vim' 
-let g:loaded_ctrlp = 1
-let g:ctrlp_map = '<F7>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
+" Plug 'ctrlpvim/ctrlp.vim' "{{{3
+" let g:loaded_ctrlp = 1
+" let g:ctrlp_map = '<F7>'
+" let g:ctrlp_cmd = 'CtrlP'
+" let g:ctrlp_match_window = 'top,order:ttb,min:1,max:10,results:10'
 " only cache if we're over this number of files
-let g:ctrlp_use_caching = 2000
+" let g:ctrlp_use_caching = 2000
 " Mappings: CtrlP {{{4
 " nnoremap <unique><leader>o :CtrlP<CR>
 " nnoremap <unique><leader>] :CtrlPBufTag<CR>
@@ -758,7 +743,7 @@ nnoremap <unique><leader>ow :Windows<CR>
 " :Colors, :Commands, :Filetypes, :Maps
 " :History:, :History/
 " 3}}}
-" }}}
+" 2}}}
 
 
 " Netrw {{{3
@@ -781,8 +766,7 @@ let g:netrw_sort_sequence = '[\/]$,*,\%(' . join(map(split(&suffixes, ','), 'esc
 let g:netrw_list_hide =
       \ join(map(split(&wildignore, ','), '"^".' . s:escape . '. "$"'), ',') . ',^\.\.\=/\=$' .
       \ (get(g:, 'netrw_list_hide', '')[-strlen(s:dotfiles)-1:-1] ==# s:dotfiles ? ','.s:dotfiles : '')
-" }}}
-" 2}}}
+" 3}}}
 
 
 " Tags/ctags/omnicomplete (check tagfiles: echo tagfiles()) {{{2
@@ -866,7 +850,7 @@ let g:ale_python_pyflakes_options = '-m pyflakes'
 
 " Search: Ack and Ag {{{2
 Plug 'wincent/ferret' " asycn!!!
-let g:FerretExecutable='ag,ack'
+let g:FerretExecutable='rg,ag,ack'
 let g:FerretMap=0
 " Possible replacements:
 " Plug 'mileszs/ack.vim'
@@ -876,8 +860,8 @@ let g:FerretMap=0
 " (N)Mappings: ack {{{3
 " Using the_silver_searcher to look for word under cursor in current dir
 " when using with Ferret there're no quotes
-nnoremap /fa :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=getcwd()<CR>
-nnoremap /fA :Ack! --<C-r>=&filetype<CR> \b<C-r><C-w>\b <C-r>=expand("%:p:h")<CR>
+nnoremap /fa :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
+nnoremap /fA :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
 nmap <leader>/ <Plug>(FerretAck)
 
 " Using Ack to search the word under cursor in the current dir
@@ -1008,24 +992,43 @@ Plug 'artur-shaik/vim-javacomplete2'
 
 
 " Markdown {{{2
-" Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'} " disabled with sheerun/vim-polyglot
-" set conceallevel=2
-" let g:vim_markdown_conceal=1
-" let g:vim_markdown_folding_disabled=0
-" let g:vim_markdown_folding_level=1
-" let g:vim_markdown_follow_anchor=0 "use get to jump to anchors
-" let g:vim_markdown_strikethrough=1
-" " let g:vim_markdown_no_default_key_mappings=1
-" nmap <Plug> <Plug>Markdown_MoveToCurHeader
-" vmap <Plug> <Plug>Markdown_MoveToCurHeader
+augroup markdown
+    autocmd!
+    autocmd FileType markdown setlocal textwidth=80 wrap foldenable "linebreak
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! $HOME/bin/emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! $HOME/bin/pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
+    " Paste clipboard as blockquote
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>bq p`]gw`[V`[:s/^/> /g<CR>:nohlsearch<CR>o
+    " visual selection to blockquote
+    autocmd FileType markdown vmap <buffer> bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
+    " https://sts10.github.io/post/2015-08-02-markdwon-hyperlink-remap-for-vim/
+    autocmd FileType markdown vnoremap <buffer> il <esc>`<i[<esc>`>a](<esc>"+]pa) <esc>
+augroup END
 
-Plug 'SidOfc/mkdx'
-let g:mkdx#settings = { 
-    \ 'fold': {'enable': 1, 'components': ['toc']},
-    \ 'highlight': {'enable': 0},
-    \ 'map': {'prefix': '<localleader>'},
-    \ 'tokens': {'fence': '`', 'italic': '*'}
-\ }
+Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'} 
+set conceallevel=2
+let g:vim_markdown_conceal=1
+let g:vim_markdown_folding_disabled=0
+let g:vim_markdown_folding_level=1
+let g:vim_markdown_follow_anchor=0 "use get to jump to anchors
+let g:vim_markdown_strikethrough=1
+" let g:vim_markdown_no_default_key_mappings=1
+nmap <Plug> <Plug>Markdown_MoveToCurHeader
+vmap <Plug> <Plug>Markdown_MoveToCurHeader
+augroup markdown_plasticboy
+    autocmd!
+    autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
+augroup END
+
+
+" Plug 'SidOfc/mkdx'
+" let g:mkdx#settings = { 
+"     \ 'fold': {'enable': 1, 'components': ['toc']},
+"     \ 'highlight': {'enable': 0},
+"     \ 'map': {'prefix': '<localleader>'},
+"     \ 'tokens': {'fence': '`', 'italic': '*'}
+" \ }
 
 " Markdown preview {{{3
 " Plug 'greyblake/vim-preview' could not get it to work
@@ -1035,24 +1038,11 @@ let vim_markdown_preview_github=0
 let vim_markdown_preview_perl=0
 let vim_markdown_preview_pandoc=0
 " let vim_markdown_preview_hotkey='<localleader>mp'
-
-" Plug 'skanehira/preview-markdown.vim'
-" let g:preview_markdown_parser='htmlmarkdown'
-" function! <SID>MarkdownPreview(file)
-"     if has("unix")
-"         let l:uname = system("uname -s")
-"         if l:uname =~ "Darwin"
-"             if filereadable("/Applications/Marked\ 2.app/Contents/Info.plist")
-"                 execute ":silent !open -a 'Marked 2.app' '" . a:file . "'"
-"                 " nnoremap <silent><localleader>mp :silent !open -a 'Marked 2.app' '%:p'<CR>
-"             else
-"                 execute ":silent !open -a Google Chrome.app' '" . a:file . "'"
-"                 " nnoremap <silent><localleader>mp :silent !open -a 'Google Chrome.app' '%:p'<CR>
-"             endif
-"         endif
-"     endif
-" endfunction
+augroup markdown_jamshedvesuna
+    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mv :call Vim_Markdown_Preview()<CR>
+augroup END
 "}}}
+
 " Markdown editing {{{3
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
@@ -1086,21 +1076,21 @@ function! <SID>IAWriter()
         Goyo
         Limelight0.7
         " call goyo#execute(0, '')
-        augroup lineno
-            autocmd!
-            autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   setlocal norelativenumber nonumber
-            autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
-            autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
-        augroup END
+        " augroup lineno
+        "     autocmd!
+        "     autocmd FocusLost *.{mk,markdown,mdown,mkdn,mkd,rst}   setlocal norelativenumber nonumber
+        "     autocmd InsertEnter *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
+        "     autocmd InsertLeave *.{mk,markdown,mdown,mkdn,mkd,rst} setlocal norelativenumber nonumber
+        " augroup END
         let g:iawriter_active = 1
         echom "IAWriter activated [new: pencil, old: " .  g:iawriter_save_colorscheme . ", background:" . g:iawriter_save_bgr . "]"
     else
-        augroup lineno
-            autocmd!
-            autocmd FocusLost * setlocal norelativenumber number
-            autocmd InsertEnter * setlocal norelativenumber number
-            autocmd InsertLeave * setlocal relativenumber number
-        augroup END
+        " augroup lineno
+        "     autocmd!
+        "     autocmd FocusLost * setlocal norelativenumber number
+        "     autocmd InsertEnter * setlocal norelativenumber number
+        "     autocmd InsertLeave * setlocal relativenumber number
+        " augroup END
         " call goyo#execute(0, '') 
         Limelight!
         Goyo
@@ -1115,27 +1105,6 @@ function! <SID>IAWriter()
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
     endif
 endfunction
-augroup markdown
-    autocmd!
-    " autocmd BufRead,BufNewFile *.{mk,markdown,mdown,mkdn,mkd,rst} set filetype=markdown
-    autocmd FileType markdown setlocal textwidth=80 wrap foldenable "linebreak
-    autocmd FileType markdown nnoremap <buffer><silent> <leader>t :Toc<CR>:q<CR>:lop<CR> 
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
-    " autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :call <SID>MarkdownPreview('%:p')<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mv :call Vim_Markdown_Preview()<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! $HOME/bin/emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! $HOME/bin/pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
-    " Paste clipboard as blockquote
-    " autocmd FileType markdown nnoremap <silent><localleader>bq pmaV`]gwv`a:s/^/> /g<CR>:nohlsearch<CR>o
-    " autocmd FileType markdown nnoremap <silent><localleader>bq pgw`]V`]:s/^/> /g<CR>:nohlsearch<CR>o
-    autocmd FileType markdown nnoremap <buffer><silent> <localleader>bq p`]gw`[V`[:s/^/> /g<CR>:nohlsearch<CR>o
-    " visual selection to blockquote
-    " autocmd FileType markdown vmap bq mzgw`<mav`z:s/^/> /g<CR>:nohlsearch<CR>2xo
-    autocmd FileType markdown vmap <buffer> bq gq$v`<:s/^/> /g<CR>:nohlsearch<CR>
-    " autocmd BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkdownPreview()
-    " https://sts10.github.io/post/2015-08-02-markdwon-hyperlink-remap-for-vim/
-    autocmd FileType markdown vnoremap <buffer> il <esc>`<i[<esc>`>a](<esc>"+]pa) <esc>
-augroup END
 
 "}}}
 "}}}
@@ -1293,15 +1262,13 @@ let g:startify_lists = [
 "     \ 'sessions',
 "     \ ]
 let g:startify_bookmarks = [
-    \ {'a': '~/Dropbox/Dox/mydox/'},
-    \ {'b': '~/Dropbox/Dox/myjrnl/'},
-    \ {'c': '~/Dropbox/Dox/nvall/'},
+    \ {'0': '~/Dropbox/Dox/myjrnl/'},
     \ '~/.vimrc',
     \ '~/Dropbox/Dox/mydox/01-weekly.taskpaper',
-    \ '~/Dropbox/Dox/mydox/02-thoughts.md',
-    \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
-    \ '~/Dropbox/Dox/mydox/04-blog.md',
-    \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
+    \ '~/Dropbox/Dox/myjrnl/02-thoughts.md',
+    \ '~/Dropbox/Dox/myjrnl/03-email_drafts.md',
+    \ '~/Dropbox/Dox/myjrnl/04-blog.md',
+    \ '~/Dropbox/Dox/myjrnl/05-blog_ideas_and_drafts.md',
     \ '/Users/Shared/homepage/h.html',
     \]
 let g:startify_files_number = 10
@@ -1488,9 +1455,9 @@ Plug 'gregsexton/gitv'
 " allows toggling bookmarks per line
 
 
-" Plug 'liuchengxu/vim-which-key'
-" nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
-" nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
+Plug 'liuchengxu/vim-which-key'
+nnoremap <silent> <localleader> :<c-u>WhichKey ','<CR>
+nnoremap <silent> <leader>      :<c-u>WhichKey "\<space>"<CR>
 
 
 " Plug 'alok/notational-fzf-vim' " disabled {{{2
