@@ -453,32 +453,6 @@ the current window and the windows state prior to that."
                         (:endgroup)
                         
                         (:startgrouptag)
-                        ("who" .  ?W)
-                        (:grouptags)
-                        ("carter_shanklin" . ?c)
-                        ("prashant_jha" . ?p)
-                        ("greg_pavlik" . ?g)
-                        ("dan_bradford" . nil)
-
-                        ("balint_papp" .  nil)
-                        ("dimitris_tzannetos" . ?t)
-                        ("edwin_biemond" . ?b)
-                        ("gyorgy_geiszter" . nil)
-                        ("iris_chen" . ?h)
-                        ("jeban_kanagarajan" . ?k)
-                        ("jon_maron" . ?m)
-                        ("kevin_minder" . ?i)
-                        ("manish_jain" . ?j)
-                        ("peter_gordos" . ?g)
-                        ("robert_levas" . ?l)
-                        ("thomas_lau" . ?a)
-                        ("zoltan_koszegi" . nil)
-                        ;; (:newline)
-                        ("durgasuresh_kagitha". nil)
-                        ("sonali_birari" . nil)
-                        (:endgrouptag)
-
-                        (:startgrouptag)
                         (:grouptags)
                         ("calendar" . ?C)
                         ("confluence" . ?X)
@@ -731,7 +705,11 @@ the current window and the windows state prior to that."
 
             (todo "WAIT|HOLD|WIP"
                   ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))))
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline))
+                   (org-agenda-files (mapcar (lambda (f) (concat org-directory f)) (list "11-inbox.org"
+                                                                                         "12-mlo.org"
+                                                                                         "13-tickler.org"
+                                                                                         "19-maybes.org")))))
 
 
             (agenda "Weekly agenda"
@@ -1095,6 +1073,7 @@ the current window and the windows state prior to that."
 ;;; ------
 ;;; Themes
 ;;; ------
+(use-package acme-theme :defer t :no-require t)
 (use-package alect-themes    :defer t :no-require t)
 (use-package anti-zenburn-theme :defer t :no-require t)
 ;; (use-package color-theme-github :defer t :no-require t)
@@ -1121,6 +1100,6 @@ the current window and the windows state prior to that."
 ;;; theme
 ;;; light themes: leuven gruvbox-light-[hard|medium|soft] plan9 twilight-bright
 ;; (load-theme 'gruvbox-light-hard)
-(load-theme 'plan9)
+;; (load-theme 'plan9)
 ;; (load-theme 'dichromacy)
-
+(load-theme 'acme)
