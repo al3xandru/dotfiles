@@ -447,10 +447,13 @@ def generate_output(data, opts):
   print_to(sys.stdout, data)
   if opts.output == 'j':
     filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], title_to_filename(data['title']))
-    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "myjrnl", "m", filename)
-    print("print to file:", filepath)
+    filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "mydox", "myjrnl", "m", filename)
     with open(filepath, "w+") as fout:
       print_to(fout, data)
+    print("print to file (path in clipboard):", filepath)
+    echo_cmd = subprocess.Popen(['echo', filepath], stdout=subprocess.PIPE)
+    subprocess.check_call(['pbcopy'], stdin=echo_cmd.stdout)
+    echo_cmd.wait()
 
   if opts.output == 'd':
     print("print to DayOne")
@@ -482,11 +485,14 @@ def generate_output(data, opts):
 
 def print_to(stream, data, encode=True):
   """ Write data to the stream. """
-  title = data['title']
   if data['imdb_url']:
-    stream.write(u"# Movie: [%s (%s)](%s) " % (title, data['year'], data['imdb_url']))
+    header =  u"# 🎥 Movie: [%s (%s)](%s) " % (data['title'], data['year'], data['imdb_url'])
   else:
-    stream.write(u"# Movie: %s (%s) " % (title, data['year']))
+    header = u"# 🎥 Movie: %s (%s) " % (data['title'], data['year'])
+  if encode:
+    stream.write(header.encode('utf8'))
+  else:
+    stream.write(header)
   stream.write("\n\n")
   if encode:
     stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
