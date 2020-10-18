@@ -230,7 +230,7 @@ set foldlevel=100
 
 
 " 16 diff mode
-set diffopt=filler,vertical
+set diffopt=filler,vertical,context:3,closeoff
 
 
 " 17. mappings {{{
