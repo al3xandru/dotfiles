@@ -73,6 +73,7 @@ LAYOUTS = {
             {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
             {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
 
+            {"Brave Browser", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
             {"Firefox", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
             {"Google Chrome", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
             {"qutebrowser", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
@@ -96,6 +97,7 @@ LAYOUTS = {
             -- {"Preview", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.5, 0.03, 0.5, 0.96), nil, nil},
             {"Terminal", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
 
+            {"Brave Browser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"Firefox", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"Google Chrome", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"qutebrowser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
@@ -115,6 +117,7 @@ LAYOUTS = {
             {"MacVim", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
             {"VimR", nil, nil, hs.geometry.new("[0, 0, 55, 90]"), nil, nil},
 
+            {"Brave Browser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"Firefox", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"Google Chrome", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
             {"qutebrowser", nil, nil, hs.geometry.new("[56, 0, 100, 85]"), nil, nil},
@@ -132,17 +135,20 @@ LAYOUTS = {
     -- Layouts for dual monitor environments
     ide_dualmonitor = {
         name = "IDE Session - Dual monitor",
-        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Qute/Chrome, Dash, Books/Preview, Terminal",
+        subtitle = "IDE, browser, Dash, Books/Preview, Terminal",
         layout = {
-            {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             {"Brave Browser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
-            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             {"Firefox", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"Google Chrome", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+            {"qutebrowser", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
+
             {"Books", nil, attemptSecondaryScreen, hs.geometry.new("[0, 0, 35, 90]"), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
             {"Preview", nil, attemptSecondaryScreen, hs.geometry.new("[65, 0, 100, 90]"), nil, nil},
+            {"Safari", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
+
             {"Terminal", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
             {"Dash", nil, attemptSecondaryScreen, hs.geometry.new("[35, 50, 65, 100]"), nil, nil},
+
             {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 75, 100]")},
             {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 75, 100]")},
             {"GoLand", nil, nil, hs.geometry.new("[0, 0, 75, 100]")}
