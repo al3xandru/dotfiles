@@ -17,7 +17,7 @@ from xml.etree import ElementTree as ET
 DEBUG = True if os.getenv('DEBUG_SCRIPT', False) == 'True' else False
 FILE_PREFIX = 'qq-'
 FILE_EXT = ('.md', '.markdown')
-SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/nvall')
+SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/mydox/myjrnl')
 SEARCH_DIRS = (SAVE_DIR,)
 
 
