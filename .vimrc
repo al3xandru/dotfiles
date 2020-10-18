@@ -230,7 +230,11 @@ set foldlevel=100
 
 
 " 16 diff mode
-set diffopt=filler,vertical,context:3,closeoff
+if has('nvim')
+    set diffopt=filler,vertical,context:3
+else
+    set diffopt=filler,vertical,context:3,closeoff
+end
 
 
 " 17. mappings {{{
