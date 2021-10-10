@@ -1,6 +1,6 @@
 scriptencoding utf-8
 
-" Organization
+" Organization {{{
 " 1. important
 " 2. moving around, searching and patterns
 " 3. tags
@@ -26,6 +26,7 @@ scriptencoding utf-8
 " 23. language specific
 " 24. multi-byte characters
 " 25. various
+" }}}
 
 " 1. important {{{
 set nocompatible
@@ -44,6 +45,7 @@ if !has('nvim')
 endif
 set hidden      " allow buffer switching without saving
 set lazyredraw
+set matchpairs+=<:>
 set modeline
 set modelines=5
 set mouse=a
@@ -140,8 +142,9 @@ set title
 set laststatus=2
 " http://got-ravings.blogspot.co.at/2008/08/vim-pr0n-making-statuslines-that-own.html
 " Colors: Error, Question, Search, Todo, Visual, WarningMsg
-set statusline=%q[%#Error#%{toupper(mode())}%*:b%n]\ %f%m%r
+set statusline=%q[%#Error#%{toupper(mode())}%*:b%n]
 set statusline+=\ %#Todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
+set statusline+=\ %f%m%r(%{getcwd()})
 set statusline+=%= "left/right separator
 set statusline+=%#Todo#%{exists('g:loaded_obsession')?ObsessionStatus():''}%*
 set statusline+=%y[%{&fileencoding?&fileencoding:&encoding}]
@@ -158,18 +161,19 @@ if has("gui_running")
     set go-=r " no scrollbar
     set go-=R
     if has("gui_macvim")
-        " set gfn=Anonymous_Pro:h12
-        " set gfn=Consolas:h12
-        " set gfn=Cousine:h11
-        " set gfn=Fira_Code_Regular:h12
-        " set gfn=Hack:h12
-        " set gfn=Inconsolata:h13
-        " set gfn=Input_Mono:h11
-        " set gfn=Liberation_Mono:h11
-        set gfn=Operator_Mono:h12
-        " set gfn=PragmataPro_Mono:h13
-        " set gfn=Source_Code_Pro:h11
+        " Anonymous_Pro:h12
+        " Consolas:h12
+        " Cousine:h11
+        " Fira_Code_Regular:h12
+        " Hack:h12
+        " Inconsolata:h13
+        " Input_Mono:h11
+        " Liberation_Mono:h11
+        " Operator_Mono_Book:h13
+        " PragmataPro_Mono:h13
+        " Source_Code_Pro:h11
         " set gfn=SF_Mono_Regular:h12 linespace=2
+        set gfn=PragmataPro_Mono:h13,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,mononoki:h13
         " add "New Window" menu to MacVim (stupid but needed)
         " aun File.New\ Window
         an <silent> 10.290 File.New\ Window :silent !mvim<CR>
@@ -238,13 +242,22 @@ end
 
 
 " 17. mappings {{{
-set timeoutlen=750
+" set timeoutlen=750
 
 
 " leader = space (default \)
 " localleader = ,
 " let mapleader="\<space>"
 " let maplocalleader=","
+
+nnoremap <expr> k (v:count == 0 ? 'gk' : "m'" .  v:count .  'k')
+nnoremap <expr> j (v:count == 0 ? 'gj' : "m'" .  v:count .  'j')
+nnoremap <Up> gk
+nnoremap <Down> gj
+vnoremap k gk
+vnoremap j gj
+vnoremap <Up> gk
+vnoremap <Down> gj
 
 " (N)Mappings: n/N with blip, center the line, and directional {{{2
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
@@ -259,13 +272,6 @@ function! <SID>HLNext (blinktime)
     call matchdelete(l:ring)
     redraw
 endfunction
-" Previous implementation {{{3
-" nnoremap <expr> n v:searchforward ? 'nzzzv:call <SID>HLNext(0.6)<CR>' : 'Nzzzv:call <SID>HLNext(0.6)<CR>'
-" nnoremap <expr> N v:searchforward ? 'Nzzzv:call <SID>HLNext(0.6)<CR>' : 'nzzzv:call <SID>HLNext(0.6)<CR>'
-" Plug 'timakro/vim-searchant'
-" nnoremap <silent> n nzzzv:call <SID>HLNext(0.6)<CR>
-" nnoremap <silent> N Nzzzv:call <SID>HLNext(0.6)<cr>
-" 3}}}
 " 2}}}
 " }}}
 
@@ -295,27 +301,30 @@ setglobal fileencoding=utf-8
 set encoding=utf-8 nobomb
 
 " autocmds
-if has("autocmd")
-    augroup vimrc
-        autocmd!
-        " autosave on focus lost
-        autocmd FocusLost, BufLeave * silent! :wall
-        " default to markdown if not in diff mode
-        autocmd BufEnter * if &filetype == "" && !&diff | setlocal ft=markdown | endif
-        " crontab -e
-        autocmd BufNewFile,BufRead crontab.* set nobackup nowritebackup
-
-        " json is javascript
-        autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-
-        autocmd FileType html,htm setlocal ts=2 sts=2 sw=2 expandtab
-        autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
-        autocmd FileType java setlocal omnifunc=javacomplete#Complete
-        autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab autoindent
-        autocmd FileType vim setlocal nowrap
-        autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-    augroup END
-end
+augroup vimrc
+    autocmd!
+    " autosave on focus lost: only for GUI
+    autocmd FocusLost, BufLeave * nested silent! wall
+    " auto change local directory (window-based): at first it looks like a
+    " good idea, but if I want to work with files starting from the root
+    " directory it quickly becomes problematic
+    " autocmd BufEnter * silent! lcd %:p:h
+augroup END
+augroup ft
+    autocmd!
+    " default to markdown if not in diff mode
+    autocmd BufEnter * if &filetype == "" && !&diff | setlocal ft=markdown | endif
+    " crontab -e
+    autocmd BufNewFile,BufRead crontab.* set nobackup nowritebackup
+    " a better place for these would be: after/ftplugin/filetype.vim
+    " vimrc allows for a central place but is loaded first and can be overwritten
+    autocmd FileType html,htm setlocal ts=2 sts=2 sw=2 expandtab
+    autocmd FileType java setlocal omnifunc=javacomplete#Complete
+    autocmd FileType make setlocal ts=4 sts=4 sw=4 noexpandtab
+    autocmd FileType python setlocal ts=4 sts=4 sw=4 expandtab autoindent
+    autocmd FileType vim setlocal nowrap
+    " autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+augroup END
 
 
 " PYENV {{{1
@@ -394,12 +403,13 @@ command! SS call <SID>SaveSession()
 " Display a window with big font {{{2
 function! <SID>BigWnd() 
     colorscheme nuvola
-    " set gfn=Operator_Mono:h24
-    set gfn=mononoki:h24
-    set colorcolumn=0
-    set columns=80
+    set gfn=Iosevka_Fixed_Light:h24,Operator_Mono_Light:h24,mononoki:h24
+    set colorcolumn=100
+    set columns=100
+    set textwidth=98
     " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
-    exec "edit ~/Dropbox/Dox/mydox/myjrnl/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    " exec "tabedit ~/Dropbox/Dox/mydox/myjrnl/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "tabedit ~/Desktop/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
 command! Bigwnd call <SID>BigWnd()
@@ -407,18 +417,26 @@ command! Bigwnd call <SID>BigWnd()
 
 " Set GUI font {{{2
 function! <SID>Fonts()
-    let l:fonts = "Anka/Coder_Narrow Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    " let l:fonts = "Anka/Coder_Narrow Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono IBM_Plex_Mono Input_Mono Input_Mono_Condensed Input_Mono_Narrow Iosevka_Fixed JetBrains_Mono Monoid mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro Victor_Mono --- Fira_Code Hack Iosevka_SS10 "
     let l:flst = split(l:fonts)
     echo "Fonts:"
     echo join(l:flst, "\n")
     echo "\n"
-    exec "set gfn=" . input("Font: ", "mononoki") . ":h" . input("Size: ", "24")
+    exec "set gfn=" . input("Font: ", "Iosevka_Fixed_Light") . ":h" . input("Size: ", "24")
 endfunction
 command! SetFont call <SID>Fonts()
+
+function! <SID>Zoom(amount) abort
+    let font_size = matchstr(&guifont, '\d\+$') + a:amount
+    let &guifont = substitute(&guifont, '\d\+$', font_size, '')
+endfunc
+command! -nargs=1 Zoom call <SID>Zoom(<f-args>)
 "2}}}
 "1}}}
 
 
+" Plugins
 " Load vim-plug https://github.com/junegunn/vim-plug
 call plug#begin('~/.vim/plugged')
 " Alternative plugin managers
@@ -437,6 +455,7 @@ Plug 'vim-scripts/Colour-Sampler-Pack'
 " top (supporting text styling) {{{2
 " Plug 'morhetz/gruvbox'
 Plug 'gruvbox-community/gruvbox'
+Plug 'humanoid-colors/vim-humanoid-colorscheme', {'branch': 'main'}
 
 " light
 Plug 'kamwitsta/flatwhite-vim'
@@ -460,41 +479,42 @@ Plug 'zefei/cake16'
 
 " simple light {{{2
 Plug 'arzg/vim-plan9'
+Plug 'jsit/toast.vim'
 Plug 'rakr/vim-one'
 let g:one_allow_italics = 1
-
 "2}}}
 "1}}}
 
 
 " Extra text objects {{{1
 Plug 'kana/vim-textobj-user'
+
+" Pairs, Quotes, Separators, Arguments, Tags
+Plug 'wellle/targets.vim'
+
 " Function argument object: i, a,
 " Shift: <, >,
 " Jump: [, ],
 Plug 'PeterRincker/vim-argumentative'
 " Plug 'argtextobj.vim' 
 
-" Function call object: am im aM iM
-Plug 'thalesmello/vim-textobj-methodcall'
+" " Function call object: am im aM iM (DISABLED)
+" Plug 'thalesmello/vim-textobj-methodcall'
 
-" Function object: if af iF aF
-Plug 'kana/vim-textobj-function'
-Plug 'kamichidu/vim-textobj-function-go'
-Plug 'thinca/vim-textobj-function-javascript'
-Plug 'thinca/vim-textobj-function-perl'
-Plug 'nelstrom/vim-textobj-rubyblock'
+" " Function object: if af iF aF (DISABLED)
+" Plug 'kana/vim-textobj-function'
+" Plug 'kamichidu/vim-textobj-function-go'
+" Plug 'thinca/vim-textobj-function-javascript'
+" Plug 'thinca/vim-textobj-function-perl'
+" Plug 'nelstrom/vim-textobj-rubyblock'
 
-" Comment object: ic ac aC
-Plug 'glts/vim-textobj-comment'
-
-" URIs: iu au
-Plug 'jceb/vim-textobj-uri'
-Plug 'wellle/targets.vim'
-"
-" Line object: il al (DISABLED)
+" " Comment object: ic ac aC (DISABLED)
+" Plug 'glts/vim-textobj-comment'
+" " URIs: iu au (DISABLED)
+" Plug 'jceb/vim-textobj-uri'
+" " Line object: il al (DISABLED)
 " Plug 'kana/vim-textobj-line'
-" Indent object: ii ai aI iI (DISABLED)
+" " Indent object: ii ai aI iI (DISABLED)
 " Plug 'michaeljsmith/vim-indent-object' 
 " }}}
 
@@ -537,10 +557,13 @@ if filereadable("/usr/local/bin/ctags")
     let g:gutentags_ctags_executable = '/usr/local/bin/ctags'
 else
     let g:gutentags_ctags_executable = '/usr/bin/ctags'
+    let g:gutentags_enabled = 0
 endif
 let g:gutentags_ctags_tagfile = '.tags'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
+let g:gutentags_exclude_filetypes = ['markdown']
+let g:gutentags_exclude_project_root = ['/usr/local', '/Users/alexandp', '/Users/alex']
 " }}}
 
 
@@ -606,8 +629,8 @@ let g:FerretMap=0
 " (N)Mappings: ack {{{3
 " Using the_silver_searcher to look for word under cursor in current dir
 " when using with Ferret there're no quotes
-" nnoremap /fa :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
-" nnoremap /fA :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
+nnoremap /f :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
+nnoremap /F :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
 
 " 3}}}
 "}}}
@@ -623,6 +646,10 @@ let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " let g:neosnippet#expand_word_boundary=0
 " }}}
 " }}}
+
+" Replace with register {{{2
+Plug 'inkarkat/vim-ReplaceWithRegister'
+" 2}}}
 " }}}
 
 
@@ -645,7 +672,7 @@ let vimclojure#SetupKeyMap = 0
 
 
 " Go {{{2
-" Plug 'fatih/vim-go'
+Plug 'fatih/vim-go'
 " let g:go_bin_path = expand("~/.golang")
 let g:go_echo_command_info = 0
 let g:go_fmt_autosave = 1
@@ -737,7 +764,7 @@ Plug 'artur-shaik/vim-javacomplete2'
 " Markdown {{{2
 augroup markdown
     autocmd!
-    autocmd FileType markdown setlocal textwidth=80 wrap foldenable "linebreak
+    autocmd FileType markdown setlocal textwidth=80 nowrap foldenable " linebreak
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>me :call <SID>IAWriter()<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mg :! $HOME/bin/emarkdown --format=1 <C-R>=expand("%:p")<CR> \| pbcopy<CR>
     autocmd FileType markdown nnoremap <buffer><silent> <localleader>mp :! $HOME/bin/pubmarkup.sh -a vim <C-R>=expand("%:p")<CR><CR>
@@ -750,7 +777,6 @@ augroup markdown
 augroup END
 
 Plug 'plasticboy/vim-markdown', {'as': 'plasticboy-vim-markdown'} 
-set conceallevel=2
 let g:vim_markdown_conceal=1
 let g:vim_markdown_folding_disabled=0
 let g:vim_markdown_folding_level=1
@@ -813,8 +839,9 @@ function! <SID>IAWriter()
         endif
         setlocal spell
         setlocal linespace=3
+        setlocal conceallevel=2
         setlocal background=light
-        setlocal gfn=Operator_Mono:h14
+        setlocal gfn=Cousine:h14
         colorscheme pencil
         Goyo
         Limelight0.7
@@ -859,7 +886,7 @@ endfunction
 " Python {{{2
 " Plug 'lambdalisue/vim-pyenv'
 " Plug 'hdima/python-syntax' " disabled with sheerun/vim-polyglot
-Plug 'klen/python-mode'
+Plug 'python-mode/python-mode', {'for': 'python', 'branch': 'last-py2-support'}
 let g:pymode_doc = 1
 let g:pymode_doc_bind = 'K'
 let g:pymode_folding = 1
@@ -935,10 +962,11 @@ let g:startify_lists = [
     \ ]
 let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/myjrnl/',
-    \ '~/Dropbox/Dox/mydox/myjrnl/02-thoughts.md',
-    \ '~/Dropbox/Dox/mydox/myjrnl/03-email_drafts.md',
-    \ '~/Dropbox/Dox/mydox/myjrnl/04-blog.md',
-    \ '~/Dropbox/Dox/mydox/myjrnl/05-blog_ideas_and_drafts.md',
+    \ '~/Dropbox/Dox/mydox/01-braindump.md',
+    \ '~/Dropbox/Dox/mydox/02-thoughts.md',
+    \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
+    \ '~/Dropbox/Dox/mydox/04-blog.md',
+    \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
     \ '/Users/Shared/homepage/h.html',
     \]
 let g:startify_files_number = 10
@@ -984,11 +1012,25 @@ Plug 'bkad/CamelCaseMotion'
 " map ge <Plug>CamelCaseMotion_ge
 " end ver.2}}}
 " Ver.3
-map ]w <Plug>CamelCaseMotion_w
-map [w <Plug>CamelCaseMotion_e
-map ]W <Plug>CamelCaseMotion_b
-map [W <Plug>CamelCaseMotion_ge
+map [w <Plug>CamelCaseMotion_w
+map ]w <Plug>CamelCaseMotion_e
+map [W <Plug>CamelCaseMotion_b
+map ]W <Plug>CamelCaseMotion_ge
 " 2}}}
+
+
+Plug 'justinmk/vim-sneak'
+let g:sneak#label=1
+let g:sneak#use_ic_scs=1
+" let g:sneak#map_netrw=1 " use Sneak in netrw
+nnoremap <silent> f :<C-U>call sneak#wrap('',           1, 0, 1, 1)<CR>
+nnoremap <silent> F :<C-U>call sneak#wrap('',           1, 1, 1, 1)<CR>
+nnoremap <silent> t :<C-U>call sneak#wrap('',           1, 0, 0, 1)<CR>
+nnoremap <silent> T :<C-U>call sneak#wrap('',           1, 1, 0, 1)<CR>
+" nmap f <Plug>Sneak_f
+" nmap F <Plug>Sneak_F
+" nmap t <Plug>Sneak_t
+" nmap T <Plug>Sneak_T
 
 
 Plug 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
@@ -1057,7 +1099,7 @@ function! <SID>ChooseColorscheme(args)
     execute "colorscheme " . input("Choice: ", "", "color")
 endfunction
 command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
-" }}}
+" }}O
 
 function! s:RandomColorschemeFromList(list)
     let m = len(a:list)
@@ -1078,7 +1120,10 @@ if has("unix")
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'papercolor', 'cake16', 'sweater', 'plan9', 'github', 'earendel', 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox', 'papercolor']
+        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'humanoid',
+                    \ 'papercolor', 'cake16', 'sweater', 'plan9', 'github', 'earendel',
+                    \ 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox',
+                    \ 'papercolor', 'toast', 'humanoid']
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1091,13 +1136,20 @@ if has("unix")
         colorscheme alduin
     elseif has('nvim')
         " colorscheme gruvbox
-        let color_schemes = ['ironman', 'gruvbox', 'papercolor', 'onedark','nord', 'alduin']
+        let color_schemes = ['ironman', 'humanoid', 'gruvbox', 'onedark', 'nord', 'alduin', 'toast']
         let cs = s:RandomColorschemeFromList(color_schemes)
         execute ":colorscheme " .  cs
     else
         " colorscheme gruvbox
-        let color_schemes = ['ironman', 'gruvbox', 'papercolor', 'onedark','nord', 'alduin']
+        " let color_schemes = ['ironman', 'humanoid', 'gruvbox',  'onedark', 'nord', 'alduin', 'toast', 'plan9']
+        let color_schemes = ['ironman', 'gruvbox', 'plan9', 'nuvola', 'morning', 'zellner', 'cake16', 'sweater', 'summerfruit256']
         let cs = s:RandomColorschemeFromList(color_schemes)
+        if cs == 'gruvbox'
+            " set background=dark
+        " elseif cs == 'humanoid'
+            set background=light
+        endif
+
         execute ":colorscheme " .  cs
     endif
 endif
@@ -1106,7 +1158,7 @@ endif
 " color column & cursor line {{{2
 function! <SID>SetColorColumn()
     " highlight ColorColumn ctermbg=235 guibg=#2c2d27
-    set colorcolumn=88,101,121,161
+    set colorcolumn=81,101,121,161
     " Following setting colors all columns after 121
     " let &colorcolumn="81,".join(range(121,999),",")
 endfunction

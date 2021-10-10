@@ -1,5 +1,5 @@
-*myvimtips.txt*     For Vim version 8.* Last change: 2017 December 10
-*myvimtips*
+*mytips.txt*     For Vim version 8.* Last change: 2017 December 10
+*mytips*
 
 This is a collection of tips and tricks that I usually don't remember that
 make vim truly powerful.
@@ -9,23 +9,44 @@ Tips for using the help:
 * CTRL-] jumps to the link
 * CTRL-O jumps back
 
+After editing this file, run `:helptags [parentdirectory]`
+
 =======================================================================
 CONTENTS
 
-    1. Normal mode.................................|myvimtips-normal|
-        1. Navigation..............................|myvimtips-normal-nav|
-    2. Insert mode.................................|myvimtips-insert|
+    Insert mode................................|mytips-insert|
+    Modeline...................................|mytips-modeline|
+    Navigation.................................|mytips-navigation|
+    Paths......................................|mytips-paths|
+    Replace....................................|mytips-replace|
+    Surround...................................|mytips-surround|
+    Writing help...............................|mytips-help|
+
+================------=======================================================
+Insert mode                                                 *myvimtips-insert*
+
+- |CTRL-T| and |CTRL-D| : insert/remove shiftwidth
+
+=============================================================================
+Modeline                                                     *mytips-modeline*
+
+Examples: >
+    # vim: set expandtab:
+    // vim: noai:ts=4:sw=4
+    /* vim: set noai ts=4 sw=4: */
+<
+
+When `set` is used, the modeline ends at the first `:` not following a
+backslash. Without `set`, no text can follow the options.
 
 =======================================================================
-1. Normal mode                                     *myvimtips-normal*
-
-1.1 Navigation in Normal Mode                      *myvimtips-normal-nav*
+Navigation in Normal Mode                                    *mytips-navigation*
 
     - |]]| : next section
-    - |]c| : move to start of change
-    - |]I] : display all lines containing keyword under cursor 
-             from current position
-    - |[I| : like "]I" but from the beginning of the file
+    - |]c| : move to start of change (diff)
+    - |]I| : display all lines containing keyword under cursor 
+           from current position
+    - |[I| : like `]I` but from the beginning of the file
     - |]m| : next method
     - |[m| : back to start of method
     - |]s| : move to next mispelled word
@@ -33,11 +54,11 @@ CONTENTS
     - |[z| : move to start of open fold
     - |]z| : move to end of open fold
 
-1.2 Navigation and Windows
+Navigation and Windows                             *mytips-navigation-windows*
 
-  - |CTRL-W ]| : split window and jump to tag under cursor
+  - |CTRL-W-]| : split window and jump to tag under cursor
 
-1.3 Navigation of "blocks"
+Navigation of "blocks"                              *mytips-navigation-blocks*
 
   - |`>| - cursor to end of highlight area
   - |`)| - cursor to first char after end of current sentence
@@ -46,10 +67,48 @@ CONTENTS
   - |`{| - cursor to the start of the current paragraph
   - |`}| - cursor to the end of the paragraph
 
-=======================================================================
-2.  Insert mode                                    *myvimtips-insert*
+=============================================================================
+Replace                                                   *mytips-replace*
 
-- |CTRL-T| and |CTRL-D| : insert/remove shiftwidth
+General replace syntax: >
+    :s/search_pattern/replace_pattern/cgi
+<
+
+search_pattern: can be any text, but the interesting parts are
+    - word boundary: `\<word\>`
+    - use word under cursor: CTRL-r CTRL-w
+
+4.1 Poor-person refactoring                           *mytips-refactor-rename*
+
+Use `*Ncgn` as a poor-person refactoring. What is does is highlight word under
+cursor, change it, and then go next. To apply it, use `n` to jump to next 
+occurance followed by `.`.
+
+=============================================================================
+Surround                                                    *mytips-surround*
+
+Enclosing text with different characters (e.g. (, ') can be accomplished either
+using interal commands or vim-surround plugin.
+
+Visual mode: `c(<C-r>")` (change selection, enter (, paste selection)
+Insert mode: `c{motion}(<C-r>")`
+
+=============================================================================
+
+3. Writing help files                                          *mytips-help*
+
+To learn about the different tags and styling options: `:help help-writing`
+
+Right align in help files                                *mytips-help-align*
+
+Tags must be unique. They are usually right aligned. To align right: >
+    v0  " visually select from text to be aligned right to beginning of line
+    d       " delete selected text
+    :right  " align remaining text right
+    0       " move to beginning of line
+    gv      " visually select original area
+    p       " replace selection with text
+<
 
 =======================================================================
 
@@ -59,3 +118,4 @@ Reference materials
 - Matt's Vim Help <https://github.com/technosophos/vim-myhelp>
 - Creating Vim help files <http://vim.1045645.n5.nabble.com/creating-Vim-help-files-td1188156.html>
 
+# vim:filetype=help:textwidth=78
