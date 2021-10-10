@@ -8,27 +8,27 @@
   // General
   // > defaults write -g NSTextKillRingSize -int 6
   // replace yank: command with yankAndSelect for use with the kill ring
-  "^y" = (yankAndSelect:);
+  // "^y" = (yankAndSelect:);
   // uppercase word
-  "^U" = (uppercaseWord:, moveWordForward:, moveWordBackward:);
+  // "^U" = (uppercaseWord:, moveWordForward:, moveWordBackward:);
   // lowercase word
-  "^~u" = (lowercaseWord:, moveWordForward:, moveWordBackward:);
+  // "^~u" = (lowercaseWord:, moveWordForward:, moveWordBackward:);
   // titlecase word
   "^~t" = (capitalizeWord:, moveWordForward:, moveWordBackward:);
 
   // uppercase current paragraph
-  "^~U" = (setMark:, selectParagraph:, uppercaseWord:, swapWithMark:);
+  // "^~U" = (setMark:, selectParagraph:, uppercaseWord:, swapWithMark:);
   // lowercase current paragraph
   // "^~u" = (setMark:, selectParagraph:, lowercaseWord:, swapWithMark:);
   // titlecase paragraph
-  "^~T" = (setMark:, selectParagraph:, capitalizeWord:, swapWithMark:);
+  // "^~T" = (setMark:, selectParagraph:, capitalizeWord:, swapWithMark:);
 
   // delete word before cursor
-  "^w" = (deleteWordBackward:);
+  // "^w" = (deleteWordBackward:);
   // select word
   "~w" = (selectWord:);
   // select word backward and modify selection
-  "~W" = (moveWordBackwardAndModifySelection:);
+  // "~W" = (moveWordBackwardAndModifySelection:);
   // select entire line/paragraph
   "~S" = (selectParagraph:);
   // select from beginning of paragraph to last character
@@ -36,28 +36,28 @@
   // select paragraph excluding leading/trailing whitespace (same as ^$@\UF701)
   "^~S" = (moveToEndOfParagraph:, insertText:, " ", selectWord:, moveBackward:, moveToBeginningOfParagraphAndModifySelection:, moveWordForwardAndModifySelection:, moveWordBackwardAndModifySelection:);
   // delete line/paragraph
-  "~d" = (selectParagraph:, delete:, moveToBeginningOfParagraph:);
+  // "~d" = (selectParagraph:, delete:, moveToBeginningOfParagraph:);
   // copy paragraph
-  "~y" = (setMark:, moveToBeginningOfParagraph:, moveToEndOfParagraphAndModifySelection:, copy:, swapWithMark:);
+  // "~y" = (setMark:, moveToBeginningOfParagraph:, moveToEndOfParagraphAndModifySelection:, copy:, swapWithMark:);
   // cut paragraph
-  "~x" = (moveToBeginningOfParagraph:, moveToEndOfParagraphAndModifySelection:, cut:);
+  // "~x" = (moveToBeginningOfParagraph:, moveToEndOfParagraphAndModifySelection:, cut:);
   // paste paragraph below
-  "~p" = (moveToEndOfParagraph:,moveRight:,insertNewline:,moveLeft:, paste:);
+  // "~p" = (moveToEndOfParagraph:,moveRight:,insertNewline:,moveLeft:, paste:);
   // paste paragraph above
-  "~P" = (moveToBeginningOfParagraph:, moveLeft:, paste:);
+  // "~P" = (moveToBeginningOfParagraph:, moveLeft:, paste:);
   // select to beginning of paragraph and copy
-  "^A" = (moveToBeginningOfParagraphAndModifySelection:, copy:);
+  // "^A" = (moveToBeginningOfParagraphAndModifySelection:, copy:);
   // select to end of paragraph and copy
-  "^E" = (moveToEndOfParagraphAndModifySelection:, copy:);
+  // "^E" = (moveToEndOfParagraphAndModifySelection:, copy:);
   // cut to beginning of paragraph
-  "~q" = (moveToBeginningOfParagraphAndModifySelection:, cut:);
+  // "~q" = (moveToBeginningOfParagraphAndModifySelection:, cut:);
   // cut to end of paragraph
-  "~k" = (moveToEndOfParagraphAndModifySelection:, cut:);
+  // "~k" = (moveToEndOfParagraphAndModifySelection:, cut:);
 
   // blank line after current
-  "~o" = (moveToEndOfParagraph:, insertNewline:);
+  // "~o" = (moveToEndOfParagraph:, insertNewline:);
   // blank line before current
-  "~O" = (moveToBeginningOfParagraph:, moveLeft:, insertNewline:);
+  // "~O" = (moveToBeginningOfParagraph:, moveLeft:, insertNewline:);
 
   // Move line up
   "^@\UF700" = (selectParagraph:, setMark:, deleteToMark:, moveLeft:, moveToBeginningOfParagraph:, yank:, moveLeft:, selectToMark:, moveLeft:);
