@@ -1,22 +1,22 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim: ts=2 shiftwidth=2:
-from __future__ import print_function
+
 
 import argparse
-import httplib
+import http.client
 import json
 import os
 import re
 import sys
 import socket
 import subprocess
-import StringIO
+import io
 import tempfile
 import time
-import urllib
-import urllib2
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 import warnings
 
 
@@ -25,13 +25,12 @@ DEBUG_HTTP_BODY = False
 
 RATINGS = {
   '': '-',
-  '1': u'\u2606 (bad. soo bad)',
-  '2': u'\u2606\u2606 _(meh)_',
-  '3': u'\u2605\u2605\u2605 *(good. i could recommend it)*',
-  '+3': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
-  '3+': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
-  '3++': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**',
-  '4': u'\u2605\u2605\u2605\u2605 **(excellent. i could always see it again)**'
+  '1': '☆ (bad. soo bad)', # \u2606
+  '2': '☆☆ _(meh)_',
+  '3': '★★ *(good. i could recommend it)*', # \u2605
+  '+3': '★★★★ **(excellent. i could always see it again)**',
+  '3+': '★★★★ **(excellent. i could always see it again)**',
+  '4': '★★★★ **(excellent. i could always see it again)**'
 }
 
 _API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0',
@@ -76,12 +75,12 @@ def imdbapi_data(title, year=None):
   if year:
     params['year'] = year
 
-  qs = urllib.urlencode(params)
+  qs = urllib.parse.urlencode(params)
   imdb_data = {}
 
   conn = None
   try:
-    conn = httplib.HTTPConnection("imdbapi.org")
+    conn = http.client.HTTPConnection("imdbapi.org")
     conn.request("GET", "/?" + qs)
     response = conn.getresponse()
     if response.status == 200:
@@ -143,16 +142,20 @@ def themoviedb_data(title, year=None):
   if not movie_id:
     return {}, 0
 
-  jdata = httpGet('api.themoviedb.org', "/3/movie/%s?api_key=%s" % (movie_id, themoviedb_api_key))
+  jdata = httpGet('api.themoviedb.org', f"/3/movie/{movie_id}?api_key={themoviedb_api_key}")
   if not jdata:
     return {}, 0
 
   imdb_data['year'] = jdata['release_date'][:4]
-  imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % jdata['imdb_id']
+  imdb_data['imdb_url'] = "http://www.imdb.com/title/{}".format(jdata['imdb_id'])
   imdb_data['genres'] = [t['name'] for t in jdata['genres']]
   imdb_data['plot'] = jdata['overview']
+  imdb_data['poster'] = jdata.get('poster_path', '')
+  imdb_data['tmdb'] = {'popularity': jdata.get('popularity', 0),
+                       'vote_count': jdata.get('vote_count', 0),
+                       'id': jdata['id']}
 
-  jdata = httpGet('api.themoviedb.org', "/3/movie/%s/credits?api_key=%s" % (movie_id, themoviedb_api_key))
+  jdata = httpGet('api.themoviedb.org', f"/3/movie/{movie_id}/credits?api_key={themoviedb_api_key}")
   if jdata:
     imdb_data['actors'] = [t['name'] for t in jdata['cast']]
     imdb_data['directors'] = [t['name'] for t in jdata['crew'] if t['job'].lower() == 'director']
@@ -214,7 +217,7 @@ def omdbapi_data(title, year=None):
   if match_len(title, imdb_data.get('Title', '')) == 0:
     return {}, 0
   if imdb_data and 'imdbID' in imdb_data:
-    imdb_data['imdb_url'] = "http://www.imdb.com/title/%s" % imdb_data['imdbID']
+    imdb_data['imdb_url'] = "http://www.imdb.com/title/{}".format(imdb_data['imdbID'])
 
   return imdb_data, 1
 
@@ -251,20 +254,20 @@ def httpGet(server, uri):
   """
   GET a remote URL
   """
-  print("GET %s%s" % (server, uri))
+  print("GET", server, uri)
   c = None
   try:
-    c = httplib.HTTPConnection(server)
+    c = http.client.HTTPConnection(server)
     c.request('GET', uri)
     response = c.getresponse()
     if DEBUG_HTTP_STATUS:
-      print("    response: ", response.status)
+      print("    response:", response.status)
     body = response.read()
     if response.status != 200:
       return None
     else:
       if DEBUG_HTTP_BODY:
-        print("    body: ", body)
+        print("    body:", body)
       return json.loads(body)
   except socket.error:
     return None
@@ -275,7 +278,7 @@ def httpGet(server, uri):
 
 def httpQuery(uri, **kwargs):
   params = kwargs or {}
-  return uri + '?' + urllib.urlencode(params)
+  return uri + '?' + urllib.parse.urlencode(params)
 
 
 def get(attr, default=None, *args):
@@ -352,13 +355,14 @@ def main(title, opts):
     'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
-    'poster_imdb': imdbapid.get('poster'),
+    'poster': get('poster', '', imdbapid, tmdbapid),
     'audience_rating': 'Upright Spilled',
-    'audience_score' : '0',
+    'audience_score' : '',
     'critics_rating' : 'Fresh Rotten',
-    'critics_score'  : '0',
+    'critics_score'  : '',
     'critics_consensus': '',
     'synopsis': '',
+    'tmdb': imdbapid.get('tmdb', {})
   }
   if rottend:
     data['rotten_url'] = rottend.get('links', {}).get('alternate', '')
@@ -380,12 +384,20 @@ def main(title, opts):
   # track(data, opts)
 
   # generate search links if needed
-  print("")
+  print("\n", "Links:", sep='')
   print(data['imdb_url'])
   print(data['rotten_url'])
-  print("http://www.imdb.com/find?q=%s" % urllib.quote_plus(title))
-  print("http://www.rottentomatoes.com/search/?search=%s" % urllib.quote_plus(title))
-  print("http://trakt.tv/search?query=%s" % urllib.quote_plus(title))
+  if 'tmdb' in data and 'id' in data['tmdb']:
+    tmdb_id = data['tmdb']['id']
+    print(f"https://www.themoviedb.org/movie/{tmdb_id}")
+  if 'poster' in data:
+    print("Poster:")
+    print(f"https://image.tmdb.org/t/p/w1280{data['poster']}")
+  print("Searches:")
+  quoted_title = urllib.parse.quote_plus(title)
+  print("http://www.imdb.com/find?q={}".format(quoted_title))
+  print("http://www.rottentomatoes.com/search/?search={}".format(quoted_title))
+  print("http://trakt.tv/search?query={}".format(quoted_title))
 
 
 def track(data, opts):
@@ -407,9 +419,9 @@ def track(data, opts):
 
   json_data = {'username': _API[1], 'password': _API[2],
                'movies': [{'imdb_id': imdb_id, 'title': data['title'], 'year': int(data['year'])}]}
-  req = urllib2.Request(_API[0])
+  req = urllib.request.Request(_API[0])
   req.add_header('Content-Type', 'application/json')
-  res = urllib2.urlopen(req, json.dumps(json_data))
+  res = urllib.request.urlopen(req, json.dumps(json_data))
   if res.code == 200:
     print('SUCCESS:', res.read())
   else:
@@ -423,7 +435,7 @@ def get_imdb_id(data, id):
     return None
 
   if id.startswith('http'):
-    _, _, path, _, _, _ = urlparse.urlparse(id)
+    _, _, path, _, _, _ = urllib.parse.urlparse(id)
     id = [t for t in path.split('/') if t][-1]
 
   return id
@@ -446,9 +458,9 @@ def title_to_filename(title):
 def generate_output(data, opts):
   print_to(sys.stdout, data)
   if opts.output == 'j':
-    filename = "m-%s-%s-%s.md" % (time.strftime("%Y%m%d"), data['year'], title_to_filename(data['title']))
+    filename = "m-{}-{}-{}.md".format(time.strftime("%Y%m%d"), data['year'], title_to_filename(data['title']))
     filepath = os.path.join(os.path.expanduser("~"), "Dropbox",  "Dox", "mydox", "myjrnl", "m", filename)
-    with open(filepath, "w+") as fout:
+    with open(filepath, mode='w+', encoding='utf-8') as fout:
       print_to(fout, data)
     print("print to file (path in clipboard):", filepath)
     echo_cmd = subprocess.Popen(['echo', filepath], stdout=subprocess.PIPE)
@@ -457,23 +469,34 @@ def generate_output(data, opts):
 
   if opts.output == 'd':
     print("print to DayOne")
-    tmpf = tempfile.NamedTemporaryFile()
+    tmpf = tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8')
 
+    cmd_params = ['/usr/local/bin/dayone2', '-j', 'Movies 🎥']
+    if 'year' in data or 'genre' in data:
+      cmd_params.append('-t')
+      if 'year' in data:
+        cmd_params.append("movie:%s" % data['year'])
+      if 'genre' in data:
+        for g in data['genre']:
+          cmd_params.append("movie:%s" % g.lower().replace(' ', '-'))
+      cmd_params.append('--')
+    cmd_params.append('new')
+    print(cmd_params)
     try:
       print_to(tmpf, data)
       # required for v2 and -j flag doesn't really work
       cat_cmd = subprocess.Popen(['cat', tmpf.name], stdout=subprocess.PIPE)
       if os.path.isfile('/usr/local/bin/dayone2'):
-        subprocess.check_call(['/usr/local/bin/dayone2', '-j', 'Movies 🎥'  , 'new'], stdin=cat_cmd.stdout)
+        subprocess.check_call(cmd_params, stdin=cat_cmd.stdout)
       else:
-        journal_path_flag = "--journal-file=%s" % os.path.expanduser(DAYONE_JOURNAL)
+        journal_path_flag = "--journal-file={}".format(os.path.expanduser(DAYONE_JOURNAL))
         subprocess.check_call(['/usr/local/bin/dayone', journal_path_flag  , 'new', '-'], stdin=cat_cmd.stdout)
       cat_cmd.wait()
     finally:
       tmpf.close()
   if opts.output == 'b':
     print("Print to Bear")
-    output = StringIO.StringIO()
+    output = io.StringIO()
     try:
       print_to(output, data, encode=False)
       bear_uri = httpQuery('bear://x-callback-url/create',
@@ -483,95 +506,68 @@ def generate_output(data, opts):
       output.close()
 
 
-def print_to(stream, data, encode=True):
+def print_to(stream, data):
   """ Write data to the stream. """
-  if data['imdb_url']:
-    header =  u"# 🎥 Movie: [%s (%s)](%s) " % (data['title'], data['year'], data['imdb_url'])
+  if 'imdb_url' in data:
+    header = f"# 🎥 Movie: [{data['title']} ({data['year']})]({data['imdb_url']})"
   else:
-    header = u"# 🎥 Movie: %s (%s) " % (data['title'], data['year'])
-  if encode:
-    stream.write(header.encode('utf8'))
-  else:
-    stream.write(header)
+    header = f"# 🎥 Movie: {data['title']} ({data['year']})"
+
+  stream.write(header)
   stream.write("\n\n")
-  if encode:
-    stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')].encode('utf8'))
-  else:
-    stream.write("My rating: %s   \n" % RATINGS[data.get('my_rating', '')])
-  stream.write("IMDB     : %s(10)   \n" %  data['imdb_rating'])
-  stream.write("Metascore:    \n")
-  stream.write("Tomato   : %s %s   \n" % (data['audience_score'], data['audience_rating']))
-  stream.write("Critics  : %s %s   \n" % (data['critics_score'], data['critics_rating']))
+  stream.write("My rating: {}   \n".format(RATINGS[data.get('my_rating', '')]))
 
-  stream.write("\n")
-  if data['imdb_url']:
-    stream.write("IMDb link  : <%s>   \n" % data['imdb_url'])
-  if data['rotten_url']:
+  stream.write(f"Year     : {data['year']}   \n")
+  stream.write( "Genre    : {}   \n\n".format(', '.join(data['genre'])))
+
+  if 'imdb_url' in data:
+    stream.write(f"IMDb link: <{data['imdb_url']}>   \n")
+  stream.write(f"IMDB     : {data['imdb_rating']}(10)   \n")
+  stream.write( "Metascore:    \n\n")
+
+  if 'rotten_url' in data:
     if data['rotten_url'].startswith('http'):
-      stream.write("Tomato link: <%s>   \n" % data['rotten_url'])
+      stream.write(f"Tomato   : <{data['rotten_url']}>   \n")
     else:
-      stream.write("Tomato link: <http:%s>   \n" % data['rotten_url'])
-  stream.write("Year     : %s   \n" % data['year'])
-  stream.write("Genre    : %s   \n" % ', '.join(data['genre']))
-  stream.write("Tagline  : \n")
+      stream.write(f"Tomato   : <http:{data['rotten_url']}>   \n")
+  stream.write(f"Audience : {data['audience_score']} {data['audience_rating']}   \n")
+  stream.write(f"Critics  : {data['critics_score']} {data['critics_rating']}   \n")
   stream.write("\n")
 
-
-  # Critics
-  if data['critics_consensus']:
-    if encode:
-      stream.write(u"Critics consensus:\n\n> %s   " % data['critics_consensus'].encode('utf8'))
-    else:
-      stream.write(u"Critics consensus:\n\n> %s   " % data['critics_consensus'])
-    stream.write("\n")
+  if 'tmdb' in data:
+    stream.write(f"TMDB link: <https://www.themoviedb.org/movie/{data['tmdb']['id']}>   \n\n")
   stream.write("* * * * * * * * * * *")
   stream.write("\n\n")
 
+
   # Plot
-  stream.write("## Plot")
+  stream.write("## Plot\n\n")
+  stream.write(data['plot'])
   stream.write("\n\n")
-  if encode:
-    stream.write(data['plot'].encode('utf8'))
-  else:
-    stream.write(data['plot'])
+  stream.write(data['synopsis'])
   stream.write("\n\n")
-  if encode:
-    stream.write(data['synopsis'].encode('utf8'))
-  else:
-    stream.write(data['synopsis'])
-  stream.write("\n\n")
+
+
+  # Commentary/Critics
+  stream.write("## Commentary\n\n")
+  stream.write("{_Me_} \n\n")
+  stream.write(f"> {data['critics_consensus']}\n")
 
   # Director(s) & Actors
   stream.write("## Cast\n\n")
-  if encode:
-    stream.write("Directors: %s\n\n" % ', '.join(data['directors']).encode('utf8'))
-  else:
-    stream.write("Directors: %s\n\n" % ', '.join(data['directors']))
+  stream.write("Directors: {}\n\n".format(', '.join(data['directors'])))
   stream.write("\n")
-  # stream.write("Actors :")
-  # stream.write("\n\n")
   for d in data['actors']:
-    if encode:
-      stream.write("*   " + d.encode('utf8') + "\n")
-    else:
-      stream.write("*   " + d + "\n")
+    stream.write(f"*   {d}\n")
   stream.write("\n")
   stream.write("* * * * * * * * * *")
   stream.write("\n\n")
 
 
-  # Posters
-  # if data['poster_imdb']:
-  #   stream.write("![Poster imdb %s](%s)\n" % (data['title'], data['poster_imdb']))
-  # if data['poster_rotten']:
-  #   stream.write("![Poster %s](%s)\n" % (data['title'], data['poster_rotten']))
-  # stream.write("\n")
-
-
   # Tags
-  tags = "t#movie:%s" % data['year']
-  for g in data['genre']:
-    tags += " t#movie:%s" % g.lower().replace(' ', '-')
+  tags = "t#movie:{}".format(data['year'])
+  for g in [t.lower().replace(' ', '-') for t in data['genre']]:
+    tags += " t#movie:{}".format(g)
   tags += " t#movie"
   stream.write(tags)
   stream.write("\n")
@@ -583,19 +579,13 @@ def print_to(stream, data, encode=True):
 if __name__ == '__main__':
   # print("Args: ", sys.argv[1:])
   parser = argparse.ArgumentParser(description='Movie details')
-  # parser.add_argument('--dayone', action='store_true', help='Save entry in DayOne')
-  # parser.add_argument('--bear', action='store_true', help='Save entry in Bear')
-  # parser.add_argument('--track', action='store_true', help='Save entry in trakt.tv')
-  # parser.add_argument('--imdb', action='store', help='IMDB movie id or url')
-  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'], default='j')
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'])
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
 
   opts = parser.parse_args()
-  # opts.dayone = True    # enable DayOne by default
-  # opts.bear = False      # enable Bear by default
-  title = u' '.join(opts.title)
+  title = ' '.join(opts.title)
 
   main(title, opts)
 

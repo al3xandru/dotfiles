@@ -1,0 +1,25 @@
+Animoji/
+App Store/
+BetterTouchTool/Logs/
+CallHistoryDB/
+CallHistoryTransactions/
+CEF/
+CloudDocs/
+CrashReporter/
+Dash/Cheat Sheets/
+Dash/DocSets/
+Dash/Java DocSets/
+Dash/Versioned DocSets/
+DiskImages/
+Dock/
+Dropbox/
+FileProvider/
+Firefox/Crash Reports/
+icdd/
+iCloud/
+JetBrains/IntelliJ*
+JetBrains/Toolbox/
+Knowledge/
+Oracle/Oracle Content/
+Oracle/Oracle Documents/
+Slack/

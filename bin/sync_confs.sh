@@ -1,58 +1,73 @@
-#!/bin/bash
-declare -a CONF_FILES
-CONF_FILES=("${HOME}/.MacOSX-renamed/environment.donotuse"
-    "${HOME}/Library/Application Support/Choosy/behaviours.plist"
-    "${HOME}/Library/Application Support/Karabiner/private.xml"
-    "${HOME}/Library/Application Support/KeyRemap4MacBook/private.xml"
-    "${HOME}/Library/Application Support/LaunchBar/Configuration.plist"
-    "${HOME}/Library/Application Support/LaunchBar/CustomShortcuts.plist"
-    "${HOME}/Library/Application Support/BetterTouchTool/bttdata2"
-    "${HOME}/Library/KeyBindings/DefaultKeyBinding.dict"
-    "${HOME}/Library/Preferences/com.apple.Safari.plist"
-    "${HOME}/Library/Colors/SkimNotes.clr"
-    "${HOME}/Library/Colors/Solarized.clr"
-)
+#!/usr/bin/env bash
+
+function syncFiles() {
+    echo ""
+}
+
+function syncDirs() {
+    syncLibraryApplicationSupport
+    syncLibraryPreferences
+    syncLibraryScripts
+    syncLibraryServices
+}
+
+function syncLibraryApplicationSupport() {
+    SRC_DIR="$HOME/Library/Application Support/"
+    TO_DIR="$TARGET_DIR/Application Support/$MACHINE_NAME"
+
+    printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
+
+    mkdir -p "$TO_DIR"
+
+    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackup-* --exclude-from="$HOME/bin/sync_confs_rsync_exclude_lib_as.txt" "$SRC_DIR" "$TO_DIR"
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
+}
+
+function syncLibraryPreferences() {
+    SRC_DIR="$HOME/Library/Preferences/"
+    TO_DIR="$TARGET_DIR/Preferences/$MACHINE_NAME"
+
+    printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
+
+    mkdir -p "$TO_DIR"
+
+    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackup-* --exclude=com.dropbox.* --exclude=ContextStoreAgent.plist --exclude=knowledge-agent.plist --exclude=loginwindow.plist --exclude=mbuseragent.plist --exclude=MobileMeAccounts.plist --exclude=siriknowledged.plist "$SRC_DIR" "$TO_DIR"
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
+}
+
+function syncLibraryScripts() {
+    SRC_DIR="$HOME/Library/Scripts/"
+    TO_DIR="$TARGET_DIR/Scripts/$MACHINE_NAME"
+
+    printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
+
+    mkdir -p "$TO_DIR"
+
+    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=zbackup-* "$SRC_DIR" "$TO_DIR"
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
+}
+
+function syncLibraryServices() {
+    SRC_DIR="$HOME/Library/Services/"
+    TO_DIR="$TARGET_DIR/Services/$MACHINE_NAME"
+
+    printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
+
+    mkdir -p "$TO_DIR"
+
+    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=zbackup-* "$SRC_DIR" "$TO_DIR"
+    echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
+}
+
 
 if [ -z "$TARGET_DIR" ]; then
-    TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/confs/appsettings"
+    TARGET_DIR="${HOME}/Dropbox/ApplicationSupport/dirs/Library"
 fi
 MACHINE_NAME=`hostname -s`
+if [ ! -d "$TARGET_DIR" ]; then
+    printf "ERROR: Target directory does not exist $TARGET_DIR\n"
+    exit 1
+fi
 
-echo "Synching config files for machine: ${MACHINE_NAME}"
-echo "into: ${TARGET_DIR}"
-echo ""
-
-for fi in "${CONF_FILES[@]}"
-    do
-        must_copy="false"
-        fname=`basename "$fi"`
-        fdname=`dirname "$fi"`
-        dname=`basename "$fdname"`
-        tfile="${TARGET_DIR}"/"${MACHINE_NAME}-${dname}-${fname}"
-        echo "Processing: '$fi'"
-        echo "Target    : '$tfile'"
-        if [ -e "$tfile" ]; then
-            echo "Target file exists"
-            if [ "$fi" -nt "$tfile" ]; then
-                must_copy="true"
-                echo "Target file is old"
-            else
-                if [ "$fi" -ot "$tfile" ]; then
-                    echo "Target file is newer"
-                    if [ -e "/usr/local/bin/growlnotify" ]; then
-                        /usr/local/bin/growlnotify -n "Conf Sync" -s -m "Target file is newer ${tfile}"
-                    else
-                        echo "`date \"+%Y-%m-%d %H:%M:%S\"` target file is newer ${tfile}" >> ~/Library/Logs/com.mypopescu.confsync.log
-                    fi
-                fi
-            fi
-        else
-            echo "Target file does not exist"
-            must_copy="true"
-        fi
-        if [ "${must_copy}" = "true" ]; then
-            echo "Copying..."
-            cp -vfp "${fi}" "${tfile}"
-        fi
-        echo ""
-    done
+printf "Synching config files for machine: ${MACHINE_NAME} to ${TARGET_DIR}\n\n"
+syncDirs

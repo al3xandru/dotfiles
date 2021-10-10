@@ -1,7 +1,7 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim: ts=4 shiftwidth=4:
-from __future__ import print_function
+
 
 import argparse
 import codecs
@@ -9,7 +9,7 @@ import os
 import pipes
 import subprocess
 # import sys
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from xml.etree import ElementTree as ET
 
@@ -17,7 +17,7 @@ from xml.etree import ElementTree as ET
 DEBUG = True if os.getenv('DEBUG_SCRIPT', False) == 'True' else False
 FILE_PREFIX = 'qq-'
 FILE_EXT = ('.md', '.markdown')
-SAVE_DIR = os.path.expanduser('~/Dropbox/Dox/mydox/myjrnl')
+SAVE_DIR = os.path.expanduser('~/omuninn/qq/')
 SEARCH_DIRS = (SAVE_DIR,)
 
 
@@ -33,14 +33,14 @@ def add(args):
     new_file = os.path.join(SAVE_DIR, "%s.md" % ' '.join(args))
     if os.path.exists(new_file):
         if DEBUG:
-            print("WARN: A file for qq already exists '%s'" % new_file)
+            print(f"WARN: A file for qq already exists '{new_file}'")
     else:
         with open(new_file, 'a+') as fout:
             fout.flush()
     subprocess.call(['open', new_file])
 
 
-_NO_RESULTS = u"""
+_NO_RESULTS = """
 <?xml version="1.0"?>
 <items>
   <item uid="noresults" arg="noresults" valid="yes">
@@ -67,8 +67,10 @@ def search(options):
         print("[ERROR] Unknow mode:", options.mode)
 
     if DEBUG:
-        print("[DEBUG]: %s" % cmd)
-    results = subprocess.check_output(cmd)
+        print(f"[DEBUG]: {cmd}")
+    results = subprocess.check_output(cmd, text=True)
+    if DEBUG:
+        print(f"[DEBUG]: {results}")
 
     return results
 
@@ -76,7 +78,7 @@ def search(options):
 def create_literal_query(options):
     query = []
     if options.prefix:
-        query.append("kMDItemFSName=%s*" % options.prefix)
+        query.append(f"kMDItemFSName={options.prefix}*")
 
     attr = ""
     if options.text:
@@ -86,7 +88,7 @@ def create_literal_query(options):
 
     for t in options.query:
         query.append('&&')
-        query.append("%s='*%s*'c" % (attr, t))
+        query.append(f"{attr}='*{t}*'c")
 
     query.append('&&')
     if len(FILE_EXT) > 1:
@@ -104,7 +106,7 @@ def create_literal_query(options):
 def create_interpret_query(options):
     query = []
     if options.prefix:
-        query.append("name:%s" % options.prefix)
+        query.append(f"name:{options.prefix}")
         query.append('AND')
     if len(FILE_EXT) > 1:
         query.append("(name:%s" % FILE_EXT[0])
@@ -117,7 +119,7 @@ def create_interpret_query(options):
     if options.text:
         query.extend(options.query)
     else:
-        query.extend(["AND name:%s" % t for t in options.query])
+        query.extend([f"AND name:{t}" for t in options.query])
 
     return ' '.join(query)
 
@@ -141,7 +143,7 @@ def output_as_text(results, query):
         bname = os.path.basename(line)
         bname = bname[:bname.rindex('.')]
         question = bname[len(FILE_PREFIX):].replace('_', ' ').replace('-', ' ').title()
-        answer = u""
+        answer = ""
         with codecs.open(line, 'r', 'utf8') as fin:
             count_lines = 0
             for li in fin:
@@ -151,7 +153,8 @@ def output_as_text(results, query):
                 if count_lines >= max_lines:
                     answer = answer[:-1] + ' [...]'
                     break
-        print("%d. [\"%s\"]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
+        # print("%d. [\"%s\"]\nQ: %s?\nA: %s\n" % (i, line, question, answer))
+        print(f"Q{i}) {question}\n{answer}\n[\"{line}\"]\n")
         i += 1
     if DEBUG:
         print("[DEBUG] results:", (i-1))
@@ -161,10 +164,10 @@ def output_as_launchbar_xml(results, query):
     if not results:
         root = ET.Element('items')
         item = ET.SubElement(root, 'item')
-        ET.SubElement(item, 'title').text = u'Tough question...'
-        ET.SubElement(item, 'subtitle').text = u'Create an answer'
-        ET.SubElement(item, 'icon').text = u'qq.png'
-        ET.SubElement(item, 'url').text = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
+        ET.SubElement(item, 'title').text = 'Tough question...'
+        ET.SubElement(item, 'subtitle').text = 'Create an answer'
+        ET.SubElement(item, 'icon').text = 'qq.png'
+        ET.SubElement(item, 'url').text = "nvalt://find/qq-%s" % urllib.parse.quote(' '.join(query))
         print(ET.tostring(root).encode('utf8'))
         return
 
@@ -177,9 +180,9 @@ def output_as_launchbar_xml(results, query):
 
         item = ET.SubElement(root, 'item')
         ET.SubElement(item, 'title').text = question.title() + '?'
-        ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.quote(bname)
+        ET.SubElement(item, 'url').text = "nvalt://find/%s" % urllib.parse.quote(bname)
         # ET.SubElement(item, 'path').text = line
-        ET.SubElement(item, 'icon').text = u'qq.png'
+        ET.SubElement(item, 'icon').text = 'qq.png'
         with codecs.open(line, 'r', 'utf8') as fin:
             for li in fin:
                 if li.strip():
@@ -192,13 +195,13 @@ def output_as_launchbar_xml(results, query):
 
 def output_as_alfred_xml(results, query):
     if not results:
-        url = "nvalt://find/qq-%s" % urllib.quote(' '.join(query))
+        url = "nvalt://find/qq-%s" % urllib.parse.quote(' '.join(query))
         root = ET.Element('items')
         item = ET.SubElement(root, 'item',
                              {'uid': 'notfound', 'arg': url, 'valid': 'yes'})
-        ET.SubElement(item, 'title').text = u'Tough question...'
-        ET.SubElement(item, 'subtitle').text = u'Create an answer'
-        ET.SubElement(item, 'icon').text = u'qq.png'
+        ET.SubElement(item, 'title').text = 'Tough question...'
+        ET.SubElement(item, 'subtitle').text = 'Create an answer'
+        ET.SubElement(item, 'icon').text = 'qq.png'
         print(ET.tostring(root).encode('utf8'))
         return
 
@@ -210,13 +213,13 @@ def output_as_alfred_xml(results, query):
         bname = os.path.basename(line)
         bname = bname[:bname.rindex('.')]
         question = bname[len(FILE_PREFIX):].replace('_', ' ').replace('-', ' ')
-        url = "nvalt://find/%s" % urllib.quote(bname)
+        url = "nvalt://find/%s" % urllib.parse.quote(bname)
         item = ET.SubElement(root, 'item',
                              {'uid': question.replace(' ', ''), 'arg': url, 'valid': 'yes'})
         ET.SubElement(item, 'title').text = question.title()+ '?'
         lineCount = 0
         hasSubtitle = False
-        subtitle = u''
+        subtitle = ''
         with codecs.open(line, 'r', 'utf8') as fin:
             for li in fin:
                 if li.strip():
@@ -225,8 +228,8 @@ def output_as_alfred_xml(results, query):
                         subtitle = li.strip('# \n')
                         hasSubtitle = True
 
-        ET.SubElement(item, 'subtitle').text = "%s [...] (%d lines)" % (subtitle, lineCount)
-        ET.SubElement(item, 'icon').text = u'qq.png'
+        ET.SubElement(item, 'subtitle').text = f"{subtitle} [...] ({lineCount} lines)"
+        ET.SubElement(item, 'icon').text = 'qq.png'
         i += 1
     print(ET.tostring(root).encode('utf8'))
 
@@ -236,7 +239,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--add', action='store_true')
     parser.add_argument('-o', '--output', action='store', choices=['launchbar', 'alfred', 'text'], default='text')
     parser.add_argument('--text', action='store_true')
-    parser.add_argument('--prefix', action='store', default='qq-')
+    parser.add_argument('--prefix', action='store', default='qq')
     parser.add_argument('--mode', action='store', choices=['interpret', 'literal'], default='interpret')
     parser.add_argument('query', nargs='*')
     options = parser.parse_args()
