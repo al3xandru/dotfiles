@@ -29,6 +29,31 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+function gitquick() {
+    if [ -z "$1" ]; then
+        echo "Usage `gitquick REPO_URI`"
+        return 1
+    fi
+    CHECKOUT_DIR=$(mktemp -d)
+    git clone --depth 1 "$1" "$CHECKOUT_DIR"
+    e "$CHECKOUT_DIR"
+}
+
+function whostopseject() {
+    sudo lsof | grep "$1"
+}
+
+function switch_java() {
+    if [ -z "$1" ]; then
+        echo "Usage `switch_java version`"
+        return 1
+    fi
+    echo "Switching to JAVA: $1"
+    export JAVA_HOME=$(/usr/libexec/java_home -v $1)
+    echo "JAVA_HOME: $JAVA_HOME"
+    java -version
+}
+
 # iTerm2 tab title
 function tabtitle() {
     local t=$1
@@ -48,6 +73,18 @@ function backup() {
         cp -v "$1"{,.`date +%Y%m%d%H%M`.orig}
     fi
 }
+
+# function cpdir() {
+#     if [ ! -d "$1" ]; then
+#         echo "Source must be a directory (\"$1\" is not)"
+#         return
+#     fi
+#     if [ ! -d "$2" ]; then
+#         echo "Target must be a directory and \"$2\" is not"
+#         return
+#     fi
+#     cp -R "$1" "$2"
+# }
 
 # Dropbox functions
 function dropbox_conflicts() {
@@ -177,7 +214,8 @@ function codepoint() {
 
 # Find an application CFBundleIndentifier
 function appid() {
-    grep 'CFBundleIdentifier' -A1 "$1Contents/Info.plist" | sed s/string//g | sed s/key//g | sed s/[\<\>\/]//g
+    # grep 'CFBundleIdentifier' -A1 "$1Contents/Info.plist" | sed s/string//g | sed s/key//g | sed s/[\<\>\/]//g
+    osascript -e "id of app \"$1\""
 }
 
 # Switch DNS
@@ -634,6 +672,7 @@ function extract() {
             *.tar) tar xvf "$1";;
             *.tbz2) tar xvjf "$1";;
             *.tgz) tar xvzf "$1";;
+            *.txz) tar xvzf "$1";;
             *.cbz) unzip "$1";;
             *.zip) unzip "$1";;
             *.Z) uncompress "$1";;
@@ -728,7 +767,7 @@ function extract() {
 # press [enter] to kill selected processes and go back to the process list.
 # or press [escape] to go back to the process list. Press [escape] twice to exit completely.
 function kp() {
-    local pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process] - use tab to select multiple'" | awk '{print $2}')
+    local pid=$(ps -ef | sed 1d | eval "fzf -m --header='[kill:process] - use tab to select multiple'" | awk '{print $2}')
 
     if [ "x$pid" != "x" ]
     then
@@ -760,7 +799,11 @@ usage
 function shush() {
     if [ -z "$1" ]; then
         echo "shush [cpu | dropbox | process_name] cpu_limit"
-        return
+        return 1
+    fi
+    if [ -z "$(which cpulimit)" ]; then
+        echo "shush required cpulimit is not present. abording"
+        return 1
     fi
     if [ "$1" = "cpu" ]; then
         savecpu
@@ -778,4 +821,36 @@ function shush() {
     else
         printf "cpulimit already running for $1 with $PID\n"
     fi
+}
+
+function scan() {
+    if  ! command -v tesseract &> /dev/null ; then
+        echo "tesseract not installed (brew install tesseract)"
+        return 1
+    fi
+    if [ -z "$1" ]; then
+        echo "Usage: scan [-d] file"
+        return 1
+    fi
+    # echo "Opt: $1"
+    if [ "$1" = "-d" ]; then
+        # echo "Branch -d"
+        if [ ! -f "$2" ]; then
+            echo "File $2 is not readable. Usage: scan -d file"
+            return 1
+        fi
+        tesseract "$2" stdout | tr -d \\f | pbcopy
+        r=$?
+        rm -vf "$2"
+        echo "scan result in clipboard ($r)"
+    else
+        if [ ! -f "$1" ]; then
+            echo "File $1 is not readable. Usage: scan file"
+            return 1
+        fi
+        tesseract "$1" stdout | tr -d \\f | pbcopy
+        r=$?
+        echo "scan result in clipboard ($r)"
+    fi
+    return $r
 }

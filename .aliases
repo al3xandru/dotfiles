@@ -25,6 +25,7 @@ alias ....="cd ../../.."
 alias grep='grep --color'
 alias unrar='unrar x'
 alias ziplist='unzip -l'
+alias dict='cat /usr/share/dict/words | fzf --height=1 --preview=""'
 
 # editors: vim, nvim, mvim, vimr
 # alias v="nvim"
@@ -64,6 +65,8 @@ alias ctagsrbe='ctagsr -f .tags `bundle show --paths`'
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+# JSON format
+alias jsonfmt='python -m json.tool'
 
 # Merge PDF files
 # Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
@@ -71,7 +74,8 @@ alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Re
 
 # One of @janmoesen’s ProTip™s
 for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
-    alias "$method"="/usr/bin/curl -i -X '$method'"
+    alias "$method"="/usr/bin/curl -X '$method'"
+    alias "${method}+"="/usr/bin/curl -i -X '$method'"
 done
 unset -v method
 

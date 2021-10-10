@@ -18,10 +18,15 @@ export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
 
 # Enable .dotfiles in fzf
 export FZF_DEFAULT_COMMAND="find . -path '*/\.*' -type d -prune -o -type f -print -o -type l -print 2> /dev/null | sed s/^..//"
-if [ -x /usr/local/bin/rg ]; then
-    export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --line-number --glob "!.git/*"'
+if [ -x /usr/local/bin/rg -o /opt/homebrew/bin/rg ]; then
+    if [ -x /usr/local/bin/bat ]; then
+        export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --line-number --glob "!.git/*"'
+        export FZF_DEFAULT_OPTS='--preview="bat {}"'
+    else
+        export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --line-number --glob "!.git/*"'
+        export FZF_DEFAULT_OPTS='--preview="cat {}"'
+    fi
 fi
-export FZF_PREV="--preview=\"cat {}\""
 
 
 #
@@ -196,3 +201,6 @@ if [ -z "$CLOJURE_HOME" ]; then
     fi
 fi
 unset JAVA_TOOLS_DIR
+if [ -d "$HOME/.pyenv" ]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+fi

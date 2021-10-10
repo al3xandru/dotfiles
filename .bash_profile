@@ -36,7 +36,9 @@ shopt -s nullglob
 for file in /usr/local/etc/bash_completion.d/*; do
     [ -f "$file" ] && source "$file"
 done
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 shopt -u nullglob
 
-# [ -r "$HOME/.asdf/asdf.sh" ] && [ -f "$HOME/.asdf/asdf.sh" ] && source "$HOME/.asdf/asdf.sh"
-# [ -f "$HOME/.asdf/completions/asdf.bash" ] && source "$HOME/.asdf/completions/asdf.bash"
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
