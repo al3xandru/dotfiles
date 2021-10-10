@@ -2,7 +2,7 @@
 
 -- settings
 local DEBUG = true
-local DEFAULT_WND_GAP = 3
+local DEFAULT_WND_GAP = 5
 --
 -- Utility functions
 -- 
