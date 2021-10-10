@@ -1,0 +1,442 @@
+
+;; <https://github.com/yqrashawn/GokuRakuJoudo>
+;; "Putting your Keyboard on Steroids with Karabiner Elements | swyx.io" <https://www.swyx.io/karabiner_lindquist/>
+;; "Customize Karabiner With Goku | John Lindquist" <https://johnlindquist.com/customize-karabiner-with-goku/>
+{:default true
+
+ :alone 500 ;;   basic.to_if_alone_timeout_milliseconds
+ :delay 200 ;;   basic.to_delayed_action_delay_milliseconds
+ :held 500  ;;   basic.to_if_held_down_threshold_milliseconds  
+ :sim 393   ;;   basic.simultaneous_threshold_milliseconds 
+ :simlayer-threshold 400
+
+ :tos {;
+       :return {:key :return_or_enter}
+       :tilde {:key :grave_accent_and_tilde}
+       :emoji_picker {:key :spacebar :modi [:command :control]} ;!CTspacebar
+       :screenshot_clipboard {:key :4 :modi [:command :control :shift]} ;!CTS4
+       }
+
+ :applications {
+                :brave ["^com\\.brave\\.Browser$"]
+                :dash ["^com\\.kapeli\\.dashdoc$"]
+                :dayone ["^com\\.bloombuilt\\.dayone-mac$"]
+                :finder ["^com\\.apple\\.finder$"]
+                :firefox ["^org.mozilla.firefox$"]
+                :jetbrains ["^com\\.jetbrains\\.intellij$"]
+                :macvim ["^org\\.vim\\.MacVim$"]
+                :omnifocus ["^com\\.omnigroup\\.OmniFocus3$"]
+                :safari ["^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$"]
+                :slack ["^com\\.tinyspeck\\.slackmacgap$"]
+                :terminal ["^com\\.apple\\.Terminal$"]
+                :yacreader ["^com\\.yacreader\\.YACReader$"]
+                :browsers ["^com\\.brave\\.Browser$" "^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$" "^org\\.mozilla\\.firefox$"]
+                :ctrl_no_hyper ["^org\\.vim\\.MacVim$" "^com\\.apple\\.Terminal$"]
+                }
+ :simlayers {
+             :fn-wasd-mode {:key :fn}
+             :f-navigation-mode {:key :f}
+             :n-navigation-mode {:key :n}
+             :s-shift-mode {:key :s}
+             :w-win-mode {:key :w}
+             :z-clip-mode {:key :z}
+             :d-cmd-mode {:key :d}
+             ; :o-open-mode {:key :o}
+             }
+
+ :templates {
+             :launch "osascript -e \"display notification \\\"Launching %1$s\\\" with title \\\"Karabiner\\\"\" -e \"tell application \\\"%1$s\\\" to activate\" "
+             }
+  ;; to_if_alone                                    | :alone
+  ;; to_if_held_down                                | :held
+  ;; to_after_key_up                                | :afterup
+  ;; from: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L11>
+  ;; conditions: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L157>
+  ;; options: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L170>
+ :main [
+        {:des "CAPS to hyper/left_control or escape if pressed alone"
+         :rules[
+                ; [:caps_lock :left_control [:ctrl_no_hyper] {:alone :escape}]
+                ; [:caps_lock :!CTOleft_shift [:!ctrl_no_hyper] {:alone :escape}]
+                ; [:caps_lock :!CTOleft_shift nil {:alone :escape}]
+                [:caps_lock :left_control nil {:alone :escape}]
+                [:escape :!CTOleft_shift nil {:alone :escape}]
+                ]}
+
+        ; {:des "Double Shift for Keyboard Maestro Menu"
+        ;  :rules [
+        ;          [:right_shift [:!O1 ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+        ;          [:right_shift [["dbl-shift-mode" 1] :right_shift] ["dbl-shift-mode" 0]
+        ;           {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+        ;         ]}
+
+        {:des "Post right_control when return_or_enter is hold"
+         :rules [
+                [:return_or_enter :right_control nil {:alone :return_or_enter}]
+                ]}
+
+        {:des "Fn + WASD navigation"
+         :rules [:fn-wasd-mode
+                 [:w :up_arrow]
+                 [:a :left_arrow]
+                 [:s :down_arrow]
+                 [:d :right_arrow]
+                 ]}
+
+        {:des "Single hand nav: n + [hjkl] [gb,.] [we] for navigation"
+         :rules [:n-navigation-mode
+                 [:##h :left_arrow]
+                 [:##j :down_arrow]
+                 [:##k :up_arrow]
+                 [:##l :right_arrow]
+
+                 [:##b :!Oleft_arrow]
+                 [:##e :!Oright_arrow]
+
+                 ;; beginning of line: ,/6 (from vim ^)/9 (from open paren)
+                 [:##comma :!Cleft_arrow]
+                 [:##6 :!Cleft_arrow]
+                 [:##9 :!Cleft_arrow]
+                 ;; end of line ./4 (from vim $)/0 (from close paren)
+                 [:##period :!Cright_arrow]
+                 [:##4 :!Cright_arrow]
+                 [:##0 :!Cright_arrow]
+
+                 ;; these do not move the cursor
+                 ; [:##g :home]
+                 ; [:##z :end]
+                 [:##g :!Cup_arrow]
+                 [:##z :!Cdown_arrow]
+                 ;; back/forward
+                 [:##open_bracket :!Copen_bracket]
+                 [:##close_bracket :!Cclose_bracket]
+                 ]}
+
+        {:des "Home row nav: f + [hjkl] [gb,.] [we] for navigation"
+         :rules [:f-navigation-mode
+                 [:##h :left_arrow]
+                 [:##j :down_arrow]
+                 [:##k :up_arrow]
+                 [:##l :right_arrow]
+
+                 [:##b :!Oleft_arrow]
+                 [:##e :!Oright_arrow]
+
+                 ;; beginning of line: ,/6 (from vim ^)/9 (from open paren)
+                 [:##comma :!Cleft_arrow]
+                 [:##6 :!Cleft_arrow] ;; ^ is beginning of line
+                 [:##9 :!Cleft_arrow] ;; think open parenthisis: beginning of sentence
+                 ;; end of line ./4 (from vim $)/0 (from close paren)
+                 [:##period :!Cright_arrow]
+                 [:##4 :!Cright_arrow]
+                 [:##0 :!Cright_arrow]
+
+                 ;; these do not move the cursor
+                 ; [:##g :home]
+                 ; [:##z :end]
+                 [:##g :!Cup_arrow]
+                 [:##z :!Cdown_arrow]
+
+                 ;; back/forward
+                 [:##open_bracket :!Copen_bracket]
+                 [:##close_bracket :!Cclose_bracket]
+                 ]}
+
+        {:des "homerow shift (s + [gb04][hjkl]"
+         :rules [:s-shift-mode
+                 [:##g :!Shome]
+                 [:##z :!Send]
+
+                 [:##comma  :!CSleft_arrow]
+                 [:##6      :!CSleft_arrow]
+                 [:##9      :!CSleft_arrow]
+                 [:##period :!CSright_arrow]
+                 [:##4      :!CSright_arrow]
+                 [:##0      :!CSright_arrow]
+
+                 [:##h :!Sleft_arrow]
+                 [:##j :!Sdown_arrow]
+                 [:##k :!Sup_arrow]
+                 [:##l :!Sright_arrow]
+
+                 [:##b :!SOleft_arrow]
+                 [:##e :!SOright_arrow]
+                 ]}
+
+        {:des "window management (requires Hammerspoon setup)"
+         :rules [:w-win-mode
+                  ;; asqd send left/down/up/right
+                  [:##a :!COleft_arrow]
+                  [:##s :!COdown_arrow]
+                  [:##q :!COup_arrow]
+                  [:##d :!COright_arrow]
+                  ;; hjkl send left/down/up/right
+                  [:##h :!COleft_arrow]
+                  [:##j :!COdown_arrow]
+                  [:##k :!COup_arrow]
+                  [:##l :!COright_arrow]
+                  ;; center
+                  [:##period :!COperiod]
+                  [:##c :!COperiod]
+                  ;; move down/up/left/right
+                  [:##hyphen :!CSOdown_arrow]
+                  [:##equal_sign :!CSOup_arrow]
+                  [:##open_bracket :!CSOleft_arrow]
+                  [:##close_bracket :!CSOright_arrow]
+                  ;; expand vertically/horizontally
+                  [:##v :!COequal_sign]
+                  ; [:##  :!COhyphen]
+                  [:##0 :!CO0]
+                  [:##9 :!CO9]  ;; move to monitor 
+                  [:##g :!COTg] ;; grid
+                  [:##z :!CTOz] ;; undo
+                  [:##u :!CTOz] ;; u from Vim undo
+
+                  ; [:##tab :!Ctab]
+                  ; [:##grave_accent_and_tilde :!Cgrave_accent_and_tilde]
+
+                  ; [:##close_bracket :!Tup_arrow] ;; Mission control
+                  [:##m :!Tup_arrow] ;; Mission control
+                  [:##a  :!Tdown_arrow] ;; Application control
+                  ]}
+
+        ; {:des "Clipboard mode (z+[xcvfb])"
+        ;  :rules [:z-clip-mode
+        ;          [:x :!Cx]
+        ;          [:c :!Cc]
+        ;          [:d :!COc] ;; macOS special copy Cmd+Alt+C
+        ;          [:v :!Cv]
+        ;          [:b :!COv] ;; macOS special paste Cmd+Alt+V
+        ;          [:f :!CSv] ;; Copied paste as text
+        ;          [:t :!CSv] ;; Copied paste as text
+        ;          [:p :!Tv]
+        ;          [:o :!OSv] ;; bring up Copied
+        ;          [:k :!OSc] ;; bring up clipboard
+        ;          ]}
+
+        ; {:des "Launcher mode using o"
+        ;  :rules [:o-open-mode
+        ;          [:a [:launch "Activity Monitor"]]
+        ;          [:b [:launch "Brave Browser"]]
+        ;          [:e [:launch "MacVim"]]
+        ;          [:i [:launch "IntelliJ IDEA Ultimate"]]
+        ;          [:m [:launch "MacVim"]]
+        ;          [:p [:launch "Private Internet Access"]]
+        ;          [:s [:launch "Safari"]]
+        ;          [:t [:launch "Terminal"]]
+        ;          [:x [:launch "Transmission"]]
+        ;          [:comma :!ERo] ;; requires Open in MacVim in Keyboard Maestro Alt+Shift+O
+        ;          [:backslash :!ERo]
+        ;          ]}
+
+        {:des "Tab handling"
+         :rules [
+                 [:condi :browsers]
+                 ;; Tab navigation
+                 [:right_command :right_command nil {:alone :!TStab}]
+                 [:right_option  :right_option  nil {:alone :!Ttab}]
+                 [:!Qperiod :!Ttab]
+                 
+                 [:left_option :left_option nil {:alone :!Cl}]
+                 ; [:left_command :left_command nil {:alone :!Ct}]
+
+                 ;; Double Shift to close tab
+                 ; [:left_shift   :left_shift   nil {:alone :!Cw}]
+                 [:left_shift [:!Cw ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+                 [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
+                  {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+                 ]}
+
+        ;; Applications
+
+        {:des "Safari"
+         :rules [;
+                 [:condi :safari]
+
+                 [:left_control :left_control nil {:alone :!CSbackslash}]
+                 ]}
+        {:des "Safari commands"
+         :rules [
+                 [:condi :safari :d-cmd-mode]
+                 [:h :!CSh]
+                 [:l :!Cl]
+                 [:t :!CSbackslash]
+                 [:open_bracket :!Copen_bracket]
+                 [:close_bracket :!Cclose_bracket]
+                 [:y :!CSy]
+                 ]}
+
+        {:des "Brave"
+         :rules [
+                 [:condi :brave]
+
+                 [:left_control :left_control nil {:alone :!St}]
+                 ]}
+        {:des "Brave commands"
+         :rules [
+                 [:condi :d-cmd-mode :brave]
+                 [:l :!Cl]
+                 [:t :!St]
+                 [:open_bracket :!Copen_bracket]
+                 [:close_bracket :!Cclose_bracket]
+                 [:y :!CSy]
+                 ]}
+
+        ; {:des "Brave tabs"
+        ;  :rules [;
+        ;          [:condi :brave]
+        ;          [:left_command :left_command nil {:alone :!Ct}]
+        ;          [:left_control :left_control nil {:alone :!Cl}]
+
+        ;          [:right_command :right_command nil {:alone :!TStab}]
+        ;          [:!Qperiod :!Ttab]
+
+        ;          [:left_option :left_option nil {:alone :!Cw}]
+        ;          [:right_option :right_option nil {:alone :!Cw}]
+        ;          ]}
+
+        {:des "Finder tabs"
+         :rules [
+                 [:condi :finder]
+                 ;; Tab navigation
+                 [:right_command :right_command nil {:alone :!TStab}]
+                 [:right_option  :right_option  nil {:alone [:!COa :!COc :!Ttab]}]
+                 [:!Qperiod :!Ttab]
+                 ;; Tab creation/delete
+                 ; [:left_option :left_option nil {:alone [:!Ct :!CSg]}]
+                 [:left_option :left_option nil {:alone :!COt}]
+                 [:left_shift [:!Cw ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+                 [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
+                  {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+                 ]}
+        {:des "Finder commands"
+         :rules [
+                 [:condi :d-cmd-mode :finder]
+                 ;; useful shortcuts
+                 ;; Cmd+Shift+G Go to path
+                 ;; Cmd+Alt+D: New window with current folder (KM)
+                 ;; Cmd+Alt+Shift+D: TotalFinder (parallel windows)
+                 ;; Cmd+Alt+S: show/hide sidebar
+                 [:##i :!Ci]  ; Show info
+                 [:##g :!CSg] ; Go to
+                 [:##s :!COs] ; show/hide sidebar
+                 [:##hyphen :!COs] ; show/hide sidebar
+                 [:##equal_sign :!COp]  ; show/hide path bar
+                 ;; requires Keyboard Maestro
+                 [:##t :!COt]   ;; new tab with current folder
+                 [:##w :!COd]   ;; new window with current folder
+                 [:##p :!COSd]  ;; parallel finder
+                 ]}
+
+        {:des "MacVim"
+         :rules [
+                 [:condi :macvim]
+                 ;; tab navigation
+                 [:right_command   :right_command  nil {:alone [:escape :g :!St]}]
+                 [:right_option    :right_option   nil {:alone [:escape :g :t]}]
+                 [:!Qperiod [:escape :g :t]]
+
+                 [:left_command :left_command nil {:alone [:escape :!Ssemicolon :b :!S3 :return_or_enter]}]
+                 [:left_control :left_control nil {:alone :!To}]
+                 ]}
+        {:des "OmniFocus"
+         :rules [
+                 [:condi :omnifocus]
+                 [:right_command :right_command nil {:alone :!Qo}]
+                 ]}
+
+        {:des "OmniFocus commands"
+         :rules [
+                 [:condi :d-cmd-mode :omnifocus]
+                 [:##h :!CTleft_arrow]
+                 [:##j :!CTdown_arrow]
+                 [:##k :!CTup_arrow]
+                 [:##l :!CTright_arrow]
+                 ]}
+
+        {:des "Slack navigation"
+         :rules [
+                 [:condi :slack]
+                 [:left_option :left_option nil {:alone :!Ct}]
+                 [:left_control :left_control nil {:alone [:!Ct :s :a :v :e :d :spacebar :i :t :e :m :s :return_or_enter]}]
+                 ;; navigation back/forward
+                 [:right_command  :right_command  nil {:alone :!Copen_bracket}]
+                 [:right_option   :right_option   nil {:alone :!Cclose_bracket}]
+                 ]}
+
+        {:des "Dash navigation"
+         :rules [
+                 [:condi :dash]
+                 [:left_option :left_option nil {:alone :!Cl}]
+                 ;; navigation back/forward
+                 [:right_command  :right_command  nil {:alone :!Copen_bracket}]
+                 [:right_option   :right_option   nil {:alone :!Cclose_bracket}]
+                 ]}
+
+        {:des "Jetbrains tools"
+         :rules [:jetbrains
+                 [:right_shift :left_shift]
+                 [:left_option :left_option  nil {:alone :!Ce}]
+                 ;; navigation back/forward
+                 [:right_command :right_command   nil {:alone :!Copen_bracket}]
+                 [:right_option :right_option nil {:alone :!Cclose_bracket}]
+                 ]}
+
+        {:des "YacReader"
+         :rules [:yacreader
+                 ]}
+
+        {:des "DayOne Commands"
+         :rules [:dayone :d-cmd-mode
+                 [:##hyphen :!COj]
+                 [:##g :!CSj]
+                 [:##f :down_arrow]
+                 [:##b :up_arrow]
+                 [:##s :down_arrow]
+                 [:##w :up_arrow]
+                 ]}
+
+        {:des "Tmux"
+         :rules [:terminal
+                 ;; windows
+                 [[:b :c] [:!Tb :c]]    ;; create
+                 [[:b :n] [:!Tb :n]]    ;; next
+                 [[:b :p] [:!Tb :p]]    ;; prev
+                 [[:b :x] [:!Tb :x :y :y]] ;; exit
+                 [[:b :w] [:!Tb :w]]    ;; list windows
+                 [[:b :comma] [:!Tb :comma]]
+                 ;; navigation
+                 [[:b :down_arrow] [:!Tb :down_arrow]]
+                 [[:b :up_arrow] [:!Tb :down_arrow]]
+                 [[:b :left_arrow] [:!Tb :left_arrow]]
+                 [[:b :right_arrow] [:!Tb :right_arrow]]
+                 [[:b :h] [:!Tb :left_arrow]]
+                 [[:b :j] [:!Tb :down_arrow]]
+                 [[:b :k] [:!Tb :up_arrow]]
+                 [[:b :l] [:!Tb :right_arrow]]
+                 ;; panel
+                 [[:b :q] [:!Tb :q]]
+                 [[:b :s] [:!Tb :!Squote]]
+                 [[:b :quote] [:!Tb :!Squote]]
+                 [[:b :v] [:!Tb :!S5]]
+                 [[:b :5] [:!Tb :!S5]]
+                 ;; clipboard
+                 [[:b :open_bracket] [:!Tb :open_bracket]]
+                 ]}
+
+        ]
+ }
+    ;; !  | means mandatory
+    ;; #  | means optional
+    ;; C  | left_command
+    ;; T  | left_control
+    ;; O  | left_option
+    ;; S  | left_shift
+    ;; F  | fn
+    ;; Q  | right_command
+    ;; W  | right_control
+    ;; E  | right_option
+    ;; R  | right_shift
+    ;; 
+    ;; !! | mandatory command + control + optional + shift (hyper)
+    ;; ## | optional any

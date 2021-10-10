@@ -5,6 +5,10 @@ bin/xkcdpwd
 .config/configstore/
 .config/git/gitk
 .config/gocode/
+.config/karabiner/assets/
+.config/karabiner/automatic_backups/
+.config/karabiner/karabiner.edn.*
+.config/karabiner/karabiner.json.*
 .config/mpv/watch_later
 .config/nvim/.netrwhist
 .config/ranger/bookmarks
