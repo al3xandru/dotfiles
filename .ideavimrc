@@ -1,5 +1,5 @@
-# mapping conflicts: Preferences -> Editor -> Vim Emulation
-# set commands https://github.com/JetBrains/ideavim/blob/master/doc/set-commands.md
+" mapping conflicts: Preferences -> Editor -> Vim Emulation
+
 set clipboard+=unnamed
 set history=10000
 set hlsearch
@@ -9,41 +9,96 @@ set incsearch
 set scrolloff=5
 set visualbell
 set noerrorbells
+set showmode    " message on the status line to show current mode
 
-" mappings
+" extensions
+set surround
+
+" gc and gcc
+set commentary
+
+" gr{motion}
+set ReplaceWithRegister
+
+" Objects: aa, ia
+set argtextobj              " 
+let g:argtextobj_pairs="(:),{:},[:]"
+
+set ideajoin
+
+" custom mappings
 nnoremap j gj
 vnoremap j gj
 nnoremap k gk
 vnoremap k gk
+
 " inoremap <C-a> <C-o>A
 inoremap <A-a> <C-o>A
-nnoremap <space><esc> :nohlsearch<CR>
+inoremap <C-x> <C-o>
+
+" handlers
+sethandler <C-A> a:ide  " Emacs: go to beginning of line
+sethandler <C-B> a:ide
+sethandler <C-E> a:ide  " Emacs go to end of line
+sethandler <C-F> a:ide
+sethandler <C-H> a:ide  " Type hierarhcy
+sethandler <C-I> a:ide  " Implement methods
+sethandler <C-J> a:ide  " Quick documentation
+sethandler <C-M> a:ide  " Move caret to matching brace
+sethandler <C-O> a:ide  " Override methods
+sethandler <C-R> a:ide  " Run
+sethandler <C-T> a:ide  " Refactor this…
+
+"" scroll half screens
+sethandler <C-D> n:vim i-v:ide 
+sethandler <C-U> n:vim i-v:ide 
+sethandler <C-V> a:vim
+sethandler <C-W> a:vim
+
+"" navigate the jump list
+" sethandler <C-O> i-v:ide n:vim
+" sethandler <C-I> i-v:ide n:vim
+"" redo/pasting
+" sethandler <C-R> n-v:ide i:vim
+
+
+
+
+" nnoremap <space><esc> :nohlsearch<CR>
 " noremap <C-w>p :PrevSplitter<CR>
 " nnoremap <space>hh :nohlsearch<CR>
-" action based
-nnoremap gcc :action CommentByLineComment<CR>
-vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
-vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
-" nnoremap ,s :action AceJumpAction<CR>
-" nnoremap ,s :action AceAction<CR>
+
+" action based mappings
+" Dash search
+nnoremap <C-S-k> :action SmartSearchAction<CR>
+
+" AceJump
 nnoremap s :action AceAction<CR>
 " nnoremap s :action KJumpAction.Char2<CR>
-nnoremap g; :action Back<CR>
-nnoremap g, :action Forward<CR>
+
+nnoremap g[ :action Back<CR>
+nnoremap g] :action Forward<CR>
+" nnoremap g[ <C-o>
+" nnoremap g] <C-i>
+
 nnoremap cn :action GotoNextError<CR>
 nnoremap ]c :action GotoNextError<CR>
 nnoremap cp :action GotoPreviousError<CR>
 nnoremap [c :action GotoPreviousError<CR>
+nnoremap ]l :action GotoNextError<CR>
+nnoremap [l :action GotoPreviousError<CR>
+" nnoremap lnext :action GotoNextError<CR>
+" nnoremap lne :action GotoNextError<CR>
+" nnoremap lprevious :action GotoPreviousError<CR>
+" nnoremap lp :action GotoPreviousError<CR>
 " nnoremap ]m :action MethodDown<CR>
 " nnoremap [m :action MethodUp<CR>
-nnoremap <C-S-k> :action SmartSearchAction<CR>
 
-nmap [o- :set nonumber relativenumber<CR>
-vmap [o- :set nonumber relativenumber<CR>
-nmap ]o- :set norelativenumber number<CR>
-vmap ]o- :set norelativenumber number<CR>
-" extensions
-set surround
-" possible ideas
-" https://github.com/marskar/biof309_fall2018/blob/master/setup/.ideavimrc
-set ideajoin
+nmap [or :set nonumber relativenumber<CR>
+nmap ]or :set norelativenumber number<CR>
+
+" nnoremap gcc :action CommentByLineComment<CR>
+" vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
+" for block comments
+vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
+vnoremap gb :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
