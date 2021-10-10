@@ -2,7 +2,7 @@
 cd "$(dirname ${BASH_SOURCE})"
 
 function doStatus() {
-    arr=("." ".ctags" ".git" ".gitconfig" ".gitignore" ".gitmodules" ".precfg" ".tags" "rsyncexclude.conf" "README.md" "bootstrap.sh" "docs" "install.sh" "macOS" ".DS_Store" ".emacs.d" ".hammerspoon" ".inputrc" ".prompt_bash2" "DefaultKeyBinding.dict" "synergy.server.conf" ".ropeproject" ".sessions")
+    arr=("." "unused" ".git" ".gitignore" ".precfg" ".tags" "rsyncexclude.conf" "README.md" "docs" "macOS" ".DS_Store" ".emacs.d" "DefaultKeyBinding.dict" ".ropeproject" ".sessions" "unused" "install.sh")
     
     echo "1) Comparing dirs"
     for file in $(find . -type d -maxdepth 1 | sed 's/^\.\///'); do
@@ -37,13 +37,13 @@ function doStatus() {
 
     echo "3) Checking symlinks are in place"
     t=0
-    for f in .{aliases,bashrc,bash_profile,exports,functions,ideavimrc,path,prompt_bash,tmux.conf,vimrc}; do
+    for f in .{aliases,bash_profile,bashrc,ctags,exports,functions,gitconfig,gitignore_global,hammerspoon,hgignore_global,ideavimrc,path,prompt_bash,sessions,tmux.conf,wgetrc}; do
         if [ ! -h $HOME/"${f}" ]; then
             echo "~/${f} is NOT a symlink"
             t=1
         fi
     done
-    for f in .{hammerspoon,slate,spacemacs,sessions}; do
+    for f in .{hammerspoon,sessions}; do
         if [ !  -h "$HOME/$f" ]; then
             echo "~/$f is NOT a symlink"
             t=1
@@ -69,39 +69,40 @@ function doStatus() {
 }
 
 function doInstall() {
-    rsync --exclude-from=rsyncexclude.conf -aq . $HOME
+    # rsync --exclude-from=rsyncexclude.conf -aq . $HOME
 
-    for f in .{aliases,bashrc,bash_profile,exports,functions,hammerspoon,ideavimrc,path,prompt_bash,sessions,slate,spacemacs,tmux.conf,vimrc}; do
+    for f in .{aliases,bash_profile,bashrc,ctags,exports,functions,gitconfig,gitignore_global,hammerspoon,hgignore_global,ideavimrc,path,prompt_bash,sessions,tmux.conf,wgetrc}; do
         proc $f
     done
 
+    proc "bin"
+
     # special treatment for .vim/bundle/
     if [ ! -d "$HOME/.vim" ]; then
-        mkdir "$HOME/.vim"
+        mkdir -p "$HOME/.vim"
     fi
-    # rsync -aqru .vim/bundle/ ~/.vim/bundle/
-    rsync -aqru .vim/autoload/ ~/.vim/autoload/
+    proc ".vim/vimrc"
+    proc ".vim/mthesaur.txt"
+    proc ".vim/after"
+    proc ".vim/autoload"
+    proc ".vim/doc"
     proc ".vim/xsnippets"
 
-    if [ !  -d "$HOME/.emacs.d" ]; then
-        mkdir "$HOME/.emacs.d"
+    if [ ! -d "$HOME/.config" ]; then
+        mkdir -p "$HOME/.config"
     fi
-    proc ".emacs.d/init.el"
+    for d in .config/*/; do
+        proc ".config/$(basename $d)"
+    done
+
+    # if [ !  -d "$HOME/.emacs.d" ]; then
+    #     mkdir "$HOME/.emacs.d"
+    # fi
+    # proc ".emacs.d/init.el"
 
     mkdir -p ~/Library/KeyBindings/
-    cp DefaultKeyBinding.dict ~/Library/KeyBindings/
+    ln -s DefaultKeyBinding.dict ~/Library/KeyBindings/
 
-    #for d in {.vim,.emacs.d,.virtualenv}; do
-        #if [ "$d" = ".emacs.d" ]; then
-            ## add -q if too verbose
-            #rsync --exclude ".DS_Store" --exclude "init.el" -ai $d $HOME
-        #else
-            #rsync --exclude ".DS_Store" -ai ${d} $HOME
-        #fi
-    #done
-
-    #exc=("." ".aliases" ".export" ".functions" ".path" ".prompt_bash")
-    #echo "TODO: copy the rest of the files"
 }
 
 function proc() {
