@@ -54,24 +54,25 @@ fi
 # Code repository
 if [ -z "$ALLREPOS" ]; then
     export ALLREPOS=$HOME/Dropbox/workspaces
+    export REPOSALL=$ALLREPOS
+    export MYREPOS=$ALLREPOS/mine
+    export MYGO=$MYREPOS/goland/gospace
+    export MYJAVA=$MYREPOS/java
+    export WORKREPOS=$ALLREPOS/work
+    export WORKGO=$WORKREPOS/gospace
+    export REPOSMINE=$MYREPOS
+    export REPOSWORK=$WORKREPOS
+    export GOMINE=$MYGO
+    export GOWORK=$WORKGO
+    if [ mkdir $HOME/.marks &>/dev/null ]; then
+        cd "$HOME/.marks"
+        echo "Creating initial marks"
+        ln -s "$HOME/Dropbox/dotfiles" dotfiles &>/dev/null
+        ln -s "$HOME/Dropbox/workspaces/mine" myrepos &>/dev/null
+        ln -s "$HOME/Dropbox/workspaces/mine/java" myjava &>/dev/null
+        cd -
+    fi
 fi
-export REPOSALL=$ALLREPOS
-export MYREPOS=$ALLREPOS/mine
-export REPOSMINE=$MYREPOS
-export MYGO=$MYREPOS/goland/gospace
-export GOMINE=$MYGO
-export WORKREPOS=$ALLREPOS/work
-export REPOSWORK=$WORKREPOS
-export WORKGO=$WORKREPOS/gospace
-export GOWORK=$WORKGO
-# ln -s $MYREPOS $HOME/.marks/myrepos &>/dev/null
-# ln -s $MYREPOS $HOME/.marks/reposmine &>/dev/null
-# ln -s $MYGO $HOME/.marks/mygo &>/dev/null
-# ln -s $MYGO $HOME/.marks/gomine &>/dev/null
-# ln -s $WORKREPOS $HOME/.marks/workrepos &>/dev/null
-# ln -s $WORKREPOS $HOME/.marks/reposwork &>/dev/null
-# ln -s $WORKGO $HOME/.marks/workgo &>/dev/null
-# ln -s $WORKGO $HOME/.marks/gowork &>/dev/null
 
 
 # Go
@@ -88,119 +89,122 @@ fi
 #
 # There is a different mechanism for macOS using /usr/libexec/java_home
 # see https://metaredux.com/posts/2018/11/05/managing-multiple-jdks-on-macos.html
-if [ -z "$JAVA_HOME" ]; then
-    vmdir=""
-    case "$_OSTYPE" in
-        "Lin" )
-            vmdir="/usr/lib/jvm"
-            ;;
-        "Mac" )
-            vmdir="/Library/Java/JavaVirtualMachines"
-            ;;
-    esac
-    if [ -z "$VM_VERSION" ]; then
-        VM_VERSION="jdk8"
-    fi
-    if [ -d "$vmdir" ]; then
-        PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
-        if [ "$PJAVA_HOME" != "" ]; then
-            case "$_OSTYPE" in
-                "Lin")
-                    export JAVA_HOME="$vmdir/$PJAVA_HOME"
-                    ;;
-                "Mac")
-                    export JAVA_HOME="$vmdir/$PJAVA_HOME/Contents/Home"
-                    ;;
-            esac
-        fi
-    fi
-    unset -v PJAVA_HOME vmdir
-fi
 
-function _findfirst {
-    local base_dir="$1"
-    local arg="$2"
-    if [ -d "$base_dir" ]; then
-        case "$_OSTYPE" in
-            "Lin" )
-                echo $(find $base_dir -maxdepth 1 -name $arg -type d)
-                ;;
-            "Mac" )
-                echo $(find $base_dir -depth 1 -name $arg -type d | sort -r | head -1)
-                ;;
-        esac
-    fi
-}
+# disabling these settings for SDKMAN
+# if [ -z "$JAVA_HOME" ]; then
+#     vmdir=""
+#     case "$_OSTYPE" in
+#         "Lin" )
+#             vmdir="/usr/lib/jvm"
+#             ;;
+#         "Mac" )
+#             vmdir="/Library/Java/JavaVirtualMachines"
+#             ;;
+#     esac
+#     if [ -z "$VM_VERSION" ]; then
+#         VM_VERSION="jdk8"
+#     fi
+#     if [ -d "$vmdir" ]; then
+#         PJAVA_HOME=$(ls -1 "$vmdir" | grep "$VM_VERSION" | sort -r | head -1)
+#         if [ "$PJAVA_HOME" != "" ]; then
+#             case "$_OSTYPE" in
+#                 "Lin")
+#                     export JAVA_HOME="$vmdir/$PJAVA_HOME"
+#                     ;;
+#                 "Mac")
+#                     export JAVA_HOME="$vmdir/$PJAVA_HOME/Contents/Home"
+#                     ;;
+#             esac
+#         fi
+#     fi
+#     unset -v PJAVA_HOME vmdir
+# fi
 
-# JAVA_TOOLS_DIR
-JAVA_TOOLS_DIR="/usr/local/share/java"
+# function _findfirst {
+#     local base_dir="$1"
+#     local arg="$2"
+#     if [ -d "$base_dir" ]; then
+#         case "$_OSTYPE" in
+#             "Lin" )
+#                 echo $(find $base_dir -maxdepth 1 -name $arg -type d)
+#                 ;;
+#             "Mac" )
+#                 echo $(find $base_dir -depth 1 -name $arg -type d | sort -r | head -1)
+#                 ;;
+#         esac
+#     fi
+# }
 
-if [ -z "$ANT_HOME" ]; then
-    if [ -h "$JAVA_TOOLS_DIR/ant" -o -d "$JAVA_TOOLS_DIR/ant" ]; then
-        ANT_HOME="$JAVA_TOOLS_DIR/ant"
-    else
-        ANT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*ant*")
-    fi
-    if [ -n "$ANT_HOME" ]; then
-        export ANT_HOME
-    else
-        unset ANT_HOME
-    fi
-fi
+# # JAVA_TOOLS_DIR
+# JAVA_TOOLS_DIR="/usr/local/share/java"
 
-if [ -z "$MVN_HOME" ]; then
-    if [ -h "$JAVA_TOOLS_DIR/maven" -o -d "$JAVA_TOOLS_DIR/maven" ]; then
-        MVN_HOME="$JAVA_TOOLS_DIR/maven"
-    else
-        MVN_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*maven*")
-    fi
-    if [ -n "$MVN_HOME" ]; then
-        export MVN_HOME
-    else
-        unset MVN_HOME
-    fi
-fi
+# if [ -z "$ANT_HOME" ]; then
+#     if [ -h "$JAVA_TOOLS_DIR/ant" -o -d "$JAVA_TOOLS_DIR/ant" ]; then
+#         ANT_HOME="$JAVA_TOOLS_DIR/ant"
+#     else
+#         ANT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*ant*")
+#     fi
+#     if [ -n "$ANT_HOME" ]; then
+#         export ANT_HOME
+#     else
+#         unset ANT_HOME
+#     fi
+# fi
 
-if [ -z "$GRADLE_HOME" ]; then
-    if [ -h "$JAVA_TOOLS_DIR/gradle" -o -d "$JAVA_TOOLS_DIR/gradle" ]; then
-        GRADLE_HOME="$JAVA_TOOLS_DIR/gradle"
-    else
-        GRADLE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*gradle*")
-    fi
-    if [ -n "$GRADLE_HOME" ]; then
-        export GRADLE_HOME
-        # export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
-    else
-        unset GRADLE_HOME
-    fi
-fi
+# if [ -z "$MVN_HOME" ]; then
+#     if [ -h "$JAVA_TOOLS_DIR/maven" -o -d "$JAVA_TOOLS_DIR/maven" ]; then
+#         MVN_HOME="$JAVA_TOOLS_DIR/maven"
+#     else
+#         MVN_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*maven*")
+#     fi
+#     if [ -n "$MVN_HOME" ]; then
+#         export MVN_HOME
+#     else
+#         unset MVN_HOME
+#     fi
+# fi
 
-if [ -z "$SBT_HOME" ]; then
-    if [ -h "$JAVA_TOOLS_DIR/sbt" -o -d "$JAVA_TOOLS_DIR/sbt" ]; then
-        SBT_HOME="$JAVA_TOOLS_DIR/sbt"
-    else
-        SBT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*sbt*")
-    fi
-    if [ -n "$SBT_HOME" ]; then
-        export SBT_HOME
-    else
-        unset SBT_HOME
-    fi
-fi
+# if [ -z "$GRADLE_HOME" ]; then
+#     if [ -h "$JAVA_TOOLS_DIR/gradle" -o -d "$JAVA_TOOLS_DIR/gradle" ]; then
+#         GRADLE_HOME="$JAVA_TOOLS_DIR/gradle"
+#     else
+#         GRADLE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*gradle*")
+#     fi
+#     if [ -n "$GRADLE_HOME" ]; then
+#         export GRADLE_HOME
+#         # export GRADLE_OPTS="-Xmx1024m -Xms192m -XX:+UseCompressedOops -XX:ReservedCodeCacheSize=256m -XX:+CMSClassUnloadingEnabled"
+#     else
+#         unset GRADLE_HOME
+#     fi
+# fi
 
-if [ -z "$CLOJURE_HOME" ]; then
-    if [ -h "$JAVA_TOOLS_DIR/clojure" -o -d "$JAVA_TOOLS_DIR/clojure" ]; then
-        CLOJURE_HOME="$JAVA_TOOLS_DIR/clojure"
-    else
-        CLOJURE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*clojure*")
-    fi
-    if [ -n "$CLOJURE_HOME" ]; then
-        export CLOJURE_HOME
-    else
-        unset CLOJURE_HOME
-    fi
-fi
-unset JAVA_TOOLS_DIR
+# if [ -z "$SBT_HOME" ]; then
+#     if [ -h "$JAVA_TOOLS_DIR/sbt" -o -d "$JAVA_TOOLS_DIR/sbt" ]; then
+#         SBT_HOME="$JAVA_TOOLS_DIR/sbt"
+#     else
+#         SBT_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*sbt*")
+#     fi
+#     if [ -n "$SBT_HOME" ]; then
+#         export SBT_HOME
+#     else
+#         unset SBT_HOME
+#     fi
+# fi
+
+# if [ -z "$CLOJURE_HOME" ]; then
+#     if [ -h "$JAVA_TOOLS_DIR/clojure" -o -d "$JAVA_TOOLS_DIR/clojure" ]; then
+#         CLOJURE_HOME="$JAVA_TOOLS_DIR/clojure"
+#     else
+#         CLOJURE_HOME=$(_findfirst "$JAVA_TOOLS_DIR" "*clojure*")
+#     fi
+#     if [ -n "$CLOJURE_HOME" ]; then
+#         export CLOJURE_HOME
+#     else
+#         unset CLOJURE_HOME
+#     fi
+# fi
+# unset JAVA_TOOLS_DIR
+
 if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
 fi
