@@ -936,6 +936,8 @@ let g:jedi#rename_command = "<localleader>gr"
 
 
 Plug 'digitalrounin/vim-yaml-folds'
+
+Plug 'darfink/vim-plist'
 " }}}
 
 
