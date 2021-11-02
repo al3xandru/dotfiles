@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 
 # not needed Homebrew will do this
 # function setupXcodeCLI() {
@@ -35,6 +35,18 @@
 #     echo "Start Dropbox and sync: ApplicationSupport, Apps, dotfiles, Fonts"
 #     read -n 1 -p "Press any key to continue after Bitwarden and Dropbox are configured"
 #}
+function switchToBash() {
+    chsh -s /bin/bash
+}
+
+function installUnblockers() {
+    read -n 1 -p "Enable Rosetta"
+    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+    read -n 1 -p "Install Dropbox and start sync (dotfiles, Apps, ApplicationSupport, Fonts)"
+    read -n 1 -p "Install Bitwarden from Mac App Store"
+    read -n 1 -p "Ask Dropbox to download the above files"
+    read -n 1 -p "Set Dropbox to sync other folders (Dox, family, MagicBriefcase, quick_sync, workspaces)"
+}
 
 function setupBrew() {
     echo "Install Homebrew"
@@ -120,7 +132,6 @@ function installBrews() {
     fi
 
     PACKAGES=(
-        bash
         fzf
         git
         mas
@@ -143,20 +154,16 @@ function installOptionalBrews() {
     PACKAGES=(
         yqrashawn/goku/goku
         lua
-        maven
         nnn
-        perl
         pyenv
         ruby
-        sbt
-        scala
         youtube-dl
     )
     for pkg in "${PACKAGES[@]}"; do
         read -n 1 -p "... Install $pkg? (y/n): "
         echo ""
         case "$REPLY" in
-            y|Y)  install $pkg
+            y|Y) $BREW_CMD install $pkg
         esac
     done
 }
@@ -168,14 +175,16 @@ function installAppsWithBrew() {
     fi
     PACKAGES=(
         atext
+        appcleaner
         bettertouchtool
         brave-browser
         firefox
         hammerspoon
         macvim
+        qbserve
         steermouse
         omnifocus
-        hombrew/cask/transmission
+        homebrew/cask/transmission
         vlc
         yacreader
     )
@@ -189,6 +198,8 @@ function installAppsWithBrew() {
     done
     ln -s "$HOME/Dropbox/ApplicationSupport/apps/SteerMouse & CursorSense" "$HOME/Library/Application Support/"
     ln -s "$HOME/Dropbox/ApplicationSupport/dirs/Library/Preferences/org.videolan.vlc" "$HOME/Library/Preferences/"
+    mkdir "$HOME/Library/Application Support/YACReader" &>/dev/null
+    ln -s "$HOME/Dropbox/ApplicationSupport/apps/YACReader/YACReader" "$HOME/Library/Application Support/YACReader/YACReader"
 }
 
 function installAppsManually() {
@@ -196,9 +207,14 @@ function installAppsManually() {
     URLS=(
         "https://karabiner-elements.pqrs.org"
         "https://www.keyboardmaestro.com/main/"
+        "https://tapbots.com/pastebot/"
         "https://vimacapp.com"
         "https://www.jetbrains.com/toolbox-app/"
         "https://betamagic.nl/products/newsexplorer.html"
+        "https://kapeli.com/dash"
+        "https://www.macbartender.com/Bartender4/"
+        "https://obsidian.md"
+        "https://www.privateinternetaccess.com/download/mac-vpn"
     )
     for url in "${URLS[@]}"; do
         read -n 1 -p "... Download $url? (y/n): "
@@ -210,16 +226,24 @@ function installAppsManually() {
                 ;;
         esac
     done
+    ln -s "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/omuninn" "$HOME/omuninn"
 }
 
 function installAppStoreAppsManually() {
+    # "https://apps.apple.com/us/app/copied/id1026349850"
+    # "https://apps.apple.com/us/app/adguard-for-safari/id1440147259?mt=12"
     echo "Download and install apps from App Store"
     URLS=(
         "https://apps.apple.com/us/app/bumpr/id1166066070?mt=12"
-        "https://apps.apple.com/us/app/copied/id1026349850"
-        "https://apps.apple.com/us/app/adguard-for-safari/id1440147259?mt=12"
         "https://apps.apple.com/us/app/vimari/id1480933944?mt=12"
         "https://apps.apple.com/us/app/day-one/id1055511498?mt=12"
+        "https://apps.apple.com/ro/app/stockfish-chess/id801463932?mt=12"
+        "https://apps.apple.com/ro/app/wipr/id1320666476?mt=12"
+        "https://apps.apple.com/ro/app/daisydisk/id411643860?mt=12"
+        "https://apps.apple.com/ro/app/calca/id635758264?mt=12"
+        "https://apps.apple.com/ro/app/reeder-5/id1529448980?mt=12"
+        "https://apps.apple.com/ro/app/evernote-web-clipper/id1481669779?mt=12"
+        "https://apps.apple.com/ro/app/keyword-search/id1558453954"
     )
     for url in "${URLS[@]}"; do
         read -n 1 -p "... Download $url? (y/n): "
@@ -234,23 +258,33 @@ function installAppStoreAppsManually() {
 }
 
 function installAppStoreAppsWithMas() {
+    # 1026349850  # Copied
+    # 1440147259  # AdGuard for Safari
     APPIDS=(
         1166066070  # Bumpr 
-        1026349850  # Copied
         1480933944  # Vimari
         801463932   # Stockfish
         1055511498  # Day One
-        1440147259  # AdGuard for Safari
         1320666476  # Wipr
+        411643860
+        635758264
+        1481669779
+        1558453954
+        1529448980
+        1289378661
         )
     APPNAMES=(
         "Bumpr"
-        "Copied"
         "Vimari"
         "Stockfish"
         "Day One"
-        "Adguard for Safari"
         "Wipr"
+        "DaisyDisk"
+        "Calca"
+        "Reeder"
+        "Twitterrific"
+        "Evernote Web Clipper"
+        "Keyword Search"
     )
     for app in "${!APPIDS[@]}"; do
         read -n 1 -p "... Install ${APPNAMES[$app]} (${APPIDS[$app]})? (y/n): "
@@ -267,7 +301,9 @@ function installFonts() {
         20160304-HCo_OperatorMono.zip
         20201230-Input-Font.zip
         20170823-mononoki.zip
-        PragmataPro.zip
+        PragmataPro/PragmataPro*.ttf
+        20211026-ttf-iosevka-fixed-10.zip
+        20211026-ttf-iosevka-fixed-slab-10.zip
         )
     for f in "${FILES[@]}"; do
         cp "$HOME/Dropbox/Fonts/_Monospaced/_favs/${f}" "$HOME/Downloads/Fonts"
@@ -275,11 +311,16 @@ function installFonts() {
 }
 
 function configureAppsManually() {
-    read -n 1 -p "Configure shortcuts in Copied; click any key to continue"
+    read -n 1 -p "Set computer name in System Preferences > Sharing"
+    read -n 1 -p "Turn on iCloud for Documents and Desktop"
     read -n 1 -p "Activate and configure Keyboard Manager; click any key to continue"
     read -n 1 -p "Configure Vimac and click any key to continue"
-    read -n 1 -p "Configure aText and click any key to continue"
-    read -n 1 -p "Configure BetterTouchTool and click any key to continue"
+    read -n 1 -p "Configure aText cloud sync and click any key to continue"
+    read -n 1 -p "Configure BetterTouchTool settings from Desktop file and click any key to continue"
+    read -n 1 -p "Configure shortcuts in Pastebot"
+    read -n 1 -p "Turn off Close windows when quitting an app in System Preferences > General"
+    read -n 1 -p "Turn on Use your Apple Watch in System Preferences > Security & Privacy > General"
+    read -n 1 -p "Create cron jobs"
 }
 
 # https://macos-defaults.com/
@@ -433,6 +474,19 @@ function configureApps() {
     defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 }
 
+
+function setupSdkman() {
+    echo "Install SDK"
+    if test ! $(which sdk); then
+        echo "... Installing SDKMAN..."
+        curl -s "https://get.sdkman.io" | bash
+        source "$HOME/.sdkman/bin/sdkman-init.sh"
+        sdk version
+    else
+        echo "... already installed"
+    fi
+}
+
 function shouldDoOp() {
     read -n 1 -p "$1 (y/n)? "
     echo ""
@@ -453,14 +507,14 @@ echo $APP_DIR
 # setupXCode
 # setupBrew
 # installBash
-# installBlockers
 # installBrews
 # installOptionalBrews
 # installAppsWithBrew
 # installAppsManually
-# installAppsStore
-installAppStoreAppsWithMas
+# installAppStoreAppsManually
+# installAppStoreAppsWithMas
 # configureAppsManually
 # configureApps
 # installFonts
+setupSdkman
 
