@@ -1058,6 +1058,8 @@ Plug 'tpope/vim-fugitive'
 
 
 " Experimental {{{1
+Plug 'junegunn/vim-peekaboo'    " show registers
+let g:peekaboo_delay=100
 "}}}
 
 call plug#end()
