@@ -1,6 +1,5 @@
 bin/Eject.app
 bin/Ejects.app
-bin/xkcdpwd
 # make sure .extras is ignored
 .config/configstore/
 .config/git/gitk
