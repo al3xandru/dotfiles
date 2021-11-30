@@ -33,6 +33,11 @@
                 :browsers ["^com\\.brave\\.Browser$" "^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$" "^org\\.mozilla\\.firefox$"]
                 :ctrl_no_hyper ["^org\\.vim\\.MacVim$" "^com\\.apple\\.Terminal$"]
                 }
+ 
+ :devices {
+           :leopold [{:vendor_id 1204, :product_id 257}]
+           }
+
  :simlayers {
              :fn-wasd-mode {:key :fn}
              :f-navigation-mode {:key :f}
@@ -54,6 +59,13 @@
   ;; conditions: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L157>
   ;; options: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L170>
  :main [
+        {:des "Leopold switch Win & Alt"
+         :rules [:leopold
+                 [:left_option :left_command]
+                 [:left_command :left_option]
+                 [:right_option :right_command]
+                 [:right_command :right_option]]}
+
         {:des "CAPS to hyper/left_control or escape if pressed alone"
          :rules[
                 ; [:caps_lock :left_control [:ctrl_no_hyper] {:alone :escape}]
