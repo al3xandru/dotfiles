@@ -78,6 +78,8 @@ nnoremap s :action AceAction<CR>
 
 nnoremap g[ :action Back<CR>
 nnoremap g] :action Forward<CR>
+" nnoremap g[ <D-[>
+" nnoremap g] <D-]>
 " nnoremap g[ <C-o>
 " nnoremap g] <C-i>
 
