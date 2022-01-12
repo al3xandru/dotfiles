@@ -17,7 +17,7 @@ unset ostype
 # * ~/.precfg can be used locally to enable/disable specific features
 # * ~/.path can be used to extend `$PATH`
 # * ~/.postcfg can be used for other setttings you don't want to commit
-for file in $HOME/.{precfg,exports,path,prompt_bash,aliases,functions,postcfg}; do
+for file in $HOME/.{precfg,exports,path,aliases,functions,postcfg}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -42,3 +42,6 @@ shopt -u nullglob
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+eval "$(starship init bash)"
+eval "$(zoxide init bash)"
