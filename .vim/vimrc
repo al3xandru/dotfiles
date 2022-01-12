@@ -211,6 +211,7 @@ set novisualbell
 set t_vb=
 if has("gui_macvim")
     set visualbell t_vb=
+    set macmeta
 endif
 " }}}
 
@@ -409,7 +410,7 @@ function! <SID>BigWnd()
     set textwidth=98
     " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
     " exec "tabedit ~/Dropbox/Dox/mydox/myjrnl/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
-    exec "tabedit ~/Desktop/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    exec "tabedit ~/Desktop/22-" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
 command! Bigwnd call <SID>BigWnd()
@@ -482,6 +483,7 @@ Plug 'arzg/vim-plan9'
 Plug 'jsit/toast.vim'
 Plug 'rakr/vim-one'
 let g:one_allow_italics = 1
+Plug 'mvanderkamp/cocoa.vim'
 "2}}}
 "1}}}
 
@@ -649,6 +651,19 @@ let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 
 " Replace with register {{{2
 Plug 'inkarkat/vim-ReplaceWithRegister'
+if has("gui_macvim")
+    nmap gr :let @t=@*<CR>"t<Plug>ReplaceWithRegisterOperator
+" else
+"     nmap R <Plug>ReplaceWithRegisterOperator
+"     xmap R <Plug>ReplaceWithRegisterVisual
+endif
+
+" https://github.com/romgrk/replace.vim
+" Plug 'romgrk/replace.vim'
+" let g:replace_register = '*'
+" nmap R <Plug>ReplaceOperator
+" vmap R <Plug>ReplaceOperator
+
 " 2}}}
 " }}}
 
@@ -936,6 +951,7 @@ let g:jedi#rename_command = "<localleader>gr"
 
 
 Plug 'digitalrounin/vim-yaml-folds'
+Plug 'Einenlum/yaml-revealer'
 
 Plug 'darfink/vim-plist'
 " }}}
@@ -1059,7 +1075,10 @@ Plug 'tpope/vim-fugitive'
 
 " Experimental {{{1
 Plug 'junegunn/vim-peekaboo'    " show registers
-let g:peekaboo_delay=100
+let g:peekaboo_delay=250
+
+Plug 'tpope/vim-rsi'            " readline keybindings
+" Ctrl-A, Ctrl-B, Ctrl-D, Ctrl-F
 "}}}
 
 call plug#end()
@@ -1127,7 +1146,8 @@ if has("unix")
         let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'humanoid',
                     \ 'papercolor', 'cake16', 'sweater', 'plan9', 'github', 'earendel',
                     \ 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox',
-                    \ 'papercolor', 'toast', 'humanoid']
+                    \ 'papercolor', 'toast', 'humanoid',
+                    \ 'cocoa']
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1146,7 +1166,11 @@ if has("unix")
     else
         " colorscheme gruvbox
         " let color_schemes = ['ironman', 'humanoid', 'gruvbox',  'onedark', 'nord', 'alduin', 'toast', 'plan9']
-        let color_schemes = ['ironman', 'gruvbox', 'plan9', 'nuvola', 'morning', 'zellner', 'cake16', 'sweater', 'summerfruit256']
+        if !empty($ALACRITTY)
+            let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+        else
+            let color_schemes = ['ironman', 'gruvbox', 'plan9', 'nuvola', 'morning', 'zellner', 'cake16', 'sweater', 'summerfruit256', 'cocoa']
+        endif
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             " set background=dark
@@ -1155,6 +1179,10 @@ if has("unix")
         endif
 
         execute ":colorscheme " .  cs
+        " :help termcap-cursor shape
+        let &t_SI = "\<Esc>[6 q"
+        let &t_SR = "\<Esc>[4 q"
+        let &t_EI = "\<Esc>[2 q"
     endif
 endif
 " }}}
@@ -1181,6 +1209,7 @@ endfunction
 
 "call <SID>SetCursorLineColors()
 call <SID>SetColorColumn()
+
 " }}}
 
 " }}}
