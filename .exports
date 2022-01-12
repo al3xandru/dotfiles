@@ -46,10 +46,12 @@ if [ -h "/usr/local/bin/vim" ]; then
         unset -v VIMDIR VIMLINK
     fi
 fi
+
 #
 # ENV VARIABLES
 #
 # export QQDIR=$HOME/Dropbox/Dox/nvall
+export QQ=$HOME/omuninn/qq
 
 # Code repository
 if [ -z "$ALLREPOS" ]; then
@@ -77,7 +79,7 @@ fi
 
 # Go
 if [ -z "$GOPATH" ]; then
-    export GOPATH=$HOME/.golang
+    export GOPATH=$HOME/go
 fi
 
 # JVM
