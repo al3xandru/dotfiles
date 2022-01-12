@@ -860,69 +860,6 @@
         "basic.to_if_held_down_threshold_milliseconds" : 500
       },
       "rules" : [ {
-        "description" : "Leopold switch Win & Alt",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "left_option"
-          },
-          "to" : [ {
-            "key_code" : "left_command"
-          } ],
-          "conditions" : [ {
-            "identifiers" : [ {
-              "vendor_id" : 1204,
-              "product_id" : 257
-            } ],
-            "type" : "device_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "left_command"
-          },
-          "to" : [ {
-            "key_code" : "left_option"
-          } ],
-          "conditions" : [ {
-            "identifiers" : [ {
-              "vendor_id" : 1204,
-              "product_id" : 257
-            } ],
-            "type" : "device_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "right_option"
-          },
-          "to" : [ {
-            "key_code" : "right_command"
-          } ],
-          "conditions" : [ {
-            "identifiers" : [ {
-              "vendor_id" : 1204,
-              "product_id" : 257
-            } ],
-            "type" : "device_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "right_command"
-          },
-          "to" : [ {
-            "key_code" : "right_option"
-          } ],
-          "conditions" : [ {
-            "identifiers" : [ {
-              "vendor_id" : 1204,
-              "product_id" : 257
-            } ],
-            "type" : "device_if"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
         "description" : "CAPS to hyper/left_control or escape if pressed alone",
         "manipulators" : [ {
           "to_if_alone" : [ {
@@ -6774,7 +6711,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6799,7 +6736,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6824,7 +6761,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6853,7 +6790,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6878,7 +6815,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6903,7 +6840,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6928,7 +6865,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6953,7 +6890,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -6978,7 +6915,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7003,7 +6940,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7028,7 +6965,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7053,7 +6990,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7078,7 +7015,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7103,7 +7040,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7128,7 +7065,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7154,7 +7091,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7180,7 +7117,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7206,7 +7143,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7232,7 +7169,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         }, {
@@ -7257,13 +7194,53 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$" ]
+            "bundle_identifiers" : [ "^com\\.apple\\.Terminal$", "^io\\.alacritty$" ]
           } ],
           "type" : "basic"
         } ]
       } ]
     },
-    "devices" : [ ],
+    "devices" : [ {
+      "disable_built_in_keyboard_if_exists" : false,
+      "fn_function_keys" : [ ],
+      "identifiers" : {
+        "is_keyboard" : true,
+        "is_pointing_device" : false,
+        "product_id" : 257,
+        "vendor_id" : 1204
+      },
+      "ignore" : false,
+      "manipulate_caps_lock_led" : true,
+      "simple_modifications" : [ {
+        "from" : {
+          "key_code" : "left_option"
+        },
+        "to" : [ {
+          "key_code" : "left_command"
+        } ]
+      }, {
+        "from" : {
+          "key_code" : "left_command"
+        },
+        "to" : [ {
+          "key_code" : "left_option"
+        } ]
+      }, {
+        "from" : {
+          "key_code" : "right_option"
+        },
+        "to" : [ {
+          "key_code" : "right_command"
+        } ]
+      }, {
+        "from" : {
+          "key_code" : "right_command"
+        },
+        "to" : [ {
+          "key_code" : "right_option"
+        } ]
+      } ]
+    } ],
     "fn_function_keys" : [ {
       "from" : {
         "key_code" : "f1"

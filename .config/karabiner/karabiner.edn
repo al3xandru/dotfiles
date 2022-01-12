@@ -28,7 +28,7 @@
                 :omnifocus ["^com\\.omnigroup\\.OmniFocus3$"]
                 :safari ["^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$"]
                 :slack ["^com\\.tinyspeck\\.slackmacgap$"]
-                :terminal ["^com\\.apple\\.Terminal$"]
+                :terminal ["^com\\.apple\\.Terminal$" "^io\\.alacritty$"]
                 :yacreader ["^com\\.yacreader\\.YACReader$"]
                 :browsers ["^com\\.brave\\.Browser$" "^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$" "^org\\.mozilla\\.firefox$"]
                 :ctrl_no_hyper ["^org\\.vim\\.MacVim$" "^com\\.apple\\.Terminal$"]
@@ -59,12 +59,33 @@
   ;; conditions: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L157>
   ;; options: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L170>
  :main [
-        {:des "Leopold switch Win & Alt"
-         :rules [:leopold
-                 [:left_option :left_command]
-                 [:left_command :left_option]
-                 [:right_option :right_command]
-                 [:right_command :right_option]]}
+        ; {:des "Leopold"
+        ;  :rules [
+        ;          :leopold
+        ;          [:right_command :right_command [:browsers] {:alone :!TStab}]
+        ;          [:right_option  :right_option  [:browsers] {:alone :!Ttab}]
+        ;          [:!Qperiod :!Ttab]
+                 
+        ;          [:left_option :left_option [:browsers] {:alone :!Cl}]
+        ;          [:left_option :left_command] 
+        ;          [:left_command :left_option] 
+        ;          [:right_option :right_command]
+        ;          [:right_command :right_option]
+        ;         ]} 
+        ; {:des "Leopold switch Win & Alt"
+        ;  :rules [:leopold
+
+        ; {:des "Leopold Tab handling"
+        ;  :rules [
+        ;          [:condi :leopold :browsers]
+        ;          ;; Tab navigation
+
+        ;          ;; Double Shift to close tab
+        ;          ; [:left_shift   :left_shift   nil {:alone :!Cw}]
+        ;          [:left_shift [:!Cw ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+        ;          [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
+        ;           {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+        ;          ]}
 
         {:des "CAPS to hyper/left_control or escape if pressed alone"
          :rules[
