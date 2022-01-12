@@ -343,6 +343,15 @@ function goworkspace {
     fi
 }
 
+function qqadd {
+    if [ -z "$1" ]; then
+        echo "quick question needed"
+    else
+        qqfilename="$(echo "$@" | tr " " _)"
+        v "$QQ/qq-$qqfilename.md"
+        echo "Created QQ: $qqfilename"
+    fi
+}
 # function loopback {
 #     local max i
 #     if [ -z "$1" ]; then
@@ -357,7 +366,6 @@ function goworkspace {
 # }
 
 # https://github.com/imwally/battstat
-
 charging_icon="⚡"     #  U+26A1 - Thunderbolt
 discharging_icon="🔋" # U+1F50B - Battery
 
@@ -689,6 +697,14 @@ function extract() {
     fi
 }
 
+function stat() {
+    if [[ "$1" == "-H" ]]; then
+        shift
+        stat -f "%N (%zbytes %Su:%Sg:%Sp)%n created : %SB%n accessed: %Sa%n modified: %Sm%n changed : %Sc%n" "$@"
+    else
+        command stat "$@"
+    fi
+}
 # function brew() {
 #     if [[ "$@" == "update" ]]; then
 #         local _fixperm=0
