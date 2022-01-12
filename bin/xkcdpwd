@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-"$0.$(uname -m)"
+"$0.$(uname -m)" $@

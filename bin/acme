@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [ -d "$HOME/plan9" ]; then
+    export SHELL=$(which bash)
+    export acmeshell=$(which bash)
+    if [ -z "$PLAN9" ]; then
+        PLAN9=$HOME/plan9
+        PATH=$PATH:$PLAN9/bin:$HOME/Dropbox/workspaces/mine/misc/acme-misc/bin
+        export PLAN9
+        export PATH
+        echo "Ready to start:"
+        echo "PLAN9: $PLAN9"
+    else
+        echo "Ready to start:"
+        echo "PLAN9: $PLAN9"
+    fi
+    fs=13
+    if [ "$1" = "-fs" ]; then
+        fs="$2"
+        shift
+        shift
+    fi
+    $PLAN9/bin/acme -a -f /mnt/font/GoMono/${fs}a/font $@ &
+else
+    echo "Plan9 is not available"
+    exit 1
+fi
