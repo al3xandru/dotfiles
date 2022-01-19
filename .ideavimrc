@@ -32,37 +32,60 @@ vnoremap j gj
 nnoremap k gk
 vnoremap k gk
 
+" These are not needed if Ctrl-E moves to end of line in Insert mode
 " inoremap <C-a> <C-o>A
-inoremap <A-a> <C-o>A
-inoremap <C-x> <C-o>
+" inoremap <A-a> <C-o>A
 
-" handlers
-sethandler <C-A> a:ide  " Emacs: go to beginning of line
+inoremap <C-X> <C-O>
+inoremap <leader>o <C-O>
+
+nnoremap <leader>o <C-O>
+nnoremap <leader>i <C-I>
+nnoremap <leader>v <C-V>
+
+" handlers IDE
+" Emacs: go to beginning of line
+sethandler <C-A> a:ide
+" Emacs left
 sethandler <C-B> a:ide
-sethandler <C-E> a:ide  " Emacs go to end of line
+" Emacs go to end of line
+sethandler <C-E> a:ide
+" Emacs right
 sethandler <C-F> a:ide
-sethandler <C-H> a:ide  " Type hierarhcy
-sethandler <C-I> a:ide  " Implement methods
-sethandler <C-J> a:ide  " Quick documentation
-sethandler <C-M> a:ide  " Move caret to matching brace
-sethandler <C-O> a:ide  " Override methods
-sethandler <C-R> a:ide  " Run
-sethandler <C-T> a:ide  " Refactor this…
+" Type hierarhcy
+sethandler <C-H> a:ide
+" Implement methods
+sethandler <C-I> a:ide
+" Quick documentation
+sethandler <C-J> a:ide
+" Cut to end of line
+sethandler <C-K> a:ide
+" Scroll to center
+sethandler <C-L> a:ide
+" Move caret to matching brace
+sethandler <C-M> a:ide
+" Down (Note: in insert mode it doesn't work as intended)
+sethandler <C-N> a:vim
+" Override methods
+sethandler <C-O> a:ide
+" Up (Note: as with Ctrl-N, insert mode vim behavior is not the one expected)
+sethandler <C-P> a:vim
+" Run
+sethandler <C-R> a:ide
+" File structure
+sethandler <C-S> a:ide
+" Refactor this…
+sethandler <C-T> a:ide
+" VCR operations
+sethandler <C-V> a:ide
 
-"" scroll half screens
-sethandler <C-D> n:vim i-v:ide 
-sethandler <C-U> n:vim i-v:ide 
-sethandler <C-V> a:vim
+" handlers VIM
+" N: scroll; I: Unindent
+sethandler <C-D> a:vim
+" N: scroll upwards; I: Delete to beginning
+sethandler <C-U> a:vim
+" N: window; I: Delete word before
 sethandler <C-W> a:vim
-
-"" navigate the jump list
-" sethandler <C-O> i-v:ide n:vim
-" sethandler <C-I> i-v:ide n:vim
-"" redo/pasting
-" sethandler <C-R> n-v:ide i:vim
-
-
-
 
 " nnoremap <space><esc> :nohlsearch<CR>
 " noremap <C-w>p :PrevSplitter<CR>
