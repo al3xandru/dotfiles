@@ -27,6 +27,9 @@ def main(action, options):
     else:
         results = search(options)
         output_results(options.output, results, options.query)
+        if options.output == 'text' and options.clipboard:
+            subprocess.run("pbcopy", universal_newlines=True, input=results)
+            print("results in clipboard")
 
 
 def add(args):
@@ -159,7 +162,6 @@ def output_as_text(results, query):
     if DEBUG:
         print("[DEBUG] results:", (i-1))
 
-
 def output_as_launchbar_xml(results, query):
     if not results:
         root = ET.Element('items')
@@ -241,6 +243,8 @@ if __name__ == '__main__':
     parser.add_argument('--text', action='store_true')
     parser.add_argument('--prefix', action='store', default='qq')
     parser.add_argument('--mode', action='store', choices=['interpret', 'literal'], default='interpret')
+    # clipboard option apply only to text results
+    parser.add_argument('-c', '--clipboard', action='store_true', default=True)
     parser.add_argument('query', nargs='*')
     options = parser.parse_args()
 
