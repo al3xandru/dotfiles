@@ -45,3 +45,4 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
+eval "$(pyenv virtualenv-init -)"
