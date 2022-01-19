@@ -4,7 +4,7 @@ command_timeout=200
 add_newline=false
 
 [character]
-success_symbol = "(bold green)"
+success_symbol = "⌘(bold green)"
 
 [directory]
 truncation_symbol = "…/"
@@ -13,6 +13,7 @@ truncate_to_repo = true
 
 [git_branch]
 symbol=""
-format="[$symbol$branch]($style) "
+# symbol="⑂"
+format="[$branch$symbol]($style)"
 
 [git_status]
