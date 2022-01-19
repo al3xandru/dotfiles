@@ -1,10 +1,15 @@
 Animoji/
 App Store/
 BetterTouchTool/Logs/
+BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage/
+Caches/
 CallHistoryDB/
 CallHistoryTransactions/
 CEF/
 CloudDocs/
+Code/Cache/
+Code/GPUCache/
+Code/logs/
 CrashReporter/
 Dash/Cheat Sheets/
 Dash/DocSets/
@@ -13,8 +18,10 @@ Dash/Versioned DocSets/
 DiskImages/
 Dock/
 Dropbox/
+Evernote/
 FileProvider/
 Firefox/Crash Reports/
+Firefox/Profiles/m7ti5f03.default-esr/storage
 icdd/
 iCloud/
 JetBrains/IntelliJ*
