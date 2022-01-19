@@ -410,9 +410,9 @@ hs.hotkey.bind(alt_cmd, ".", function()
     end
 end)
 -- Enlarged vertically
-hs.hotkey.bind(alt_cmd, "=", expandVertically)
+hs.hotkey.bind(alt_cmd, "\\", expandVertically)
 -- Enlarged horizontally
-hs.hotkey.bind(alt_cmd, "-", expandHorizontally)
+hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
 -- Fullscreen
 hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
 

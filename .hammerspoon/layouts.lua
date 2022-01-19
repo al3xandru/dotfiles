@@ -44,16 +44,25 @@ LAYOUTS = {
             {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.25, 0.5, 0.75, 0.5), nil, nil}
         }
     },
-    communication = {
-        name = "Comms & Scheduling",
-        subtitle = "Mail, Slack, Calendar, Zimbra",
+    work_communication = {
+        name = "Work comms",
+        subtitle = "Mail, Slack, Outlook",
         layout = {
-            {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, .7), nil, nil},
-            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, .3, 1, .7), nil, nil},
-            {"Calendar", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, 0, .5, .75), nil, nil},
-            {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
+            {"Slack", nil, nil, hs.geometry.unitrect(0, 0, 1, .6), nil, nil},
+            {"Microsoft Outlook", nil, nil, hs.geometry.unitrect(0, .2, 1, .6), nil, nil},
+            {"Mail", nil, nil, hs.geometry.unitrect(0, .4, 1, .6), nil, nil}
         }
     },
+    -- communication = {
+    --     name = "Comms & Scheduling",
+    --     subtitle = "Mail, Slack, Calendar, Zimbra",
+    --     layout = {
+    --         {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, .7), nil, nil},
+    --         {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, .3, 1, .7), nil, nil},
+    --         {"Calendar", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, 0, .5, .75), nil, nil},
+    --         {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
+    --     }
+    -- },
     planning = {
         name = "Task planning",
         subtitle = "TaskPaper, OmniFocus",
@@ -81,6 +90,7 @@ LAYOUTS = {
 
             {"Dash", nil, nil, hs.geometry.new("[60, 50, 100, 95]"), nil, nil},
             {"Terminal", nil, nil, hs.geometry.new("[0, 65, 100, 100]"), nil, nil},
+            {"Alacritty", nil, nil, hs.geometry.new("[0, 65, 100, 100]"), nil, nil},
 
             -- {"Books", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
             -- {"Preview", nil, nil, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
@@ -143,6 +153,7 @@ LAYOUTS = {
             {"Safari Technology Preview", nil, attemptSecondaryScreen, hs.geometry.new("[0, 10, 35, 100]"), nil, nil},
             -- secondary center
             {"Terminal", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
+            {"Alacritty", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
             {"Dash", nil, attemptSecondaryScreen, hs.geometry.new("[35, 50, 65, 100]"), nil, nil},
             -- secondary right
             {"Brave Browser", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
