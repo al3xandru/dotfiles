@@ -15,6 +15,7 @@ alias lt='ls -AFlpt ${lsflags}'
 alias tree='tree -C'
 
 # Directories:
+alias cd=z
 alias ~="cd ~"
 alias -- -="cd -"
 alias ..="cd .."
