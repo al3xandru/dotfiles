@@ -349,7 +349,8 @@ function qqadd {
     else
         qqfilename="$(echo "$@" | tr " " _)"
         v "$QQ/qq-$qqfilename.md"
-        echo "Created QQ: $qqfilename"
+        echo "Created QQ: $qqfilename (filename in clipboard: $QQ/qq-$qqfilename.md)"
+        echo "$QQ/qq-$qqfilename.md" | pbcopy
     fi
 }
 # function loopback {
