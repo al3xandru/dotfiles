@@ -1,6 +1,7 @@
 Animoji/
 App Store/
 BetterTouchTool/Logs/
+BraveSoftware/
 BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage/
 Caches/
 CallHistoryDB/
@@ -11,6 +12,7 @@ Code/Cache/
 Code/GPUCache/
 Code/logs/
 CrashReporter/
+com.QotoQot.Qbserve/
 Dash/Cheat Sheets/
 Dash/DocSets/
 Dash/Java DocSets/
@@ -18,15 +20,26 @@ Dash/Versioned DocSets/
 DiskImages/
 Dock/
 Dropbox/
+DropboxElectron/
 Evernote/
+FaceTime/
 FileProvider/
+Firefox/
 Firefox/Crash Reports/
 Firefox/Profiles/m7ti5f03.default-esr/storage
 icdd/
 iCloud/
+info.eurocomp.Timing2/
+info.eurocomp.TimingHelper/
 JetBrains/IntelliJ*
 JetBrains/Toolbox/
+Kiwi for Gmail/
 Knowledge/
 Oracle/Oracle Content/
 Oracle/Oracle Documents/
+Qbserve/
 Slack/
+Transmission/Resume/
+Transmission/Torrents/
+Workflowy/
+workflowy-nativefier-cb05a0/
