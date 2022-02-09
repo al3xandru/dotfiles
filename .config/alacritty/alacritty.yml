@@ -1,9 +1,9 @@
 env:
   ALACRITTY: "1"
 window:
-  dimensions:
-    columns: 100
-    lines: 75
+  # dimensions:
+  #   columns: 100
+  #   lines: 72
   # full, buttonless, transparent, none
   decorations: transparent
   dynamic_title: true
@@ -33,6 +33,9 @@ cursor:
 selection:
   save_to_clipboard: true
 
+key_bindings:
+- { key: N, mods: Command, action: CreateNewWindow }
+- { key: N, mods: Command|Control, action: SpawnNewInstance} 
 # 
 # shell:
 #   program: bash
