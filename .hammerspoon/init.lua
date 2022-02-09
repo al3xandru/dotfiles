@@ -78,6 +78,9 @@ require('layouts')
 hs.hotkey.bind(alt_cmd, "tab", function()
     hs.hints.windowHints()
 end)
+hs.hotkey.bind(alt, "tab", function()
+    hs.hints.windowHints()
+end)
 
 --
 -- Window management
