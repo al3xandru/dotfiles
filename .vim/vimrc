@@ -1056,6 +1056,23 @@ Plug 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 " tpope extensions: surround, unimpaired {{{
 Plug 'tpope/vim-surround'
+
+" mappings
+nnoremap <silent> [b :<C-U>bprev<CR>
+nnoremap <silent> ]b :<C-U>bnext<CR>
+nnoremap <silent> [l :<C-U>lprev<CR>
+nnoremap <silent> ]l :<C-U>lnext<CR>
+nnoremap <silent> [q :<C-U>cprev<CR>
+nnoremap <silent> ]q :<C-U>cnext<CR>
+
+" toggles: background, spell, number, relativenumber, wrap, list
+nmap yob :<C-U>set background=<C-R>=&background == "dark" ? "light" : "dark"<CR><CR>
+nmap yol :<C-U>setlocal <C-R>=&list == 0 ? 'list' : 'nolist'<CR><CR>
+nmap yon :<C-U>setlocal number norelativenumber<CR>
+nmap yor :<C-U>setlocal nonumber relativenumber<CR>
+nmap yos :<C-U>setlocal <C-R>=&spell == 0 ? 'spell' : 'nospell'<CR><CR>
+nmap yow :<C-U>setlocal <C-R>=&wrap == 0 ? 'wrap' : 'nowrap'<CR><CR>
+
 " }}}
 
 
