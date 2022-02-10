@@ -9,7 +9,11 @@ set incsearch
 set scrolloff=5
 set visualbell
 set noerrorbells
-set showmode    " message on the status line to show current mode
+" message on the status line to show current mode
+set showmode
+
+" relative line numbers by default
+set nonumber relativenumber
 
 " extensions
 set surround
@@ -99,6 +103,7 @@ nnoremap <C-S-k> :action SmartSearchAction<CR>
 nnoremap s :action AceAction<CR>
 " nnoremap s :action KJumpAction.Char2<CR>
 
+" mappings inspired by tpope/vim-unimpaired
 nnoremap g[ :action Back<CR>
 nnoremap g] :action Forward<CR>
 " nnoremap g[ <D-[>
@@ -107,20 +112,24 @@ nnoremap g] :action Forward<CR>
 " nnoremap g] <C-i>
 
 nnoremap cn :action GotoNextError<CR>
-nnoremap ]c :action GotoNextError<CR>
+nnoremap ]q :action GotoNextError<CR>
 nnoremap cp :action GotoPreviousError<CR>
-nnoremap [c :action GotoPreviousError<CR>
+nnoremap [q :action GotoPreviousError<CR>
 nnoremap ]l :action GotoNextError<CR>
 nnoremap [l :action GotoPreviousError<CR>
-" nnoremap lnext :action GotoNextError<CR>
-" nnoremap lne :action GotoNextError<CR>
-" nnoremap lprevious :action GotoPreviousError<CR>
-" nnoremap lp :action GotoPreviousError<CR>
-" nnoremap ]m :action MethodDown<CR>
-" nnoremap [m :action MethodUp<CR>
+nnoremap lnext :action GotoNextError<CR>
+nnoremap lne :action GotoNextError<CR>
+nnoremap lprevious :action GotoPreviousError<CR>
+nnoremap lp :action GotoPreviousError<CR>
+"
+nnoremap ]m :action MethodDown<CR>
+nnoremap [m :action MethodUp<CR>
 
-nmap [or :set nonumber relativenumber<CR>
-nmap ]or :set norelativenumber number<CR>
+" nmap [or :set nonumber relativenumber<CR>
+" nmap ]or :set norelativenumber number<CR>
+
+nmap yon :<C-U>setlocal norelativenumber number<CR>
+nmap yor :<C-U>setlocal nonumber relativenumber<CR> 
 
 " nnoremap gcc :action CommentByLineComment<CR>
 " vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
