@@ -17,3 +17,5 @@ symbol=""
 format="[$symbol$branch]($style)"
 
 [git_status]
+# modified="!"
+modified="*"
