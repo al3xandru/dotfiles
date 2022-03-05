@@ -347,7 +347,7 @@ if has('mac')
         let &pythondll=$HOME . "/.pyenv/versions/" . _pyver . "/lib/libpython" . _pyvermaj . ".dylib"
         let &pythonhome=$HOME . "/.pyenv/versions/" . _pyver
         " Python 3
-        let _cmd = 'pyenv versions --bare --skip-aliases | grep -E "3\.[[:digit:]]\.[[:digit:]]+$" | tail -1'
+        let _cmd = 'pyenv versions --bare --skip-aliases | grep -E "3\.[[:digit:]]+\.[[:digit:]]+$" | tail -1'
         let _pyenv=substitute(system(_cmd), '[\]\|[[:cntrl:]]', '', 'g')
         let _pyver=substitute(_pyenv, '^\s*\(.*\)', '\1', '')
         " let _pyver=_pyenv
@@ -370,7 +370,7 @@ if has('mac')
             let g:jedi#force_py_version = 3
             let g:pymode_python = 'python3'
         else
-            " echom "PYTHON3k  :NO"
+            echom "PYTHON3k  :NO"
             let g:jedi#force_py_version = 2
             let g:pymode_python = 'python'
         endif
