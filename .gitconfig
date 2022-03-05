@@ -35,14 +35,18 @@
     bn = checkout -b
     cl = clone
     cl0 = clone --depth 1
-    c = commit
+    # c = commit
     ci = commit --interactive -v
     cm = commit -m
     cv = commit -v
-    # ca = commit -a -v
     co = checkout
+    # switch introduced in 2.23
+    sw = switch
+    sn = switch -c
+    swn = switch -c
     d = diff
     dh = diff HEAD
+    # --cached and --staged are synonymous
     dc = diff --staged
     dw = diff --word-diff
     dcw = diff --color-words
