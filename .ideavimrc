@@ -31,6 +31,7 @@ let g:argtextobj_pairs="(:),{:},[:]"
 set ideajoin
 
 " custom mappings
+set timeoutlen=500
 nnoremap j gj
 vnoremap j gj
 nnoremap k gk
@@ -40,12 +41,51 @@ vnoremap k gk
 " inoremap <C-a> <C-o>A
 " inoremap <A-a> <C-o>A
 
+" i_CTRL-O: allows to execute 1 normal command
 inoremap <C-X> <C-O>
 inoremap <leader>o <C-O>
 
 nnoremap <leader>o <C-O>
 nnoremap <leader>i <C-I>
 nnoremap <leader>v <C-V>
+
+" nnoremap <space><esc> :nohlsearch<CR>
+" noremap <C-w>p :PrevSplitter<CR>
+" nnoremap <space>hh :nohlsearch<CR>
+
+" action based mappings
+" Dash search
+nnoremap <C-S-k> :action SmartSearchAction<CR>
+
+" AceJump
+nnoremap s :action AceAction<CR>
+" nnoremap s :action KJumpAction.Char2<CR>
+
+" mappings inspired by tpope/vim-unimpaired
+" nnoremap g[ :action Back<CR>
+" nnoremap g] :action Forward<CR>
+nnoremap g[ <M-[>
+nnoremap g] <M-]>
+
+nnoremap cn :action GotoNextError<CR>
+nnoremap ]q :action GotoNextError<CR>
+nnoremap cp :action GotoPreviousError<CR>
+nnoremap [q :action GotoPreviousError<CR>
+nnoremap ]l :action GotoNextError<CR>
+nnoremap [l :action GotoPreviousError<CR>
+
+nnoremap ]m :action MethodDown<CR>
+nnoremap [m :action MethodUp<CR>
+
+
+nmap yon :<C-U>setlocal norelativenumber number<CR>
+nmap yor :<C-U>setlocal nonumber relativenumber<CR> 
+
+" nnoremap gcc :action CommentByLineComment<CR>
+" vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
+" for block comments
+vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
+vnoremap gb :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
 
 " handlers IDE
 " Emacs: go to beginning of line
@@ -91,48 +131,3 @@ sethandler <C-U> a:vim
 " N: window; I: Delete word before
 sethandler <C-W> a:vim
 
-" nnoremap <space><esc> :nohlsearch<CR>
-" noremap <C-w>p :PrevSplitter<CR>
-" nnoremap <space>hh :nohlsearch<CR>
-
-" action based mappings
-" Dash search
-nnoremap <C-S-k> :action SmartSearchAction<CR>
-
-" AceJump
-nnoremap s :action AceAction<CR>
-" nnoremap s :action KJumpAction.Char2<CR>
-
-" mappings inspired by tpope/vim-unimpaired
-nnoremap g[ :action Back<CR>
-nnoremap g] :action Forward<CR>
-" nnoremap g[ <D-[>
-" nnoremap g] <D-]>
-" nnoremap g[ <C-o>
-" nnoremap g] <C-i>
-
-nnoremap cn :action GotoNextError<CR>
-nnoremap ]q :action GotoNextError<CR>
-nnoremap cp :action GotoPreviousError<CR>
-nnoremap [q :action GotoPreviousError<CR>
-nnoremap ]l :action GotoNextError<CR>
-nnoremap [l :action GotoPreviousError<CR>
-nnoremap lnext :action GotoNextError<CR>
-nnoremap lne :action GotoNextError<CR>
-nnoremap lprevious :action GotoPreviousError<CR>
-nnoremap lp :action GotoPreviousError<CR>
-"
-nnoremap ]m :action MethodDown<CR>
-nnoremap [m :action MethodUp<CR>
-
-" nmap [or :set nonumber relativenumber<CR>
-" nmap ]or :set norelativenumber number<CR>
-
-nmap yon :<C-U>setlocal norelativenumber number<CR>
-nmap yor :<C-U>setlocal nonumber relativenumber<CR> 
-
-" nnoremap gcc :action CommentByLineComment<CR>
-" vnoremap gc :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByLineComment<CR>
-" for block comments
-vnoremap gC :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
-vnoremap gb :<bs><bs><bs><bs><bs>action VimVisualSwapSelections<CR>:action CommentByBlockComment<CR>
