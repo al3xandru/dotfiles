@@ -147,17 +147,19 @@ def themoviedb_data(title, year=None):
     return {}, 0
 
   imdb_data['year'] = jdata['release_date'][:4]
-  imdb_data['imdb_url'] = "http://www.imdb.com/title/{}".format(jdata['imdb_id'])
+  imdb_data['imdb_url'] = "https://www.imdb.com/title/{}".format(jdata['imdb_id'])
   imdb_data['genres'] = [t['name'] for t in jdata['genres']]
   imdb_data['plot'] = jdata['overview']
   imdb_data['poster'] = jdata.get('poster_path', '')
+  imdb_data['rating'] = jdata.get('vote_average', 0)
   imdb_data['tmdb'] = {'popularity': jdata.get('popularity', 0),
                        'vote_count': jdata.get('vote_count', 0),
+                       'vote_average': jdata.get('vote_average', 0),
                        'id': jdata['id']}
 
   jdata = httpGet('api.themoviedb.org', f"/3/movie/{movie_id}/credits?api_key={themoviedb_api_key}")
   if jdata:
-    imdb_data['actors'] = [t['name'] for t in jdata['cast']]
+    imdb_data['actors'] = [f"{t['name']} (as {t['character']})" for t in jdata['cast']]
     imdb_data['directors'] = [t['name'] for t in jdata['crew'] if t['job'].lower() == 'director']
 
   return imdb_data, 1
@@ -217,7 +219,7 @@ def omdbapi_data(title, year=None):
   if match_len(title, imdb_data.get('Title', '')) == 0:
     return {}, 0
   if imdb_data and 'imdbID' in imdb_data:
-    imdb_data['imdb_url'] = "http://www.imdb.com/title/{}".format(imdb_data['imdbID'])
+    imdb_data['imdb_url'] = "https://www.imdb.com/title/{}".format(imdb_data['imdbID'])
 
   return imdb_data, 1
 
@@ -248,6 +250,70 @@ def rotten_data(title, year=None):
       return movie, 1
 
   return {}, 0
+
+def imdb_scores(imdb_url):
+  """scrap the imdb page for 2 scores"""
+  if not imdb_url.endswith("/"):
+    imdb_url = imdb_url + "/"
+  imdb_url = imdb_url.replace("http://", "https://")
+  print("GET", imdb_url)
+  from urllib.parse import urlparse
+  url_parts = urlparse(imdb_url)
+  c = None
+  try:
+    c = http.client.HTTPSConnection(url_parts.netloc)
+    c.request('GET', url_parts.path)
+    response = c.getresponse()
+    if DEBUG_HTTP_STATUS:
+      print("    response:", response.status)
+    if response.status != 200:
+      print(f"not ok: {response.status} for {imdb_url}")
+    else:
+      body = response.read()
+      parser = ImdbHtmlParser()
+      parser.feed(body.decode(encoding='utf-8', errors='skip'))
+      return {'imdb': parser.imdb_score, 'meta': parser.meta_score}
+  except socket.error:
+    print("error retrieving: ", imdb_url)
+  finally:
+    if c:
+      c.close()
+  return {'imdb': '', 'meta': ''}
+
+from html.parser import HTMLParser
+
+class ImdbHtmlParser(HTMLParser):
+  def __init__(self):
+    super().__init__()
+    self._next_imdb_score = False
+    self._next_meta_score = False
+    self.imdb_score = ''
+    self.meta_score = ''
+
+  def handle_starttag(self, tag, attrs):
+    if tag == 'span':
+      for a, v in attrs:
+        if a == 'class':
+          if 'iTLWoV' in v:
+            # print("found potential imdb score:", tag, v)
+            self._next_imdb_score = True
+          if 'score-meta' in v:
+            # print("found potential meta score:", tag, v)
+            self._next_meta_score = True
+
+  def handle_endtag(self, tag):
+    if self._next_imdb_score:
+      self._next_imdb_score = False
+    if self._next_meta_score:
+      self._next_meta_score = False
+
+  def handle_data(self, data):
+    if self._next_imdb_score:
+      self.imdb_score = data
+    if self._next_meta_score:
+      self.meta_score = data
+
+
 
 
 def httpGet(server, uri):
@@ -345,13 +411,17 @@ def main(title, opts):
   # rottend, r3 = rotten_data(title, opts.year)
   rottend = {}
 
+  ratings= {'tmdb': imdbapid.get('rating', ''), 'imdb': omdbapid.get('rating', ''), 'meta': ''}
+  imdb_url = get('imdb_url', '', imdbapid, tmdbapid, omdbapid)
+  if imdb_url:
+    ratings.update(imdb_scores(imdb_url))
+
   data = {
     'title': get('title', '', imdbapid, tmdbapid, rottend, omdbapid),
     'year': opts.year or get('year', '', imdbapid, tmdbapid, omdbapid),
     'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
-    'imdb_rating': get('rating', '', imdbapid, tmdbapid),
     'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
     'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
@@ -364,6 +434,7 @@ def main(title, opts):
     'synopsis': '',
     'tmdb': imdbapid.get('tmdb', {})
   }
+  data['ratings'] = ratings
   if rottend:
     data['rotten_url'] = rottend.get('links', {}).get('alternate', '')
     data['critics_rating'] = rottend.get('ratings', {}).get('critics_rating', 'n/a')
@@ -395,7 +466,7 @@ def main(title, opts):
     print(f"https://image.tmdb.org/t/p/w1280{data['poster']}")
   print("Searches:")
   quoted_title = urllib.parse.quote_plus(title)
-  print("http://www.imdb.com/find?q={}".format(quoted_title))
+  print("https://www.imdb.com/find?q={}".format(quoted_title))
   print("http://www.rottentomatoes.com/search/?search={}".format(quoted_title))
   print("http://trakt.tv/search?query={}".format(quoted_title))
 
@@ -518,24 +589,30 @@ def print_to(stream, data):
   stream.write("My rating: {}   \n".format(RATINGS[data.get('my_rating', '')]))
 
   stream.write(f"Year     : {data['year']}   \n")
-  stream.write( "Genre    : {}   \n\n".format(', '.join(data['genre'])))
+  stream.write( "Genre    : {}   \n".format(', '.join(data['genre'])))
+  if 'ratings' in data:
+    stream.write(f"Scores   : tmdb:{data['ratings'].get('tmdb')}, imdb:{data['ratings'].get('imdb')}, meta:{data['ratings'].get('meta')}\n\n")
+  else:
+    stream.write("\n")
 
+  if 'tmdb' in data:
+    stream.write(f"TMDB link: <https://www.themoviedb.org/movie/{data['tmdb']['id']}>   \n")
   if 'imdb_url' in data:
     stream.write(f"IMDb link: <{data['imdb_url']}>   \n")
-  stream.write(f"IMDB     : {data['imdb_rating']}(10)   \n")
-  stream.write( "Metascore:    \n\n")
+    stream.write(f"Meta link: <{data['imdb_url']}/criticreviews>   \n")
+
+  # stream.write(f"IMDB     : {data['imdb_rating']}(10)   \n")
+  # stream.write( "Metascore:    \n\n")
 
   if 'rotten_url' in data:
     if data['rotten_url'].startswith('http'):
-      stream.write(f"Tomato   : <{data['rotten_url']}>   \n")
+      stream.write(f"Tomato   : <{data['rotten_url']}>   \n\n")
     else:
-      stream.write(f"Tomato   : <http:{data['rotten_url']}>   \n")
+      stream.write(f"Tomato   : <http:{data['rotten_url']}>   \n\n")
   stream.write(f"Audience : {data['audience_score']} {data['audience_rating']}   \n")
   stream.write(f"Critics  : {data['critics_score']} {data['critics_rating']}   \n")
   stream.write("\n")
 
-  if 'tmdb' in data:
-    stream.write(f"TMDB link: <https://www.themoviedb.org/movie/{data['tmdb']['id']}>   \n\n")
   stream.write("* * * * * * * * * * *")
   stream.write("\n\n")
 
@@ -563,6 +640,7 @@ def print_to(stream, data):
   stream.write("* * * * * * * * * *")
   stream.write("\n\n")
 
+  stream.write(f"![{data['title']}](https://image.tmdb.org/t/p/w1280/{data['poster']})\n\n")
 
   # Tags
   tags = "t#movie:{}".format(data['year'])
@@ -588,6 +666,7 @@ if __name__ == '__main__':
   title = ' '.join(opts.title)
 
   main(title, opts)
+  # imdb_scores(sys.argv[1])
 
 
 # Sample imdbapi.org result:
