@@ -28,7 +28,7 @@ def main(action, options):
         results = search(options)
         output_results(options.output, results, options.query)
         if options.output == 'text' and options.clipboard:
-            subprocess.run("pbcopy", universal_newlines=True, input=results)
+            subprocess.run("pbcopy", text=True, input=results.strip("\n\r"))
             print("results in clipboard")
 
 
