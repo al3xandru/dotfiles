@@ -39,6 +39,11 @@ function gitquick() {
     e "$CHECKOUT_DIR"
 }
 
+# https://leancrew.com/all-this/2022/03/last-man-standing
+function bbman() {
+    man "$1" | col -bx | bbedit --view-top --clean -t "$1"
+}
+
 function whostopseject() {
     sudo lsof | grep "$1"
 }
@@ -333,15 +338,15 @@ function gopath {
     go env
 }
 
-function goworkspace {
-    if [ -z "$1" ]; then
-        echo "Project name required"
-    else
-        mkdir -p "$1/"{bin,pkg,src}    
-        cd "$1"
-        gopath .
-    fi
-}
+# function goworkspace {
+#     if [ -z "$1" ]; then
+#         echo "Project name required"
+#     else
+#         mkdir -p "$1/"{bin,pkg,src}    
+#         cd "$1"
+#         gopath .
+#     fi
+# }
 
 function qqadd {
     if [ -z "$1" ]; then
