@@ -27,6 +27,7 @@ alias grep='grep --color'
 alias unrar='unrar x'
 alias ziplist='unzip -l'
 alias dict='cat /usr/share/dict/words | fzf --height=1 --preview=""'
+alias jq='gojq'
 
 # editors: vim, nvim, mvim, vimr
 # alias v="nvim"
