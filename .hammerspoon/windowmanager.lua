@@ -409,6 +409,7 @@ hs.hotkey.bind(alt_cmd, ".", function()
         wnd:centerOnScreen() 
     end
 end)
+
 -- Enlarged vertically
 hs.hotkey.bind(alt_cmd, "\\", expandVertically)
 -- Enlarged horizontally
@@ -421,8 +422,9 @@ hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
 hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 
 -- Move to left/right dekstop
-hs.hotkey.bind({"alt", "ctrl"}, 'right', function() moveWndNextSpace('right') end)
-hs.hotkey.bind({"alt", "ctrl"}, 'left', function() moveWndNextSpace('left') end)
+-- Disabled as long using Raycast
+-- hs.hotkey.bind({"alt", "ctrl"}, 'right', function() moveWndNextSpace('right') end)
+-- hs.hotkey.bind({"alt", "ctrl"}, 'left', function() moveWndNextSpace('left') end)
 
 
 -- Move
