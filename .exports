@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Disable macOS Bash deprecation warning.
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
 #
 # Dynamic EDITOR/VISUAL
 export EDITOR="$HOME/bin/editor.sh"
@@ -28,6 +31,8 @@ if [ -x /usr/local/bin/rg -o /opt/homebrew/bin/rg ]; then
     fi
 fi
 
+# Karabiner & GOKU
+export GOKU_EDN_CONFIG_FILE=$HOME/.config/karabiner/karabiner.edn
 
 #
 # Homebrew
@@ -52,18 +57,23 @@ export HOMEBREW_NO_INSTALL_CLEANUP=1
 #
 # export QQDIR=$HOME/Dropbox/Dox/nvall
 export QQ=$HOME/omuninn/qq
+export MYDOX=$HOME/Dropbox/Dox/mydox
 
 # Code repository
 if [ -z "$ALLREPOS" ]; then
     export ALLREPOS=$HOME/Dropbox/workspaces
+    # Mine
     export MYREPOS=$ALLREPOS/mine
     export MYGO=$MYREPOS/goland/gospace/src/github.com/al3xandru
     export MYJAVA=$MYREPOS/java
     export MYMISC=$MYREPOS/misc
+    # Work
     export WORKREPOS=$ALLREPOS/work
     export WORKGO=$WORKREPOS/gospace/src/github.com/al3xandru
     export WORKJAVA=$WORKREPOS/javaspace
-    export MYDOX=$HOME/Dropbox/Dox/mydox
+    # Shared
+    export SHAREDREPOS=/Users/Shared/workspace
+    export SREPOS=$SHAREDREPOS
     if [ mkdir $HOME/.marks &>/dev/null ]; then
         cd "$HOME/.marks"
         echo "Creating initial marks"
