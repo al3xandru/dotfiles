@@ -291,10 +291,10 @@ class ImdbHtmlParser(HTMLParser):
     self.meta_score = ''
 
   def handle_starttag(self, tag, attrs):
-    if tag == 'span':
+    if tag == 'span' and (self.imdb_score == '' or self.meta_score == ''):
       for a, v in attrs:
         if a == 'class':
-          if 'iTLWoV' in v:
+          if 'iTLWoV' in v or 'sc-7ab21ed2-1' in v:
             # print("found potential imdb score:", tag, v)
             self._next_imdb_score = True
           if 'score-meta' in v:
@@ -323,7 +323,7 @@ def httpGet(server, uri):
   print("GET", server, uri)
   c = None
   try:
-    c = http.client.HTTPConnection(server)
+    c = http.client.HTTPConnection(server, timeout=20)
     c.request('GET', uri)
     response = c.getresponse()
     if DEBUG_HTTP_STATUS:
