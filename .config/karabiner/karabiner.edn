@@ -271,13 +271,14 @@
                  [:!Qperiod :!Ttab]
                  
                  [:left_option :left_option nil {:alone :!Cl}]
+                 [:!Oc [:!Cl :!Cc]]
+                 [:!Oq [:!Cl :!Cc]] 
                  ; [:left_command :left_command nil {:alone :!Ct}]
 
-                 ;; Double Shift to close tab
-                 ; [:left_shift   :left_shift   nil {:alone :!Cw}]
-                 [:left_shift [:!Cw ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
-                 [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
-                  {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+                 ;; Double Shift to close tab - Disabled
+                 ; [:left_shift [:!Cw ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+                 ; [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
+                 ;  {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
                  ]}
 
         ;; Applications
