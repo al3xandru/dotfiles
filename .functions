@@ -29,6 +29,41 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+function kind() {
+    if [ -z "$1" ]; then
+        echo "Usage kind FILE"
+        return 1
+    fi
+    mdls -name kMDItemKind "$1"
+    mdls -name kMDItemContentType "$1"
+    mdls -name kMDItemContentTypeTree "$1"
+}
+
+function recents() {
+    sortBy="%SB"
+    if [ "$1" = "-c" ]; then
+        shift
+    elif [ "$1" = "-u" ]; then
+        sortBy="%Sm"
+        shift
+    elif [ "$1" = "-a" ]; then
+        sortBy="%Sa"
+        shift
+    fi
+    if [ -z "$1" ]; then
+        echo "Usage: recents [-c|-u|-a] directory [limit]"
+        return
+    fi
+    folder="$1"
+    shift
+    res=10
+    if [ -n "$1" ]; then
+        res=$1
+    fi
+    # find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | sed 's/^[0-9][0-9]* *//'
+    find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | awk -F" " '{ st=index($0," "); path = substr($0,st+1); fp = path; sub(".*/","",fp); print path }'
+}
+
 function gitquick() {
     if [ -z "$1" ]; then
         echo "Usage `gitquick REPO_URI`"
