@@ -62,10 +62,10 @@ nnoremap s :action AceAction<CR>
 " nnoremap s :action KJumpAction.Char2<CR>
 
 " mappings inspired by tpope/vim-unimpaired
-" nnoremap g[ :action Back<CR>
-" nnoremap g] :action Forward<CR>
-nnoremap g[ <M-[>
-nnoremap g] <M-]>
+nnoremap g[ :action Back<CR>
+nnoremap g] :action Forward<CR>
+" nnoremap g[ <M-[>
+" nnoremap g] <M-]>
 
 nnoremap cn :action GotoNextError<CR>
 nnoremap ]q :action GotoNextError<CR>
