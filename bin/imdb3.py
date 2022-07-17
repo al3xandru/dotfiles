@@ -27,7 +27,7 @@ RATINGS = {
   '': '-',
   '1': '☆ (bad. soo bad)', # \u2606
   '2': '☆☆ _(meh)_',
-  '3': '★★ *(good. i could recommend it)*', # \u2605
+  '3': '★★★ *(good. i could recommend it)*', # \u2605
   '+3': '★★★★ **(excellent. i could always see it again)**',
   '3+': '★★★★ **(excellent. i could always see it again)**',
   '4': '★★★★ **(excellent. i could always see it again)**'
@@ -655,14 +655,14 @@ def print_to(stream, data):
 
 
 if __name__ == '__main__':
-  # print("Args: ", sys.argv[1:])
   parser = argparse.ArgumentParser(description='Movie details')
-  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'])
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'], default='d')
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
 
   opts = parser.parse_args()
+  opts.rating = opts.rating or ''
   title = ' '.join(opts.title)
 
   main(title, opts)
