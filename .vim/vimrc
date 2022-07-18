@@ -100,13 +100,13 @@ set showbreak=↪
 " set showbreak=⤿
 
 " line numbers {{{
-augroup lineno
-    autocmd!
-    autocmd FocusLost * set norelativenumber number
-    autocmd InsertEnter * set norelativenumber number
-    autocmd InsertLeave * set relativenumber number
-    autocmd Filetype qf setlocal norelativenumber number nowrap
-augroup END
+" augroup lineno
+"     autocmd!
+"     autocmd FocusLost * set norelativenumber number
+"     autocmd InsertEnter * set norelativenumber number
+"     autocmd InsertLeave * set relativenumber number
+"     autocmd Filetype qf setlocal norelativenumber number nowrap
+" augroup END
 set number
 set relativenumber
 set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
@@ -173,7 +173,7 @@ if has("gui_running")
         " PragmataPro_Mono:h13
         " Source_Code_Pro:h11
         " set gfn=SF_Mono_Regular:h12 linespace=2
-        set gfn=PragmataPro_Mono:h13,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,mononoki:h13
+        set gfn=PragmataPro_Mono:h16,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,Iosevka_Fixed:h13,mononoki:h13
         " add "New Window" menu to MacVim (stupid but needed)
         " aun File.New\ Window
         an <silent> 10.290 File.New\ Window :silent !mvim<CR>
@@ -404,7 +404,7 @@ command! SS call <SID>SaveSession()
 " Display a window with big font {{{2
 function! <SID>BigWnd() 
     colorscheme nuvola
-    set gfn=Iosevka_Fixed_Light:h24,Operator_Mono_Light:h24,mononoki:h24
+    set gfn=Iosevka_Fixed_Light:h24,Operator_Mono_Light:h24,Input_Mono_Compressed:h24,mononoki:h24
     set colorcolumn=100
     set columns=100
     set textwidth=98
@@ -419,7 +419,7 @@ command! Bigwnd call <SID>BigWnd()
 " Set GUI font {{{2
 function! <SID>Fonts()
     " let l:fonts = "Anka/Coder_Narrow Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
-    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono IBM_Plex_Mono Input_Mono Input_Mono_Condensed Input_Mono_Narrow Iosevka_Fixed JetBrains_Mono Monoid mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro Victor_Mono --- Fira_Code Hack Iosevka_SS10 "
+    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono IBM_Plex_Mono Input_Mono Input_Mono_Condensed Input_Mono_Narrow Iosevka_Fixed Iosevka_Fixed_Slab JetBrains_Mono Monoid mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro Victor_Mono --- Fira_Code Hack Iosevka_SS10 "
     let l:flst = split(l:fonts)
     echo "Fonts:"
     echo join(l:flst, "\n")
@@ -484,6 +484,7 @@ Plug 'jsit/toast.vim'
 Plug 'rakr/vim-one'
 let g:one_allow_italics = 1
 Plug 'mvanderkamp/cocoa.vim'
+Plug 'junegunn/seoul256.vim'    " Sat, Apr.2nd, 2022
 "2}}}
 "1}}}
 
@@ -856,7 +857,11 @@ function! <SID>IAWriter()
         setlocal linespace=3
         setlocal conceallevel=2
         setlocal background=light
-        setlocal gfn=Cousine:h14
+        setlocal gfn=Cousine:h14,Iosevka_Fixed_Slab_Light:h14,Operator_Mono_Light:h14,Input_Mono_Compressed_Light:h14
+        setlocal wrap
+        setlocal textwidth=80
+        setlocal norelativenumber
+        setlocal nonumber
         colorscheme pencil
         Goyo
         Limelight0.7
@@ -883,8 +888,9 @@ function! <SID>IAWriter()
         if g:iawriter_save_bgr
             execute printf("set background=%s", g:iawriter_save_bgr)
         endif
-        setlocal gfn=Operator_Mono:h12
+        setlocal gfn=Operator_Mono_Book:h12
         setlocal linespace=1
+        setlocal nowrap
         setlocal nospell
         let g:iawriter_active = 0
         echom "IAWriter deactivated [new: " . g:iawriter_save_colorscheme . ", old: pencil, background:" . g:iawriter_save_bgr . "]"
@@ -1037,14 +1043,15 @@ map ]W <Plug>CamelCaseMotion_ge
 " 2}}}
 
 
+" TODO: why did I disable vim-sneak single-char jumps?
 Plug 'justinmk/vim-sneak'
 let g:sneak#label=1
 let g:sneak#use_ic_scs=1
 " let g:sneak#map_netrw=1 " use Sneak in netrw
-nnoremap <silent> f :<C-U>call sneak#wrap('',           1, 0, 1, 1)<CR>
-nnoremap <silent> F :<C-U>call sneak#wrap('',           1, 1, 1, 1)<CR>
-nnoremap <silent> t :<C-U>call sneak#wrap('',           1, 0, 0, 1)<CR>
-nnoremap <silent> T :<C-U>call sneak#wrap('',           1, 1, 0, 1)<CR>
+" nnoremap <silent> f :<C-U>call sneak#wrap('',           1, 0, 1, 1)<CR>
+" nnoremap <silent> F :<C-U>call sneak#wrap('',           1, 1, 1, 1)<CR>
+" nnoremap <silent> t :<C-U>call sneak#wrap('',           1, 0, 0, 1)<CR>
+" nnoremap <silent> T :<C-U>call sneak#wrap('',           1, 1, 0, 1)<CR>
 " nmap f <Plug>Sneak_f
 " nmap F <Plug>Sneak_F
 " nmap t <Plug>Sneak_t
@@ -1096,51 +1103,22 @@ let g:peekaboo_delay=250
 
 Plug 'tpope/vim-rsi'            " readline keybindings
 " Ctrl-A, Ctrl-B, Ctrl-D, Ctrl-F
+
+Plug 'chrisbra/NrrwRgn'         " narrow region as in Emacs
 "}}}
 
 call plug#end()
 
-" colorscheme {{{
+"" colorscheme {{{
 
 " default colorscheme
 colorscheme evening " morning zellner
 
 " THEME command: custom colorscheme groups {{{2
 " Color scheme sites:
+" https://vimcolorschemes.com/dark/top
 " http://vimcolors.com/
 " http://colorswat.ch/
-let s:cs_dark = "(rich) onedark nord nova (vimdefault) desert256 molokai dante koehler vividchalk vibrantink molokai tango fnaqeran motus railcast tir_black inkpot"
-let s:cs_light = "(rich) ironman nuvola gruvbox (vimdefault) morning zellner (misc) cake16 sweater--- simpleandfriendly summerfruit256 calmbreeze autumnleaf buttercream navajo papayawhip pyte (disabled)"
-let s:cs_pastel = "(rich) earendel gruvbox (misc) alduin lucius --- jellybeans railcast2 tango2 wombat wombat256 wombat256mod camo (disabled) kolor"
-
-function! <SID>ChooseColorscheme(args)
-    let l:cslist = []
-    if len(a:args) == 0
-        echo 'Usage: :THEME [all|dark|light|paster]'
-        return
-    elseif a:args == 'all'
-        let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
-        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
-        echo 'List of all installed colorschemes:'
-        echo join(l:cslist, "\n")
-        return
-    elseif a:args == 'light'
-        let l:cslist = split(s:cs_light)
-        echo 'Light colorschemes:'
-    elseif a:args == 'pastel'
-        let l:cslist = split(s:cs_pastel)
-        echo 'Pastel colorschemes:'
-    elseif a:args == 'dark'
-        let l:cslist = split(s:cs_dark)
-        echo 'Dark colorschemes:'
-    endif
-    echo join(l:cslist, "\n")
-    echo "\n"
-    execute "colorscheme " . input("Choice: ", "", "color")
-endfunction
-command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
-" }}O
-
 function! s:RandomColorschemeFromList(list)
     let m = len(a:list)
     let tmstmp = str2nr(strftime('%s'))
@@ -1151,6 +1129,30 @@ function! s:RandomColorschemeFromList(list)
     return selColorscheme
 endfunction
 
+let s:cs_dark = ["(rich)", "onedark", "nord", "nova", "gruvbox",
+            \ "(new)", "seoul256",
+            \ "(vimdefault)", "desert256", "molokai", "dante", "koehler",
+            \ "vividchalk", "vibrantink", "molokai", "tango", "fnaqeran",
+            \ "motus", "railcast", "tir_black", "inkpot"]
+let s:cs_light = ["(rich)", "ironman", "nuvola", "gruvbox",
+            \ "(new)", "humanoid", "plan9", "seoul256-light",
+            \ "(vimdefault)", "morning", "zellner",
+            \ "(misc)", "cake16", "sweater", 
+            \ "---", "simpleandfriendly", "summerfruit256", "calmbreeze",
+            \ "autumnleaf", "buttercream", "navajo", "papayawhip", "pyte"]
+let s:cs_pastel = "(rich) earendel gruvbox (misc) alduin lucius seoul256 seoul256-light --- jellybeans railcast2 tango2 wombat wombat256 wombat256mod camo (disabled) kolor"
+
+let s:cs_gui = [
+            \ 'ironman', 'nuvola', 'gruvbox', 'humanoid', 'papercolor', 
+            \ 'cake16', 'sweater', 'plan9', 'github', 'earendel', 'cocoa', 'seoul256-light', 'toast', 
+            \ 'onedark', 'nord', 'nova', 'seoul256',
+            \ 'ironman', 'nuvola', 'gruvbox', 'humanoid', 'papercolor']
+
+let s:cs_term_dark = [ 'onedark', 'nord', 'nova', "gruvbox", 'seoul256', 'desert256', 'dante', 'koehler', 'solarized', "alduin", "lucius", "cocoa"]
+let s:cs_term_light = ['ironman', 'nuvola', 'gruvbox', 'humanoid', 'seoul256-light', 'plan9', 'zellner', 'papercolor', 'cocoa']
+let s:cs_zellij_dark = ['nord', 'dante', 'koehler', 'ironman', 'github', 'dante', 'ironman', 'koehler', 'github']
+let s:cs_zellij_light = ['ironman', 'nuvola', 'zellner', 'github']
+
 " set colorscheme based on vim flavor {{{2
 if has("unix")
     " use if needed to determine the os
@@ -1160,11 +1162,7 @@ if has("unix")
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let color_schemes = ['ironman', 'nuvola', 'gruvbox', 'humanoid',
-                    \ 'papercolor', 'cake16', 'sweater', 'plan9', 'github', 'earendel',
-                    \ 'onedark', 'nord', 'nova', 'ironman', 'nuvola', 'gruvbox',
-                    \ 'papercolor', 'toast', 'humanoid',
-                    \ 'cocoa']
+        let color_schemes = s:cs_gui
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1181,19 +1179,32 @@ if has("unix")
         let cs = s:RandomColorschemeFromList(color_schemes)
         execute ":colorscheme " .  cs
     else
-        " colorscheme gruvbox
-        " let color_schemes = ['ironman', 'humanoid', 'gruvbox',  'onedark', 'nord', 'alduin', 'toast', 'plan9']
-        if !empty($ALACRITTY)
-            let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+        if &background == 'dark' 
+            set background=dark
+            if !empty($ZELLIJ)
+                let color_schemes = s:cs_zellij_dark
+            elseif !empty($ALACRITTY)
+                let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+            else
+                let color_schemes = s:cs_term_dark
+
+            endif
         else
-            let color_schemes = ['ironman', 'gruvbox', 'plan9', 'nuvola', 'morning', 'zellner', 'cake16', 'sweater', 'summerfruit256', 'cocoa']
+            set background=light
+            if !empty($ZELLIJ)
+                let color_schemes = s:cs_zellij_light
+            elseif !empty($ALACRITTY)
+                let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+            else
+                let color_schemes = s:cs_term_light
+            endif
         endif
         let cs = s:RandomColorschemeFromList(color_schemes)
-        if cs == 'gruvbox'
-            " set background=dark
-        " elseif cs == 'humanoid'
-            set background=light
-        endif
+        " if cs == 'gruvbox'
+        "     " set background=dark
+        "     " elseif cs == 'humanoid'
+        "     set background=light
+        " endif
 
         execute ":colorscheme " .  cs
         " :help termcap-cursor shape
@@ -1203,6 +1214,44 @@ if has("unix")
     endif
 endif
 " }}}
+
+function! <SID>ChooseColorscheme(args)
+    let l:cslist = []
+    if len(a:args) == 0
+        echo 'Usage: :THEME [all|dark|light|pastel|gui|term_dark|term_light|zellij_dark|zellij_light]'
+        return
+    elseif a:args == 'all'
+        let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
+        let l:cslist = map(paths, 'fnamemodify(v:val, ":t:r")')
+        echo 'List of all installed colorschemes:'
+        echo join(l:cslist, "\n")
+        return
+    elseif a:args == 'light'
+        " let l:cslist = split(s:cs_light)
+        let l:cslist=s:cs_light
+    elseif a:args == 'pastel'
+        let l:cslist = split(s:cs_pastel)
+    elseif a:args == 'dark'
+        " let l:cslist = split(s:cs_dark)
+        let l:cslist=s:cs_dark
+    elseif a:args == 'term_dark'
+        let l:cslist=s:cs_term_dark
+    elseif a:args == 'term_light'
+        let l:cslist=s:cs_term_light
+    elseif a:args == 'zellij_dark'
+        let l:cslist=s:cs_zellij_dark
+    elseif a:args == 'zellij_light'
+        let l:cslist=s:cs_zellij_light
+    endif
+    echo 'Colorschemes:'
+    echo join(l:cslist, "\n")
+    echo "\n"
+    execute "colorscheme " . input("Choice: ", "", "color")
+endfunction
+command! -nargs=* THEME call <SID>ChooseColorscheme('<args>')
+" }}O
+
+
 
 " color column & cursor line {{{2
 function! <SID>SetColorColumn()
@@ -1230,7 +1279,7 @@ call <SID>SetColorColumn()
 " }}}
 
 " }}}
-
+"
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 "
