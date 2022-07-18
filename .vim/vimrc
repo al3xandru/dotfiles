@@ -173,7 +173,7 @@ if has("gui_running")
         " PragmataPro_Mono:h13
         " Source_Code_Pro:h11
         " set gfn=SF_Mono_Regular:h12 linespace=2
-        set gfn=PragmataPro_Mono:h16,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,Iosevka_Fixed:h13,mononoki:h13
+        set gfn=PragmataPro_Mono:h14,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,Iosevka_Fixed:h13,mononoki:h13
         " add "New Window" menu to MacVim (stupid but needed)
         " aun File.New\ Window
         an <silent> 10.290 File.New\ Window :silent !mvim<CR>
