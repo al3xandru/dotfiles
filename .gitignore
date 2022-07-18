@@ -1,5 +1,8 @@
 bin/Eject.app
 bin/Ejects.app
+bin/doing
+bin/helidon
+bin/qqq
 # make sure .extras is ignored
 .config/configstore/
 .config/git/gitk
