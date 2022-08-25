@@ -40,28 +40,48 @@ function kind() {
 }
 
 function recents() {
-    sortBy="%SB"
-    if [ "$1" = "-c" ]; then
-        shift
-    elif [ "$1" = "-u" ]; then
-        sortBy="%Sm"
-        shift
-    elif [ "$1" = "-a" ]; then
-        sortBy="%Sa"
-        shift
-    fi
     if [ -z "$1" ]; then
-        echo "Usage: recents [-c|-u|-a] directory [limit]"
+        echo "Usage: recents directory [created|updated|accessed] [limit]"
         return
     fi
+    res=10
+    sortBy="%SB"
     folder="$1"
     shift
-    res=10
+    case "$1" in
+        c* | -c*)
+            sortBy="%SB"
+            shift
+            ;;
+        u* | -u*)
+            sortBy="%Sm"
+            shift
+            ;;
+        a* | -a*)
+            sortBy="%Sa"
+            shift
+            ;;
+        [0-9] | [0-9][0-9] | [0-9][0-9][0-9])
+            res="$1"
+            shift
+            ;;
+    esac
     if [ -n "$1" ]; then
         res=$1
     fi
     # find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | sed 's/^[0-9][0-9]* *//'
     find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | awk -F" " '{ st=index($0," "); path = substr($0,st+1); fp = path; sub(".*/","",fp); print path }'
+}
+
+function randombook() {
+    temp_file=$(mktemp)
+    ls -1R "$1" | grep -v '^/' | sed 's/\.cb[rz]$//g' | sed 's/(.*)//g' | sed 's/v[0-9][0-9]*//g' | sed 's/vol[0-9\.][0-9\.]*//ig' | sed 's/[\.0-9_-]//g' | sed 's/  */ /g' | sort | uniq | sort > $temp_file
+    echo "Unique entries: $(wc -l < $temp_file)"
+    len=$(wc -l < $temp_file)
+    idx=$(( $RANDOM % $len ))
+    echo "Random line: $idx"
+    cat "$temp_file" | head -n $idx | tail -1
+    rm $temp_file
 }
 
 function gitquick() {
