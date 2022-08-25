@@ -3,6 +3,7 @@
 unset PYTHONHOME
 unset PYTHONPATH
 PYTHONHOME=$HOME/.pyenv/versions/2.7.18
+PATH=$PYTHONHOME/bin:$PATH
 SCRIPT="$MYREPOS/python/markdown/mkdn/markuptools.py"
 NOTIFIER_APP=""
 NOTIFIER_TYPE="0"
