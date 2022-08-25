@@ -860,7 +860,7 @@
         "basic.to_if_held_down_threshold_milliseconds" : 500
       },
       "rules" : [ {
-        "description" : "CAPS to hyper/left_control or escape if pressed alone",
+        "description" : "CAPS to (left) Ctrl or escape if pressed alone",
         "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "escape"
@@ -872,7 +872,10 @@
             "key_code" : "left_control"
           } ],
           "type" : "basic"
-        }, {
+        } ]
+      }, {
+        "description" : "Esc to Hyper or Esc if pressed alone",
+        "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "escape"
           } ],
@@ -886,7 +889,7 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "Post right_control when return_or_enter is hold",
+        "description" : "Enter to (right) Ctrl when hold",
         "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "return_or_enter"
@@ -896,6 +899,75 @@
           },
           "to" : [ {
             "key_code" : "right_control"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "Double shift sends selection to launcher",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "left_shift"
+          },
+          "to" : [ {
+            "key_code" : "c",
+            "modifiers" : [ "left_command" ]
+          }, {
+            "key_code" : "spacebar",
+            "modifiers" : [ "left_command" ]
+          }, {
+            "key_code" : "v",
+            "modifiers" : [ "left_command" ]
+          }, {
+            "set_variable" : {
+              "name" : "dbl-shift-mode",
+              "value" : 0
+            }
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+          }, {
+            "name" : "dbl-shift-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "to_delayed_action" : {
+            "to_if_invoked" : [ {
+              "set_variable" : {
+                "name" : "dbl-shift-mode",
+                "value" : 0
+              }
+            } ],
+            "to_if_canceled" : [ {
+              "set_variable" : {
+                "name" : "dbl-shift-mode",
+                "value" : 0
+              }
+            } ]
+          },
+          "parameters" : {
+            "basic.to_delayed_action_delay_milliseconds" : 200
+          },
+          "from" : {
+            "key_code" : "left_shift"
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "dbl-shift-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "left_shift"
+          } ],
+          "conditions" : [ {
+            "type" : "frontmost_application_unless",
+            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+          }, {
+            "name" : "dbl-shift-mode",
+            "value" : 0,
+            "type" : "variable_if"
           } ],
           "type" : "basic"
         } ]
@@ -1878,799 +1950,219 @@
           }
         } ]
       }, {
-        "description" : "Home row nav: f + [hjkl] [gb,.] [we] for navigation",
+        "description" : "Home row nav: f + char[hjkl] word[be] line[6/9,0/4] doc[gz]",
         "manipulators" : [ {
-          "from" : {
-            "key_code" : "h",
-            "modifiers" : {
-              "optional" : [ "any" ]
+          "to_if_alone" : [ {
+            "key_code" : "f"
+          } ],
+          "to_after_key_up" : [ {
+            "set_variable" : {
+              "name" : "fnav",
+              "value" : 0
             }
+          } ],
+          "from" : {
+            "key_code" : "f"
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "fnav",
+              "value" : 1
+            }
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "h"
           },
           "to" : [ {
             "key_code" : "left_arrow"
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow"
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "h"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "j",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "j"
           },
           "to" : [ {
             "key_code" : "down_arrow"
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow"
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "j"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "k",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "k"
           },
           "to" : [ {
             "key_code" : "up_arrow"
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow"
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "k"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "l",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "l"
           },
           "to" : [ {
             "key_code" : "right_arrow"
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow"
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "l"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "b",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "b"
           },
           "to" : [ {
             "key_code" : "left_arrow",
             "modifiers" : [ "left_option" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_option" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "b"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "e",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "e"
           },
           "to" : [ {
             "key_code" : "right_arrow",
             "modifiers" : [ "left_option" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_option" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "e"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "comma",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "6"
           },
           "to" : [ {
             "key_code" : "left_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "comma"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "6",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "9"
           },
           "to" : [ {
             "key_code" : "left_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "6"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "9",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "f-navigation-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "9"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "period",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "4"
           },
           "to" : [ {
             "key_code" : "right_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "period"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "4",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "0"
           },
           "to" : [ {
             "key_code" : "right_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "4"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "0",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "f-navigation-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "0"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "g",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "g"
           },
           "to" : [ {
             "key_code" : "up_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "g"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "z",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "z"
           },
           "to" : [ {
             "key_code" : "down_arrow",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "z"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "open_bracket",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "open_bracket"
           },
           "to" : [ {
             "key_code" : "open_bracket",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
         }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "open_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
           "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "open_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "close_bracket",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
+            "key_code" : "close_bracket"
           },
           "to" : [ {
             "key_code" : "close_bracket",
             "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
-            "name" : "f-navigation-mode",
+            "name" : "fnav",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "f-navigation-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "close_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "f"
-            }, {
-              "key_code" : "close_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "f-navigation-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
         } ]
       }, {
         "description" : "homerow shift (s + [gb04][hjkl]",
@@ -3376,1109 +2868,6 @@
           }
         } ]
       }, {
-        "description" : "window management (requires Hammerspoon setup)",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "a",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "a"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "s",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "s"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "q",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "q"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "d",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "d"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "h",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "h"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "j",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "j"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "k",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "k"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "l",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "l"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "period",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "period",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "period",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "period"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "c",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "period",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "period",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "c"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "hyphen",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "hyphen"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "equal_sign",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "equal_sign"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "open_bracket",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "open_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "close_bracket",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "right_arrow",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "close_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "v",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "equal_sign",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "equal_sign",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "v"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "0",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "0",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "0",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "0"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "9",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "9",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "9",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "9"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "g",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "g",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "g",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "g"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "z",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "z",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "z",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "z"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "u",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "z",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "z",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "u"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "m",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "m"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "a",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "conditions" : [ {
-            "name" : "w-win-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "w-win-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow",
-            "modifiers" : [ "left_control" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "w"
-            }, {
-              "key_code" : "a"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "w-win-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        } ]
-      }, {
         "description" : "Tab handling",
         "manipulators" : [ {
           "to_if_alone" : [ {
@@ -4555,6 +2944,13 @@
             "key_code" : "l",
             "modifiers" : [ "left_command" ]
           }, {
+            "key_code" : "escape"
+          }, {
+            "key_code" : "l",
+            "modifiers" : [ "left_command" ]
+          }, {
+            "key_code" : "escape"
+          }, {
             "key_code" : "c",
             "modifiers" : [ "left_command" ]
           } ],
@@ -4565,7 +2961,7 @@
           "type" : "basic"
         }, {
           "from" : {
-            "key_code" : "q",
+            "key_code" : "v",
             "modifiers" : {
               "mandatory" : [ "left_option" ]
             }
@@ -4574,8 +2970,13 @@
             "key_code" : "l",
             "modifiers" : [ "left_command" ]
           }, {
-            "key_code" : "c",
+            "key_code" : "l",
             "modifiers" : [ "left_command" ]
+          }, {
+            "key_code" : "v",
+            "modifiers" : [ "left_command" ]
+          }, {
+            "key_code" : "return_or_enter"
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
@@ -4603,333 +3004,6 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "Safari commands",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "h"
-          },
-          "to" : [ {
-            "key_code" : "h",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "h",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "h"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "l"
-          },
-          "to" : [ {
-            "key_code" : "l",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "l",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "l"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "t"
-          },
-          "to" : [ {
-            "key_code" : "backslash",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "backslash",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "t"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "open_bracket"
-          },
-          "to" : [ {
-            "key_code" : "open_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "open_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "open_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "close_bracket"
-          },
-          "to" : [ {
-            "key_code" : "close_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "close_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "close_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "y"
-          },
-          "to" : [ {
-            "key_code" : "y",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          }, {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "y",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "y"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.Safari$", "^com\\.apple\\.SafariTechnologyPreview$" ]
-          } ]
-        } ]
-      }, {
         "description" : "Brave",
         "manipulators" : [ {
           "to_if_alone" : [ {
@@ -4947,279 +3021,6 @@
             "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
           } ],
           "type" : "basic"
-        } ]
-      }, {
-        "description" : "Brave commands",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "l"
-          },
-          "to" : [ {
-            "key_code" : "l",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "l",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "l"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "t"
-          },
-          "to" : [ {
-            "key_code" : "t",
-            "modifiers" : [ "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "t",
-            "modifiers" : [ "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "t"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "open_bracket"
-          },
-          "to" : [ {
-            "key_code" : "open_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "open_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "open_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "close_bracket"
-          },
-          "to" : [ {
-            "key_code" : "close_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "close_bracket",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "close_bracket"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "y"
-          },
-          "to" : [ {
-            "key_code" : "y",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "y",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "y"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.brave\\.Browser$" ]
-          } ]
         } ]
       }, {
         "description" : "Finder tabs",
@@ -5293,525 +3094,6 @@
             "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
           } ],
           "type" : "basic"
-        }, {
-          "from" : {
-            "key_code" : "left_shift"
-          },
-          "to" : [ {
-            "key_code" : "w",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "set_variable" : {
-              "name" : "dbl-shift-mode",
-              "value" : 0
-            }
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "dbl-shift-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "to_delayed_action" : {
-            "to_if_invoked" : [ {
-              "set_variable" : {
-                "name" : "dbl-shift-mode",
-                "value" : 0
-              }
-            } ],
-            "to_if_canceled" : [ {
-              "set_variable" : {
-                "name" : "dbl-shift-mode",
-                "value" : 0
-              }
-            } ]
-          },
-          "parameters" : {
-            "basic.to_delayed_action_delay_milliseconds" : 200
-          },
-          "from" : {
-            "key_code" : "left_shift"
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "dbl-shift-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "left_shift"
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "dbl-shift-mode",
-            "value" : 0,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
-        "description" : "Finder commands",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "i",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "i",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "i",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "i"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "g",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "g",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "g",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "g"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "s",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "s"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "hyphen",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "hyphen"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "equal_sign",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "p",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "p",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "equal_sign"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "t",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "t",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "t",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "t"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "w",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "d",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "d",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "w"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
-        }, {
-          "from" : {
-            "key_code" : "p",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "d",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          }, {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "d",
-            "modifiers" : [ "left_command", "left_option", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "p"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          },
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.apple\\.finder$" ]
-          } ]
         } ]
       }, {
         "description" : "MacVim",
@@ -6369,301 +3651,6 @@
             "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
           } ],
           "type" : "basic"
-        } ]
-      }, {
-        "description" : "DayOne Commands",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "hyphen",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "j",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "j",
-            "modifiers" : [ "left_command", "left_option" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "hyphen"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "g",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "j",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "j",
-            "modifiers" : [ "left_command", "left_shift" ]
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "g"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "f",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "f"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "b",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "b"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "s",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "down_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "down_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "s"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "w",
-            "modifiers" : {
-              "optional" : [ "any" ]
-            }
-          },
-          "to" : [ {
-            "key_code" : "up_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "d-cmd-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 400
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "d-cmd-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "up_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "w"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "d-cmd-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
         } ]
       }, {
         "description" : "Tmux",
