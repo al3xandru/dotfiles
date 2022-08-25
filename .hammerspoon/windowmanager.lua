@@ -402,24 +402,24 @@ hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- }}}
 
 -- Predefined positions:
--- Center
-hs.hotkey.bind(alt_cmd, ".", function() 
-    local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
-    if wnd then
-        wnd:centerOnScreen() 
-    end
-end)
+-- Raycast -- Center
+-- hs.hotkey.bind(alt_cmd, ".", function() 
+--     local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
+--     if wnd then
+--         wnd:centerOnScreen() 
+--     end
+-- end)
 
--- Enlarged vertically
-hs.hotkey.bind(alt_cmd, "\\", expandVertically)
--- Enlarged horizontally
-hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
--- Fullscreen
-hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
+-- Raycase -- Enlarged vertically
+-- hs.hotkey.bind(alt_cmd, "\\", expandVertically)
+-- -- Enlarged horizontally
+-- hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
+-- -- Fullscreen
+-- hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
 
--- Move to different monitor
-hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
-hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
+-- Raycast -- Move to different monitor
+-- hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
+-- hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 
 -- Move to left/right dekstop
 -- Disabled as long using Raycast
@@ -427,15 +427,15 @@ hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 -- hs.hotkey.bind({"alt", "ctrl"}, 'left', function() moveWndNextSpace('left') end)
 
 
--- Move
-hs.hotkey.bind(alt_shift_cmd, 'down',  function() nudge(0, 50) end)
-hs.hotkey.bind(alt_shift_cmd, "up",    function() nudge(0,-50) end)
-hs.hotkey.bind(alt_shift_cmd, "right", function() nudge(50,0) end)
-hs.hotkey.bind(alt_shift_cmd, "left",  function() nudge(-50, 0) end)
+-- -- Move
+-- hs.hotkey.bind(alt_shift_cmd, 'down',  function() nudge(0, 50) end)
+-- hs.hotkey.bind(alt_shift_cmd, "up",    function() nudge(0,-50) end)
+-- hs.hotkey.bind(alt_shift_cmd, "right", function() nudge(50,0) end)
+-- hs.hotkey.bind(alt_shift_cmd, "left",  function() nudge(-50, 0) end)
 
-hs.hotkey.bind(ctrl_alt_cmd, 'up',    function() resize(0, -50) end)
-hs.hotkey.bind(ctrl_alt_cmd, 'down',  function() resize(0, 50) end)
-hs.hotkey.bind(ctrl_alt_cmd, 'right', function() resize(50, 0) end)
-hs.hotkey.bind(ctrl_alt_cmd, 'left',  function() resize(-50, 0) end)
+-- hs.hotkey.bind(ctrl_alt_cmd, 'up',    function() resize(0, -50) end)
+-- hs.hotkey.bind(ctrl_alt_cmd, 'down',  function() resize(0, 50) end)
+-- hs.hotkey.bind(ctrl_alt_cmd, 'right', function() resize(50, 0) end)
+-- hs.hotkey.bind(ctrl_alt_cmd, 'left',  function() resize(-50, 0) end)
 
 
