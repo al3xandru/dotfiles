@@ -7,7 +7,7 @@
 if ls --time-style > /dev/null 2>&1; then # GNU `ls`
     lsflags='--color --time-style=+%Y-%m-%dT%H:%M:%S'
 else # OS X `ls`
-    lsflags="-GT"
+    lsflags="-GT --color=auto"
 fi
 alias l='ls -1AFp ${lsflags}'
 alias ll='ls -AFlp ${lsflags}'
