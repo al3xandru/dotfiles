@@ -909,14 +909,8 @@
             "key_code" : "left_shift"
           },
           "to" : [ {
-            "key_code" : "c",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "spacebar",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "v",
-            "modifiers" : [ "left_command" ]
+            "key_code" : "1",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           }, {
             "set_variable" : {
               "name" : "dbl-shift-mode",

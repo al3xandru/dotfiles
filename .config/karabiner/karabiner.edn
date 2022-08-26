@@ -76,7 +76,7 @@
         {:des "Double shift sends selection to launcher"
          :rules [
                  [:condi :!jetbrains]
-                 [:left_shift [:!Cc :!Cspacebar :!Cv ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+                 [:left_shift [:!CTOS1 ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
                  [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
                   {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
                  ]}
