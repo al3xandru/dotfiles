@@ -969,9 +969,9 @@ Plug 'kien/rainbow_parentheses.vim' " {{{3
 augroup rainbowpar
     autocmd!
     autocmd VimEnter * RainbowParenthesesToggle
-    autocmd Syntax * RainbowParenthesesLoadRound
-    autocmd Syntax * RainbowParenthesesLoadSquare
-    autocmd Syntax * RainbowParenthesesLoadBraces
+    " autocmd Syntax * RainbowParenthesesLoadRound
+    " autocmd Syntax * RainbowParenthesesLoadSquare
+    " autocmd Syntax * RainbowParenthesesLoadBraces
 augroup END
 " 3}}}
 " 2}}}
