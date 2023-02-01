@@ -25,7 +25,7 @@
                 :firefox ["^org.mozilla.firefox$"]
                 :jetbrains ["^com\\.jetbrains\\.intellij$"]
                 :macvim ["^org\\.vim\\.MacVim$"]
-                :omnifocus ["^com\\.omnigroup\\.OmniFocus3$"]
+                :omnifocus ["^com\\.omnigroup\\.OmniFocus3$" "^com\\.omnigroup\\.OmniFocus4$"]
                 :safari ["^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$"]
                 :slack ["^com\\.tinyspeck\\.slackmacgap$"]
                 :terminal ["^com\\.apple\\.Terminal$" "^io\\.alacritty$"]
@@ -57,10 +57,10 @@
   ;; options: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L170>
 
  :main [
-        {:des "CAPS to (left) Ctrl or escape if pressed alone"
+        {:des "CAPS to Hyper or escape if pressed alone"
          :rules[
                 ; caps lock to Esc if alone, Ctrl otherwise
-                [:caps_lock :left_control nil {:alone :escape}]
+                [:caps_lock :!CTOleft_shift nil {:alone :escape}]
                 ]}
 
         {:des "Esc to Hyper or Esc if pressed alone"
@@ -81,45 +81,75 @@
                   {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
                  ]}
 
-        {:des "Fn + WASD navigation"
-         :rules [:fn-wasd-mode
+        ;; NOTE: this must come before the other 
+        {:des "Fn + WASD OmniFocus: Move"
+         :rules [
+                 [:condi :fn-wasd-mode :omnifocus]
+                 [:w :!CTup_arrow]
+                 [:a :!CTleft_arrow]
+                 [:s :!CTdown_arrow]
+                 [:d :!CTright_arrow]
+                 ]}
+        {:des "Fn + WASD navigation (-OmniFocus)"
+         :rules [
+                 [:condi :fn-wasd-mode :!omnifocus]
                  [:w :up_arrow]
                  [:a :left_arrow]
                  [:s :down_arrow]
                  [:d :right_arrow]
                  ]}
+        ; {:des "Fn + Vim-like char[hjkl] word[be] line[64] doc[gz]"
+        ;  :rules [:fn-wasd-mode
+        ;          [:h :left_arrow]
+        ;          [:j :down_arrow]
+        ;          [:k :up_arrow]
+        ;          [:l :right_arrow]
 
-        {:des "Single hand nav: n + [hjkl] [gb,.] [we] for navigation"
-         :rules [:n-navigation-mode
-                 [:##h :left_arrow]
-                 [:##j :down_arrow]
-                 [:##k :up_arrow]
-                 [:##l :right_arrow]
+        ;          [:b :!Oleft_arrow]
+        ;          [:e :!Oright_arrow]
 
-                 [:##b :!Oleft_arrow]
-                 [:##e :!Oright_arrow]
+        ;          [:6 :!Cleft_arrow]   ;; ^
+        ;          [:4 :!Cright_arrow]  ;; $
+        ;          ;; these do not move the cursor
+        ;          [:g :!Cup_arrow]
+        ;          [:G :!Cdown_arrow]
 
-                 ;; beginning of line: ,/6 (from vim ^)/9 (from open paren)
-                 [:##comma :!Cleft_arrow]
-                 [:##6 :!Cleft_arrow]
-                 [:##9 :!Cleft_arrow]
-                 ;; end of line ./4 (from vim $)/0 (from close paren)
-                 [:##period :!Cright_arrow]
-                 [:##4 :!Cright_arrow]
-                 [:##0 :!Cright_arrow]
+        ;          ;; back/forward
+        ;          [:open_bracket :!Copen_bracket]
+        ;          [:close_bracket :!Cclose_bracket]
+        ;          ]}
+        
+        ; {:des "Single hand nav: n + [hjkl] [gb,.] [we] for navigation"
+        ;  :rules [:n-navigation-mode
+        ;          [:##h :left_arrow]
+        ;          [:##j :down_arrow]
+        ;          [:##k :up_arrow]
+        ;          [:##l :right_arrow]
 
-                 ;; these do not move the cursor
-                 ; [:##g :home]
-                 ; [:##z :end]
-                 [:##g :!Cup_arrow]
-                 [:##z :!Cdown_arrow]
-                 ;; back/forward
-                 [:##open_bracket :!Copen_bracket]
-                 [:##close_bracket :!Cclose_bracket]
-                 ]}
+        ;          [:##b :!Oleft_arrow]
+        ;          [:##e :!Oright_arrow]
+
+        ;          ;; beginning of line: ,/6 (from vim ^)/9 (from open paren)
+        ;          [:##comma :!Cleft_arrow]
+        ;          [:##6 :!Cleft_arrow]
+        ;          [:##9 :!Cleft_arrow]
+        ;          ;; end of line ./4 (from vim $)/0 (from close paren)
+        ;          [:##period :!Cright_arrow]
+        ;          [:##4 :!Cright_arrow]
+        ;          [:##0 :!Cright_arrow]
+
+        ;          ;; these do not move the cursor
+        ;          ; [:##g :home]
+        ;          ; [:##z :end]
+        ;          [:##g :!Cup_arrow]
+        ;          [:##z :!Cdown_arrow]
+        ;          ;; back/forward
+        ;          [:##open_bracket :!Copen_bracket]
+        ;          [:##close_bracket :!Cclose_bracket]
+        ;          ]}
 
         ;; as layer not simlayer
-        {:des "Home row nav: f + char[hjkl] word[be] line[6/9,0/4] doc[gz]"
+        {:des "Homerow nav: f + char[hjkl] word[be] line[6/9,0/4] doc[gz]"
          :rules [:f-navigation-mode
                  [:h :left_arrow]
                  [:j :down_arrow]
@@ -131,15 +161,11 @@
 
                  ;; beginning of line: 6 (from vim ^)/9 (from open paren)
                  [:6 :!Cleft_arrow] ;; ^ is beginning of line
-                 [:9 :!Cleft_arrow] ;; think open parenthisis: beginning of sentence
                  ;; end of line 4 (from vim $)/0 (from close paren)
                  [:4 :!Cright_arrow]
-                 [:0 :!Cright_arrow]
 
                  ;; these do not move the cursor
-                 ; [:##g :home]
                  [:g :!Cup_arrow]
-                 ; [:##z :end]
                  [:z :!Cdown_arrow]
 
                  ;; back/forward
@@ -147,25 +173,21 @@
                  [:close_bracket :!Cclose_bracket]
                  ]}
 
-        {:des "homerow shift (s + [gb04][hjkl]"
+        {:des "Homerow shift (s + [gb04][hjkl]"
          :rules [:s-shift-mode
-                 [:##g :!Shome]
-                 [:##z :!Send]
+                 [:g :!Shome]
+                 [:z :!Send]
 
-                 [:##comma  :!CSleft_arrow]
-                 [:##6      :!CSleft_arrow]
-                 [:##9      :!CSleft_arrow]
-                 [:##period :!CSright_arrow]
-                 [:##4      :!CSright_arrow]
-                 [:##0      :!CSright_arrow]
+                 [:6 :!CSleft_arrow]
+                 [:4 :!CSright_arrow]
 
-                 [:##h :!Sleft_arrow]
-                 [:##j :!Sdown_arrow]
-                 [:##k :!Sup_arrow]
-                 [:##l :!Sright_arrow]
+                 [:h :!Sleft_arrow]
+                 [:j :!Sdown_arrow]
+                 [:k :!Sup_arrow]
+                 [:l :!Sright_arrow]
 
-                 [:##b :!SOleft_arrow]
-                 [:##e :!SOright_arrow]
+                 [:b :!SOleft_arrow]
+                 [:e :!SOright_arrow]
                  ]}
 
 
@@ -344,13 +366,13 @@
                  [:right_command :right_command nil {:alone :!Qo}]
                  ]}
 
-        {:des "OmniFocus commands"
+        {:des "OmniFocus D commands"
          :rules [
                  [:condi :d-cmd-mode :omnifocus]
-                 [:##h :!CTleft_arrow]
-                 [:##j :!CTdown_arrow]
-                 [:##k :!CTup_arrow]
-                 [:##l :!CTright_arrow]
+                 [:h :!CTleft_arrow]
+                 [:j :!CTdown_arrow]
+                 [:k :!CTup_arrow]
+                 [:l :!CTright_arrow]
                  ]}
 
         {:des "Slack navigation"
