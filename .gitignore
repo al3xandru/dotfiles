@@ -4,6 +4,7 @@ bin/doing
 bin/helidon
 bin/qqq
 # make sure .extras is ignored
+.config/Amazon/
 .config/configstore/
 .config/git/gitk
 .config/gocode/
@@ -13,9 +14,12 @@ bin/qqq
 .config/karabiner/karabiner.json.*
 .config/mpv/watch_later
 .config/nvim/.netrwhist
+.config/qBittorrent/
 .config/ranger/bookmarks
 .config/ranger/history
 .config/ranger/tagged
+.config/raycast/
+.config/softgaroo.com/
 .extras
 .sessions/
 # vim
