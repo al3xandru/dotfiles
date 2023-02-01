@@ -9,10 +9,14 @@ if ls --time-style > /dev/null 2>&1; then # GNU `ls`
 else # OS X `ls`
     lsflags="-GT --color=auto"
 fi
-alias l='ls -1AFp ${lsflags}'
-alias ll='ls -AFlp ${lsflags}'
+exaflags="-F --time-style=long-iso"
+# alias l='ls -1AFp ${lsflags}'
+# alias ll='ls -AFlp ${lsflags}'
+alias l='exa -1aF'
+alias ll='exa -al ${exaflags}'
 alias lt='ls -AFlpt ${lsflags}'
 alias tree='tree -C'
+# alias tree='exa -T'
 
 # Directories:
 alias cd=z
