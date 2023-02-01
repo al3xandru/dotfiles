@@ -64,7 +64,7 @@ if [ -z "$ALLREPOS" ]; then
     export ALLREPOS=$HOME/Dropbox/workspaces
     # Mine
     export MYREPOS=$ALLREPOS/mine
-    export MYGO=$MYREPOS/goland/gospace/src/github.com/al3xandru
+    export MYGO=$MYREPOS/gospace/src/github.com/al3xandru
     export MYJAVA=$MYREPOS/java
     export MYMISC=$MYREPOS/misc
     # Work
