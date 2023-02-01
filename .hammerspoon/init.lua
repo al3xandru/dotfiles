@@ -103,6 +103,14 @@ end)
 require('windowmanager')
 
 
+--- VimMode
+-- local VimMode = hs.loadSpoon('VimMode')
+-- local vim = VimMode:new()
+-- vim:disableForApp('MacVim')
+-- vim:disableForApp('Terminal')
+-- vim:shouldDimScreenInNormalMode(true)
+-- -- vim:enableBetaFeature('block_cursor_overlay')
+-- vim:bindHotKeys({ enter= {{'alt'}, 'return'}})
 
 
 

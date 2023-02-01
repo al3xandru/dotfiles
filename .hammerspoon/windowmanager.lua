@@ -395,6 +395,7 @@ local alt_shift_cmd = {"⌥", "⇧", "⌘"}
 local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
 
 -- Snap to screen edge {{{1
+-- Raycast has partial support for this behavior
 hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
 hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
 hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
@@ -402,27 +403,27 @@ hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- }}}
 
 -- Predefined positions:
--- Raycast -- Center
--- hs.hotkey.bind(alt_cmd, ".", function() 
---     local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
---     if wnd then
---         wnd:centerOnScreen() 
---     end
--- end)
+-- Raycast supports Center
+hs.hotkey.bind(alt_cmd, ".", function() 
+    local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
+    if wnd then
+        wnd:centerOnScreen() 
+    end
+end)
 
--- Raycase -- Enlarged vertically
--- hs.hotkey.bind(alt_cmd, "\\", expandVertically)
+-- Raycast -- Enlarged vertically
+hs.hotkey.bind(alt_cmd, "\\", expandVertically)
 -- -- Enlarged horizontally
--- hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
+hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
 -- -- Fullscreen
--- hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
+hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
 
--- Raycast -- Move to different monitor
+-- Raycast works better for Move to different monitor
 -- hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
 -- hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
 
 -- Move to left/right dekstop
--- Disabled as long using Raycast
+-- Raycast works better for these
 -- hs.hotkey.bind({"alt", "ctrl"}, 'right', function() moveWndNextSpace('right') end)
 -- hs.hotkey.bind({"alt", "ctrl"}, 'left', function() moveWndNextSpace('left') end)
 

@@ -33,17 +33,6 @@ end
 --   Format reminder:
 --     {"App name", "Window name", "Display Name/function", "unitrect", "framerect", "fullframerect"},
 LAYOUTS = {
-    calls = {
-        name = "Video calls",
-        subtitle = "Zoom, Evernote, Safari, Slack",
-        layout = {
-            {"zoom.us", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.6), nil, nil},
-            {"zoom.us", "Zoom - Pro Account", nil, hs.geometry.unitrect(0.8, 0, 0.1, 0.1)},
-            {"Evernote", nil, nil, hs.geometry.unitrect(0.6, 0, 0.4, 0.8), nil, nil},
-            {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.5, 0.75, 0.5), nil, nil},
-            {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.25, 0.5, 0.75, 0.5), nil, nil}
-        }
-    },
     work_communication = {
         name = "Work comms",
         subtitle = "Mail, Slack, Outlook",
@@ -53,50 +42,50 @@ LAYOUTS = {
             {"Mail", nil, nil, hs.geometry.unitrect(0, .4, 1, .6), nil, nil}
         }
     },
-    -- communication = {
-    --     name = "Comms & Scheduling",
-    --     subtitle = "Mail, Slack, Calendar, Zimbra",
-    --     layout = {
-    --         {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, .7), nil, nil},
-    --         {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, .3, 1, .7), nil, nil},
-    --         {"Calendar", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, 0, .5, .75), nil, nil},
-    --         {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
-    --     }
-    -- },
     planning = {
-        name = "Task planning",
-        subtitle = "TaskPaper, OmniFocus",
+        name = "Planning",
+        subtitle = "WorkFlowy & Omnifocus",
         layout = {
-            {"OmniFocus", nil, nil, hs.geometry.unitrect(0, 0, 1, 0.70), nil, nil},
-            {"TaskPaper", nil, nil, hs.geometry.unitrect(0, .35, 1, .65), nil, nil}
+            {"OmniFocus", nil, nil, hs.geometry.unitrect(0, 0, .65, 1), nil, nil},
+            {"WorkFlowy", nil, nil, hs.geometry.unitrect(0.65, 0, 1, 1), nil, nil}
         }
     },
+    -- planning = {
+    --     name = "Task planning",
+    --     subtitle = "TaskPaper, OmniFocus",
+    --     layout = {
+    --         {"OmniFocus", nil, nil, hs.geometry.unitrect(0, 0, 1, 0.70), nil, nil},
+    --         {"TaskPaper", nil, nil, hs.geometry.unitrect(0, .35, 1, .65), nil, nil}
+    --     }
+    -- },
     -- coding setups
     -- goals:
     -- 1.  find a way for some apps to be visible at the same way
     ide = {
         name = "IDE Session - Single monitor",
-        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash, iBooks/Preview",
+        subtitle = "IntelliJ/PyCharm/GoLand, Safari/Chrome, Dash",
         layout = {
-            {"GoLand", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
-            {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
-            {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 60, 95]")},
+            {"GoLand", nil, nil, hs.geometry.new("[0, 0, 65, 97]")},
+            {"IntelliJ IDEA", nil, nil, hs.geometry.new("[0, 0, 65, 97]")},
+            {"PyCharm", nil, nil, hs.geometry.new("[0, 0, 65, 97]")},
 
-            {"Brave Browser", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
-            {"Firefox", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
-            {"Google Chrome", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
-            {"qutebrowser", nil, nil, hs.geometry.new("[60, 0, 100, 85]"), nil, nil},
-            {"Safari", nil, nil, hs.geometry.new("[60, 5, 1, 90]"), nil, nil},
+            {"Brave Browser", nil, nil, hs.geometry.new("[65, 0, 100, 85]"), nil, nil},
+            {"Firefox", nil, nil, hs.geometry.new("[65, 0, 100, 85]"), nil, nil},
+            {"Google Chrome", nil, nil, hs.geometry.new("[65, 0, 100, 85]"), nil, nil},
+            {"qutebrowser", nil, nil, hs.geometry.new("[65, 0, 100, 85]"), nil, nil},
+            {"Safari", nil, nil, hs.geometry.new("[65, 0, 100, 90]"), nil, nil},
 
-            {"Dash", nil, nil, hs.geometry.new("[60, 50, 100, 95]"), nil, nil},
-            {"Terminal", nil, nil, hs.geometry.new("[0, 65, 100, 100]"), nil, nil},
-            {"Alacritty", nil, nil, hs.geometry.new("[0, 65, 100, 100]"), nil, nil},
+            {"Dash", nil, nil, hs.geometry.new("[55, 45, 100, 95]"), nil, nil},
+
+            {"Terminal", nil, nil, hs.geometry.new("[0, 50, 100, 100]"), nil, nil},
+            {"Warp", nil, nil, hs.geometry.new("[0, 50, 100, 100]"), nil, nil},
+            {"Alacritty", nil, nil, hs.geometry.new("[0, 50, 100, 100]"), nil, nil},
 
             -- {"Books", nil, nil, hs.geometry.unitrect(0.5, 0, 0.5, 0.98), nil, nil},
             -- {"Preview", nil, nil, hs.geometry.unitrect(0.5, 0.02, 0.5, 0.98), nil, nil},
         },
         actions = {
-            function() hs.notify.show("Hammerspoon layouts", "Activated \"IDE Session - Single monitor\"",  "Turn Hocus Focus to Coding") end
+            function() hs.notify.show("Hammerspoon layouts", "Activated \"IDE Session - Single monitor\"",  "Ready") end
         }
     },
     terminal = {
@@ -154,6 +143,7 @@ LAYOUTS = {
             -- secondary center
             {"Terminal", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
             {"Alacritty", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
+            {"Warp", nil, attemptSecondaryScreen, hs.geometry.new("[35, 0, 65, 50]"), nil, nil},
             {"Dash", nil, attemptSecondaryScreen, hs.geometry.new("[35, 50, 65, 100]"), nil, nil},
             -- secondary right
             {"Brave Browser", nil, attemptSecondaryScreen, hs.geometry.new("[65, 10, 100, 100]"), nil, nil},
@@ -220,7 +210,27 @@ LAYOUTS = {
             function() hs.notify.show("Hammerspoon layouts", "Activated \"Vim GUI - Dual monitor\"",  "Turn Hocus Focus to Coding") end
         }
     },
-    
+    -- calls = {
+    --     name = "Video calls",
+    --     subtitle = "Zoom, Evernote, Safari, Slack",
+    --     layout = {
+    --         {"zoom.us", nil, nil, hs.geometry.unitrect(0, 0, 0.6, 0.6), nil, nil},
+    --         {"zoom.us", "Zoom - Pro Account", nil, hs.geometry.unitrect(0.8, 0, 0.1, 0.1)},
+    --         {"Evernote", nil, nil, hs.geometry.unitrect(0.6, 0, 0.4, 0.8), nil, nil},
+    --         {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0.5, 0.75, 0.5), nil, nil},
+    --         {"Safari", nil, attemptSecondaryScreen, hs.geometry.unitrect(0.25, 0.5, 0.75, 0.5), nil, nil}
+    --     }
+    -- },
+    -- communication = {
+    --     name = "Comms & Scheduling",
+    --     subtitle = "Mail, Slack, Calendar, Zimbra",
+    --     layout = {
+    --         {"Mail", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, 0, 1, .7), nil, nil},
+    --         {"Slack", nil, attemptSecondaryScreen, hs.geometry.unitrect(0, .3, 1, .7), nil, nil},
+    --         {"Calendar", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, 0, .5, .75), nil, nil},
+    --         {"Firefox", nil, attemptSecondaryScreen, hs.geometry.unitrect(.5, .25, .5, .75), nil, nil}
+    --     }
+    -- },
 }
 
 -- apply a selected layout
