@@ -1,8 +1,16 @@
 bin/Eject.app
 bin/Ejects.app
+bin/coverfinder
 bin/doing
+bin/fleet
+bin/goland
 bin/helidon
+bin/idea
+bin/metafinder
+bin/pycharm
 bin/qqq
+bin/spectra-cli
+bin/theperfectdailyreadinglist.sh
 # make sure .extras is ignored
 .config/Amazon/
 .config/configstore/
