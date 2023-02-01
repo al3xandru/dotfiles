@@ -29,6 +29,10 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+function emacs() {
+    /Applications/Emacs.app/Contents/MacOS/Emacs "$@" &
+}
+
 function kind() {
     if [ -z "$1" ]; then
         echo "Usage kind FILE"
