@@ -1,5 +1,0 @@
-#!/bin/bash
-if [ ! -e "$1" ]; then
-    touch "$1"
-fi
-open -a WriteRoom "$1"
