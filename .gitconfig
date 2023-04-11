@@ -33,6 +33,7 @@
     bd = branch -d
     bD = branch -D
     bn = checkout -b
+    bav = branch -a -v
     cl = clone
     cl0 = clone --depth 1
     # c = commit
@@ -75,12 +76,16 @@
 #    spull = !git-svn fetch && git-svn rebase
 #    spush = !git-svn dcommit
 #    sync = !git pull && git push
-
+# [Idiot proof git](https://softwaredoug.com/blog/2022/11/09/idiot-proof-git-aliases.html)
+    mainbranch = "!git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
+    update = "!git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase"
+    squash = "!git rebase -v -i $(git mainbranch)"
 [push]
     default = upstream
 
 [diff]
-	tool = xdiff
+	; tool = xdiff
+    tool = vimdiff
 [difftool]
 	prompt = false
 
