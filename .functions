@@ -12,6 +12,17 @@ function e() {
     fi
 }
 
+function mc() {
+    case "$(( RANDOM % 2 ))" in
+        0)
+            lf "$@"
+            ;;
+        1)
+            nnn "$@"
+            ;;
+    esac
+}
+
 function v() {
     if [ -x "$(command -v nvim)" ]; then
         if [ $(( RANDOM % 2 )) -eq 0 ]; then
@@ -27,6 +38,36 @@ function v() {
 # List defined functions 
 function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
+}
+
+# yabai functions
+function ybkill() {
+    ps ax | grep 'yabai$' | grep -v grep | awk '{print $1}' | xargs kill
+}
+
+function ybup() {
+    ps ax | grep 'yabai$'
+    if [ $? -eq 0 ]; then
+        echo "yabai running"
+    else
+        echo "yabai is not running"
+    fi
+}
+
+function ybsp() {
+    case "$2" in
+        h*)
+            split_type="horizontal"
+            ;;
+        v*)
+            split_type="vertical"
+            ;;
+        *)
+            split_type="auto"
+            ;;
+    esac
+    yabai -m config --space $1 layout bsp split_type ${split_type} 
+    echo "Space $1 configured with split_type ${split_type}"
 }
 
 function emacs() {
@@ -75,6 +116,27 @@ function recents() {
     fi
     # find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | sed 's/^[0-9][0-9]* *//'
     find "$folder" -type f -exec stat -t "%Y%m%d%H%M" -f "$sortBy %N" {} \; | sort -r | grep -v '.DS_Store' | head -"$res" | awk -F" " '{ st=index($0," "); path = substr($0,st+1); fp = path; sub(".*/","",fp); print path }'
+}
+
+function magazines() {
+    startdir="$HOME/Dropbox/MagicBriefcase/Magazines"
+    year=$1
+    month=$2
+    case "$year" in 
+        [0-9][0-9][0-9][0-9]) ;;
+        *)
+            echo "Invalid year $year (must have 4 digits)"
+            return
+    esac
+    case "$month" in
+        [0-9][0-9]) ;;
+        *)
+            echo "Invalid month $month (month must have 2 digits)"
+            return
+    esac
+                
+    cp "$startdir/Scientific American/$year/$year.$month Scientific American *.pdf" "$startdir/Monthly Magazines/A.Scientific American $month $year.pdf"
+    cp "$startdir/Consumer Reports/$year/$year.$month Consumer Reports*.pdf" "$startdir/Monthly Magazines/B.Consumer Reports $month $year.pdf"
 }
 
 function randombook() {
@@ -152,7 +214,7 @@ function backup() {
 
 # Dropbox functions
 function dropbox_conflicts() {
-    local DROPBOXDIR="$HOME/Dropbox"
+    local DROPBOXDIR="$HOME/Library/CloudStorage/Dropbox"
     local cmd="$1"
     if [ -z "$cmd" ]; then
         echo "Usage dropbox_conflicts [wc | ls | rm]"
@@ -180,6 +242,21 @@ function dropbox_conflicts() {
                 echo "Usage dropbox_conflicts wc | ls | rm"
                 ;;
         esac
+    fi
+}
+
+function dropbox_ignore() {
+    if [ -z "$1" ]; then
+        echo "dropbox_ignore dir"
+        return
+    fi
+    read -p "Delete $1 (y):" yes
+    if [ "$yes" = "y" ]; then 
+        rm -rf "$1"
+        mkdir "$1"
+        echo "waiting 30s to synch"
+        sleep 30
+        xattr -w com.dropbox.ignored 1 "$1"
     fi
 }
 
