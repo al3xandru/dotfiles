@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ -d "/Applications/Sublime Text 2.app" ]; then
+    APPDIR="/Applications/Sublime Text 2.app"
+else
+    APPDIR="/Applications/ST2.app"
+fi
+SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
+"${SUBL}" -n
+sleep 3
+"${SUBL}" -a "$@"
+

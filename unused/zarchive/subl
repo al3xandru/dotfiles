@@ -1,0 +1,40 @@
+#!/bin/bash
+# declare an array variable
+declare -a arr=("Sublime Text.app" "Sublime Text 3.app" "ST3.app" "Sublime Text 2.app" "ST2.app")
+
+## now loop through the above array
+for i in "${arr[@]}"
+do
+	if [ -d "/Applications/$i" ]; then
+		APPDIR="/Applications/$i"
+		break
+	fi
+done
+
+SUBL="$APPDIR/Contents/SharedSupport/bin/subl"
+"${SUBL}" -b
+if [ $# = 1 ]; then
+    if [ -d "$1" ]; then
+        pushd "$1" > /dev/null
+        dirpath=$(pwd)
+        popd > /dev/null
+        # echo "basename: ${dirpath##*/}"
+        # echo "dirname : ${dirpath%/*}"
+        prj_file=$(find "$1" -name *.sublime-project | head -1)
+        if [ ! -f "${prj_file}" ]; then
+            prj_file="${dirpath%/*}/${dirpath##*/}.sublime-project"
+            if [ ! -f "${prj_file}" ]; then
+                prj_file=""
+            fi
+        fi
+        if [ -f "${prj_file}" ]; then
+            echo "Project file: ${prj_file}"
+            read -p "Do you want to open project file? " yn
+            case $yn in
+                [Yy]* ) "${SUBL}" --project "${prj_file}"; exit;;
+            esac
+        fi
+    fi
+fi
+# echo "default behavior"
+"${SUBL}" -na "$@"

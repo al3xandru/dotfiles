@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -h $0 ]; then
+    SLINK=`ls -l $0 | awk '{print $11}'`;
+    DIR=`dirname $SLINK`
+else
+    DIR=`dirname $0`
+fi
+URL=`python -c "import urllib,sys;print 'https://pinboard.in/search/?mine=1&query='+urllib.quote(' '.join(sys.argv[1:]))" $@` 
+open -a Safari $URL
+SCRIPT_CODE="tell application \"$TERM_PROGRAM\" to activate"
+osascript -e "$SCRIPT_CODE"
+"$DIR/smartfinder" -d=~/Dropbox/ka/nvall "$@"
