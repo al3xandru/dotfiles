@@ -395,21 +395,21 @@ local alt_shift_cmd = {"⌥", "⇧", "⌘"}
 local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
 
 -- Snap to screen edge {{{1
--- Raycast has partial support for this behavior
-hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
-hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
-hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
-hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
+-- Raycast introduced this behavior in 1.43.0
+-- hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
+-- hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
+-- hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
+-- hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
 -- }}}
 
 -- Predefined positions:
 -- Raycast supports Center
-hs.hotkey.bind(alt_cmd, ".", function() 
-    local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
-    if wnd then
-        wnd:centerOnScreen() 
-    end
-end)
+-- hs.hotkey.bind(alt_cmd, ".", function() 
+--     local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
+--     if wnd then
+--         wnd:centerOnScreen() 
+--     end
+-- end)
 
 -- Raycast -- Enlarged vertically
 hs.hotkey.bind(alt_cmd, "\\", expandVertically)
