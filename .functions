@@ -40,9 +40,19 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+# kobo with kepublify
+function kobopub() {
+    if [ -z "$1" ]; then
+        kepubify $HOME/Dropbox/MagicBriefcase/Books/*.epub -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
+    else
+        kepubify "$@" -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
+    fi
+}
+
 # yabai functions
 function ybkill() {
-    ps ax | grep 'yabai$' | grep -v grep | awk '{print $1}' | xargs kill
+    # ps ax | grep 'yabai$' | grep -v grep | awk '{print $1}' | xargs kill
+    yabai --stop-service
 }
 
 function ybup() {
@@ -50,11 +60,21 @@ function ybup() {
     if [ $? -eq 0 ]; then
         echo "yabai running"
     else
-        echo "yabai is not running"
+        echo "yabai is not running. starting now..."
+        # nohup yabai &> /dev/null &
+        yabai --start-service
     fi
 }
 
 function ybsp() {
+    if [ -z "$1" ]; then
+        yabai -m query --spaces | jq '.[] | {display,index,type}'
+        return
+    fi
+    if [ "$1" = "w" ]; then
+        yabai -m query --windows | jq '.[] | {app,"split-type",space,display}'
+        return
+    fi
     case "$2" in
         h*)
             split_type="horizontal"
@@ -68,6 +88,10 @@ function ybsp() {
     esac
     yabai -m config --space $1 layout bsp split_type ${split_type} 
     echo "Space $1 configured with split_type ${split_type}"
+}
+
+function mvnrun() {
+    mvn exec:java -Dexec.mainClass=$1
 }
 
 function emacs() {
@@ -142,11 +166,16 @@ function magazines() {
 function randombook() {
     temp_file=$(mktemp)
     ls -1R "$1" | grep -v '^/' | sed 's/\.cb[rz]$//g' | sed 's/(.*)//g' | sed 's/v[0-9][0-9]*//g' | sed 's/vol[0-9\.][0-9\.]*//ig' | sed 's/[\.0-9_-]//g' | sed 's/  */ /g' | sort | uniq | sort > $temp_file
-    echo "Unique entries: $(wc -l < $temp_file)"
     len=$(wc -l < $temp_file)
     idx=$(( $RANDOM % $len ))
-    echo "Random line: $idx"
-    cat "$temp_file" | head -n $idx | tail -1
+    echo "Unique entries: $len"
+    echo "Random line   : $idx"
+    entry=$(cat "$temp_file" | head -n $idx | tail -1)
+    echo "$entry"
+    fentry=$(echo "$entry" | sed 's/ /\*/g')
+    file=$(find "$1" -name "$fentry" -exec basename {} \;)
+    echo "$file"
+    echo "$file" | pbcopy
     rm $temp_file
 }
 
@@ -182,7 +211,7 @@ function switch_java() {
 
 # iTerm2 tab title
 function tabtitle() {
-    local t=$1
+    local t=$*
     if [ -z "$t" ]; then
         t=$(basename $PWD)
     fi
