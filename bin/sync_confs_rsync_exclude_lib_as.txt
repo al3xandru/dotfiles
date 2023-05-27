@@ -1,4 +1,6 @@
 */com.microsoft.appcenter/*
+AddressBook/
+AerialUpdater/
 Animoji/
 Anki2/alex/collection.media/
 app.kaleidoscope.v3/
@@ -6,30 +8,48 @@ Arc/
 App Store/
 BetterTouchTool/Logs/
 BetterTouchTool/.BTTClipboardManager_SUPPORT/*
+Bitwarden/
+Bitwarden CLI/
 BraveSoftware/
-BraveSoftware/Brave-Browser/Default/Service Worker/CacheStorage/
 Caches/
 CallHistoryDB/
 CallHistoryTransactions/
 CEF/
+Chromium/
+Cisco/
 CloudDocs/
+Cisco Spark/
 Code/Cache/
 Code/CachedData/
 Code/CachedExtensions/
 Code/CachedExtensionVSIXs/
 Code/Code Cache/
 Code/Crashpad/
+Code/databases/
 Code/Local Storage/
 Code/Service Worker/
 Code/GPUCache/
 Code/logs/
-Code/User/
+Code/Session Storage/
+Code/shared_proto_db/
+Code/User/globalStorage/
+Code/User/History/
+Code/User/workspaceStorage/
+Code/VideoDecodeStats/
+Code/WebStorage/
 CrashReporter/
+com.bugsnag.Bugsnag/
 com.cloudflare.1dot1dot1dot1.macos/
 com.contextsformac.Contexts/com.microsoft.appcenter/
+com.contextsformac.Contexts/com.microsoft.HockeyApp/
+com.contextsformac.Contexts/default.realm.management
+com.dexterleng.Homerow/com.crashlytics/
+com.kapeli.dashdoc/com.microsoft.appcenter/
+com.mjc.warped/com.crashlytics/
 com.QotoQot.Qbserve/
 com.raycast.macos/Updates/*
 com.raycast.macos/NodeJS/*
+com.remotemouse.remotemouseserver/com.microsoft.appcenter/
 Dash/Cheat Sheets/
 Dash/DocSets/
 Dash/Java DocSets/
@@ -49,21 +69,29 @@ Google/
 google-heartbeat-storage/
 icdd/
 iCloud/
-info.eurocomp.Timing2/
+info.eurocomp.Timing2/com.microsoft.appcenter/
 info.eurocomp.TimingHelper/
-JetBrains/IntelliJ*
-JetBrains/Toolbox/
+info.eurocomp.TimingHelper.InfoExtractorService/com.microsoft.appcenter/
+JetBrains/
 Kiwi for Gmail/
 Knowledge/
+LaunchBar/
 Microsoft Edge/
 Microsoft Edge Beta/
+Mozilla/
 Oracle/Oracle Content/
 Oracle/Oracle Documents/
 Qbserve/
+qBittorrent/logs/
 rancher-desktop/*
+Rancher Desktop/
 Slack/
+SteerMouse & CursorSense/
+TaskPaper/
 TestReach/
 Transmission/Resume/
 Transmission/Torrents/
+TV/
+virtualenv/
 WorkFlowy/
 workflowy-nativefier-cb05a0/

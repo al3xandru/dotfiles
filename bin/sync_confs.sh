@@ -8,18 +8,19 @@ function syncDirs() {
     syncLibraryApplicationSupport
     syncLibraryPreferences
     syncLibraryScripts
-    syncLibraryServices
+    # syncLibraryServices
 }
 
 function syncLibraryApplicationSupport() {
     SRC_DIR="$HOME/Library/Application Support/"
     TO_DIR="$TARGET_DIR/Application Support/$MACHINE_NAME"
 
-    printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
+    printf "... start sync for '%s' to '%s'\n" "$SRC_DIR" "$TO_DIR"
+    printf "...... backup in '%s/zbackups/%s'\n\n" "$TO_DIR" "$(date +%Y%m%d)"
 
-    mkdir -p "$TO_DIR"
+    mkdir -p "$TO_DIR/zbackups/$(date +%Y%m%d)"
 
-    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackup-* --exclude-from="$HOME/bin/sync_confs_rsync_exclude_lib_as.txt" "$SRC_DIR" "$TO_DIR"
+    rsync -rlptgomEb --backup-dir="zbackups/$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackups --exclude=zbackup-* --exclude-from="$HOME/bin/sync_confs_rsync_exclude_lib_as.txt" --no-links "$SRC_DIR" "$TO_DIR"
     echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
 }
 
@@ -29,9 +30,9 @@ function syncLibraryPreferences() {
 
     printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
 
-    mkdir -p "$TO_DIR"
+    mkdir -p "$TO_DIR/zbackups/$(date +%Y%m%d)"
 
-    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackup-* --exclude=com.dropbox.* --exclude=ContextStoreAgent.plist --exclude=knowledge-agent.plist --exclude=loginwindow.plist --exclude=mbuseragent.plist --exclude=MobileMeAccounts.plist --exclude=siriknowledged.plist "$SRC_DIR" "$TO_DIR"
+    rsync -rlptgomEb --no-links --backup-dir="zbackups/$(date +%Y%m%d)" --delete --exclude=com.apple.* --exclude=zbackups --exclude=com.dropbox.* --exclude=ContextStoreAgent.plist --exclude=knowledge-agent.plist --exclude=loginwindow.plist --exclude=mbuseragent.plist --exclude=MobileMeAccounts.plist --exclude=siriknowledged.plist "$SRC_DIR" "$TO_DIR"
     echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
 }
 
@@ -41,9 +42,9 @@ function syncLibraryScripts() {
 
     printf "... start sync for '%s' to '%s'\n\n" "$SRC_DIR" "$TO_DIR"
 
-    mkdir -p "$TO_DIR"
+    mkdir -p "$TO_DIR/zbackups/$(date +%Y%m%d)"
 
-    rsync -rlptgomEb --backup-dir="zbackup-$(date +%Y%m%d)" --delete --exclude=zbackup-* "$SRC_DIR" "$TO_DIR"
+    rsync -rlptgomEb --backup-dir="zbackups/$(date +%Y%m%d)" --delete --exclude=zbackups "$SRC_DIR" "$TO_DIR"
     echo "$(date +"%Y-%m-%d %H:%M:%S")" >> "${TO_DIR}_timestamp.log"
 }
 
