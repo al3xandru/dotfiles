@@ -23,7 +23,9 @@
                 :dayone ["^com\\.bloombuilt\\.dayone-mac$"]
                 :finder ["^com\\.apple\\.finder$"]
                 :firefox ["^org.mozilla.firefox$"]
-                :jetbrains ["^com\\.jetbrains\\.intellij$"]
+                ;; com.jetbrains.goland com.jetbrains.intellij
+                ; :jetbrains ["^com\\.jetbrains\\.intellij$" "^com\\.jetbrains\\.intellij-EAP$"]
+                :jetbrains ["^com\\.jetbrains\\."]
                 :macvim ["^org\\.vim\\.MacVim$"]
                 :omnifocus ["^com\\.omnigroup\\.OmniFocus3$" "^com\\.omnigroup\\.OmniFocus4$"]
                 :safari ["^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$"]
@@ -57,10 +59,9 @@
   ;; options: <https://github.com/yqrashawn/GokuRakuJoudo/blob/a9f2551e1961aab3549fd9e7622b40fd6304b27b/src/karabiner_configurator/rules.clj#L170>
 
  :main [
-        {:des "CAPS to Hyper or escape if pressed alone"
+        {:des "CAPS to Ctrl or escape if pressed alone"
          :rules[
-                ; caps lock to Esc if alone, Ctrl otherwise
-                [:caps_lock :!CTOleft_shift nil {:alone :escape}]
+                [:caps_lock :left_control nil {:alone :escape}]
                 ]}
 
         {:des "Esc to Hyper or Esc if pressed alone"

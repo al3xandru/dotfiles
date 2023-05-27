@@ -14,7 +14,7 @@
         "basic.to_if_held_down_threshold_milliseconds" : 500
       },
       "rules" : [ {
-        "description" : "CAPS to Hyper or escape if pressed alone",
+        "description" : "CAPS to Ctrl or escape if pressed alone",
         "manipulators" : [ {
           "to_if_alone" : [ {
             "key_code" : "escape"
@@ -23,8 +23,7 @@
             "key_code" : "caps_lock"
           },
           "to" : [ {
-            "key_code" : "left_shift",
-            "modifiers" : [ "left_command", "left_control", "left_option" ]
+            "key_code" : "left_control"
           } ],
           "type" : "basic"
         } ]
@@ -74,7 +73,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           }, {
             "name" : "dbl-shift-mode",
             "value" : 1,
@@ -112,7 +111,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_unless",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           }, {
             "name" : "dbl-shift-mode",
             "value" : 0,
@@ -2303,7 +2302,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           } ],
           "type" : "basic"
         }, {
@@ -2319,7 +2318,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           } ],
           "type" : "basic"
         }, {
@@ -2335,7 +2334,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           } ],
           "type" : "basic"
         }, {
@@ -2351,7 +2350,7 @@
           } ],
           "conditions" : [ {
             "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "^com\\.jetbrains\\.intellij$" ]
+            "bundle_identifiers" : [ "^com\\.jetbrains\\." ]
           } ],
           "type" : "basic"
         } ]
