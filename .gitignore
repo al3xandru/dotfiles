@@ -4,8 +4,11 @@ bin/coverfinder
 bin/doing
 bin/fleet
 bin/goland
-bin/helidon
+bin/golandeap
+bin/helidon2
+bin/helidon3
 bin/idea
+bin/idea1
 bin/metafinder
 bin/pycharm
 bin/qqq
