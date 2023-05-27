@@ -11,6 +11,10 @@ bin/pycharm
 bin/qqq
 bin/spectra-cli
 bin/theperfectdailyreadinglist.sh
+bin/d1otd
+bin/enotd
+bin/hnotd
+bin/xkcdotd
 # make sure .extras is ignored
 .config/Amazon/
 .config/configstore/
