@@ -108,8 +108,10 @@ set showbreak=↪
 "     autocmd Filetype qf setlocal norelativenumber number nowrap
 " augroup END
 set number
-set relativenumber
 set numberwidth=2   " keep the line number gutter narrow so 3 digits is cozy
+if !&diff 
+    set relativenumber
+end
 " }}}
 " }}}
 
@@ -259,6 +261,19 @@ vnoremap k gk
 vnoremap j gj
 vnoremap <Up> gk
 vnoremap <Down> gj
+" it might be a bit surprising
+" nmap <CR> ciw 
+
+" command {{{2 
+" path
+cnoremap <C-p>p <C-r>=expand('%:p')<CR>
+" tail (filename)
+cnoremap <C-p>t <C-r>=expand('%:t')<CR>
+" head (dir)
+cnoremap <C-p>h <C-r>=expand('%:p:h')<CR>
+" extension
+cnoremap <C-p>e <C-r>=expand('%:e')<CR>
+" }}}
 
 " (N)Mappings: n/N with blip, center the line, and directional {{{2
 " http://vi.stackexchange.com/questions/2761/set-cursor-colour-different-when-on-a-highlighted-word
@@ -365,12 +380,12 @@ if has('mac')
         " echom "&pythonthreedll :" . &pythonthreedll
 
         " http://stackoverflow.com/questions/30443836/install-vim-via-homebrew-with-python-and-python3-support
-        if _pyvermaj > '3.0' && has('python3')
+        if _pyvermaj > '3.' && has('python3')
             " echom "PYTHON3k  :YES"
             let g:jedi#force_py_version = 3
             let g:pymode_python = 'python3'
         else
-            echom "PYTHON3k  :NO"
+            " echom "PYTHON3k  :NO"
             let g:jedi#force_py_version = 2
             let g:pymode_python = 'python'
         endif
@@ -402,15 +417,38 @@ command! SS call <SID>SaveSession()
 " 2}}}
 
 " Display a window with big font {{{2
+function! <SID>Scratch(...)
+    let extension = "md"
+    let start_index = 0
+    let known_extensions = ["md", "txt", "org", "markdown"]
+    if a:0 > 0
+        if index(known_extensions, a:1) >= 0 
+            let extension = a:1
+            let start_index = 1
+        end
+    end
+    let words = ""
+    echom "length: " . a:0
+    if a:0 > 1
+        let words = "-" . join(a:000[start_index:-1], "_")
+    end
+    exec "tabedit ~/Desktop/wip-" . strftime("%Y%m%d-%a-%H%M") . words . "." . extension
+    exec "autocmd FocusLost,BufLeave <buffer> w"
+    set gfn=Iosevka_Fixed_Slab:h16,PragmataPro_Mono:h16,Operator_Mono:h16,Input_Mono_Compressed:h16,mononoki:h16
+    startinsert
+endfunction
+command! -nargs=* Scratch call <SID>Scratch(<f-args>)
+
 function! <SID>BigWnd() 
     colorscheme nuvola
-    set gfn=Iosevka_Fixed_Light:h24,Operator_Mono_Light:h24,Input_Mono_Compressed:h24,mononoki:h24
+    set gfn=Iosevka_Fixed_Slab:h24,Operator_Mono:h24,Input_Mono_Compressed:h24,mononoki:h24
     set colorcolumn=100
     set columns=100
     set textwidth=98
+    call <SID>Scratch("md")
     " edit "~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
     " exec "tabedit ~/Dropbox/Dox/mydox/myjrnl/tmp-" .  strftime("%Y%m%d-%H%M") .  ".md"
-    exec "tabedit ~/Desktop/22-" .  strftime("%Y%m%d-%H%M") .  ".md"
+    " exec "tabedit ~/Desktop/" .  strftime("%Y%m%d-%H%M") .  ".md"
     startinsert
 endfunction
 command! Bigwnd call <SID>BigWnd()
@@ -418,19 +456,20 @@ command! Bigwnd call <SID>BigWnd()
 
 " Set GUI font {{{2
 function! <SID>Fonts()
-    " let l:fonts = "Anka/Coder_Narrow Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
-    let l:fonts = "Anka/Coder_Narrow Cousine Go_Mono IBM_Plex_Mono Input_Mono Input_Mono_Condensed Input_Mono_Narrow Iosevka_Fixed Iosevka_Fixed_Slab JetBrains_Mono Monoid mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro Victor_Mono --- Fira_Code Hack Iosevka_SS10 "
+    " let l:fonts = "Anka/Coder_Narrow Cascadia_Mono Courier_New Cousine Fira_Code Go_Mono Hack IBM_Plex_Mono Iosevka JetBrains_Mono mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro"
+    " let l:fonts = "Anka/Coder_Narrow Cascadia_Mono Courier_New Cousine Go_Mono IBM_Plex_Mono Input_Mono Input_Mono_Compressed Input_Mono_Condensed Input_Mono_Narrow Iosevka_Fixed Iosevka_Fixed_Slab JetBrains_Mono Monoid mononoki Operator_Mono PragmataPro_Mono Source_Code_Pro Victor_Mono --- Fira_Code Hack Iosevka_SS10 "
+    let l:fonts = "Cascadia_Mono Ccurier_New Go_Mono Input_Mono Input_Mono_Compressed Input_Mono_Condensed(?) Input_Mono_Narrow(?) Iosevka_Fixed Iosevka_Fixed_Slab JetBrains_Mono(?) Monoid(?) mononoki Operator_Mono PragmataPro_Mono PT_Mono SF_Mono Source_Code_Pro(?) Space_Mono Victor_Mono(?) --- Cousine(?) Fira_Code Hack IBM_Plex_Mono"
     let l:flst = split(l:fonts)
     echo "Fonts:"
     echo join(l:flst, "\n")
     echo "\n"
-    exec "set gfn=" . input("Font: ", "Iosevka_Fixed_Light") . ":h" . input("Size: ", "24")
+    exec "set gfn=" . input("Font: ", "Iosevka_Fixed_Slab_Light") . ":h" . input("Size: ", "20")
 endfunction
 command! SetFont call <SID>Fonts()
 
 function! <SID>Zoom(amount) abort
-    let font_size = matchstr(&guifont, '\d\+$') + a:amount
-    let &guifont = substitute(&guifont, '\d\+$', font_size, '')
+    let font_size = matchstr(&guifont, '\d\+') + a:amount
+    let &guifont = substitute(&guifont, '\d\+', font_size, 'ge')
 endfunc
 command! -nargs=1 Zoom call <SID>Zoom(<f-args>)
 "2}}}
@@ -486,6 +525,9 @@ let g:one_allow_italics = 1
 Plug 'mvanderkamp/cocoa.vim'
 Plug 'junegunn/seoul256.vim'    " Sat, Apr.2nd, 2022
 "2}}}
+
+" Testing
+Plug 'sainnhe/everforest'
 "1}}}
 
 
@@ -513,8 +555,8 @@ Plug 'PeterRincker/vim-argumentative'
 
 " " Comment object: ic ac aC (DISABLED)
 " Plug 'glts/vim-textobj-comment'
-" " URIs: iu au (DISABLED)
-" Plug 'jceb/vim-textobj-uri'
+" URIs: iu au
+Plug 'jceb/vim-textobj-uri'
 " " Line object: il al (DISABLED)
 " Plug 'kana/vim-textobj-line'
 " " Indent object: ii ai aI iI (DISABLED)
@@ -528,20 +570,36 @@ Plug 'PeterRincker/vim-argumentative'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 let g:fzf_layout = {'up': '~20%'}
+noremap <C-x>f <C-o>:Files<CR>
+noremap <C-x>b <C-o>:Buffers<CR>
+noremap <C-x>l <C-o>:Lines<CR>
+nnoremap g. :Files<CR>
+nnoremap gl :Lines<CR>
+nnoremap gb :Buffers<CR>
 " 2}}}
 
 
 " Netrw {{{2
 autocmd FileType netrw setlocal bufhidden=delete "wipe
-let g:netrw_banner = 0
-let g:netrw_browse_split=0      " re-use the same window
+let g:netrw_banner=1
+" 0: re-using the same window (default)
+" 1: horizontal split
+" 2: vertical split
+" 3: new tab
+" 4: act like P
+let g:netrw_browse_split=0
 let g:netrw_hide=0
 " let g:netrw_home='~'
-let g:netrw_preview=0   "horizontal
-let g:netrw_alto=0      "aboveleft
-let g:netrw_altv=1      "open splits to the right
-let g:netrw_liststyle=0 " 3: thin long wide tree; 0: thin list
-let g:netrw_winsize=25
+" aboveleft:  0 0
+" belowright: 0 1
+" topleft:    1 0
+" botright:   1 1
+let g:netrw_preview=0   "0: horizontal; 1:vertical
+let g:netrw_alto=1      "Used for `o` (default &splitbelow): 0 window on top; 1 window bottom
+let g:netrw_altv=1      "Used for `v`: 1 to the right
+
+let g:netrw_liststyle=3 " 3: thin long wide tree; 0: thin list
+let g:netrw_winsize=50
 " from vinegar
 let s:dotfiles = '\(^\|\s\s\)\zs\.\S\+'
 let s:escape = 'substitute(escape(v:val, ".$~"), "*", ".*", "g")'
@@ -571,7 +629,7 @@ let g:gutentags_exclude_project_root = ['/usr/local', '/Users/alexandp', '/Users
 
 
 Plug 'mbbill/undotree' " {{{
-" nnoremap <leader>u :UndotreeToggle<CR>
+nnoremap <leader>u :UndotreeToggle<CR>
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
 " }}}
@@ -632,8 +690,8 @@ let g:FerretMap=0
 " (N)Mappings: ack {{{3
 " Using the_silver_searcher to look for word under cursor in current dir
 " when using with Ferret there're no quotes
-nnoremap /f :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
-nnoremap /F :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
+nnoremap /ack :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
+nnoremap /Ack :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
 
 " 3}}}
 "}}}
@@ -642,9 +700,9 @@ nnoremap /F :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand(
 " Snippets {{{2
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets' "{{{
-imap <C-e> <Plug>(neosnippet_expand_or_jump)
-smap <C-e> <Plug>(neosnippet_expand_or_jump)
-xmap <C-e> <Plug>(neosnippet_expand_target)
+imap <C-x>e <Plug>(neosnippet_expand_or_jump)
+smap <C-x>e <Plug>(neosnippet_expand_or_jump)
+xmap <C-x>e <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " let g:neosnippet#expand_word_boundary=0
 " }}}
@@ -985,13 +1043,17 @@ let g:startify_lists = [
     \ {'type': 'sessions', 'header': ['   Sessions']},
     \ ]
 let g:startify_bookmarks = [
-    \ '~/Dropbox/Dox/mydox/myjrnl/',
+    \ '~/Dropbox/Dox/mydox/00-dailylog.md',
     \ '~/Dropbox/Dox/mydox/01-braindump.md',
     \ '~/Dropbox/Dox/mydox/02-thoughts.md',
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
     \ '~/Dropbox/Dox/mydox/04-blog.md',
     \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
+    \ '~/Desktop/',
+    \ '~/Desktop/m/',
+    \ '~/Desktop/w/',
     \ '/Users/Shared/homepage/h.html',
+    \ '~/Dropbox/Dox/mydox/myjrnl/'
     \]
 let g:startify_files_number = 10
 let g:startify_session_autoload = 1
@@ -1004,10 +1066,10 @@ let g:startify_change_to_dir = 1
 let g:startify_change_to_vcs_root = 0
 "}}}
 
-" CamelCase {{{2
+" CamelCase disabled 2023-08-29 {{{2
 " Plug 'camelcasemotion'
 " Plug 'kana/vim-smartword'
-Plug 'bkad/CamelCaseMotion' 
+" Plug 'bkad/CamelCaseMotion' last used
 " Ver.1: Alt - w/b/3/g => ∑/∫/£/© {{{3
 " map ∑ <Plug>CamelCaseMotion_w
 " map ∫ <Plug>CamelCaseMotion_b
@@ -1036,10 +1098,13 @@ Plug 'bkad/CamelCaseMotion'
 " map ge <Plug>CamelCaseMotion_ge
 " end ver.2}}}
 " Ver.3
-map [w <Plug>CamelCaseMotion_w
-map ]w <Plug>CamelCaseMotion_e
-map [W <Plug>CamelCaseMotion_b
-map ]W <Plug>CamelCaseMotion_ge
+" map [w <Plug>CamelCaseMotion_w
+" map ƒ <Plug>CamelCaseMotion_w
+" map ]w <Plug>CamelCaseMotion_e
+" map [W <Plug>CamelCaseMotion_b
+" map ]W <Plug>CamelCaseMotion_ge
+" Ver.4 defaults: leader
+let g:camelcasemotion_key = '<leader>'
 " 2}}}
 
 
@@ -1061,7 +1126,7 @@ let g:sneak#use_ic_scs=1
 Plug 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
 
 
-" tpope extensions: surround, unimpaired {{{
+" tpope extensions: surround, unimpaired, vim-rsi {{{
 Plug 'tpope/vim-surround'
 
 " mappings
@@ -1080,6 +1145,9 @@ nmap yor :<C-U>setlocal nonumber relativenumber<CR>
 nmap yos :<C-U>setlocal <C-R>=&spell == 0 ? 'spell' : 'nospell'<CR><CR>
 nmap yow :<C-U>setlocal <C-R>=&wrap == 0 ? 'wrap' : 'nowrap'<CR><CR>
 
+" readline keybindings
+" Ctrl-A, Ctrl-B, Ctrl-D, Ctrl-F
+Plug 'tpope/vim-rsi'            
 " }}}
 
 
@@ -1089,6 +1157,11 @@ Plug 'rizzatti/dash.vim'
 " noremap does *not* work with <Plug>
 " nmap <leader>k <Plug>DashSearch
 " }}}
+
+
+" DiffDir {{{2
+Plug 'will133/vim-dirdiff'
+" 2}}}
 
 
 " Git {{{2
@@ -1101,10 +1174,12 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/vim-peekaboo'    " show registers
 let g:peekaboo_delay=250
 
-Plug 'tpope/vim-rsi'            " readline keybindings
-" Ctrl-A, Ctrl-B, Ctrl-D, Ctrl-F
 
-Plug 'chrisbra/NrrwRgn'         " narrow region as in Emacs
+" Plug 'chrisbra/NrrwRgn'         " narrow region as in Emacs
+
+Plug 'christoomey/vim-tmux-navigator'
+
+Plug 'preservim/nerdtree'
 "}}}
 
 call plug#end()
@@ -1147,6 +1222,19 @@ let s:cs_gui = [
             \ 'cake16', 'sweater', 'plan9', 'github', 'earendel', 'cocoa', 'seoul256-light', 'toast', 
             \ 'onedark', 'nord', 'nova', 'seoul256',
             \ 'ironman', 'nuvola', 'gruvbox', 'humanoid', 'papercolor']
+let s:cs_gui_light = ['ironman',
+            \ 'nuvola',
+            \ 'gruvbox',
+            \ 'humanoid',
+            \ 'plan9',
+            \ 'github',
+            \ 'seoul256-light',
+            \ 'morning',
+            \ 'zellner',
+            \ 'papercolor',
+            \ 'sweater', 
+            \ 'cocoa',
+            \ 'everforest']
 
 let s:cs_term_dark = [ 'onedark', 'nord', 'nova', "gruvbox", 'seoul256', 'desert256', 'dante', 'koehler', 'solarized', "alduin", "lucius", "cocoa"]
 let s:cs_term_light = ['ironman', 'nuvola', 'gruvbox', 'humanoid', 'seoul256-light', 'plan9', 'zellner', 'papercolor', 'cocoa']
@@ -1162,7 +1250,7 @@ if has("unix")
     if &diff 
         colorscheme ironman
     elseif has("gui_running")
-        let color_schemes = s:cs_gui
+        let color_schemes = s:cs_gui_light
         let cs = s:RandomColorschemeFromList(color_schemes)
         if cs == 'gruvbox'
             set background=light
@@ -1173,46 +1261,56 @@ if has("unix")
         execute ":colorscheme " .  cs
     elseif has("gui_vimr")
         colorscheme alduin
-    elseif has('nvim')
-        " colorscheme gruvbox
-        let color_schemes = ['ironman', 'humanoid', 'gruvbox', 'onedark', 'nord', 'alduin', 'toast']
-        let cs = s:RandomColorschemeFromList(color_schemes)
-        execute ":colorscheme " .  cs
     else
-        if &background == 'dark' 
-            set background=dark
-            if !empty($ZELLIJ)
-                let color_schemes = s:cs_zellij_dark
-            elseif !empty($ALACRITTY)
-                let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
-            else
-                let color_schemes = s:cs_term_dark
-
-            endif
-        else
+        " echom "Terminal: " $TERM_PROGRAM
+        if $TERM_PROGRAM == "WarpTerminal"
+            " echom "Found: WarpTerminal"
             set background=light
-            if !empty($ZELLIJ)
+            let color_schemes = s:cs_gui_light
+        else
+            " echom "Found: Apple_Terminal"
+            if !empty($TMUX)
                 let color_schemes = s:cs_zellij_light
-            elseif !empty($ALACRITTY)
-                let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
             else
-                let color_schemes = s:cs_term_light
+                if &background == 'dark' 
+                    set background=dark
+                    if !empty($ZELLIJ)
+                        let color_schemes = s:cs_zellij_dark
+                    elseif !empty($TMUX)
+                        let color_schemes = s:cs_zellij_dark
+                    elseif !empty($ALACRITTY)
+                        let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+                    else
+                        let color_schemes = s:cs_term_dark
+
+                    endif
+                else
+                    set background=light
+                    if !empty($ZELLIJ)
+                        let color_schemes = s:cs_zellij_light
+                    elseif !empty($TMUX)
+                        let color_schemes = s:cs_zellij_light
+                    elseif !empty($ALACRITTY)
+                        let color_schemes = ['ironman', 'gruvbox', 'plan9', 'zellner', 'sweater', 'summerfruit256']
+                    else
+                        let color_schemes = s:cs_term_light
+                    endif
+                endif
             endif
+            " :help termcap-cursor shape
+            let &t_SI = "\<Esc>[6 q"
+            let &t_SR = "\<Esc>[4 q"
+            let &t_EI = "\<Esc>[2 q"
         endif
         let cs = s:RandomColorschemeFromList(color_schemes)
-        " if cs == 'gruvbox'
-        "     " set background=dark
-        "     " elseif cs == 'humanoid'
-        "     set background=light
-        " endif
-
         execute ":colorscheme " .  cs
-        " :help termcap-cursor shape
-        let &t_SI = "\<Esc>[6 q"
-        let &t_SR = "\<Esc>[4 q"
-        let &t_EI = "\<Esc>[2 q"
     endif
 endif
+    " elseif has('nvim')
+    "     " colorscheme gruvbox
+    "     let color_schemes = ['ironman', 'humanoid', 'gruvbox', 'onedark', 'nord', 'alduin', 'toast']
+    "     let cs = s:RandomColorschemeFromList(color_schemes)
+    "     execute ":colorscheme " .  cs
 " }}}
 
 function! <SID>ChooseColorscheme(args)
@@ -1280,6 +1378,21 @@ call <SID>SetColorColumn()
 
 " }}}
 "
+"{{{ fortunes
+" F5: Add a fortune and advance to the next one
+" mX			mark where we are
+" :sp ~/.fortunes<CR>	open a window on ~/.fortunes
+" gg			go to first line
+" d/^--/<CR>		delete until the next line starting with "--"
+" Gp			Go to the end and put the just deleted text there
+" :wq<CR>		Write the ~/.fortunes file and close the window
+" 'XG			Go to the last line of the original file
+" A<CR><Esc>		Add an empty line
+" p			put the fortune text
+" `X			return to where we started
+
+map <F5> mX:sp ~/.vim/fortunes.txt<CR>ggd/^--/<CR>Gp:wq<CR>'XGA<CR><Esc>p`X
+"}}}
 
 " * * * * * * * * * * * * * * * * * * * * * * * * * *
 "
