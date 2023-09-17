@@ -10,6 +10,7 @@ bin/helidon3
 bin/idea
 bin/idea1
 bin/metafinder
+bin/otd_*
 bin/pycharm
 bin/qqq
 bin/spectra-cli
