@@ -567,12 +567,14 @@ def generate_output(data, opts):
       tmpf.close()
   if opts.output == 'b':
     print("Print to Bear")
+    # tmpf = tempfile.NamedTemporaryFile(mode='w+', encoding='utf-8')
     output = io.StringIO()
     try:
-      print_to(output, data, encode=False)
-      bear_uri = httpQuery('bear://x-callback-url/create',
-                          text=output.getvalue().encode('utf8'))
+      print_to(output, data)
+      note_text = urllib.parse.quote(output.getvalue(), encoding='utf8')
+      bear_uri = f"bear://x-callback-url/create?text={note_text}"
       print(bear_uri)
+      subprocess.check_call(['open', bear_uri])
     finally:
       output.close()
 
@@ -656,7 +658,7 @@ def print_to(stream, data):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Movie details')
-  parser.add_argument('-o', '--output', action='store', choices=['j', 'd'], default='d')
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd', 'b'], default='b')
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
