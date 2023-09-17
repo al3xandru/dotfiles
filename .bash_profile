@@ -31,6 +31,7 @@ shopt -s histappend
 
 # if possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
 shopt -s nullglob
 for file in /usr/local/etc/bash_completion.d/*; do
@@ -42,3 +43,4 @@ shopt -u nullglob
 
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
+
