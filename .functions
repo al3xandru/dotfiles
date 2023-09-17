@@ -12,17 +12,7 @@ function e() {
     fi
 }
 
-function mc() {
-    case "$(( RANDOM % 2 ))" in
-        0)
-            lf "$@"
-            ;;
-        1)
-            nnn "$@"
-            ;;
-    esac
-}
-
+# randomize usage of vim and nvim
 function v() {
     if [ -x "$(command -v nvim)" ]; then
         if [ $(( RANDOM % 2 )) -eq 0 ]; then
@@ -35,21 +25,40 @@ function v() {
     fi
 }
 
+# randomize usage of nnn and lf
+function mc() {
+    case "$(( RANDOM % 2 ))" in
+        0)
+            lf "$@"
+            ;;
+        1)
+            nnn "$@"
+            ;;
+    esac
+}
+
+
 # List defined functions 
 function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
+# read URL as text
+function txturl() {
+    url=$(echo "$1" | sed 's/^https*:\/\///')
+    http GET "https://txtify.it/$url" | v -
+}
+
 # kobo with kepublify
 function kobopub() {
     if [ -z "$1" ]; then
-        kepubify $HOME/Dropbox/MagicBriefcase/Books/*.epub -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
+        kepubify --smarten-punctuation --hyphenate -i $HOME/Dropbox/MagicBriefcase/Books/*.epub -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
     else
-        kepubify "$@" -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
+        kepubify --smarten-punctuation --hyphenate -i "$@" -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
     fi
 }
 
-# yabai functions
+#{{{ yabai functions
 function ybkill() {
     # ps ax | grep 'yabai$' | grep -v grep | awk '{print $1}' | xargs kill
     yabai --stop-service
@@ -89,6 +98,7 @@ function ybsp() {
     yabai -m config --space $1 layout bsp split_type ${split_type} 
     echo "Space $1 configured with split_type ${split_type}"
 }
+#}}}
 
 function mvnrun() {
     mvn exec:java -Dexec.mainClass=$1
