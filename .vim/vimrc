@@ -261,8 +261,6 @@ vnoremap k gk
 vnoremap j gj
 vnoremap <Up> gk
 vnoremap <Down> gj
-" it might be a bit surprising
-" nmap <CR> ciw 
 
 " command {{{2 
 " path
@@ -463,7 +461,7 @@ function! <SID>Fonts()
     echo "Fonts:"
     echo join(l:flst, "\n")
     echo "\n"
-    exec "set gfn=" . input("Font: ", "Iosevka_Fixed_Slab_Light") . ":h" . input("Size: ", "20")
+    exec "set gfn=" . input("Font: ", "Iosevka_Fixed_Slab") . ":h" . input("Size: ", "24")
 endfunction
 command! SetFont call <SID>Fonts()
 
@@ -570,12 +568,29 @@ Plug 'jceb/vim-textobj-uri'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 let g:fzf_layout = {'up': '~20%'}
-noremap <C-x>f <C-o>:Files<CR>
-noremap <C-x>b <C-o>:Buffers<CR>
-noremap <C-x>l <C-o>:Lines<CR>
+nnoremap <leader>f. <Cmd>Files<CR>
+inoremap <leader>f. <Cmd>:Files<CR>
+vnoremap <leader>f. <Cmd>:Files<CR>
+nnoremap <leader>fg <Cmd>GFiles<CR>
+inoremap <leader>fg <Cmd>GFiles<CR>
+vnoremap <leader>fg <Cmd>GFiles<CR>
+nnoremap <leader>fb <Cmd>Buffers<CR>
+inoremap <leader>fb <Cmd>Buffers<CR>
+vnoremap <leader>fb <Cmd>Buffers<CR>
+nnoremap <leader>fl <Cmd>BLines<CR>
+inoremap <leader>fl <Cmd>BLines<CR>
+vnoremap <leader>fl <Cmd>BLines<CR>
+nnoremap <leader>fL <Cmd>Lines<CR>
+inoremap <leader>fL <Cmd>Lines<CR>
+vnoremap <leader>fL <Cmd>Lines<CR>
 nnoremap g. :Files<CR>
-nnoremap gl :Lines<CR>
+nnoremap gG :GFiles<CR>
+nnoremap gl :BLines<CR>
+nnoremap gL :Lines<CR>
 nnoremap gb :Buffers<CR>
+nnoremap gW :Windows<CR>
+nnoremap gJ :Jumps<CR>
+nnoremap gM :Marks<CR>
 " 2}}}
 
 
@@ -690,8 +705,11 @@ let g:FerretMap=0
 " (N)Mappings: ack {{{3
 " Using the_silver_searcher to look for word under cursor in current dir
 " when using with Ferret there're no quotes
-nnoremap /ack :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
-nnoremap /Ack :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
+" nnoremap /ack :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
+" nnoremap /Ack :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
+nnoremap g! :Ack \b<C-r><C-w>\b <C-r>=getcwd()<CR> --smart-case --type <C-r>=&filetype<CR>
+nnoremap g!! :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expand("%:p:h")<CR>
+
 
 " 3}}}
 "}}}
@@ -700,9 +718,9 @@ nnoremap /Ack :Ack --<C-r>=&filetype<CR> \b<C-r><C-w>\b --smart-case <C-r>=expan
 " Snippets {{{2
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets' "{{{
-imap <C-x>e <Plug>(neosnippet_expand_or_jump)
-smap <C-x>e <Plug>(neosnippet_expand_or_jump)
-xmap <C-x>e <Plug>(neosnippet_expand_target)
+imap <leader>x <Plug>(neosnippet_expand_or_jump)
+smap <leader>x <Plug>(neosnippet_expand_or_jump)
+xmap <leader>x <Plug>(neosnippet_expand_target)
 let g:neosnippet#snippets_directory=expand("~/.vim/xsnippets/neosnippets")
 " let g:neosnippet#expand_word_boundary=0
 " }}}
