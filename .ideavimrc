@@ -97,7 +97,7 @@ sethandler <C-B> a:ide
 sethandler <C-E> a:ide
 " Emacs right
 sethandler <C-F> a:ide
-" Type hierarhcy
+" Type hierarchy
 sethandler <C-H> a:ide
 " Implement methods
 sethandler <C-I> a:ide
@@ -121,14 +121,14 @@ sethandler <C-R> a:ide
 sethandler <C-S> a:ide
 " Refactor this…
 sethandler <C-T> a:ide
-" VCR operations
-sethandler <C-V> a:ide
 
 " handlers VIM
 " N: scroll; I: Unindent
 sethandler <C-D> a:vim
 " N: scroll upwards; I: Delete to beginning
 sethandler <C-U> a:vim
+" N: visual block
+sethandler <C-V> n:vim i-x:ide
 " N: window; I: Delete word before
 sethandler <C-W> a:vim
 
