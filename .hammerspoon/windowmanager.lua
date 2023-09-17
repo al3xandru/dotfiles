@@ -393,34 +393,41 @@ end
 local alt_cmd = {"⌘", "⌥"}
 local alt_shift_cmd = {"⌥", "⇧", "⌘"}
 local ctrl_alt_cmd = {"⌥", "⌃", "⌘"}
+local cmd_ctrl = {"cmd", "ctrl"}
 
 -- Snap to screen edge {{{1
 -- Raycast introduced this behavior in 1.43.0
--- hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
--- hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
--- hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
--- hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
+hs.hotkey.bind(alt_cmd, "left",  dynamicResizeLeft)
+hs.hotkey.bind(alt_cmd, "right", dynamicResizeRight)
+hs.hotkey.bind(alt_cmd, "up",    dynamicResizeTop)
+hs.hotkey.bind(alt_cmd, "down",  dynamicResizeBottom)
+hs.hotkey.bind(cmd_ctrl, "h", "◀️", dynamicResizeLeft)
+hs.hotkey.bind(cmd_ctrl, "l", "▶️", dynamicResizeRight)
+hs.hotkey.bind(cmd_ctrl, "k", "🔼", dynamicResizeTop)
+hs.hotkey.bind(cmd_ctrl, "j", "🔽", dynamicResizeBottom)
 -- }}}
 
 -- Predefined positions:
 -- Raycast supports Center
--- hs.hotkey.bind(alt_cmd, ".", function() 
---     local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
---     if wnd then
---         wnd:centerOnScreen() 
---     end
--- end)
+function center()
+    local wnd = hs.window.focusedWindow() or hs.window.frontmostWindow() 
+    if wnd then
+        wnd:centerOnScreen() 
+    end
+end
+hs.hotkey.bind(alt_cmd, ".", "", center)
+hs.hotkey.bind(cmd_ctrl, "z", ".", center)
 
 -- Raycast -- Enlarged vertically
-hs.hotkey.bind(alt_cmd, "\\", expandVertically)
+hs.hotkey.bind(cmd_ctrl, "\\", expandVertically)
 -- -- Enlarged horizontally
-hs.hotkey.bind(alt_cmd, "=", expandHorizontally)
+hs.hotkey.bind(cmd_ctrl, "=", expandHorizontally)
 -- -- Fullscreen
-hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0,0,1,1) end)
+hs.hotkey.bind(ctrl_alt_cmd, "f", function() push(0.01, 0.01, .95, .95) end)
 
 -- Raycast works better for Move to different monitor
--- hs.hotkey.bind(alt_cmd, "9", function() moveToMonitor(-1) end)
--- hs.hotkey.bind(alt_cmd, "0", function() moveToMonitor(1) end)
+hs.hotkey.bind(ctrl_alt_cmd, "s", function() moveToMonitor(-1) end)
+-- hs.hotkey.bind(cmd_ctrl, "b", function() moveToMonitor(1) end)
 
 -- Move to left/right dekstop
 -- Raycast works better for these
