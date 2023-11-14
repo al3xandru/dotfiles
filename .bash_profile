@@ -1,46 +1,24 @@
 # 
 # Bash setup inspired by: https://github.com/mathiasbynens/dotfiles
+# https://scriptingosx.com/2017/04/about-bash_profile-and-bashrc-on-macos/
 #
-# disable XON/XOFF flow control
-stty -ixon
-ostype=`uname`
-case "$ostype" in
-    "Darwin")
-        export _OSTYPE="Mac"
-        ;;
-    "Linux")
-        export _OSTYPE="Lin"
-        ;;
-esac
-unset ostype
+
 # Load the shell dotfiles, and then some:
 # * ~/.precfg can be used locally to enable/disable specific features
-# * ~/.path can be used to extend `$PATH`
 # * ~/.postcfg can be used for other setttings you don't want to commit
-for file in $HOME/.{precfg,exports,path,aliases,functions,postcfg}; do
-    [ -r "$file" ] && [ -f "$file" ] && source "$file"
-done
-unset file
-unset _OSTYPE
+# for file in $HOME/.{precfg,path,aliases,exports,functions}; do
+#     [ -r "$file" ] && [ -f "$file" ] && source "$file"
+# done
+# unset file
 
-shopt -s histappend
+[ -r ~/.precfg ] && [ -f ~/.precfg ] && source ~/.precfg
+[ -r ~/.path ] && [ -f ~/.path ] && source ~/.path
+[ -r ~/.aliases ] && [ -f ~/.aliases ] && source ~/.aliases
+[ -r ~/.exports ] && [ -f ~/.exports ] && source ~/.exports
+[ -r ~/.functions ] && [ -f ~/.functions ] && source ~/.functions
 
-# Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-# [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
+[ -r ~/.bashrc ] && source ~/.bashrc
 
-
-# if possible, add tab completion for many more commands
-[ -f /etc/bash_completion ] && source /etc/bash_completion
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
-
-shopt -s nullglob
-for file in /usr/local/etc/bash_completion.d/*; do
-    [ -f "$file" ] && source "$file"
-done
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-shopt -u nullglob
-
-
-eval "$(starship init bash)"
-eval "$(zoxide init bash)"
-
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/alexandp/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
