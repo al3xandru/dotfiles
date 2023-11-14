@@ -1,16 +1,17 @@
-#!/usr/bin/env bash
-
 # Disable macOS Bash deprecation warning.
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 #
 # Dynamic EDITOR/VISUAL
-export EDITOR="$HOME/bin/editor.sh"
-export VISUAL="$HOME/bin/editor.sh"
+# export EDITOR="$HOME/bin/editor.sh"
+# export VISUAL="$HOME/bin/editor.sh"
 #
 # Make some commands not show up in history
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 export HISTCONTROL=ignoreboth:erasedups
+export HISTFILESIZE=10000
+export HISTSIZE=10000
+shopt -s histappend
 
 
 # Prefer US English and use UTF-8
@@ -22,7 +23,8 @@ export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
 # Enable .dotfiles in fzf
 export FZF_DEFAULT_COMMAND="find . -path '*/\.*' -type d -prune -o -type f -print -o -type l -print 2> /dev/null | sed s/^..//"
 if [ -x /usr/local/bin/rg -o /opt/homebrew/bin/rg ]; then
-    if [ -x /usr/local/bin/bat ]; then
+    # shorter but assumes brew :-D
+    if [ -x "$(brew --prefix)/bin/bat" ]; then
         export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --line-number --glob "!.git/*"'
         export FZF_DEFAULT_OPTS='--preview="bat {}"'
     else
@@ -42,51 +44,35 @@ export HOMEBREW_NO_ANALYTICS=1
 # https://brew.sh/2019/02/02/homebrew-2.0.0/
 export HOMEBREW_NO_INSTALL_CLEANUP=1
 
-# Homebrew vim
-# if [ -h "/usr/local/bin/vim" ]; then
-#     if [ `which vim` = "/usr/local/bin/vim" ]; then
-#         VIMLINK=`ls -l /usr/local/bin/vim | awk '{print $11}'`
-#         VIMDIR=`dirname $VIMLINK`
-#         # export VIMRUNTIME="/usr/local/bin/$VIMDIR/../share/vim/vim74"
-#         unset -v VIMDIR VIMLINK
-#     fi
-# fi
-
 #
 # ENV VARIABLES
 #
 # export QQDIR=$HOME/Dropbox/Dox/nvall
-export QQ=$HOME/omuninn/qq
 export MYDOX=$HOME/Dropbox/Dox/mydox
 
 # Code repository
-if [ -z "$ALLREPOS" ]; then
-    export ALLREPOS=$HOME/Dropbox/workspaces
-    # Mine
-    export MYREPOS=$ALLREPOS/mine
-    export MYGO=$MYREPOS/gospace/src/github.com/al3xandru
-    export MYJAVA=$MYREPOS/java
-    export MYMISC=$MYREPOS/misc
-    # Work
-    export WORKREPOS=$ALLREPOS/work
-    export WORKGO=$WORKREPOS/gospace/src/github.com/al3xandru
-    export WORKJAVA=$WORKREPOS/javaspace
-    # Shared
-    export SHAREDREPOS=/Users/Shared/workspace
-    export SREPOS=$SHAREDREPOS
-    if [ mkdir $HOME/.marks &>/dev/null ]; then
-        cd "$HOME/.marks"
-        echo "Creating initial marks"
-        ln -s "$HOME/Dropbox/dotfiles" dotfiles &>/dev/null
-        ln -s "$HOME/Dropbox/workspaces/mine" myrepos &>/dev/null
-        ln -s "$HOME/Dropbox/workspaces/mine/java" myjava &>/dev/null
-        cd -
-    fi
-fi
+# if [ -z "$ALLREPOS" ]; then
+#     export ALLREPOS=$HOME/Dropbox/workspaces
+#     # Mine
+#     export MYREPOS=$ALLREPOS/mine
+#     export MYGO=$MYREPOS/gospace/src/github.com/al3xandru
+#     export MYJAVA=$MYREPOS/java
+#     export MYMISC=$MYREPOS/misc
+#     # Work
+#     export WORKREPOS=$ALLREPOS/work
+#     export WORKGO=$WORKREPOS/gospace/src/github.com/al3xandru
+#     export WORKJAVA=$WORKREPOS/javaspace
+#     # Shared
+#     export SHAREDREPOS=/Users/Shared/workspace
+#     export SREPOS=$SHAREDREPOS
+#     if [ mkdir $HOME/.marks &>/dev/null ]; then
+#         cd "$HOME/.marks"
+#         # echo "Creating initial marks"
+#         ln -s "$HOME/Dropbox/dotfiles" dotfiles &>/dev/null
+#         ln -s "$HOME/Dropbox/workspaces/mine" myrepos &>/dev/null
+#         ln -s "$HOME/Dropbox/workspaces/mine/java" myjava &>/dev/null
+#         cd -
+#     fi
+# fi
 
 
-## Go
-if [ -z "$GOPATH" ]; then
-    export GOPATH=$HOME/go
-    export PATH="$GOPATH/bin:$PATH"
-fi
