@@ -1,25 +1,9 @@
-if [ -x /opt/homebrew/bin/brew ]; then
-    export PATH="/opt/homebrew/bin:${PATH}"
-elif [ -x /usr/local/bin/brew ]; then
-    export PATH="/usr/local/bin:${PATH}"
+
+## Go
+if [ -z "$GOPATH" ]; then
+    export GOPATH=$HOME/go
+    export PATH="$GOPATH/bin:$PATH"
 fi
-
-#if [ -d "$GOROOTPATH" ]; then
-#    PATH="$GOROOTPATH/bin:$PATH"
-#fi
-#if [ -d "$GOPATH" ]; then
-#    PATH="$GOPATH/bin:$PATH"
-#fi
-#if [ "$GRADLE_HOME" != "" ]; then
-#    PATH="$GRADLE_HOME/bin:$PATH"
-#fi
-#if [ -d "$HOME/perl5" ]; then
-#    PATH="$HOME/perl5/bin:$PATH"
-#fi
-#if [ "$SBT_HOME" != "" ]; then
-#    PATH="$SBT_HOME/bin:$PATH"
-#fi
-
 ## Pyenv
 if command -v pyenv &> /dev/null; then
     if [ -d "$HOME/.pyenv" ]; then
@@ -45,4 +29,9 @@ fi
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+if [ -x /opt/homebrew/bin/brew ]; then
+    export PATH="/opt/homebrew/bin:${PATH}"
+elif [ -x /usr/local/bin/brew ]; then
+    export PATH="/usr/local/bin:${PATH}"
+fi
 export PATH="$HOME/bin:${PATH}"
