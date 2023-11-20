@@ -1,0 +1,40 @@
+#/usr/bin/env bash
+
+function awedit() {
+    local PATH=/opt/homebrew/bin:/usr/local/bin:$PATH
+    local fname="$1"
+    if [ -z "$fname" ]; then
+       fname="~/tmp/awedit/awe.txt"
+    fi
+    local editors=(mvim)
+    if [ -x "$(command -v neovide)" ]; then
+        editors+=(neovide)
+    fi
+    if [ -x "$(command -v bbedit)" ]; then
+        editors+=(bbedit)
+    fi
+    if [ -x "$(command -v emacs)" ]; then
+        editors+=(emacs)
+    fi
+    local idx=$(( RANDOM % ${#editors[@]} ))
+    local cmd=${editors[$idx]}
+    echo "[${editors[@]}]:$idx:$cmd"
+    case "$cmd" in
+        mvim)
+            mvim -f "$fname"
+            ;;
+        neovide)
+            neovide --nofork "$fname"
+            ;;
+        bbedit)
+            bbedit --wait "$fname"
+            ;;
+        emacs)
+            /Applications/Emacs.app/Contents/MacOS/Emacs --no-desktop
+            sleep 3
+            emacsclient "$fname"
+            ;;
+    esac
+
+    cat "$fname" | pbcopy
+}

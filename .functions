@@ -1,29 +1,56 @@
 #!/usr/bin/env bash
 
 function e() {
+    vimflavors=("mvim")
     if [ -x "$(command -v vimr)" ]; then
-        if [ $(( RANDOM % 2 )) -eq 0 ]; then
-            mvim "$@"
-        else 
-            vimr "$@"
-        fi
-    else
-        mvim "$@"
+        vimflavors+=(vimr)
     fi
+    if [ -x "$(command -v neovide)" ]; then
+        vimflavors+=(neovide)
+    fi
+    if [ -d "/Applications/BBEdit.app/" ]; then
+        vimflavors+=(/Applications/BBEdit.app/Contents/Helpers/bbedit_tool)
+    fi
+    if [ -x "/Applications/Emacs.app/Contents/MacOS/Emacs" ]; then
+        vimflavors+=(/Applications/Emacs.app/Contents/MacOS/Emacs)
+    fi
+    idx=$(( RANDOM % ${#vimflavors[@]} ))
+    command ${vimflavors[$idx]} "$@"
 }
 
 # randomize usage of vim and nvim
 function v() {
-    if [ -x "$(command -v nvim)" ]; then
-        if [ $(( RANDOM % 2 )) -eq 0 ]; then
-            nvim "$@"
-        else 
-            vim "$@"
-        fi
-    else
+    case "$1" in
+     -e)
+        shift
+         /Applications/Emacs.app/Contents/MacOS/Emacs --no-desktop -nw --visit "$@"
+         ;;
+    -n)
+        shift
+        nvim "$@"
+        ;;
+    -v)
+        shift
         vim "$@"
-    fi
+        ;;
+    *)
+        local options=(vim)
+        if [ -x "$(command -v nvim)" ]; then
+            options+=(nvim)
+        fi 
+        if [ -d "/Applications/Emacs.app" ]; then
+            options+=(temacs)
+        fi
+        local idx=$(( RANDOM % ${#options[@]} ))
+        local cmd="${options[$idx]}"
+        echo "[${options[@]}]:$idx:$cmd"
+        eval " $cmd $@"
+        ;;
+    esac
 }
+
+[ -f "~/.fnawedit" ] && [ -r "~/.fnawedit" ] && source "~/.fnawedit"
+
 
 # randomize usage of nnn and lf
 function mc() {
@@ -43,13 +70,14 @@ function funclist() {
     declare -f | grep "()" | egrep -v "^[_ \$]"
 }
 
-# read URL as text
-function txturl() {
-    url=$(echo "$1" | sed 's/^https*:\/\///')
-    http GET "https://txtify.it/$url" | v -
+# https://mitxela.com/projects/dotfiles_management
+function dotstatus() {
+    for i in $(dotfiles ls-files); do
+        echo -n "$(dotfiles -c color.status=always status $i -s | sed "s#$i##")"
+        echo -e "\t$i\t\t$(dotfiles -c color.ui=always log -1 --format="%s" -- $i)"
+    done
 }
-
-# kobo with kepublify
+# kobopub uses kepubify to prepare epubs for Kobo
 function kobopub() {
     if [ -z "$1" ]; then
         kepubify --smarten-punctuation --hyphenate -i $HOME/Dropbox/MagicBriefcase/Books/*.epub -o "$HOME/Dropbox/Apps/Rakuten Kobo/"
@@ -231,11 +259,11 @@ function tabtitle() {
 # backup a file
 function backup() {
     if [ -d "$1" ]; then
-        local ndir="$(basename $1).`date +%Y%m%d%H%M.orig`"
+        local ndir="$(basename $1).`date +%Y%m%d%H%M`"
         mkdir $ndir 
         cp -R "$1/." "$ndir"
     else
-        cp -v "$1"{,.`date +%Y%m%d%H%M`.orig}
+        cp -v "$1"{,.`date +%Y%m%d%H%M`.${1##*.}}
     fi
 }
 
@@ -1050,4 +1078,49 @@ function scan() {
         echo "scan result in clipboard ($r)"
     fi
     return $r
+}
+
+# Search TIL in the repo
+function til() {
+    if [ -z "$1" ]; then
+        echo "Usage: til term1 term2"
+        return
+    fi
+    if [ "$1" = "-n" ]; then
+        if [ -z "$2" ]; then
+            echo "Usage: to create a new til use til -n [topic]"
+            return -1
+        fi
+        mkdir -p "$HOME/Dropbox/workspaces/kb/til/$2"
+        mvim $HOME/Dropbox/workspaces/kb/til/README.md -c "cd $HOME/Dropbox/workspaces/kb/til/$2 | new" 
+        return
+    fi
+    # append --layout=reverse
+    result=$(mdfind -onlyin $HOME/Dropbox/workspaces/kb/til "$@" 2>/dev/null | fzf -1 -0 --delimiter / --with-nth=8.. --preview-window=right:40% --cycle) 
+    if [ -f "$result" ]; then
+        # https://unix.stackexchange.com/questions/28503/how-can-i-send-stdout-to-multiple-commands
+        echo "$result" | tee >(pbcopy)
+        glow "$result"
+    fi
+}
+
+function awesome() {
+    if [ -z "$1" ]; then
+        echo "Usage: awesome term [term...]"
+        return -1
+    fi
+    local terms=( $@ )
+    local grep_args=""
+    for i in "${terms[@]}"; do
+        grep_args="$grep_args -e $i"
+    done
+    # echo "$grep_args"
+    mdfind -onlyin $HOME/Dropbox/workspaces/kb/awesome "$@" 2>/dev/null | grep -e '\.md$' -e '\.org$' | fzf -1 -0 --delimiter / --with-nth=8.. --preview-window=right:40% | xargs command grep --color=always $grep_args
+}
+
+function join_by {
+  local d=${1-} f=${2-}
+  if shift 2; then
+    printf %s "$f" "${@/#/$d}"
+  fi
 }
