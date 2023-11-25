@@ -101,4 +101,3 @@ alias k=kubectl
 
 # dotfiles
 alias dotfiles='git --git-dir=$HOME/Dropbox/dotfiles/.git --work-tree=$HOME/Dropbox/dotfiles'
-
