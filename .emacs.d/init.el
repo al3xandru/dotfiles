@@ -74,7 +74,7 @@
 
 ;; Files
 ;;; Sessions
-(desktop-save-mode 1)
+(desktop-save-mode +1)
 ;;; Symlinks
 (setq vc-follow-symlinks t)
 
@@ -92,7 +92,6 @@
 
 ;;; auto-refresh
 (global-auto-revert-mode 1)
-
 ;; Editor
 (setq-default indicate-empty-lines t
               line-spacing 0.1
@@ -242,11 +241,11 @@ the current window and the windows state prior to that."
 ;; ------------
 
 (require 'package)
-;; (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
 ;; (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+;; (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/"))
 
 (setq gnutls-verify-error t
       gnutls-min-prime-bits 2048)
@@ -423,13 +422,15 @@ the current window and the windows state prior to that."
         avy-all-windows t
         avy-case-fold-search nil
         avy-highlight-first t)
-  :bind (("C-;" .  avy-goto-char-timer)
+  :bind (
+         ;; ("C-;" .  avy-goto-char-timer)
+         ("C-;" .  avy-goto-char-2)
          ("C-x j 1" . avy-goto-char)
          ("C-x j 2" . avy-goto-char-2)
          ("C-x j l" . avy-goto-line)
          ("C-x j w" . avy-goto-word-1))
-  :bind (:map evil-normal-state-map
-              ("s" . avy-goto-char-timer))
+  ;; :bind (:map evil-normal-state-map
+  ;;             ("s" . avy-goto-char-timer))
   :config (avy-setup-default))
 
 
@@ -491,7 +492,7 @@ the current window and the windows state prior to that."
  
 (use-package persistent-scratch
   :ensure t
-  :init (with-demoted-errors (persistent-scratch-restore))
+  :init (ignore-error (persistent-scratch-restore))
   :config
   (defun alpo/scratch-buffer-p (&optional buffer)
     "Return non-nil if the BUFFER (defaults to current buffer) is a scratch buffer."
@@ -501,8 +502,21 @@ the current window and the windows state prior to that."
   (persistent-scratch-setup-default)
   (persistent-scratch-autosave-mode 1))
 
+;; https://codeberg.org/emacs-weirdware/scratch
 (use-package scratch
-  :bind (("C-c s" . scratch)))
+  :config
+  (defun alpo/scratch ()
+    (interactive)
+    (let ((current-prefix-arg t))
+      (scratch (scratch--buffer-querymode))))
+  :bind (("C-c s" . alpo/scratch)))
+
+;; (defun alpo/scratch ()
+;;   (interactive)
+;;     (let ((current-prefix-arg t))
+;;       (scratch (scratch--buffer-querymode))))
+;; (global-set-key (kbd "C-c s") #'alpo/scratch)
+
 
 (use-package undo-tree
   :init
@@ -510,7 +524,7 @@ the current window and the windows state prior to that."
         undo-tree-visualizer-timestamps t
         undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))
         ;; alternatively
-        ;; undo-tree-auto-save-history nil
+        ;; undo-tree-auto-save-history ni
         )
   :config (global-undo-tree-mode))
 
