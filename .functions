@@ -1096,7 +1096,7 @@ function til() {
         return
     fi
     # append --layout=reverse
-    result=$(mdfind -onlyin $HOME/Dropbox/workspaces/kb/til "$@" 2>/dev/null | fzf -1 -0 --delimiter / --with-nth=8.. --preview-window=right:40% --cycle) 
+    result=$(mdfind -onlyin $HOME/Dropbox/workspaces/kb/til "$@ AND NOT kind:folder" 2>/dev/null | fzf -1 -0 --delimiter / --with-nth=8.. --preview-window=right:40% --cycle) 
     if [ -f "$result" ]; then
         # https://unix.stackexchange.com/questions/28503/how-can-i-send-stdout-to-multiple-commands
         echo "$result" | tee >(pbcopy)
