@@ -119,9 +119,11 @@ def themoviedb_data(title, year=None):
                             api_key=themoviedb_api_key,
                             query=short_title,
                             year=year))
-  if not jdata:
-    return {}, 0
 
+  if not jdata or jdata['total_results'] == 0:
+    return themoviedb_tv_data(title, year)
+
+  print("TMDB Movies:", jdata)
   imdb_data = {}
 
   if ('results' in jdata) and len(jdata['results']) == 1:
@@ -155,7 +157,8 @@ def themoviedb_data(title, year=None):
   imdb_data['tmdb'] = {'popularity': jdata.get('popularity', 0),
                        'vote_count': jdata.get('vote_count', 0),
                        'vote_average': jdata.get('vote_average', 0),
-                       'id': jdata['id']}
+                       'id': jdata['id'],
+                       'url': f"https://www.themoviedb.org/movie/{jdata['id']}"}
 
   jdata = httpGet('api.themoviedb.org', f"/3/movie/{movie_id}/credits?api_key={themoviedb_api_key}")
   if jdata:
@@ -164,6 +167,65 @@ def themoviedb_data(title, year=None):
 
   return imdb_data, 1
 
+def themoviedb_tv_data(title, year=None):
+  themoviedb_api_key = '99026a194a4dbafd98c3070108bc93db'
+  short_title = prepare_title(title)
+  jdata = httpGet('api.themoviedb.org',
+                  httpQuery('/3/search/tv',
+                            api_key=themoviedb_api_key,
+                            query=short_title,
+                            year=year))
+
+  if not jdata or jdata['total_results'] == 0:
+    print("TMDB TV: no results found")
+    return  {}, 0
+
+  print("TMDB TV", jdata)
+  imdb_data = {}
+
+  if ('results' in jdata) and len(jdata['results']) == 1:
+    movie_id = jdata['results'][0]['id']
+    imdb_data['title'] = jdata['results'][0]['name']
+  else:
+    movie_id = None
+    max_match = 0
+    for r in jdata['results']:
+      match = match_len(title, r['name'])
+      if year and r['first_air_date'][:4] == str(year):
+        match += 1
+      if match > max_match:
+        movie_id = r['id']
+        max_match = match
+        imdb_data['title'] = r['name']
+
+  if not movie_id:
+    return {}, 0
+
+  jdata = httpGet('api.themoviedb.org',
+                  httpQuery(f"/3/tv/{movie_id}",
+                            api_key=themoviedb_api_key))
+  if not jdata:
+    return {}, 0
+
+  imdb_data['year'] = jdata['first_air_date'][:4]
+  if 'imdb_id' in jdata:
+    imdb_data['imdb_url'] = "https://www.imdb.com/title/{}".format(jdata['imdb_id'])
+  imdb_data['genres'] = [t['name'] for t in jdata['genres']]
+  imdb_data['plot'] = jdata['overview']
+  imdb_data['poster'] = jdata.get('poster_path', '')
+  imdb_data['rating'] = jdata.get('vote_average', 0)
+  imdb_data['tmdb'] = {'popularity': jdata.get('popularity', 0),
+                       'vote_count': jdata.get('vote_count', 0),
+                       'vote_average': jdata.get('vote_average', 0),
+                       'id': jdata['id'],
+                       'url': f"https://themoviedb.org/tv/{jdata['id']}"}
+
+  jdata = httpGet('api.themoviedb.org', f"/3/tv/{movie_id}/credits?api_key={themoviedb_api_key}")
+  if jdata:
+    imdb_data['actors'] = [f"{t['name']} (as {t['character']})" for t in jdata['cast']]
+    imdb_data['directors'] = [t['name'] for t in jdata['crew'] if t['job'].lower() == 'executive producer']
+
+  return imdb_data, 1
 
 def theimdbapi_data(title, year=None):
   """http://www.theimdbapi.org/api"""
@@ -458,12 +520,12 @@ def main(title, opts):
   print("\n", "Links:", sep='')
   print(data['imdb_url'])
   print(data['rotten_url'])
-  if 'tmdb' in data and 'id' in data['tmdb']:
-    tmdb_id = data['tmdb']['id']
-    print(f"https://www.themoviedb.org/movie/{tmdb_id}")
+  if 'tmdb' in data and 'url' in data['tmdb']:
+    print(data['tmdb']['url'])
   if 'poster' in data:
     print("Poster:")
     print(f"https://image.tmdb.org/t/p/w1280{data['poster']}")
+    print(f"https://www.tmdb.org/t/p/original{data['poster']}")
   print("Searches:")
   quoted_title = urllib.parse.quote_plus(title)
   print("https://www.imdb.com/find?q={}".format(quoted_title))
@@ -598,7 +660,7 @@ def print_to(stream, data):
     stream.write("\n")
 
   if 'tmdb' in data:
-    stream.write(f"TMDB link: <https://www.themoviedb.org/movie/{data['tmdb']['id']}>   \n")
+    stream.write(f"TMDB link: <{data['tmdb']['url']}>   \n")
   if 'imdb_url' in data:
     stream.write(f"IMDb link: <{data['imdb_url']}>   \n")
     stream.write(f"Meta link: <{data['imdb_url']}/criticreviews>   \n")
@@ -643,12 +705,13 @@ def print_to(stream, data):
   stream.write("\n\n")
 
   stream.write(f"![{data['title']}](https://image.tmdb.org/t/p/w1280/{data['poster']})\n\n")
+  stream.write(f"![{data['title']}](https://www.themoviedb.org/t/p/original/{data['poster']})\n\n")
 
   # Tags
-  tags = "t#movie:{}".format(data['year'])
+  tags = "#movie/{}#".format(data['year'])
   for g in [t.lower().replace(' ', '-') for t in data['genre']]:
-    tags += " t#movie:{}".format(g)
-  tags += " t#movie"
+    tags += " #movie/{}#".format(g)
+  tags += " #movie"
   stream.write(tags)
   stream.write("\n")
 
@@ -658,7 +721,7 @@ def print_to(stream, data):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='Movie details')
-  parser.add_argument('-o', '--output', action='store', choices=['j', 'd', 'b'], default='b')
+  parser.add_argument('-o', '--output', action='store', choices=['j', 'd', 'b', ''], default='')
   parser.add_argument('-r', '--rating', action='store', choices=['1', '2', '3', '+3', '3+'])
   parser.add_argument('-y', '--year', action='store', type=int)
   parser.add_argument('title', nargs='+')
