@@ -32,12 +32,13 @@
                 :slack ["^com\\.tinyspeck\\.slackmacgap$"]
                 :terminal ["^com\\.apple\\.Terminal$" "^io\\.alacritty$"]
                 :yacreader ["^com\\.yacreader\\.YACReader$"]
-                :browsers ["^com\\.brave\\.Browser$" "^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$" "^org\\.mozilla\\.firefox$"]
+                :browsers ["^com\\.brave\\.Browser$" "^com\\.apple\\.Safari$" "^com\\.apple\\.SafariTechnologyPreview$" "^org\\.mozilla\\.firefox$" "^company\\.thebrowser\\.Browser$" ]
                 :ctrl_no_hyper ["^org\\.vim\\.MacVim$" "^com\\.apple\\.Terminal$"]
                 }
  
  :devices {
            :leopold [{:vendor_id 1204, :product_id 257}]
+           :logimx [{:vendor_id 1133, :product_id 45933}]
            }
 
  :simlayers {
@@ -74,13 +75,14 @@
                 [:return_or_enter :right_control nil {:alone :return_or_enter}]
                 ]}
 
-        {:des "Double shift sends selection to launcher"
-         :rules [
-                 [:condi :!jetbrains]
-                 [:left_shift [:!CTOS1 ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
-                 [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
-                  {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
-                 ]}
+        ; Disabled Jan. 3rd, 2024 as unused
+        ; {:des "Double shift sends selection to launcher"
+        ;  :rules [
+        ;          [:condi :!jetbrains]
+        ;          [:left_shift [:!CTOS1 ["dbl-shift-mode" 0]] ["dbl-shift-mode" 1]]
+        ;          [:left_shift [["dbl-shift-mode" 1] :left_shift] ["dbl-shift-mode" 0]
+        ;           {:delayed {:invoked ["dbl-shift-mode" 0] :canceled ["dbl-shift-mode" 0]} :params {:delay 200}}]
+        ;          ]}
 
         ;; NOTE: this must come before the other 
         {:des "Fn + WASD OmniFocus: Move"
@@ -99,6 +101,7 @@
                  [:s :down_arrow]
                  [:d :right_arrow]
                  ]}
+
         ; {:des "Fn + Vim-like char[hjkl] word[be] line[64] doc[gz]"
         ;  :rules [:fn-wasd-mode
         ;          [:h :left_arrow]
@@ -149,47 +152,49 @@
         ;          [:##close_bracket :!Cclose_bracket]
         ;          ]}
 
-        ;; as layer not simlayer
-        {:des "Homerow nav: f + char[hjkl] word[be] line[6/9,0/4] doc[gz]"
-         :rules [:f-navigation-mode
-                 [:h :left_arrow]
-                 [:j :down_arrow]
-                 [:k :up_arrow]
-                 [:l :right_arrow]
+        ; Disabled Jan. 3rd, 2024 as never used
+        ; ;; as layer not simlayer
+        ; {:des "Homerow nav: f + char[hjkl] word[be] line[6/9,0/4] doc[gz]"
+        ;  :rules [:f-navigation-mode
+        ;          [:h :left_arrow]
+        ;          [:j :down_arrow]
+        ;          [:k :up_arrow]
+        ;          [:l :right_arrow]
 
-                 [:b :!Oleft_arrow]
-                 [:e :!Oright_arrow]
+        ;          [:b :!Oleft_arrow]
+        ;          [:e :!Oright_arrow]
 
-                 ;; beginning of line: 6 (from vim ^)/9 (from open paren)
-                 [:6 :!Cleft_arrow] ;; ^ is beginning of line
-                 ;; end of line 4 (from vim $)/0 (from close paren)
-                 [:4 :!Cright_arrow]
+        ;          ;; beginning of line: 6 (from vim ^)/9 (from open paren)
+        ;          [:6 :!Cleft_arrow] ;; ^ is beginning of line
+        ;          ;; end of line 4 (from vim $)/0 (from close paren)
+        ;          [:4 :!Cright_arrow]
 
-                 ;; these do not move the cursor
-                 [:g :!Cup_arrow]
-                 [:z :!Cdown_arrow]
+        ;          ;; these do not move the cursor
+        ;          [:g :!Cup_arrow]
+        ;          [:z :!Cdown_arrow]
 
-                 ;; back/forward
-                 [:open_bracket :!Copen_bracket]
-                 [:close_bracket :!Cclose_bracket]
-                 ]}
+        ;          ;; back/forward
+        ;          [:open_bracket :!Copen_bracket]
+        ;          [:close_bracket :!Cclose_bracket]
+        ;          ]}
 
-        {:des "Homerow shift (s + [gb04][hjkl]"
-         :rules [:s-shift-mode
-                 [:g :!Shome]
-                 [:z :!Send]
+        ; Disabled Jan. 3rd, 2024 as never used
+        ; {:des "Homerow shift (s + [gb04][hjkl]"
+        ;  :rules [:s-shift-mode
+        ;          [:g :!Shome]
+        ;          [:z :!Send]
 
-                 [:6 :!CSleft_arrow]
-                 [:4 :!CSright_arrow]
+        ;          [:6 :!CSleft_arrow]
+        ;          [:4 :!CSright_arrow]
 
-                 [:h :!Sleft_arrow]
-                 [:j :!Sdown_arrow]
-                 [:k :!Sup_arrow]
-                 [:l :!Sright_arrow]
+        ;          [:h :!Sleft_arrow]
+        ;          [:j :!Sdown_arrow]
+        ;          [:k :!Sup_arrow]
+        ;          [:l :!Sright_arrow]
 
-                 [:b :!SOleft_arrow]
-                 [:e :!SOright_arrow]
-                 ]}
+        ;          [:b :!SOleft_arrow]
+        ;          [:e :!SOright_arrow]
+        ;          ]}
 
 
 ; Disabled as I never use it
@@ -395,14 +400,15 @@
                  [:right_option   :right_option   nil {:alone :!Cclose_bracket}]
                  ]}
 
-        {:des "Jetbrains tools"
-         :rules [:jetbrains
-                 [:right_shift :left_shift]
-                 [:left_option :left_option  nil {:alone :!Ce}]
-                 ;; navigation back/forward
-                 [:right_command :right_command   nil {:alone :!Copen_bracket}]
-                 [:right_option :right_option nil {:alone :!Cclose_bracket}]
-                 ]}
+        ; Disabled Jan. 3rdd, 2024 to avoid overlapping
+        ; {:des "Jetbrains tools"
+        ;  :rules [:jetbrains
+        ;          [:right_shift :left_shift]
+        ;          [:left_option :left_option  nil {:alone :!Ce}]
+        ;          ;; navigation back/forward
+        ;          [:right_command :right_command   nil {:alone :!Copen_bracket}]
+        ;          [:right_option :right_option nil {:alone :!Cclose_bracket}]
+        ;          ]}
 
         ; Never used
         ; {:des "DayOne Commands"
@@ -443,6 +449,14 @@
                  [[:b :open_bracket] [:!Tb :open_bracket]]
                  ]}
 
+        {:des "Logi MX Switch grave_accent_and_tilde and non_us_backslash"
+         :rules [
+                [:condi :logimx]
+                [:grave_accent_and_tilde :non_us_backslash]
+                [:non_us_backslash :grave_accent_and_tilde]
+                ]
+         }
+        
         ]
  }
     ;; !  | means mandatory
