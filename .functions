@@ -38,9 +38,9 @@ function v() {
         if [ -x "$(command -v nvim)" ]; then
             options+=(nvim)
         fi 
-        if [ -d "/Applications/Emacs.app" ]; then
-            options+=(temacs)
-        fi
+        # if [ -d "/Applications/Emacs.app" ]; then
+        #     options+=(temacs)
+        # fi
         local idx=$(( RANDOM % ${#options[@]} ))
         local cmd="${options[$idx]}"
         echo "[${options[@]}]:$idx:$cmd"
@@ -203,7 +203,8 @@ function magazines() {
 
 function randombook() {
     temp_file=$(mktemp)
-    ls -1R "$1" | grep -v '^/' | sed 's/\.cb[rz]$//g' | sed 's/(.*)//g' | sed 's/v[0-9][0-9]*//g' | sed 's/vol[0-9\.][0-9\.]*//ig' | sed 's/[\.0-9_-]//g' | sed 's/  */ /g' | sort | uniq | sort > $temp_file
+    # ls -1R "$1" | grep -v '^/' | sed 's/\.cb[rz]$//g' | sed 's/(.*)//g' | sed 's/v[0-9][0-9]*//g' | sed 's/vol[0-9\.][0-9\.]*//ig' | sed 's/[\.0-9_-]//g' | sed 's/  */ /g' | sort | uniq | sort > $temp_file
+    find "$1" -type f -name "*.cb[rz]" -type f -exec basename {} \; | sed 's/\.cb[rz]$//g' | sed 's/(.*)//g' | sed 's/v[0-9][0-9]*//g' | sed 's/vol[0-9\.][0-9\.]*//ig' | sed 's/[\.0-9_-]//g' | sed 's/  */ /g' | sort | uniq | sort > $temp_file
     len=$(wc -l < $temp_file)
     idx=$(( $RANDOM % $len ))
     echo "Unique entries: $len"
@@ -211,11 +212,46 @@ function randombook() {
     entry=$(cat "$temp_file" | head -n $idx | tail -1)
     echo "$entry"
     fentry=$(echo "$entry" | sed 's/ /\*/g')
-    file=$(find "$1" -name "$fentry" -exec basename {} \;)
+    file=$(find "$1" -name "*$fentry*" -exec basename {} \;)
     echo "$file"
     echo "$file" | pbcopy
     rm $temp_file
 }
+
+function weeklycomics() {
+    if [ "-s" = "$1" ]; then
+        local count=4
+        if [ -n "$2" ]; then
+            count=$2
+        fi
+        for i in {1..$count}; do 
+            echo "Result $i:"
+            echo "=========" 
+            randombook "$HOME/Dropbox/MagicBriefcase/ComicBooks/00.inbox"
+            echo "- - - - - - - -"
+            echo ""
+        done
+        return
+    fi
+    if [ "-c" = "$1" ]; then
+        local count=4
+        if [ -n "$2" ]; then
+            count=$2
+        fi
+        rm -vf $HOME/Dropbox/MagicBriefcase/ComicBooks/weeklycomics/*
+        tail -$count "$HOME/Dropbox/MagicBriefcase/ComicBooks/weeklycomics.txt" | while read line; do
+            if [ -n "$line" ]; then
+                ln "$HOME/Dropbox/MagicBriefcase/ComicBooks/00.inbox/$line" "$HOME/Dropbox/MagicBriefcase/ComicBooks/weeklycomics/"
+            fi
+        done
+        ls -1 "$HOME/Dropbox/MagicBriefcase/ComicBooks/weeklycomics/"
+        return
+    fi
+    echo "Usage:"
+    echo "    weeklycomics -s to select comics"
+    echo "    weeklycomics -c to create weekly comics folder"
+}
+
 
 function gitquick() {
     if [ -z "$1" ]; then
@@ -1124,3 +1160,28 @@ function join_by {
     printf %s "$f" "${@/#/$d}"
   fi
 }
+
+# convert heic to jpeg (low)
+function heic2jpeg {
+    local formatOptions="$H2J"
+    if [ -z "$formatOptions" ]; then
+        formatOptions="10%"
+    fi
+    sips -s format jpeg -s formatOptions "$formatOptions" "$1" --out "${1%.*}.jpeg"
+    echo ""
+    echo "Info: Change formatOptions using env variable H2J (e.g. H2J=low|normal|high|best|<percent> heic2jpeg)"
+}
+
+# predefined configuration for running whisper
+function transcribe {
+    if [ -z "$1" ]; then
+        echo "input audio file is required"
+        return -1
+    fi
+
+    echo "output    : txt"
+    echo "output dir: $(dirname $1)"
+    pyenv shell 3.10.13-whisper
+    whisper --model medium --output_dir "$(dirname $1)" --output_format txt --task transcribe --language en --max_words_per_line 12 --word_timestamps True "$1"
+}
+
