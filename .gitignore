@@ -53,3 +53,4 @@ bin/xkcdotd
 .emacs.d/projectile-bookmarks.eld
 #
 .ropeproject/
+.config/nnn/.selection
