@@ -33,9 +33,12 @@ RATINGS = {
   '4': '★★★★ **(excellent. i could always see it again)**'
 }
 
-_API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0',
-        'alpo',
-        '808a49948b398609e61e62917bd235a8c8139866')
+# Rotten Tomatoes killed the free API
+
+# Trakt.tv API unused
+# _API = ('http://api.trakt.tv/movie/seen/8861c688930852cfbff18e51f195acb0',
+#         'alpo',
+#         '808a49948b398609e61e62917bd235a8c8139866')
 
 WORDS = ('a', 'an',  'and', 'as', 'at',  'but', 'by', 'for', 'i', 'in', 'not', 'of', 'on','or', 'the', 'yet', 'with')
 
@@ -286,33 +289,6 @@ def omdbapi_data(title, year=None):
   return imdb_data, 1
 
 
-def rotten_data(title, year=None):
-  """ Try RottenTomatoes service """
-  short_title = prepare_title(title)
-
-  rotten_dt = httpGet('api.rottentomatoes.com',
-                      httpQuery("/api/public/v1.0/movies.json",
-                                q=short_title,
-                                page_limit=25,
-                                page=1,
-                                apikey='3r2avcbv2fhn6gk2nhtxeke9'))
-
-  if rotten_dt:
-    movie = None
-    max_match = 0
-    for mov in rotten_dt['movies']:
-      match = match_len(title, mov.get('title', ''))
-      if year and year == mov.get('year', 0):
-        match += 1
-      if match > max_match:
-        movie = mov
-        max_match = match
-
-    if max_match > 0:
-      return movie, 1
-
-  return {}, 0
-
 def imdb_scores(imdb_url):
   """scrap the imdb page for 2 scores"""
   if not imdb_url.endswith("/"):
@@ -469,9 +445,6 @@ def main(title, opts):
   omdbapid, r2 = omdbapi_data(title, opts.year)
   # omdbapid = {}
   # Rotten Tomatoes killed the free API
-  # print("Trying: rottentomatoes.com")
-  # rottend, r3 = rotten_data(title, opts.year)
-  rottend = {}
 
   ratings= {'tmdb': imdbapid.get('rating', ''), 'imdb': omdbapid.get('rating', ''), 'meta': ''}
   imdb_url = get('imdb_url', '', imdbapid, tmdbapid, omdbapid)
@@ -479,58 +452,43 @@ def main(title, opts):
     ratings.update(imdb_scores(imdb_url))
 
   data = {
-    'title': get('title', '', imdbapid, tmdbapid, rottend, omdbapid),
+    'title': get('title', '', imdbapid, tmdbapid, omdbapid),
     'year': opts.year or get('year', '', imdbapid, tmdbapid, omdbapid),
     'genre': get('genres', [], imdbapid, tmdbapid) or omdbapid.get('Genre', '').split(', '),
     'imdb_url': get('imdb_url', '', imdbapid, tmdbapid, omdbapid),
     'my_rating': opts.rating,
     'directors': get('directors', [], imdbapid, tmdbapid) or omdbapid.get('Director', '').split(', '),
-    'actors': find_actors(imdbapid, tmdbapid, omdbapid, rottend),
+    'actors': find_actors(imdbapid, tmdbapid, omdbapid),
     'plot': get('plot', '', imdbapid, tmdbapid, omdbapid),
     'poster': get('poster', '', imdbapid, tmdbapid),
-    'audience_rating': 'Upright Spilled',
-    'audience_score' : '',
-    'critics_rating' : 'Fresh Rotten',
-    'critics_score'  : '',
-    'critics_consensus': '',
     'synopsis': '',
     'tmdb': imdbapid.get('tmdb', {})
   }
   data['ratings'] = ratings
-  if rottend:
-    data['rotten_url'] = rottend.get('links', {}).get('alternate', '')
-    data['critics_rating'] = rottend.get('ratings', {}).get('critics_rating', 'n/a')
-    data['critics_score'] = rottend.get('ratings', {}).get('critics_score', 'n/a')
-    data['audience_rating'] = rottend.get('ratings', {}).get('audience_rating', 'n/a')
-    data['audience_score'] = rottend.get('ratings', {}).get('audience_score', 'n/a')
-    data['critics_consensus'] = rottend.get('critics_consensus', '')
-    data['poster_rotten'] = rottend.get('posters', {}).get('original')
-    data['synopsis'] = rottend.get('synopsis', '')
-  else:
-    rotten_slug = data['title'].lower()
-    rotten_slug = re.sub('\s+', '_', rotten_slug)
-    rotten_slug = re.sub('\W+', '', rotten_slug)
-    data['rotten_url'] = "http://www.rottentomatoes.com/m/%s" % rotten_slug
 
   generate_output(data, opts)
 
-  # track(data, opts)
+  generate_links(data)
 
-  # generate search links if needed
-  print("\n", "Links:", sep='')
+
+def generate_links(data):
+  """Generates different types of links"""
+
+  print("\n", "Links:", "-----", sep='\n')
   print(data['imdb_url'])
-  print(data['rotten_url'])
   if 'tmdb' in data and 'url' in data['tmdb']:
     print(data['tmdb']['url'])
+
+  quoted_title = urllib.parse.quote_plus(title)
+  print("\n", "Searches:", "--------", sep='\n')
+  print(f"https://www.imdb.com/find?q={quoted_title}")
+  print(f"https://www.themoviedb.org/search?query={quoted_title}")
+
   if 'poster' in data:
-    print("Poster:")
+    print("\n", "Poster:", "------", sep='\n')
     print(f"https://image.tmdb.org/t/p/w1280{data['poster']}")
     print(f"https://www.tmdb.org/t/p/original{data['poster']}")
-  print("Searches:")
-  quoted_title = urllib.parse.quote_plus(title)
-  print("https://www.imdb.com/find?q={}".format(quoted_title))
-  print("http://www.rottentomatoes.com/search/?search={}".format(quoted_title))
-  print("http://trakt.tv/search?query={}".format(quoted_title))
+
 
 
 def track(data, opts):
@@ -554,7 +512,7 @@ def track(data, opts):
                'movies': [{'imdb_id': imdb_id, 'title': data['title'], 'year': int(data['year'])}]}
   req = urllib.request.Request(_API[0])
   req.add_header('Content-Type', 'application/json')
-  res = urllib.request.urlopen(req, json.dumps(json_data))
+  res = urllib.request.urlopen(req, json.dumps(json_data).encode('utf8'))
   if res.code == 200:
     print('SUCCESS:', res.read())
   else:
@@ -665,18 +623,6 @@ def print_to(stream, data):
     stream.write(f"IMDb link: <{data['imdb_url']}>   \n")
     stream.write(f"Meta link: <{data['imdb_url']}/criticreviews>   \n")
 
-  # stream.write(f"IMDB     : {data['imdb_rating']}(10)   \n")
-  # stream.write( "Metascore:    \n\n")
-
-  if 'rotten_url' in data:
-    if data['rotten_url'].startswith('http'):
-      stream.write(f"Tomato   : <{data['rotten_url']}>   \n\n")
-    else:
-      stream.write(f"Tomato   : <http:{data['rotten_url']}>   \n\n")
-  stream.write(f"Audience : {data['audience_score']} {data['audience_rating']}   \n")
-  stream.write(f"Critics  : {data['critics_score']} {data['critics_rating']}   \n")
-  stream.write("\n")
-
   stream.write("* * * * * * * * * * *")
   stream.write("\n\n")
 
@@ -692,7 +638,6 @@ def print_to(stream, data):
   # Commentary/Critics
   stream.write("## Commentary\n\n")
   stream.write("{_Me_} \n\n")
-  stream.write(f"> {data['critics_consensus']}\n")
 
   # Director(s) & Actors
   stream.write("## Cast\n\n")
@@ -729,6 +674,7 @@ if __name__ == '__main__':
   opts = parser.parse_args()
   opts.rating = opts.rating or ''
   title = ' '.join(opts.title)
+
 
   main(title, opts)
   # imdb_scores(sys.argv[1])
