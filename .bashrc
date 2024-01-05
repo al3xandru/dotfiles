@@ -19,7 +19,3 @@ shopt -u nullglob
 
 eval "$(starship init bash)"
 eval "$(zoxide init bash)"
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/alexandp/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
