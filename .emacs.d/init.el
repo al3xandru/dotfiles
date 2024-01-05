@@ -209,7 +209,7 @@ Consider only documented, non-obsolete functions."
   "Kill up to, but not including ARGth occurrence of CHAR
    (fn arg char)"
   'interactive)
-(global-set-key (kbd "M-Z") 'zap-to-char)
+(global-set-key (kbd "C-M-z") 'zap-to-char)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
 ;;; One Window Toggle
