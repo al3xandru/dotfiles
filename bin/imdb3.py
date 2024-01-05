@@ -126,7 +126,8 @@ def themoviedb_data(title, year=None):
   if not jdata or jdata['total_results'] == 0:
     return themoviedb_tv_data(title, year)
 
-  print("TMDB Movies:", jdata)
+  if DEBUG_HTTP_BODY:
+    print("TMDB Movies:", jdata)
   imdb_data = {}
 
   if ('results' in jdata) and len(jdata['results']) == 1:
@@ -295,7 +296,9 @@ def imdb_scores(imdb_url):
     imdb_url = imdb_url + "/"
   imdb_url = imdb_url.replace("http://", "https://")
   print("GET", imdb_url)
+
   from urllib.parse import urlparse
+
   url_parts = urlparse(imdb_url)
   c = None
   try:
@@ -324,20 +327,23 @@ class ImdbHtmlParser(HTMLParser):
   def __init__(self):
     super().__init__()
     self._next_imdb_score = False
+    self._next_span_is_the_score = False
     self._next_meta_score = False
     self.imdb_score = ''
     self.meta_score = ''
 
   def handle_starttag(self, tag, attrs):
-    if tag == 'span' and (self.imdb_score == '' or self.meta_score == ''):
+    if tag == 'div' and self.imdb_score == '':
       for a, v in attrs:
-        if a == 'class':
-          if 'iTLWoV' in v or 'sc-7ab21ed2-1' in v:
-            # print("found potential imdb score:", tag, v)
-            self._next_imdb_score = True
-          if 'score-meta' in v:
-            # print("found potential meta score:", tag, v)
-            self._next_meta_score = True
+        if a == 'data-testid' and 'hero-rating-bar__aggregate-rating__score' in v:
+          self._next_span_is_the_score = True
+    if tag == 'span' and self._next_span_is_the_score:
+      self._next_imdb_score = True
+      self._next_span_is_the_score = False
+    if tag == 'span' and self.meta_score == '':
+      for a, v in attrs:
+        if a == 'class' and 'metacritic-score-box' in v:
+          self._next_meta_score = True
 
   def handle_endtag(self, tag):
     if self._next_imdb_score:
@@ -466,7 +472,11 @@ def main(title, opts):
   }
   data['ratings'] = ratings
 
+  print("\n", "- v - v - v - v - v - v - v -\n", sep='\n')
+
   generate_output(data, opts)
+
+  print("\n", "- ^ - ^ - ^ - ^ - ^ - ^ - ^ -", sep='\n')
 
   generate_links(data)
 
@@ -623,6 +633,7 @@ def print_to(stream, data):
     stream.write(f"IMDb link: <{data['imdb_url']}>   \n")
     stream.write(f"Meta link: <{data['imdb_url']}/criticreviews>   \n")
 
+  stream.write("\n\n")
   stream.write("* * * * * * * * * * *")
   stream.write("\n\n")
 
@@ -677,7 +688,7 @@ if __name__ == '__main__':
 
 
   main(title, opts)
-  # imdb_scores(sys.argv[1])
+  # print(imdb_scores(sys.argv[1]))
 
 
 # Sample imdbapi.org result:
