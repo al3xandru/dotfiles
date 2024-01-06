@@ -84,10 +84,11 @@
     default = upstream
 
 [diff]
-	; tool = xdiff
-    tool = vimdiff
+	tool = xdiff
+    # tool = vimdiff
 [difftool]
-	prompt = false
+    tool = xdiff
+    prompt = false
 
 # REMOTE: the new version
 # LOCAL: the old version

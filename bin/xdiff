@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ $# -eq 2 ]; then
     OLD=$1
     NEW=$2
@@ -6,29 +6,37 @@ else
     OLD=$2
     NEW=$3
 fi
-if [ -x /usr/local/bin/ksdiff ]; then
-    if [ $# -eq 2 ]; then
-        ksdiff "$OLD" "$NEW"
-    else
-        ksdiff --partial-changeset --relative-path "$1" -- "$OLD" "$NEW"
-    fi
-else
-    if [ -x /usr/local/bin/bbdiff ]; then
-        bbdiff --wait --resume "$NEW" "$OLD"
-    else
-        # if [ -x /usr/local/bin/vimr ]; then
-        #     /usr/local/bin/vimr --wait  --nvim -d "$OLD" "$NEW"
-        # elif [ -x $HOME/bin/mvim ]; then
-        if [ -x $HOME/bin/mvim ]; then
-           $HOME/bin/mvim -d -f "$OLD" "$NEW"
-        elif [ -x /usr/local/bin/vimdiff ]; then 
-            /usr/local/bin/vimdiff "$OLD" "$NEW"
-        else
-            if [ -x /usr/bin/vimdiff ]; then
-                /usr/bin/vimdiff "$OLD" "$NEW"
-            else
-                diff "$OLD" "$NEW"
-            fi
-        fi
-    fi
+diffcmd=""
+if [ -n "$XDIFF" ]; then
+    diffcmd="$XDIFF"
+elif [ $(command -v ksdiff) ]; then
+        diffcmd=ksdiff
+elif [ $(command -v mvim) ]; then
+    diffcmd=mvim
+elif [ $(command -v vimdiff) ]; then
+    diffcmd=vimdiff
 fi
+echo "Using diff program: $diffcmd"
+
+# bbdiff --wait --resume "$NEW" "$OLD"
+case "$diffcmd" in
+    ksdiff)
+        if [ $# -eq 2 ]; then
+            ksdiff "$OLD" "$NEW"
+        else
+            ksdiff --partial-changeset --relative-path "$1" -- "$OLD" "$NEW"
+        fi
+        ;;
+
+    mvim)
+        mvim -d -f "$OLD" "$NEW"
+        ;;
+
+    vimdiff)
+        vimdiff "$OLD" "$NEW"
+        ;;
+
+    *)
+        diff "$OLD" "$NEW"
+        ;;
+esac
