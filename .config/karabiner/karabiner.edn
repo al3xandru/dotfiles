@@ -1,4 +1,3 @@
-
 ;; <https://github.com/yqrashawn/GokuRakuJoudo>
 ;; "Putting your Keyboard on Steroids with Karabiner Elements | swyx.io" <https://www.swyx.io/karabiner_lindquist/>
 ;; "Customize Karabiner With Goku | John Lindquist" <https://johnlindquist.com/customize-karabiner-with-goku/>
@@ -10,12 +9,13 @@
  :sim 393   ;;   basic.simultaneous_threshold_milliseconds 
  :simlayer-threshold 400
 
- :tos {;
-       :return {:key :return_or_enter}
-       :tilde {:key :grave_accent_and_tilde}
-       :emoji_picker {:key :spacebar :modi [:command :control]} ;!CTspacebar
-       :screenshot_clipboard {:key :4 :modi [:command :control :shift]} ;!CTS4
-       }
+ ; Are thes eused anywhere? (Jan.6 2024)
+ ; :tos {;
+ ;       :return {:key :return_or_enter}
+ ;       :tilde {:key :grave_accent_and_tilde}
+ ;       :emoji_picker {:key :spacebar :modi [:command :control]} ;!CTspacebar
+ ;       :screenshot_clipboard {:key :4 :modi [:command :control :shift]} ;!CTS4
+ ;       }
 
  :applications {
                 :brave ["^com\\.brave\\.Browser$"]
@@ -23,8 +23,6 @@
                 :dayone ["^com\\.bloombuilt\\.dayone-mac$"]
                 :finder ["^com\\.apple\\.finder$"]
                 :firefox ["^org.mozilla.firefox$"]
-                ;; com.jetbrains.goland com.jetbrains.intellij
-                ; :jetbrains ["^com\\.jetbrains\\.intellij$" "^com\\.jetbrains\\.intellij-EAP$"]
                 :jetbrains ["^com\\.jetbrains\\."]
                 :macvim ["^org\\.vim\\.MacVim$"]
                 :omnifocus ["^com\\.omnigroup\\.OmniFocus3$" "^com\\.omnigroup\\.OmniFocus4$"]
@@ -43,10 +41,12 @@
 
  :simlayers {
              :fn-wasd-mode {:key :fn}
-             :f-navigation-mode {:key :f}
-             :n-navigation-mode {:key :n}
-             :s-shift-mode {:key :s}
              :d-cmd-mode {:key :d}
+             ;; used in Terminal only with TMUX
+             :b-tmux-mode {:key :b}     
+             ; :f-navigation-mode {:key :f}
+             ; :n-navigation-mode {:key :n}
+             ; :s-shift-mode {:key :s}
              ; :w-win-mode {:key :w}
              ; :z-clip-mode {:key :z}
              ; :o-open-mode {:key :o}
@@ -422,40 +422,42 @@
         ;          ]}
 
         {:des "Tmux"
-         :rules [:terminal
+         :rules [
+                 [:condi :terminal :b-tmux-mode]
                  ;; windows
-                 [[:b :c] [:!Tb :c]]    ;; create
-                 [[:b :n] [:!Tb :n]]    ;; next
-                 [[:b :p] [:!Tb :p]]    ;; prev
-                 [[:b :x] [:!Tb :x :y :y]] ;; exit
-                 [[:b :w] [:!Tb :w]]    ;; list windows
-                 [[:b :comma] [:!Tb :comma]]
+                 [:##c [:!Tb :c]]         ;; create
+                 [:##n [:!Tb :n]]         ;; next
+                 [:##p [:!Tb :p]]         ;; prev
+                 [:##x [:!Tb :x :y :y]]   ;; exit
+                 [:##w [:!Tb :w]]         ;; list windows
+                 [:##comma [:!Tb :comma]] ;; rename
                  ;; navigation
-                 [[:b :down_arrow] [:!Tb :down_arrow]]
-                 [[:b :up_arrow] [:!Tb :down_arrow]]
-                 [[:b :left_arrow] [:!Tb :left_arrow]]
-                 [[:b :right_arrow] [:!Tb :right_arrow]]
-                 [[:b :h] [:!Tb :left_arrow]]
-                 [[:b :j] [:!Tb :down_arrow]]
-                 [[:b :k] [:!Tb :up_arrow]]
-                 [[:b :l] [:!Tb :right_arrow]]
+                 [:##left_arrow [:!Tb :left_arrow]]
+                 [:##down_arrow [:!Tb :down_arrow]]
+                 [:##up_arrow [:!Tb :up_arrow]]
+                 [:##right_arrow [:!Tb :right_arrow]]
+                 [:##h [:!Tb :left_arrow]]
+                 [:##j [:!Tb :down_arrow]]
+                 [:##k [:!Tb :up_arrow]]
+                 [:##l [:!Tb :right_arrow]]
                  ;; panel
-                 [[:b :q] [:!Tb :q]]
-                 [[:b :s] [:!Tb :!Squote]]
-                 [[:b :quote] [:!Tb :!Squote]]
-                 [[:b :v] [:!Tb :!S5]]
-                 [[:b :5] [:!Tb :!S5]]
+                 [:##q [:!Tb :q]]           ;; panel count
+                 [:##s [:!Tb :!Squote]]     ;; split
+                 [:##quote [:!Tb :!Squote]] ;; split
+                 [:##v [:!Tb :!S5]]         ;; vertical split
+                 [:##5 [:!Tb :!S5]]         ;; vertical split
                  ;; clipboard
-                 [[:b :open_bracket] [:!Tb :open_bracket]]
+                 [:##open_bracket [:!Tb :open_bracket]]
                  ]}
 
-        {:des "Logi MX Switch grave_accent_and_tilde and non_us_backslash"
-         :rules [
-                [:condi :logimx]
-                [:grave_accent_and_tilde :non_us_backslash]
-                [:non_us_backslash :grave_accent_and_tilde]
-                ]
-         }
+        ; Disables this rule as using Simple Rules in Karabiner works better
+        ; {:des "Logi MX Switch grave_accent_and_tilde and non_us_backslash"
+        ;  :rules [
+        ;         [:condi :logimx]
+        ;         [:grave_accent_and_tilde :non_us_backslash]
+        ;         [:non_us_backslash :grave_accent_and_tilde]
+        ;         ]
+        ;  }
         
         ]
  }
