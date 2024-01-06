@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
+# Args received as GIT_EXTERNAL_DIFF:
+# path old-file old-hex old-mode new-file new-hex new-mode
+#
+if [ "$XDIFF_DEBUG" == "true" ]; then
+    echo "Args count: $#"
+    echo "Args      : $@"
+fi
 if [ $# -eq 2 ]; then
     OLD=$1
     NEW=$2
+elif [ $# -eq 7 ]; then
+    OLD=$2
+    NEW=$5
 else
     OLD=$2
     NEW=$3
@@ -13,13 +23,20 @@ elif [ $(command -v ksdiff) ]; then
         diffcmd=ksdiff
 elif [ $(command -v mvim) ]; then
     diffcmd=mvim
+elif [ $(command -v bbdiff) ]; then
+    diffcmd=bbdiff
 elif [ $(command -v vimdiff) ]; then
     diffcmd=vimdiff
 fi
-echo "Using diff program: $diffcmd"
+if [ "$XDIFF_DEBUG" == "true" ]; then
+    echo "Using diff program: $diffcmd"
+fi
 
-# bbdiff --wait --resume "$NEW" "$OLD"
 case "$diffcmd" in
+    bbdiff)
+        bbdiff --wait --resume "$OLD" "$NEW"
+        ;;
+
     ksdiff)
         if [ $# -eq 2 ]; then
             ksdiff "$OLD" "$NEW"

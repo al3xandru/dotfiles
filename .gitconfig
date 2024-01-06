@@ -69,13 +69,6 @@
     # commit graph with changes per file and patch 
     origin = remote show origin
     findalias = "!grepalias() { git config --global --get-regexp alias | grep -i \"$1\" | awk -v nr=2 '{sub(/^alias\\./,\"\")};{printf \"\\033[31m%_10s\\033[1;35m\", $1};{sep=FS};{for (x=nr; x<=NF; x++) {printf \"%s%s\", sep, $x; }; print \"\\033[0;39m\"}'; }; grepalias"
-#    dx = !git diff | mate
-#    dv = !git diff | vim
-#    ph = push
-#    pl = pull
-#    spull = !git-svn fetch && git-svn rebase
-#    spush = !git-svn dcommit
-#    sync = !git pull && git push
 # [Idiot proof git](https://softwaredoug.com/blog/2022/11/09/idiot-proof-git-aliases.html)
     mainbranch = "!git remote show origin | sed -n '/HEAD branch/s/.*: //p'"
     update = "!git pull origin $(git rev-parse --abbrev-ref HEAD) --rebase"
@@ -84,47 +77,38 @@
     default = upstream
 
 [diff]
+    external = $HOME/bin/xdiff
 	tool = xdiff
-    # tool = vimdiff
-[difftool]
-    tool = xdiff
-    prompt = false
+    ; the following doesn't work
+    ; tool = xdiff
 
 # REMOTE: the new version
 # LOCAL: the old version
+[difftool]
+    prompt = false
 [difftool "xdiff"]
-    cmd = xdiff "$MERGED" "$LOCAL" "$REMOTE"
-    prompt = false
+	cmd = $HOME/bin/xdiff "$LOCAL" "$REMOTE"
 [difftool "bbdiff"]
-    cmd = bbdiff --wait --resume "$REMOTE" "$LOCAL" 
-    prompt = false
-[difftool "sourcetree"]
-	cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
-	path = 
-[difftool "vimdiff"]
-    cmd = mvim -d -f "$LOCAL" "$REMOTE"
-[difftool "diffmerge"]
-  # GIT_EXTERNAL_DIFF will be called with a fixed set of 7 arguments:
-  #
-  # old-file old-hex old-mode new-file new-hex new-mode
-  # cmd = diffmerge.sh --nosplash -ro2 -t1=Old -t2=New \"$LOCAL\" \"$REMOTE\" > /dev/null 2>&1
-    cmd = diffmerge.sh --nosplash -ro2 -t1=Old -t2=New \"$LOCAL\" \"$REMOTE\" 
-[difftool "Kaleidoscope"]
-	cmd = /usr/local/bin/ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+    cmd = $(brew --prefix)/bin/bbdiff --wait --resume "$REMOTE" "$LOCAL" 
+; [difftool "diffmerge"]
+;     cmd = diffmerge.sh --nosplash -ro2 -t1=Old -t2=New \"$LOCAL\" \"$REMOTE\" 
+; [difftool "Kaleidoscope"]
+; 	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 
-[merge]
-	tool = Kaleidoscope
-[mergetool]
-	prompt = false
-[mergetool "diffmerge"]
-    cmd = diffmerge.sh --nosplash --merge --result=\"$MERGED\" -t1=New -t2=Base -t3=Old \"$LOCAL\" \"$BASE\" \"$REMOTE\"
-	trustexitcode = false
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
-[mergetool "Kaleidoscope"]
-	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-	trustExitCode = true
+; [merge]
+; 	tool = Kaleidoscope
+; [mergetool]
+; 	prompt = false
+; [mergetool "diffmerge"]
+;     cmd = diffmerge.sh --nosplash --merge --result=\"$MERGED\" -t1=New -t2=Base -t3=Old \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+; 	trustexitcode = false
+; [mergetool "sourcetree"]
+; 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+; 	trustExitCode = true
+; [mergetool "Kaleidoscope"]
+; 	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+; 	trustExitCode = true
+
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
