@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+function pubmd() {
+	if [ -z "$1" ]; then
+		printf "Usage: pubmarkdown filename\n"
+		return 2
+	fi
+	$HOME/bin/Markdown.pl "$1" | $HOME/bin/SmartyPants.pl | tee >(pbcopy)
+	cp "$1" "$(dirname $1)/$(date +%Y%m%d-%H%M).markdown"
+}
+
 function e() {
     vimflavors=("mvim")
     if [ -x "$(command -v vimr)" ]; then
@@ -19,7 +28,7 @@ function e() {
 }
 
 # randomize usage of vim and nvim
-function v() {
+function v(){ 
     case "$1" in
      -e)
         shift
@@ -224,7 +233,7 @@ function weeklycomics() {
         if [ -n "$2" ]; then
             count=$2
         fi
-        for i in {1..$count}; do 
+        for i in $(seq 1 $count); do 
             echo "Result $i:"
             echo "=========" 
             randombook "$HOME/Dropbox/MagicBriefcase/ComicBooks/00.inbox"
@@ -265,7 +274,15 @@ function gitquick() {
 
 # https://leancrew.com/all-this/2022/03/last-man-standing
 function bbman() {
-    man "$1" | col -bx | bbedit --view-top --clean -t "$1"
+    if [ $# -lt 2 ]; then
+        local cmd=${1}
+        local sec=''
+    else
+        local cmd=${2}
+        local sec=${1}
+    fi
+
+    man $sec $cmd | col -bx | bbedit --view-top --clean -t "$cmd"
 }
 
 function whostopseject() {
