@@ -146,41 +146,38 @@ set laststatus=2
 " Colors: Error, Question, Search, Todo, Visual, WarningMsg
 set statusline=%q[%#Error#%{toupper(mode())}%*:b%n]
 set statusline+=\ %#Todo#%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
-set statusline+=\ %f%m%r(%{getcwd()})
+set statusline+=\ %f%m(%{getcwd()})
 set statusline+=%= "left/right separator
 set statusline+=%#Todo#%{exists('g:loaded_obsession')?ObsessionStatus():''}%*
-set statusline+=%y[%{&fileencoding?&fileencoding:&encoding}]
-set statusline+=%<[%v:%l/%L][a\%03.3b:h\%02.2B]
+set statusline+=%r%y[%{&fileencoding?&fileencoding:&encoding}]
+set statusline+=%<[%v:%l/%L][a\%03.3b]
 
 " GUI {{{
 " set guicursor=n-v-c:block-Cursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-lCursor,r-cr:hor20-Cursor,sm:block
 set guioptions=aAce
 set selection=exclusive
 if has("gui_running")
-    set go-=T
-    set go-=l
-    set go-=L
-    set go-=r " no scrollbar
-    set go-=R
+    " no left scrollbar
+    set guioptions-=l
+    set guioptions-=L
+    " no toolbar
+    " set guioptions-=T
+    " no right scrollbar
+    " set guioptions-=r
+    " set guioptions-=R
+    set gfn=PragmataPro_Mono:h14,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,Iosevka_Fixed:h13,mononoki:h13
     if has("gui_macvim")
-        " Anonymous_Pro:h12
-        " Consolas:h12
-        " Cousine:h11
-        " Fira_Code_Regular:h12
-        " Hack:h12
-        " Inconsolata:h13
-        " Input_Mono:h11
-        " Liberation_Mono:h11
-        " Operator_Mono_Book:h13
-        " PragmataPro_Mono:h13
-        " Source_Code_Pro:h11
         " set gfn=SF_Mono_Regular:h12 linespace=2
-        set gfn=PragmataPro_Mono:h14,Operator_Mono_Book:h13,Input_Mono_Condensed:h13,Iosevka_Fixed:h13,mononoki:h13
         " add "New Window" menu to MacVim (stupid but needed)
         " aun File.New\ Window
         an <silent> 10.290 File.New\ Window :silent !mvim<CR>
         macm File.New\ Window key=<D-n>
-    elseif has("gui_gtk2")
+    endif
+    if exists("g:neovide")
+         let g:neovide_input_macos_alt_is_meta = v:true
+         set gfn=Iosevka_Fixed:h15,PragmataPro_Mono:h15,Operator_Mono_Book:h15,Iosevka_Fixed:h15,mononoki:h15
+    endif
+    if has("gui_gtk2")
         set gfn=monofur\ 12,SourceCodePro\ 10,Anonymous\ Pro\ 10
     endif
 
@@ -450,6 +447,18 @@ function! <SID>BigWnd()
     startinsert
 endfunction
 command! Bigwnd call <SID>BigWnd()
+
+" https://vcavallo.github.io/vim/markdown/how_to/2017/02/28/vim-function-to-visually-center-a-plaintext-file.html
+" https://github.com/JMcKiern/vim-venter and https://github.com/junegunn/goyo.vim
+function! <SID>CenterWnd()
+    lefta vnew
+    exec 'vertical resize '. string(&columns * 0.10)
+    wincmd w
+    rightb vnew
+    exec 'vertical resize '. string(&columns * 0.10)
+    wincmd W
+endfunction
+command! CenterWnd call <SID>CenterWnd()
 " 2}}}
 
 " Set GUI font {{{2
@@ -476,7 +485,7 @@ command! -nargs=1 Zoom call <SID>Zoom(<f-args>)
 
 " Plugins
 " Load vim-plug https://github.com/junegunn/vim-plug
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.vim/plugins')
 " Alternative plugin managers
 " - vundle
 " - junegunn/vim-plug 
@@ -502,7 +511,10 @@ Plug 'NLKNguyen/papercolor-theme'
 " dark
 Plug 'arcticicestudio/nord-vim'
 Plug 'joshdick/onedark.vim'
-Plug 'trevordmiller/nova-vim'
+" Plug 'trevordmiller/nova-vim' " 404
+Plug 'iammerrick/nova-vim'
+" Alternative
+" Plug 'scanhex/nova.vim'
 " }}}
 
 " ok {{{2
@@ -524,8 +536,11 @@ Plug 'mvanderkamp/cocoa.vim'
 Plug 'junegunn/seoul256.vim'    " Sat, Apr.2nd, 2022
 "2}}}
 
-" Testing
+" colorschemes in test {{{2
 Plug 'sainnhe/everforest'
+Plug 'sainnhe/gruvbox-material'
+Plug 'catppuccin/vim'
+"2}}}
 "1}}}
 
 
@@ -564,34 +579,6 @@ Plug 'jceb/vim-textobj-uri'
 
 " Essentials {{{1
 "
-" Files {{{2
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
-let g:fzf_layout = {'up': '~20%'}
-nnoremap <leader>f. <Cmd>Files<CR>
-inoremap <leader>f. <Cmd>:Files<CR>
-vnoremap <leader>f. <Cmd>:Files<CR>
-nnoremap <leader>fg <Cmd>GFiles<CR>
-inoremap <leader>fg <Cmd>GFiles<CR>
-vnoremap <leader>fg <Cmd>GFiles<CR>
-nnoremap <leader>fb <Cmd>Buffers<CR>
-inoremap <leader>fb <Cmd>Buffers<CR>
-vnoremap <leader>fb <Cmd>Buffers<CR>
-nnoremap <leader>fl <Cmd>BLines<CR>
-inoremap <leader>fl <Cmd>BLines<CR>
-vnoremap <leader>fl <Cmd>BLines<CR>
-nnoremap <leader>fL <Cmd>Lines<CR>
-inoremap <leader>fL <Cmd>Lines<CR>
-vnoremap <leader>fL <Cmd>Lines<CR>
-nnoremap g. :Files<CR>
-nnoremap gG :GFiles<CR>
-nnoremap gl :BLines<CR>
-nnoremap gL :Lines<CR>
-nnoremap gb :Buffers<CR>
-nnoremap gW :Windows<CR>
-nnoremap gJ :Jumps<CR>
-nnoremap gM :Marks<CR>
-" 2}}}
 
 
 " Netrw {{{2
@@ -906,12 +893,13 @@ augroup END
 
 " Markdown editing {{{3
 Plug 'junegunn/goyo.vim'
+let g:goyo_width=84
+nmap yoc <Cmd>Goyo<CR>
+
 Plug 'junegunn/limelight.vim'
 let g:limelight_default_coefficient = 0.7
 let g:limelight_paragraph_span = 1
-" nmap [of :Limelight<CR>
-" nmap ]of :Limelight!<CR>
-" nmap cof :Limelight!!<CR>
+nmap yop :<C-U>Limelight!!<CR>
 
 
 Plug 'reedes/vim-colors-pencil'
@@ -1067,6 +1055,7 @@ let g:startify_bookmarks = [
     \ '~/Dropbox/Dox/mydox/03-email_drafts.md',
     \ '~/Dropbox/Dox/mydox/04-blog.md',
     \ '~/Dropbox/Dox/mydox/05-blog_ideas_and_drafts.md',
+    \ '~/.vim/vimrc',
     \ '~/Desktop/',
     \ '~/Desktop/m/',
     \ '~/Desktop/w/',
@@ -1135,10 +1124,10 @@ let g:sneak#use_ic_scs=1
 " nnoremap <silent> F :<C-U>call sneak#wrap('',           1, 1, 1, 1)<CR>
 " nnoremap <silent> t :<C-U>call sneak#wrap('',           1, 0, 0, 1)<CR>
 " nnoremap <silent> T :<C-U>call sneak#wrap('',           1, 1, 0, 1)<CR>
-" nmap f <Plug>Sneak_f
-" nmap F <Plug>Sneak_F
-" nmap t <Plug>Sneak_t
-" nmap T <Plug>Sneak_T
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
 
 
 Plug 'yuttie/comfortable-motion.vim'  " smoother scrolling physics
@@ -1157,11 +1146,16 @@ nnoremap <silent> ]q :<C-U>cnext<CR>
 
 " toggles: background, spell, number, relativenumber, wrap, list
 nmap yob :<C-U>set background=<C-R>=&background == "dark" ? "light" : "dark"<CR><CR>
-nmap yol :<C-U>setlocal <C-R>=&list == 0 ? 'list' : 'nolist'<CR><CR>
-nmap yon :<C-U>setlocal number norelativenumber<CR>
-nmap yor :<C-U>setlocal nonumber relativenumber<CR>
-nmap yos :<C-U>setlocal <C-R>=&spell == 0 ? 'spell' : 'nospell'<CR><CR>
-nmap yow :<C-U>setlocal <C-R>=&wrap == 0 ? 'wrap' : 'nowrap'<CR><CR>
+" nmap yol :<C-U>setlocal <C-R>=&list == 0 ? 'list' : 'nolist'<CR><CR>
+" nmap yon :<C-U>setlocal norelativenumber <C-R>=&number == 0 ? 'number' : 'nonumber'<CR><CR>
+" nmap yor :<C-U>setlocal nonumber <C-R>=&relativenumber == 0 ? 'relativenumber' : 'norelativenumber'<CR><CR>
+" nmap yos :<C-U>setlocal <C-R>=&spell == 0 ? 'spell' : 'nospell'<CR><CR>
+" nmap yow :<C-U>setlocal <C-R>=&wrap == 0 ? 'wrap' : 'nowrap'<CR><CR>
+nmap yol <Cmd>setlocal list!<CR>
+nmap yon <Cmd>setlocal norelativenumber number!<CR>
+nmap yor <Cmd>setlocal nonumber relativenumber!<CR>
+nmap yos <Cmd>setlocal spell!<CR>
+nmap yow <Cmd>setlocal wrap!<CR>
 
 " readline keybindings
 " Ctrl-A, Ctrl-B, Ctrl-D, Ctrl-F
@@ -1189,18 +1183,72 @@ Plug 'tpope/vim-fugitive'
 
 
 " Experimental {{{1
-Plug 'junegunn/vim-peekaboo'    " show registers
+Plug 'junegunn/vim-peekaboo'        " show registers
 let g:peekaboo_delay=250
 
 
-" Plug 'chrisbra/NrrwRgn'         " narrow region as in Emacs
+" Plug 'chrisbra/NrrwRgn'           " narrow region as in Emacs
 
-Plug 'christoomey/vim-tmux-navigator'
+" Plug 'christoomey/vim-tmux-navigator'
+
+Plug 'lambdalisue/fern.vim'
+nnoremap <leader>. <CMD>Fern %:h -keep -toggle<CR>
+nnoremap <leader>1 <CMD>Fern . -reveal=% -keep -togand WordHTML gle<CR>
 
 Plug 'preservim/nerdtree'
+
+Plug 'chaoren/vim-wordmotion'
+let g:wordmotion_prefix='/' "<space>
 "}}}
 
+" exclusive plugins for vim and nvim {{{
+if has('nvim')
+    " colorscheme nvim {{{
+	Plug 'rose-pine/neovim'
+	Plug 'catppuccin/nvim'
+	Plug 'folke/tokyonight.nvim'
+	Plug 'rebelot/kanagawa.nvim'
+	Plug 'EdenEast/nightfox.nvim'
+	Plug 'navarasu/onedark.nvim'	
+	Plug 'nyoom-engineering/oxocarbon.nvim'
+	Plug 'projekt0n/github-nvim-theme'
+    " }}}
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+    nnoremap <leader>f. <cmd>Telescope find_files<cr>
+    nnoremap <leader>fg <cmd>Telescope git_files<CR>
+    nnoremap <leader>fb <cmd>Telescope buffers<cr>
+else
+    Plug 'junegunn/fzf'
+    Plug 'junegunn/fzf.vim'
+    let g:fzf_layout = {'up': '~20%'}
+    nnoremap <leader>f. <Cmd>Files<CR>
+    inoremap <leader>f. <Cmd>:Files<CR>
+    vnoremap <leader>f. <Cmd>:Files<CR>
+    nnoremap <leader>fg <Cmd>GFiles<CR>
+    inoremap <leader>fg <Cmd>GFiles<CR>
+    vnoremap <leader>fg <Cmd>GFiles<CR>
+    nnoremap <leader>fb <Cmd>Buffers<CR>
+    inoremap <leader>fb <Cmd>Buffers<CR>
+    vnoremap <leader>fb <Cmd>Buffers<CR>
+    nnoremap <leader>fl <Cmd>BLines<CR>
+    inoremap <leader>fl <Cmd>BLines<CR>
+    vnoremap <leader>fl <Cmd>BLines<CR>
+    nnoremap <leader>fL <Cmd>Lines<CR>
+    inoremap <leader>fL <Cmd>Lines<CR>
+    vnoremap <leader>fL <Cmd>Lines<CR>
+    nnoremap g. :Files<CR>
+    nnoremap gG :GFiles<CR>
+    nnoremap gl :BLines<CR>
+    nnoremap gL :Lines<CR>
+    nnoremap gb :Buffers<CR>
+    nnoremap gW :Windows<CR>
+    nnoremap gJ :Jumps<CR>
+    nnoremap gM :Marks<CR>
+endif
 call plug#end()
+
+
 
 "" colorscheme {{{
 
@@ -1228,7 +1276,7 @@ let s:cs_dark = ["(rich)", "onedark", "nord", "nova", "gruvbox",
             \ "vividchalk", "vibrantink", "molokai", "tango", "fnaqeran",
             \ "motus", "railcast", "tir_black", "inkpot"]
 let s:cs_light = ["(rich)", "ironman", "nuvola", "gruvbox",
-            \ "(new)", "humanoid", "plan9", "seoul256-light",
+            \ "(new)", "humanoid", "plan9", "seoul256-light", "everforest", "gruvbox-material", "catppuccin_frappe", "catppuccin_latte", "catppuccin_macchiato", "catppuccin_mocha",
             \ "(vimdefault)", "morning", "zellner",
             \ "(misc)", "cake16", "sweater", 
             \ "---", "simpleandfriendly", "summerfruit256", "calmbreeze",
@@ -1240,24 +1288,65 @@ let s:cs_gui = [
             \ 'cake16', 'sweater', 'plan9', 'github', 'earendel', 'cocoa', 'seoul256-light', 'toast', 
             \ 'onedark', 'nord', 'nova', 'seoul256',
             \ 'ironman', 'nuvola', 'gruvbox', 'humanoid', 'papercolor']
-let s:cs_gui_light = ['ironman',
-            \ 'nuvola',
-            \ 'gruvbox',
-            \ 'humanoid',
-            \ 'plan9',
-            \ 'github',
-            \ 'seoul256-light',
-            \ 'morning',
-            \ 'zellner',
-            \ 'papercolor',
-            \ 'sweater', 
-            \ 'cocoa',
-            \ 'everforest']
+let s:cs_gui_light = [
+	\ 'ironman',
+	\ 'nuvola',
+	\ 'gruvbox',
+	\ 'humanoid',
+	\ 'plan9',
+	\ 'github',
+	\ 'seoul256-light',
+	\ 'morning',
+	\ 'zellner',
+	\ 'papercolor',
+	\ 'sweater', 
+	\ 'cocoa',
+	\ 'solarized',
+	\ 'everforest',
+	\ 'gruvbox-material',
+	\ 'catppuccin_frappe',
+	\ 'catppuccin_latte',
+	\ 'catppuccin_macchiato',
+	\ 'catppuccin_mocha',
+    \ 'flatwhite']
 
-let s:cs_term_dark = [ 'onedark', 'nord', 'nova', "gruvbox", 'seoul256', 'desert256', 'dante', 'koehler', 'solarized', "alduin", "lucius", "cocoa"]
-let s:cs_term_light = ['ironman', 'nuvola', 'gruvbox', 'humanoid', 'seoul256-light', 'plan9', 'zellner', 'papercolor', 'cocoa']
+let s:cs_term_dark = [ 
+	\ 'onedark', 
+	\ 'nord', 
+	\ 'nova',
+	\ 'gruvbox', 
+	\ 'seoul256', 
+	\ 'desert256', 
+	\ 'dante', 
+	\ 'koehler', 
+	\ 'solarized', 
+	\ 'alduin', 
+	\ 'lucius', 
+	\ 'cocoa']
+
+let s:cs_term_light = [
+	\ 'ironman', 
+	\ 'nuvola', 
+	\ 'gruvbox', 
+	\ 'humanoid', 
+	\ 'seoul256-light', 
+	\ 'plan9', 
+	\ 'zellner', 
+	\ 'papercolor', 
+	\ 'cocoa',
+	\ 'solarized',
+	\ 'everforest',
+	\ 'gruvbox-material',
+	\ 'catppuccin_frappe',
+	\ 'catppuccin_latte',
+	\ 'catppuccin_macchiato',
+	\ 'catppuccin_mocha',
+    \ 'flatwhite']
+
 let s:cs_zellij_dark = ['nord', 'dante', 'koehler', 'ironman', 'github', 'dante', 'ironman', 'koehler', 'github']
 let s:cs_zellij_light = ['ironman', 'nuvola', 'zellner', 'github']
+let s:cs_test = ['everforest', 'gruvbox-material', 'catppuccin_frappe','catppuccin_latte','catppuccin_macchiato','catppuccin_mocha']
+let s:cs_test_nvim = ['everforest', 'gruvbox-material', 'catppuccin_frappe','catppuccin_latte','catppuccin_macchiato','catppuccin_mocha','rose-pine','rose-pine-main', 'rose-pine-dawn', 'rose-pine-moon', 'tokyonight','tokyonight-day', 'tokyonight-moon','tokyonight-night','tokyonight-storm','kanagawa','kanagawa-dragon','kanagawa-lotus','kanagawa-wave', 'nightfox','oxocarbon']
 
 " set colorscheme based on vim flavor {{{2
 if has("unix")
@@ -1334,7 +1423,7 @@ endif
 function! <SID>ChooseColorscheme(args)
     let l:cslist = []
     if len(a:args) == 0
-        echo 'Usage: :THEME [all|dark|light|pastel|gui|term_dark|term_light|zellij_dark|zellij_light]'
+        echo 'Usage: :THEME [all|dark|light|pastel|gui|term_dark|term_light|zellij_dark|zellij_light|test|test_nvim]'
         return
     elseif a:args == 'all'
         let paths = split(globpath(&runtimepath, 'colors/*vim'), "\n")
@@ -1358,6 +1447,10 @@ function! <SID>ChooseColorscheme(args)
         let l:cslist=s:cs_zellij_dark
     elseif a:args == 'zellij_light'
         let l:cslist=s:cs_zellij_light
+    elseif a:args == 'test'
+    	let l:cslist=s:cs_test
+    elseif a:args == 'test_nvim'
+    	let l:cslist=s:cs_test_nvim 
     endif
     echo 'Colorschemes:'
     echo join(l:cslist, "\n")
