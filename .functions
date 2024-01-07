@@ -6,7 +6,7 @@ function pubmd() {
 		printf "Usage: pubmarkdown filename\n"
 		return 2
 	fi
-	$HOME/bin/Markdown.pl "$1" | $HOME/bin/SmartyPants.pl | tee >(pbcopy)
+	$HOME/bin/SmartPants.pl "$1" | $HOME/bin/Markdown.pl | tee >(pbcopy)
 	cp "$1" "$outputdir/$(date +%Y%m%d-%H%M).markdown"
 }
 
@@ -1154,7 +1154,7 @@ function til() {
     if [ -f "$result" ]; then
         # https://unix.stackexchange.com/questions/28503/how-can-i-send-stdout-to-multiple-commands
         echo "$result" | tee >(pbcopy)
-        glow "$result"
+        glow -s light -w 65 "$result"
     fi
 }
 
