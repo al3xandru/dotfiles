@@ -65,6 +65,7 @@ FileProvider/
 Firefox/
 Firefox/Crash Reports/
 Firefox/Profiles/m7ti5f03.default-esr/storage
+firestore/
 Google/
 google-heartbeat-storage/
 icdd/
@@ -73,20 +74,24 @@ info.eurocomp.Timing2/com.microsoft.appcenter/
 info.eurocomp.TimingHelper/
 info.eurocomp.TimingHelper.InfoExtractorService/com.microsoft.appcenter/
 JetBrains/
+JREInstaller/
 Kiwi for Gmail/
 Knowledge/
 LaunchBar/
 Microsoft Edge/
 Microsoft Edge Beta/
 Mozilla/
+networkserviceproxy/
 Oracle/Oracle Content/
 Oracle/Oracle Documents/
 Qbserve/
 qBittorrent/logs/
 rancher-desktop/*
 Rancher Desktop/
+SESStorage/
 Slack/
 SteerMouse & CursorSense/
+SyncServices/
 TaskPaper/
 TestReach/
 Transmission/Resume/
