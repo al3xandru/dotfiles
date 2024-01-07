@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 function pubmd() {
+	local outputdir="$HOME/Dropbox/Dox/jots.mypopescu.com/posts"
 	if [ -z "$1" ]; then
 		printf "Usage: pubmarkdown filename\n"
 		return 2
 	fi
 	$HOME/bin/Markdown.pl "$1" | $HOME/bin/SmartyPants.pl | tee >(pbcopy)
-	cp "$1" "$(dirname $1)/$(date +%Y%m%d-%H%M).markdown"
+	cp "$1" "$outputdir/$(date +%Y%m%d-%H%M).markdown"
 }
 
 function e() {
