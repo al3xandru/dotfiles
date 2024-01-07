@@ -425,29 +425,35 @@
          :rules [
                  [:condi :terminal :b-tmux-mode]
                  ;; windows
-                 [:##c [:!Tb :c]]         ;; create
-                 [:##n [:!Tb :n]]         ;; next
-                 [:##p [:!Tb :p]]         ;; prev
-                 [:##x [:!Tb :x :y :y]]   ;; exit
-                 [:##w [:!Tb :w]]         ;; list windows
-                 [:##comma [:!Tb :comma]] ;; rename
-                 ;; navigation
-                 [:##left_arrow [:!Tb :left_arrow]]
-                 [:##down_arrow [:!Tb :down_arrow]]
-                 [:##up_arrow [:!Tb :up_arrow]]
-                 [:##right_arrow [:!Tb :right_arrow]]
-                 [:##h [:!Tb :left_arrow]]
-                 [:##j [:!Tb :down_arrow]]
-                 [:##k [:!Tb :up_arrow]]
-                 [:##l [:!Tb :right_arrow]]
+                 [:c [:!Tb :c]]         ;; create
+                 [:n [:!Tb :n]]         ;; next
+                 [:p [:!Tb :p]]         ;; prev
+                 [:x [:!Tb :x :y :y]]   ;; exit
+                 [:w [:!Tb :w]]         ;; list windows
+                 [:comma [:!Tb :comma]] ;; rename
+                 ;; panel navigation
+                 [:left_arrow [:!Tb :left_arrow]]
+                 [:down_arrow [:!Tb :down_arrow]]
+                 [:up_arrow [:!Tb :up_arrow]]
+                 [:right_arrow [:!Tb :right_arrow]]
+                 [:h [:!Tb :left_arrow]]
+                 [:j [:!Tb :down_arrow]]
+                 [:k [:!Tb :up_arrow]]
+                 [:l [:!Tb :right_arrow]]
+                 [:o [:!Tb :o]]                 ;; next panel
+                 [:semicolon [:!Tb :semicolon]] ;; prev panel
                  ;; panel
-                 [:##q [:!Tb :q]]           ;; panel count
-                 [:##s [:!Tb :!Squote]]     ;; split
-                 [:##quote [:!Tb :!Squote]] ;; split
-                 [:##v [:!Tb :!S5]]         ;; vertical split
-                 [:##5 [:!Tb :!S5]]         ;; vertical split
+                 [:q [:!Tb :q]]           ;; panel count
+                 [:s [:!Tb :!Squote]]     ;; split
+                 [:quote [:!Tb :!Squote]] ;; split
+                 [:v [:!Tb :!S5]]         ;; vertical split
+                 [:5 [:!Tb :!S5]]         ;; vertical split
                  ;; clipboard
-                 [:##open_bracket [:!Tb :open_bracket]]
+                 [:open_bracket [:!Tb :open_bracket]]
+                 ;; commands
+                 [:z [:!Tb :z]]           ;; zoom
+                 [:d [:!Tb :d]]           ;; dettach current client
+                 [:!Rsemicolon [:!Tb :!Rsemicolon]]
                  ]}
 
         ; Disables this rule as using Simple Rules in Karabiner works better
